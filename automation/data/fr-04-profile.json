@@ -228,18 +228,145 @@
       },
       "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (must start with 0), applied path-agnostically per HW02's reframed oracle",
       "status": "frozen"
-    }
-  ],
+    },
 
-  "plannedCases": {
-    "note": "Designed and mapped in Step 3.1; data added in the batch that automates them.",
-    "C": [
-      "TC-04-EP-001-API",
-      "TC-04-EP-002-API",
-      "TC-04-EP-003-API",
-      "TC-04-EP-004-API",
-      "TC-04-EP-005-API",
-      "TC-04-EP-006-UI-API"
-    ]
-  }
+    {
+      "id": "TC-04-EP-001-API",
+      "hw02Ref": "TC-04-EP-001",
+      "batch": "C",
+      "mechanism": "API",
+      "technique": "EP",
+      "partition": "valid class, all three manageable fields at once",
+      "title": "A valid update of name, phone and shipping_address must be persisted",
+      "input": {
+        "name": "Nguyen Van A",
+        "phone": "0912345678",
+        "shippingAddress": "123 Le Loi, TP.HCM"
+      },
+      "expected": {
+        "specClass": "valid",
+        "requestMustSucceed": true,
+        "fields": {
+          "name": { "mode": "equals", "value": "Nguyen Van A" },
+          "phone": { "mode": "equals", "value": "0912345678" },
+          "shipping_address": { "mode": "equals", "value": "123 Le Loi, TP.HCM" }
+        }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 64 (these three fields are user-updatable)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-EP-002-API",
+      "hw02Ref": "TC-04-EP-002",
+      "batch": "C",
+      "mechanism": "API",
+      "technique": "EP",
+      "partition": "invalid class for `name` (empty string)",
+      "title": "An empty name must not end up persisted",
+      "input": {
+        "name": "",
+        "phone": "0912345678",
+        "shippingAddress": "123 Le Loi"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "fields": {
+          "name": { "mode": "notEquals", "value": "" }
+        }
+      },
+      "expectedSource": "assumption A2 (accepted 2026-07-04, HW02 work/FR-04-personal-profile/assumptions.md) — an empty `name` is an invalid equivalence class. HW02 states the expectation as an OUTCOME because the SUT documents no error-response contract: GET must not return name=\"\".",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-EP-003-API",
+      "hw02Ref": "TC-04-EP-003",
+      "batch": "C",
+      "mechanism": "API",
+      "technique": "EP",
+      "partition": "valid class for `shipping_address` (empty string)",
+      "title": "An empty shipping_address is valid and must be stored as an empty string",
+      "input": {
+        "name": "Nguyen Van A",
+        "phone": "0912345678",
+        "shippingAddress": ""
+      },
+      "expected": {
+        "specClass": "valid",
+        "requestMustSucceed": true,
+        "fields": {
+          "shipping_address": { "mode": "equals", "value": "" }
+        }
+      },
+      "expectedSource": "assumption A3 (accepted 2026-07-04, HW02 assumptions.md) — empty `shipping_address` is a valid class; HW02's frozen expectation is explicit that it is accepted and not coerced to null or rejected.",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-EP-004-API",
+      "hw02Ref": "TC-04-EP-004",
+      "batch": "C",
+      "mechanism": "API",
+      "technique": "EP",
+      "partition": "invalid class for `phone` (wrong leading digit), API path",
+      "title": "A spec-invalid phone must not be persisted via the API (EP representative)",
+      "convergesWith": "TC-04-BVA-010-API",
+      "convergenceNote": "Same input and same assertion as the BVA case, inherited from HW02's own design: the EP report designed ONE representative invalid-phone case and the BVA report expanded the full boundary set. Kept for traceability to HW02's frozen case list; it adds no new coverage beyond TC-04-BVA-010-API. See automation/report.md §14 finding 19.",
+      "input": {
+        "name": "Nguyen Van A",
+        "phone": "1912345678",
+        "shippingAddress": "123 Le Loi"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "fields": {
+          "phone": { "mode": "notEquals", "value": "1912345678" }
+        }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (must start with 0), applied path-agnostically per HW02's reframed oracle",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-EP-005-API",
+      "hw02Ref": "TC-04-EP-005",
+      "batch": "C",
+      "mechanism": "API",
+      "technique": "EP",
+      "partition": "negative test on the forbidden field `role`",
+      "title": "A client-supplied role must not change the stored role",
+      "input": {
+        "name": "Nguyen Van A",
+        "phone": "0912345678",
+        "shippingAddress": "123 Le Loi",
+        "role": "admin"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "roleMustRemain": "user"
+      },
+      "expectedSource": "spec — eshop-sut/README.md line 67 (\"không thể tự thay đổi thuộc tính role\") + SEC-06 line 283 (\"API cập nhật hồ sơ không được cho phép thay đổi trường role từ client\")",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-EP-006-UI-API",
+      "hw02Ref": "TC-04-EP-006",
+      "batch": "C",
+      "mechanism": "UI+API",
+      "technique": "EP",
+      "partition": "negative test on the immutable field `email`",
+      "title": "Email must not be changeable — the form field is disabled and a forged email is ignored",
+      "dualSurfaceNote": "Spec line 66 constrains the INTERFACE specifically (\"qua giao diện\"), so the UI assertion tests that wording directly, while the API assertion tests the underlying immutability guarantee. Two different claims, one case.",
+      "input": {
+        "name": "Nguyen Van A",
+        "phone": "0912345678",
+        "shippingAddress": "123 Le Loi",
+        "forgedEmail": "changed@eshop.com"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "uiEmailFieldDisabled": true,
+        "emailMustRemainOwn": true
+      },
+      "expectedSource": "spec — eshop-sut/README.md line 66 (\"Email không được phép thay đổi qua giao diện\")",
+      "status": "frozen"
+    }
+  ]
 }
