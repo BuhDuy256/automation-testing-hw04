@@ -168,5 +168,87 @@ copy stored here.
 
 ## 8. Cases not automated
 
-None yet — Step 2 scope is deliberately one case. Step 3 selects ≥12 from FR-04's 16 HW02 cases
-and will list, with reasons, any that cannot be automated (HW04 §6).
+None yet — Step 2 scope is deliberately one case. See §9 for the full Step 3 selection.
+
+---
+
+# Step 3 — Full pilot (in progress)
+
+## 9. Case selection and mechanism mapping (Step 3.1)
+
+**All 16** HW02 FR-04 cases are selected (minimum is 12) — 6 EP + 10 BVA. Sources:
+`references/hw2/.../FR-04-personal-profile/{domain-testing,boundary-value-analysis}/report.md`.
+
+| # | Case | HW02 ref | Variable / target | Mechanism | Batch |
+|---|---|---|---|---|---|
+| 1 | `TC-04-BVA-002-UI` | `TC-04-BVA-002` | phone, min (10 digits, lead 0) — **valid** | UI | ✅ smoke (done) |
+| 2 | `TC-04-BVA-001-UI` | `TC-04-BVA-001` | phone, min−1 (9 digits) — invalid | UI | **A** |
+| 3 | `TC-04-BVA-003-UI` | `TC-04-BVA-003` | phone, max (11 digits, lead 0) — **valid** | UI | **A** |
+| 4 | `TC-04-BVA-004-UI` | `TC-04-BVA-004` | phone, max+1 (12 digits) — invalid | UI | **A** |
+| 5 | `TC-04-BVA-005-UI` | `TC-04-BVA-005` | phone, leading digit `1` — invalid | UI | **A** |
+| 6 | `TC-04-BVA-006-API` | `TC-04-BVA-006` | phone 9 digits, persistence | `APIRequestContext` | B |
+| 7 | `TC-04-BVA-007-API` | `TC-04-BVA-007` | phone 10 digits, persistence | `APIRequestContext` | B |
+| 8 | `TC-04-BVA-008-API` | `TC-04-BVA-008` | phone 11 digits, persistence | `APIRequestContext` | B |
+| 9 | `TC-04-BVA-009-API` | `TC-04-BVA-009` | phone 12 digits, persistence | `APIRequestContext` | B |
+| 10 | `TC-04-BVA-010-API` | `TC-04-BVA-010` | phone leading `1`, persistence | `APIRequestContext` | B |
+| 11 | `TC-04-EP-001-API` | `TC-04-EP-001` | valid update, all 3 fields | `APIRequestContext` | C |
+| 12 | `TC-04-EP-002-API` | `TC-04-EP-002` | `name` empty (assumption A2) | `APIRequestContext` | C |
+| 13 | `TC-04-EP-003-API` | `TC-04-EP-003` | `shipping_address` empty (A3) | `APIRequestContext` | C |
+| 14 | `TC-04-EP-004-API` | `TC-04-EP-004` | spec-invalid phone persists | `APIRequestContext` | C |
+| 15 | `TC-04-EP-005-API` | `TC-04-EP-005` | `role` injection (forbidden field) | `APIRequestContext` | C |
+| 16 | `TC-04-EP-006-UI-API` | `TC-04-EP-006` | `email` immutability | **UI + API** | C |
+
+### Why these mechanisms (architecture §3.1)
+
+- **UI (6 cases).** The whole phone boundary set runs through the real form. This is the default
+  and the majority surface, as HW04 §4/§5 requires.
+- **`APIRequestContext` (10 cases).** Chosen only where the behaviour is **unreachable through
+  the UI**, and each has a concrete reason, not a convenience:
+  - *BVA API-path (6–10):* these assert what the **backend** stores. Since `BUG-04-101` shows the
+    client-side regex blocks every leading-`0` value, the backend's persistence behaviour cannot
+    be reached through the form at all — a direct call is the only way to observe it. This is the
+    same pairing HW02 used, and the two paths disagreeing is itself the finding.
+  - *EP 005 `role`, EP 006 `email`:* the form has **no `role` input** and renders `email` as
+    `disabled` (`Profile.jsx:119-124`), so neither field is ever sent by the UI. A forged payload
+    is the only way to test that the backend ignores them.
+  - *EP 001–004:* HW02 froze these as `PUT /api/users/me` cases whose expectation is about the
+    **persisted value**, not the rendering. Re-routing them through the UI would collapse them
+    onto the same regex assertion the BVA UI cases already cover — duplicated surface, no added
+    value.
+- **`page.route()` — not needed for FR-04.** No FR-04 case requires forging a value the client
+  computes (unlike FR-08's `total_amount`); `role`/`email` are simply absent from the form, which
+  a direct request models more honestly than intercepting one the app never sends.
+- **`TC-04-EP-006` is deliberately dual-surface.** Spec line 66 says email may not be changed
+  *"qua giao diện"* (**through the interface**) — so the UI assertion (the field is `disabled`) is
+  testing the literal wording, while the API assertion (a forged `email` is ignored) tests the
+  underlying guarantee. Two genuinely different claims, one case.
+
+### Cases that cannot be automated
+
+**None.** All 16 are automatable through the mechanisms above.
+
+One HW02 *gap-analysis* item is knowingly **not** included: a **partial-update / omitted-field**
+case (`PUT` without `phone`, where `server.js` would pass `undefined` into the `UPDATE`). HW02
+recorded it as an untested hypothesis and never designed a frozen case for it. Step 3 converts
+HW02's frozen cases; inventing a new one here would mean designing a test case in an automation
+step, so it is logged as future work rather than silently added.
+
+## 10. Batch A — human review of the AI-generated specs
+
+Batch A = the 4 remaining UI-path boundary cases. Reviewed **before** the freeze commit:
+
+| # | Finding | Why the AI missed it | Fix |
+|---|---|---|---|
+| 6 | **A worker-shared account corrupts boundary assertions.** The obvious move was to reuse `isolatedUser`, as the Step 2 smoke does. But it is *worker-scoped*, and Batch A has 4 tests that each write a phone — a later test's read-back can see an earlier test's value. `TC-04-BVA-005-UI` in particular is expected to leave `1912345678` stored, which a subsequent "must not equal" assertion could then read and judge against the wrong write. | Scope-anchoring on the working example: worker scope was safe for a *single* test, and the AI carried that pattern forward without re-checking the assumption once 4 mutating tests shared it. | Added a **test-scoped `freshUser` fixture** — one private account per test. Documented in `fixtures/base.ts` as the rule: any test asserting on profile state uses `freshUser`, not `isolatedUser`. |
+| 7 | **"Not persisted" is a not-equals, not an equals.** The natural generated assertion for an invalid value was `expect(phone).toBeNull()` (or `''`). That **invents an oracle**: HW02's own note states a "not persisted as X" expectation does not prescribe *how* the SUT avoids storing it — reject, coerce, or truncate are all spec-compliant. | Model bias toward a concrete, symmetric assertion; `toBeNull()` looks stronger and reads better, but asserts something line 65 never says. | Modelled persistence in data as `{ mode: "equals" \| "notEquals", value }` and branched on it. The spec now asserts exactly what the oracle states, no more. |
+| 8 | **Assertion direction must come from the spec class, not the observed behaviour.** With 2 valid and 2 invalid cases in one loop, it is trivially easy to let the expected direction follow what the UI happens to do. | Genuine risk of the failure mode HW04 §6 warns about — the loop makes it a one-character mistake. | Direction is read from `expected.specClass` / `expected.rejectedByUi` in the **data file**, never inferred in the spec body. Failure messages quote the spec line so a wrong direction is obvious in the report. |
+| 9 | **A silent data-file edit could shrink the suite.** In a data-driven loop, deleting a case from JSON makes the suite report "all passed" with fewer tests — a false green nobody notices. | Not a modelling error; an absence the AI had no reason to consider. | Added a guard: `if (batchA.length !== 4) throw`. The suite fails loudly if the data no longer matches the frozen plan. |
+| 10 | **Schema drift between Step 2 and Step 3 data.** The smoke case uses `expected.persistedPhone`; batch A needs the richer `expected.persistence`. | Natural consequence of generalizing after a worked example. | Kept the smoke key (its spec is already frozen — churning a frozen artifact for cosmetics is worse) and documented the divergence in the data file's `schemaNote`. Every case from batch A onward uses the new shape. |
+
+**Predicted outcome, recorded before running** (from `Profile.jsx:43`'s `/^[1-9][0-9]{8,9}$/`):
+`BVA-001` and `BVA-004` should pass (invalid, correctly rejected — though for the wrong reason);
+`BVA-003` should fail as another manifestation of `BUG-04-101`; `BVA-005` should fail in the
+**opposite** direction — the UI *accepts* a spec-invalid value. Recorded here so the run can be
+compared against a prediction rather than rationalised afterwards.
+
+**No assertion was relaxed** to accommodate `BUG-04-101`.
