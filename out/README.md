@@ -23,7 +23,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _not started_ |
 | 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _not started_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
-| 3 | Agent Skill | 10 | _not started_ |
+| 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
 | | **Total** | **100** | — |
 
 ## 3. Test summary report
@@ -71,6 +71,7 @@ _Paths relative to this `out/` folder._
 | FR-04 main report (generation log, AI review, gap analysis, results) | `reports/FR-04-personal-profile/automation/report.md` |
 | FR-04 bug reports | `reports/FR-04-personal-profile/bug-reports/report.md` |
 | FR-04 HTML reports (combined + per batch) | `reports/FR-04-personal-profile/html-report/` (see its `README.md`) |
+| **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique | `ai-critique.md` _(pending)_ |
 | Git commit log | `git_commit_log.txt` _(generated before submission)_ |

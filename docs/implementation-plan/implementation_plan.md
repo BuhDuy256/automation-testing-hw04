@@ -185,8 +185,17 @@ out/reports/FR-0X-*/              # DELIVERABLES
   bug-reports/report.md           # confirmed defects + GitHub issue links
   bug-reports/evidence/*.png
 
-.claude/skills/test-automation-design/SKILL.md   # Step 4
+.claude/skills/test-automation-design/SKILL.md   # Step 4 — working copy (Claude)
+.codex/skills/test-automation-design/SKILL.md    # Step 4 — working copy (Codex), byte-identical
+out/agent-skill/SKILL.md                         # Step 4 — SUBMISSION copy (see note below)
+out/agent-skill/README.md                        # provenance + validation trace
 ```
+
+**Why the skill is copied into `out/`.** `.claude/` and `.codex/` are separate git repos recorded
+in this repo as **gitlinks** (mode `160000`) with no `.gitmodules`, so cloning the submission repo
+yields two *empty* directories. Delivering the §7 skill only there would make a 10-point deliverable
+invisible to a grader while every local check still passed. The config copies remain the source of
+truth; a change to either must be re-mirrored to all three.
 
 ---
 
@@ -517,7 +526,7 @@ before mass-generating specs.
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
-| 4 Extract skill | **in progress** |
+| 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
@@ -592,20 +601,25 @@ Matched the batch-derived expectation exactly; **no fourth root cause appeared**
 weakened and no `.spec.ts` was touched, so there is **no `fix:` commit**. `html-report/index.html`
 was preserved as `smoke.html` before being overwritten, because issue #1 cites that path.
 
+**Step 4 done.** `test-automation-design` extracted — 7 phases, generated through `generate-skill`,
+smell-test **0 hits** on both the required term list and an extended one (bug IDs, tool/browser
+names, prior-assignment refs). Validation ran Phase 4.3's static gates literally against the
+finished suite and **found a real defect in the skill**: the invented-oracle gate, specified as a
+grep for the operator alone, produced 3 false positives on the legitimate capture-then-assert
+pattern. Gate rewritten to match the operator *together with its target*; re-run scoped it returns
+zero. Three byte-identical copies (`.claude`, `.codex`, `out/agent-skill`), sha256 `2bb4b512…`.
+
 ## > NEXT ACTION
 
-**Step 4 — extract the `test-automation-design` skill.** FR-04 is finished end to end; this
-converts the method that produced it into a reusable, repo-agnostic skill (HW04 §7, 10 pts).
-Do **not** start Step 5 / FR-08 yet.
+**Step 5 — FR-08 (Checkout) through the skill.** First application of `test-automation-design` to a
+feature it was not derived from — which is also the real test of whether the extraction generalised.
 
-1. Extract methodology notes from what actually worked in FR-04 (freeze-before-run, data
-   externalization, oracle traceability, pre-run human review, the real-defect gate, no assertion
-   weakening, batch sizing, honest browser counting, issue-per-root-cause).
-2. Generate `.claude/skills/test-automation-design/SKILL.md` via the `generate-skill` skill — do
-   not hand-write an overfit script.
-3. Validate it reproduces an equivalent workflow against the FR-04 inputs, without overwriting any
-   FR-04 deliverable.
-4. Smell-test for coupling (0 hits), then mirror byte-identically to `.codex/skills/`.
+1. **5.1 design work first (budgeted, not a surprise):** FR-08 has only 4 reusable HW02 cases and
+   needs **≥12**, so **≥8 new cases must be designed** before any automation. Derive them only from
+   FR-08's R1–R5 in the spec; FR-07/FR-09/FR-10 are explicitly out of scope.
+2. Then run the skill's phases 1–7 per batch, 3 freeze commits expected.
+
+**Ledger:** 4 freezes so far; **4 more needed** from FR-08/FR-15 to clear the §12 floor of 8.
 
 **Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
 oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
