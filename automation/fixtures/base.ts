@@ -35,7 +35,18 @@ export type WorkerFixtures = {
  *    pristine profile must not assume defaults left by an earlier test — call
  *    `registerAndLogin(api, 'label')` directly for a private account instead.
  */
-export const test = base.extend<{ runBy: void }, WorkerFixtures>({
+export type TestFixtures = {
+  runBy: void;
+  /**
+   * A private account for ONE test. Use instead of `isolatedUser` whenever the test asserts on
+   * profile state, because `isolatedUser` is shared by every test in the worker and an earlier
+   * test's write would still be there — a boundary case reading a leftover phone could pass or
+   * fail for the wrong reason. Costs one registration per test.
+   */
+  freshUser: IsolatedUser;
+};
+
+export const test = base.extend<TestFixtures, WorkerFixtures>({
   api: [
     async ({}, use) => {
       const context = await apiRequest.newContext({ baseURL: API_URL });
@@ -52,6 +63,10 @@ export const test = base.extend<{ runBy: void }, WorkerFixtures>({
     },
     { scope: 'worker' },
   ],
+
+  freshUser: async ({ api }, use, testInfo) => {
+    await use(await registerAndLogin(api, `t${testInfo.workerIndex}`));
+  },
 
   runBy: [
     async ({}, use, testInfo) => {

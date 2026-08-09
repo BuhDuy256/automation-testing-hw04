@@ -2,15 +2,26 @@
   "feature": "FR-04",
   "featureTitle": "Quản lý hồ sơ cá nhân (Personal Profile Management)",
   "oracle": {
-    "source": "eshop-sut/README.md — FR-04, line 65",
-    "text": "Số điện thoại hợp lệ: bắt đầu bằng số `0`, từ 10–11 chữ số.",
-    "translation": "A valid phone number starts with 0 and is 10-11 digits long."
+    "source": "eshop-sut/README.md — FR-04, lines 64-67",
+    "lines": {
+      "64": "Người dùng đã đăng nhập có thể cập nhật: Họ Tên, Số điện thoại, Địa chỉ giao hàng mặc định.",
+      "65": "Số điện thoại hợp lệ: bắt đầu bằng số `0`, từ 10–11 chữ số.",
+      "66": "Email không được phép thay đổi qua giao diện.",
+      "67": "Người dùng chỉ có thể cập nhật hồ sơ của chính mình; không thể tự thay đổi thuộc tính `role`."
+    }
   },
-  "note": "Expected values are derived ONLY from the oracle above, never from observed SUT behaviour (plan §2 rule 1). Do not edit an expected value to make a test pass.",
+  "note": "Expected values are derived ONLY from the oracle above (or an HW02 accepted assumption), never from observed SUT behaviour (plan §2 rule 1). Do not edit an expected value to make a test pass.",
+  "persistenceModes": {
+    "equals": "after the operation, the stored phone MUST equal `value`",
+    "notEquals": "after the operation, the stored phone MUST NOT equal `value` (the spec-invalid input must not end up stored; the spec does not prescribe how the SUT avoids that)"
+  },
+  "schemaNote": "TC-04-BVA-002-UI (the Step 2 smoke) predates the generalized `expected.persistence` shape and carries the older `expected.persistedPhone` key, which its already-frozen spec reads. It is left as-is rather than churning a frozen artifact; every case from batch A onward uses `expected.persistence`.",
   "cases": [
     {
       "id": "TC-04-BVA-002-UI",
       "hw02Ref": "TC-04-BVA-002",
+      "batch": "smoke",
+      "mechanism": "UI",
       "technique": "BVA",
       "boundaryPoint": "min (10 digits, leading 0)",
       "title": "A spec-valid phone (10 digits, leading 0) must be accepted by the profile form",
@@ -28,6 +39,111 @@
       },
       "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (leading 0, 10-11 digits)",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-04-BVA-001-UI",
+      "hw02Ref": "TC-04-BVA-001",
+      "batch": "A",
+      "mechanism": "UI",
+      "technique": "BVA",
+      "boundaryPoint": "min − 1 (9 digits, leading 0)",
+      "title": "A too-short phone (9 digits) must not be accepted by the profile form",
+      "input": {
+        "phone": "091234567",
+        "shippingAddress": "1 Le Loi, Q1, TP.HCM"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "rejectedByUi": true,
+        "putRequestIssued": false,
+        "persistence": { "mode": "notEquals", "value": "091234567" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (10-11 digits required)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-003-UI",
+      "hw02Ref": "TC-04-BVA-003",
+      "batch": "A",
+      "mechanism": "UI",
+      "technique": "BVA",
+      "boundaryPoint": "max (11 digits, leading 0)",
+      "title": "A spec-valid phone (11 digits, leading 0) must be accepted by the profile form",
+      "input": {
+        "phone": "09123456789",
+        "shippingAddress": "2 Nguyen Hue, Q1, TP.HCM"
+      },
+      "expected": {
+        "specClass": "valid",
+        "rejectedByUi": false,
+        "putRequestIssued": true,
+        "putStatus": 200,
+        "persistence": { "mode": "equals", "value": "09123456789" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (leading 0, 10-11 digits)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-004-UI",
+      "hw02Ref": "TC-04-BVA-004",
+      "batch": "A",
+      "mechanism": "UI",
+      "technique": "BVA",
+      "boundaryPoint": "max + 1 (12 digits, leading 0)",
+      "title": "A too-long phone (12 digits) must not be accepted by the profile form",
+      "input": {
+        "phone": "091234567890",
+        "shippingAddress": "3 Hai Ba Trung, Q1, TP.HCM"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "rejectedByUi": true,
+        "putRequestIssued": false,
+        "persistence": { "mode": "notEquals", "value": "091234567890" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (10-11 digits required)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-005-UI",
+      "hw02Ref": "TC-04-BVA-005",
+      "batch": "A",
+      "mechanism": "UI",
+      "technique": "BVA",
+      "boundaryPoint": "leading-digit boundary (10 digits, leading 1)",
+      "title": "A phone with the wrong leading digit must not be accepted by the profile form",
+      "input": {
+        "phone": "1912345678",
+        "shippingAddress": "4 Dien Bien Phu, Q3, TP.HCM"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "rejectedByUi": true,
+        "putRequestIssued": false,
+        "persistence": { "mode": "notEquals", "value": "1912345678" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (must start with 0)",
+      "status": "frozen"
     }
-  ]
+  ],
+
+  "plannedCases": {
+    "note": "Designed and mapped in Step 3.1; data added in the batch that automates them.",
+    "B": [
+      "TC-04-BVA-006-API",
+      "TC-04-BVA-007-API",
+      "TC-04-BVA-008-API",
+      "TC-04-BVA-009-API",
+      "TC-04-BVA-010-API"
+    ],
+    "C": [
+      "TC-04-EP-001-API",
+      "TC-04-EP-002-API",
+      "TC-04-EP-003-API",
+      "TC-04-EP-004-API",
+      "TC-04-EP-005-API",
+      "TC-04-EP-006-UI-API"
+    ]
+  }
 }
