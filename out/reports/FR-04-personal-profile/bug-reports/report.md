@@ -6,7 +6,8 @@
 
 | ID | Title | Severity | Priority | Status | GitHub Issue |
 |---|---|---|---|---|---|
-| `BUG-04-101` | Profile form rejects every spec-valid phone number (client-side regex is the inverse of the spec) | **High** | High | Confirmed | [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1) |
+| `BUG-04-101` | Profile form rejects every spec-valid phone number, and accepts a spec-invalid one (client-side regex is the inverse of the spec) | **High** | High | Confirmed | [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1) |
+| `BUG-04-102` | `PUT /api/users/me` performs no phone validation — a spec-invalid phone is persisted | **High** | High | Confirmed | [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) |
 
 ---
 
@@ -125,3 +126,118 @@ inverse of FR-04)](https://github.com/BuhDuy256/automation-testing-hw04/issues/1
 The issue embeds the evidence screenshot inline (served from this repo at
 `out/reports/FR-04-personal-profile/bug-reports/evidence/BUG-04-101-profile-form-chromium.png`)
 and links the frozen spec, this report, and the multi-browser HTML report.
+
+### Additional evidence from Step 3 Batch A (2026-08-09)
+
+Batch A completed the 5-point boundary set through the UI and **widened this defect in both
+directions** — it is the same single regex, so it is recorded here rather than as a new bug:
+
+| Case | Value | Spec class | Result | What it adds |
+|---|---|---|---|---|
+| `TC-04-BVA-003-UI` | `09123456789` (11 digits, lead `0`) | **valid** | **FAIL** 3/3 browsers — rejected | The *other* valid length is rejected too, so **no** spec-valid phone is accepted |
+| `TC-04-BVA-005-UI` | `1912345678` (10 digits, lead `1`) | invalid | **FAIL** 3/3 browsers — **accepted** | The inverse half: a spec-**invalid** value passes the guard |
+
+`TC-04-BVA-001-UI` (9 digits) and `TC-04-BVA-004-UI` (12 digits) **passed** — but only
+incidentally: they are rejected by the leading-digit clause, not by any length check. The regex
+never enforces the spec's 10–11 length rule at all.
+
+Both halves of the boundary set now confirm one statement: `/^[1-9][0-9]{8,9}$/` accepts exactly
+the class the spec forbids and rejects both classes it permits.
+
+Evidence: `evidence/BUG-04-101-BVA-003-11digit-rejected-chromium.png`,
+Batch A report `../html-report/batch-a.html`.
+
+---
+
+## BUG-04-102 — `PUT /api/users/me` performs no phone validation, so a spec-invalid phone is stored
+
+| Field | Value |
+|---|---|
+| **Feature** | FR-04 Personal Profile Management |
+| **Component** | `backend/server.js:118-135` (`PUT /api/users/me`) |
+| **Found by** | `TC-04-BVA-005-UI` (automated, Playwright) |
+| **HW02 lineage** | `TC-04-BVA-010` / `TC-04-EP-004` (API-path — Batch B will test this surface directly) |
+| **Severity** | **High** — invalid data enters persistent storage; survives any frontend fix |
+| **Priority** | High |
+| **Reproducible** | 3/3 browsers, 100% (and directly via API) |
+
+### Why this is a separate defect from `BUG-04-101`
+
+They share a symptom in `TC-04-BVA-005-UI` but not a cause, and **fixing `BUG-04-101` would not
+fix this one**:
+
+| | `BUG-04-101` | `BUG-04-102` |
+|---|---|---|
+| Component | `frontend-web/src/pages/Profile.jsx:43` | `backend/server.js:118-135` |
+| Fault | regex is the inverse of the spec | **no validation exists at all** |
+| Fix | correct the regex | add server-side validation |
+| Remains after the other is fixed? | — | **Yes** — any direct API client still stores anything |
+
+### Expected (oracle)
+
+`README.md` FR-04 line 65 defines a valid phone as starting with `0`, 10–11 digits. Applied
+path-agnostically (HW02's reframed oracle, `boundary-value-analysis/report.md`): the SUT **must
+not end up storing** a value its own spec defines as invalid. The spec does not prescribe *how*
+that is prevented — reject, coerce, or ignore are all acceptable.
+
+### Actual
+
+`1912345678` (leading `1` — spec-invalid) is written straight to the database and read back
+unchanged:
+
+```
+Error: spec-invalid phone "1912345678" ended up stored; FR-04 line 65 defines it as invalid
+expect(received).not.toBe(expected)
+Expected: not "1912345678"
+```
+
+### Root cause
+
+```js
+// backend/server.js:118
+app.put("/api/users/me", authenticateToken, (req, res) => {
+  const { name, shipping_address, phone, role } = req.body;
+  let query = "UPDATE users SET name = ?, shipping_address = ?, phone = ?";
+  let params = [name, shipping_address, phone];
+  // ... no validation of `phone` anywhere before the UPDATE
+```
+
+The handler destructures `phone` and passes it directly into the `UPDATE`. There is no length
+check, no leading-digit check, no type check. The only guard in the entire system is the
+client-side regex — which `BUG-04-101` shows is itself wrong, and which any non-browser client
+bypasses entirely.
+
+### Steps to reproduce
+
+1. Register and log in as any user.
+2. `PUT /api/users/me` with `{"name":"X","shipping_address":"Y","phone":"1912345678"}`.
+3. `GET /api/users/me` → `phone` is `"1912345678"`.
+
+(Reachable through the UI too, because `BUG-04-101`'s regex *accepts* leading-`1` values — that
+is how the automated case found it.)
+
+### Suggested fix
+
+Validate server-side before the `UPDATE`, mirroring the spec:
+
+```js
+if (phone !== undefined && phone !== null && !/^0[0-9]{9,10}$/.test(phone)) {
+  return res.status(400).json({ error: "Số điện thoại không hợp lệ" });
+}
+```
+
+Client-side validation is a usability affordance; the server is the only place that can actually
+enforce the rule.
+
+### Evidence
+
+- `evidence/BUG-04-102-BVA-005-leading1-persisted-chromium.png` — the spec-invalid value entered
+  and accepted under a fresh isolated account.
+- Batch A HTML report: `../html-report/batch-a.html` (carries `Run by: 23127179` + ISO).
+- Automated case: `automation/tests/fr-04-profile/phone-boundary-ui.spec.ts`, frozen at
+  `8053add` **before** execution.
+
+### GitHub issue
+
+**[#2 — BUG-04-102](https://github.com/BuhDuy256/automation-testing-hw04/issues/2)** · filed
+2026-08-09 · state: OPEN

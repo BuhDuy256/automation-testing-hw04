@@ -252,3 +252,105 @@ Batch A = the 4 remaining UI-path boundary cases. Reviewed **before** the freeze
 compared against a prediction rather than rationalised afterwards.
 
 **No assertion was relaxed** to accommodate `BUG-04-101`.
+
+## 11. Batch A — execution results
+
+Spec frozen at `8053add` before any run. Four runs were needed, and **the first two produced a
+false signal that had nothing to do with the SUT** — that story is the most useful part of this
+section, so it is recorded in full rather than only the final numbers.
+
+### 11.1 Run log
+
+| Run | Config | Result | Failure causes |
+|---|---|---|---|
+| 1 | default workers (**6**), `waitUntil: 'load'` | 7 failed / 5 passed | 5 assertion + **2 navigation timeouts** |
+| 2 | default workers (**6**), `waitUntil: 'domcontentloaded'` | 8 failed / 4 passed | 5 assertion + **3 navigation timeouts** |
+| 3 | **`workers: 3`**, `domcontentloaded` | **6 failed / 6 passed** | **6 assertion, 0 timeouts** |
+| 4 | same as run 3 (stability check) | **6 failed / 6 passed** | identical — no flake |
+
+### 11.2 The false signal, and the real-defect gate
+
+Run 1 failed `TC-04-BVA-001-UI` on Firefox — a case **predicted to pass**. The gate question is
+whether that is the product or the test. Evidence:
+
+- The error was `page.goto: Test timeout of 30000ms exceeded` — the navigation never completed,
+  so **no assertion ever ran**. A failure that never reached an assertion cannot be evidence
+  about the spec.
+- The same case **passed on Firefox in isolation** (12.9s).
+- Chromium and WebKit passed it under the same parallel load.
+
+**Verdict: test-side defect**, in the "flaky waits" category HW04 §6 asks us to find. Two distinct
+causes, fixed separately:
+
+1. **Wrong readiness signal.** `page.goto` defaults to `waitUntil: 'load'`, which blocks until
+   *every* subresource finishes. The SUT is served by a **Vite dev server** that compiles modules
+   on demand, so `load` waits on work the test does not care about. Fixed by waiting for
+   `domcontentloaded` and letting the existing web-first assertion on the phone field — which
+   retries by itself — be the real readiness signal.
+2. **Over-subscription.** Run 2 showed the wait fix alone was not enough: tests that took 2–13s
+   in isolation were taking 30–52s. Playwright defaults to `cpus/2` workers = **6** on this
+   12-CPU machine, against a **single** Vite dev server and a **single-threaded SQLite** backend.
+   Six concurrent browsers starved the SUT. Fixed with `workers: 3` — one per browser project,
+   preserving genuine cross-browser parallelism.
+
+After both fixes, runtimes returned to 0.9–16s and two consecutive runs produced identical
+results with zero timeouts.
+
+> **Why this matters beyond Batch A.** For one run, an infrastructure timeout was sitting in the
+> results wearing the same red as a genuine spec violation. Had it been accepted at face value,
+> `TC-04-BVA-001-UI` would have been written up as a Firefox-specific product defect that does
+> not exist. The distinguishing question is not "did it fail?" but **"did it fail at an
+> assertion?"** — a failure that never reached one is evidence about the harness, not the SUT.
+
+### 11.3 Final results (runs 3 and 4, identical)
+
+| Case | Value | Spec class | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-04-BVA-001-UI` | `091234567` (9) | invalid | ✅ | ✅ | ✅ | PASS |
+| `TC-04-BVA-003-UI` | `09123456789` (11) | **valid** | ❌ | ❌ | ❌ | FAIL → `BUG-04-101` |
+| `TC-04-BVA-004-UI` | `091234567890` (12) | invalid | ✅ | ✅ | ✅ | PASS |
+| `TC-04-BVA-005-UI` | `1912345678` (lead `1`) | invalid | ❌ | ❌ | ❌ | FAIL → `BUG-04-101` + **`BUG-04-102`** |
+
+**6 passed / 6 failed** across 12 browser runs. All 6 failures are assertion failures.
+
+### 11.4 Prediction vs actual
+
+The prediction recorded in §10 **before** the run:
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-04-BVA-001-UI` | pass | pass | ✅ |
+| `TC-04-BVA-003-UI` | fail (`BUG-04-101`) | fail (`BUG-04-101`) | ✅ |
+| `TC-04-BVA-004-UI` | pass | pass | ✅ |
+| `TC-04-BVA-005-UI` | fail, **opposite direction** (UI accepts invalid) | fail, UI accepted and value persisted | ✅ |
+
+**4/4 correct** once the harness noise was removed. The prediction did *not* anticipate the
+infrastructure flake — which is precisely why it was worth writing down: the mismatch in runs 1–2
+was the signal that something non-product was interfering, rather than something to explain away.
+
+One nuance the prediction under-specified: `BVA-001` and `BVA-004` pass **incidentally**. They are
+rejected by the regex's leading-digit clause, not by any length check — the regex never enforces
+the spec's 10–11 length rule at all. A green result here does **not** mean length validation
+works.
+
+### 11.5 Defect classification
+
+- **`TC-04-BVA-003-UI`** → same root cause as `BUG-04-101` (one regex, `[1-9]` inverts the spec).
+  **No duplicate issue filed**; issue #1 updated with the widened evidence.
+- **`TC-04-BVA-005-UI`** → two findings from one case:
+  - the UI *accepting* a spec-invalid value is the other half of `BUG-04-101` → issue #1;
+  - the backend **persisting** it is a **distinct root cause** — `server.js:118-135` has no
+    validation whatsoever, in a different component, needing a different fix, and it would
+    **survive any frontend correction**. Filed separately as **`BUG-04-102`** (issue #2).
+
+### 11.6 Additional review findings from this run
+
+| # | Finding | Category | Fix |
+|---|---|---|---|
+| 11 | `page.goto` used the default `'load'`, which waits on every Vite dev-server subresource and timed out before any assertion ran | flaky wait (test-side) | `waitUntil: 'domcontentloaded'` + rely on the retrying element assertion (`fix: FR-04 post-run corrections`) |
+| 12 | Default `workers: 6` over-subscribed a single-threaded SUT, inflating 2–13s tests to 30–52s | environment (test-side) | `workers: 3`, one per browser project |
+| 13 | Passing cases (`BVA-001`, `BVA-004`) pass for the *wrong reason* — the length rule is never enforced | oracle interpretation | Recorded here and in the bug report so a green result is not misread as length validation working |
+
+**No assertion, expected value, or oracle was changed at any point.** The only post-run edits were
+the navigation wait and the worker count, both of which change *how the test waits*, never *what
+it expects*.

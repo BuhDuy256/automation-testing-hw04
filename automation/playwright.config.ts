@@ -29,6 +29,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
+  // One worker per browser project. Playwright's default is cpus/2 (6 here), which
+  // over-subscribes the SUT: it is a single Vite DEV server compiling modules on demand plus a
+  // single-threaded SQLite backend, so 6 concurrent browsers turned 2-13s tests into 30-52s and
+  // produced navigation timeouts that masqueraded as test failures (report §11). Capping at 3
+  // keeps real cross-browser parallelism while leaving the SUT able to answer.
+  workers: 3,
   metadata: {
     'Run by': RUN_BY,
   },
