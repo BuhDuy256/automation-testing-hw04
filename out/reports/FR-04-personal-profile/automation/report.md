@@ -354,3 +354,28 @@ works.
 **No assertion, expected value, or oracle was changed at any point.** The only post-run edits were
 the navigation wait and the worker count, both of which change *how the test waits*, never *what
 it expects*.
+
+## 12. Batch B — human review of the AI-generated specs (frozen, not yet run)
+
+Batch B = the 5 API-path boundary cases (`TC-04-BVA-006-API` … `TC-04-BVA-010-API`), which assert
+what the **backend** stores. Reviewed **before** the freeze commit:
+
+| # | Finding | Why the AI missed it | Fix |
+|---|---|---|---|
+| 14 | **A missing comma broke the whole data file.** Appending the 5 Batch B cases left the previous array element unterminated, so `fr-04-profile.json` no longer parsed. Every spec imports this file, so *all three* spec files would have failed at load — the suite would report a load error, not test failures. | Mechanical editing error while appending to a long array. Cheap to make, disproportionately expensive: it takes down the entire suite, not one case. | Caught by parsing the file with `node -e` **before** committing. Added that parse-and-summarise check as the routine gate after any data edit. |
+| 15 | **Asserting a status code for invalid input would invent an oracle.** The natural symmetric generation is `expect(status).toBe(200)` for valid and `toBe(400)` for invalid. But `api_specification.md` §2.2 documents **only the request body** for `PUT /api/users/me` — no validation rule, no error-response contract — and README line 65 says nothing about *how* an invalid value must be refused. | Model bias toward symmetry: a matched pair of status assertions reads complete and rigorous, which disguises that half of it has no source. | Status is asserted **only** for spec-valid cases (traceable to HW02's "must succeed"). For invalid cases the status is recorded as a test **annotation** — evidence without an unfounded claim. Same reasoning as finding 7: the oracle is "not stored as this value", nothing more. |
+| 16 | **`TC-04-BVA-010-API` risked being pure duplication.** Batch A's `TC-04-BVA-005-UI` already showed a leading-`1` phone reaching the backend and being stored, so a reviewer could fairly ask why this case earns its place. | Not an AI error — a genuine selection question that had to be answered rather than assumed. | Kept, with the reason recorded in the spec header: `BVA-005-UI` proves a **compound** result ("UI accepts *and* backend stores"), while `BVA-010-API` **isolates the backend half**. That isolation is exactly what substantiates `BUG-04-102`'s central claim — that the defect **survives any frontend fix** — because this case would still fail with `Profile.jsx` corrected. |
+| 17 | **API cases launch no browser, so they are not browser coverage.** They never request the `page` fixture, yet still execute once per configured project. Three identical backend results could be silently counted toward HW04 §6's multi-browser requirement. | Absence rather than error — nothing prompts an AI to question what a green result across projects actually demonstrates. | Documented in the spec header and to be repeated in the results section: the §6 multi-browser requirement is carried by the **UI** cases (smoke + Batch A); Batch B rides the same matrix for uniformity only. The browser-run count must not be inflated by them. |
+| 18 | **No proof the write landed on the intended account.** With per-test accounts, a fixture regression could point several tests at one user and the persistence assertions would still look plausible. | The AI trusted the fixture, which is reasonable but leaves the failure mode silent. | Added `expect.soft(persisted.email).toBe(freshUser.email)` so a mis-targeted write is reported explicitly instead of corrupting the phone assertion's meaning. |
+
+**Checklist verified before freezing:** no `test@eshop.com` anywhere in `tests/`; Batch B uses
+`freshUser` (test-scoped), never `isolatedUser`; no phone literals in the spec (all values read
+from the data file); no `toBeNull` / `toBe('')` invented alternatives; all four failure messages
+cite **FR-04 line 65**; `npx tsc --noEmit` exits 0; 15 Batch B tests discovered statically.
+
+**Predicted outcome, recorded before running** (from `server.js:118-135`, which has no phone
+validation at all): `BVA-007` and `BVA-008` should **pass** (spec-valid values are stored);
+`BVA-006`, `BVA-009` and `BVA-010` should **fail**, all three as `BUG-04-102` — the backend
+persists spec-invalid values verbatim. Expected tally: **2 pass / 3 fail** per project.
+
+**No assertion was relaxed** because `BUG-04-102` is already known.
