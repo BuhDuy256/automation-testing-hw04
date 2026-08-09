@@ -89,7 +89,7 @@ failing assertions, which is the intended source of HW04's bug reports.
 
 ## 3. Architecture decisions to freeze at Step 1
 
-These five are decided once, in Step 1, and then not re-opened.
+These six (§3.1–§3.6) are decided once, in Step 1, and then not re-opened.
 
 ### 3.1 UI-first with a documented API-assist policy
 HW04 §4/§5 says *automate the web frontend*. Default = drive the browser UI. Two HW02 case
@@ -185,49 +185,77 @@ out/reports/FR-0X-*/              # DELIVERABLES
 **Qualifying commit** = a commit whose diff **changes at least one `.spec.ts` file** (HW04 §12).
 Commits touching only `README`/`report.md`/HTML reports/config/`SKILL.md` do **not** count.
 
-### 5.1 The three-commit-per-feature rule
-Each feature contributes **exactly three** qualifying commits, in this fixed order:
+### 5.1 The floor comes from freeze commits only
 
-| # | Commit | Trigger | Why it qualifies |
+**Design rule: the ≥8 minimum is met entirely by *freeze* commits — commits that create spec
+files before they are first run.** A freeze commit is unconditional: every case that gets
+automated must be written and committed before it can be executed (§2 rule 2), so these commits
+*always* happen. Nothing in the floor depends on what a test run happens to produce.
+
+Each feature's ≥12 cases are written in **three freeze batches** (≈4 cases each, grouped by
+requirement or by variable — a natural review unit, not an artificial split):
+
+| # | Commit | Trigger | Conditional? |
 |---|---|---|---|
-| **F** | `freeze: <feature> specs batch A` | Specs written, **before first run** | Creates `.spec.ts` — and *is* the freeze-before-execute proof (§2 rule 2) |
-| **F2** | `freeze: <feature> specs batch B` | Remaining specs written, before their first run | Creates more `.spec.ts` |
-| **R** | `fix: <feature> post-run corrections` | After the 3-browser run, once the real-defect gate has been passed | Edits `.spec.ts` |
+| **F1** | `freeze: <feature> specs batch A` | Batch A written, **before its first run** | No — always occurs |
+| **F2** | `freeze: <feature> specs batch B` | Batch B written, before its first run | No — always occurs |
+| **F3** | `freeze: <feature> specs batch C` | Batch C written, before its first run | No — always occurs |
 
-**The R commit is where the discipline bites.** It may only contain corrections to *test* defects
-(bad selector, missing wait, wrong precondition). If a failing assertion turned out to expose a
-**real product defect**, the assertion stays red and the finding goes to the bug report — it is
-**never** "fixed" into green. If an R commit would contain zero legitimate test-side fixes, skip
-it and record why; do not manufacture a commit.
+### 5.2 Post-run correction commits are optional extras — never part of the floor
 
-### 5.2 Ledger
+An `fix: <feature> post-run corrections` (**R**) commit may follow a run, but it is **excluded
+from the guaranteed minimum by design**. It may only contain corrections to *test* defects (bad
+selector, missing wait, wrong precondition).
 
-| Step | Qualifying commits | Running total |
+**If a failing assertion exposed a real product defect, the assertion stays red** and the finding
+goes to the bug report — it is never "fixed" into green. If a feature's run yields no legitimate
+test-side fixes, **no R commit is created and nothing is owed**: the floor was already met by F1–F3.
+This is the point of excluding them. Counting R commits toward the minimum would create pressure
+to manufacture test edits, which is exactly the behaviour §12 should not reward.
+
+### 5.3 Ledger — guaranteed floor
+
+| Step | Guaranteed qualifying commits | Running total |
 |---|---|---|
+| Step 1 — architecture | **0** (config, fixtures, helpers, docs — no `.spec.ts`; see §5.4) | **0** |
 | Step 2 — FR-04 smoke | 1 (`freeze: FR-04 smoke spec`) | **1** |
-| Step 3 — FR-04 full | 3 (F, F2, R) | **4** |
-| Step 4 — extract skill | **0 — does not qualify** (touches `SKILL.md` only) | **4** |
-| Step 5 — FR-08 | 3 (F, F2, R) | **7** |
-| Step 6 — FR-15 | 3 (F, F2, R) | **10** |
+| Step 3 — FR-04 full | 3 (F1, F2, F3) | **4** |
+| Step 4 — extract skill | **0** (touches `SKILL.md` only) | **4** |
+| Step 5 — FR-08 | 3 (F1, F2, F3) | **7** |
+| Step 6 — FR-15 | 3 (F1, F2, F3) | **10** |
 | Step 7 — globals | 0 (docs/reports only) | **10** |
 
-**Floor: 10 qualifying commits — margin of 2 over the §12 minimum of 8.** Step 4 is explicitly
-called out as non-qualifying so it is never miscounted as one of the eight.
+**Guaranteed floor: 10 — margin of 2 over the §12 minimum of 8, with zero reliance on optional R
+commits.** Any R commits that do occur are genuine extras on top. Steps 1, 4 and 7 are explicitly
+marked non-qualifying so they are never miscounted.
 
-### 5.3 Separation rule
+**Contingency:** if a feature's cases genuinely do not divide into three batches, the floor still
+holds at **8** (1 smoke + 3 + 2 + 2). Below that, add a batch — do not rely on an R commit.
+
+### 5.4 Only feature scripts enter the ledger
+Step 1's isolation check (1.4) is scaffolding, not a feature script. Per §5 of Step 1 it is
+**run and then deleted before committing**, so `git log -- '*.spec.ts'` contains *only* the
+committed feature scripts and needs no exclusion filter. Evidence that isolation was proven lives
+in `automation-architecture.md` as pasted run output, not as a committed throwaway spec.
+
+### 5.5 Separation rule
 Never mix a `.spec.ts` change and a report/doc change in the same commit. Keeping them separate
 keeps `git log -- '*.spec.ts'` a clean, auditable list of exactly the qualifying commits.
 
 **Verification before submission (Step 7.4):**
 ```bash
-git log --oneline -- '*.spec.ts' | wc -l    # must be >= 8
+# every entry must be a feature-script freeze (or an optional post-run fix) — no scaffolding
+git log --oneline -- '*.spec.ts' | wc -l    # must be >= 8; planned floor 10 from freezes alone
+git log --oneline -- '*.spec.ts' | grep -c '^[0-9a-f]* freeze:'   # must be >= 8 on its own
 ```
+The second command is the real check: **the freeze commits alone must clear 8**, independent of
+any correction commits.
 
 ---
 
 ## Step 1 — Freeze the automation architecture
 
-**Goal:** decide §3's five questions once, with evidence, before any test exists.
+**Goal:** decide §3's six questions (§3.1–§3.6) once, with evidence, before any test exists.
 
 **Tasks**
 - 1.0 Apply §3.6 layer 1: add `title` to the HTML reporter options in `playwright.config.ts`
@@ -242,11 +270,22 @@ git log --oneline -- '*.spec.ts' | wc -l    # must be >= 8
 - 1.4 Prove isolation: run one trivial test that mutates its own user's profile, on all 3
   browsers in parallel, and confirm no cross-worker interference.
 
-**Exit criteria:** architecture doc written; **§3.6 grep passes** (report `<title>` carries the
-Run-by stamp); fixture yields a distinct user per worker; the parallel mutation test passes 3/3
-with no flake across 2 consecutive runs.
+  **This spec is temporary and is deleted before the Step 1 commit** (`automation/tests/
+  _isolation-check.spec.ts` → removed once it passes). Rationale — the most conservative option
+  for grading: a throwaway scaffolding spec must never inflate the §12 ledger, and deleting it
+  keeps `git log -- '*.spec.ts'` a list of *only* feature scripts, needing no exclusion filter
+  a TA would have to trust (§5.4). Paste the passing run output into
+  `automation-architecture.md` — **that** is the durable evidence isolation was proven, not a
+  committed spec file.
+
+**Exit criteria:** architecture doc written (§3.1–§3.6 frozen); **§3.6 grep passes** (report
+`<title>` carries the Run-by stamp); fixture yields a distinct user per worker; the parallel
+mutation check passes 3/3 with no flake across 2 consecutive runs, its output pasted into the
+architecture doc; **the temporary isolation spec is deleted** (`git status` clean of it).
 **Risks eliminated:** phantom cross-worker failures; dependence on seeded state; ad-hoc selector drift.
-**Commit:** `Step 1: freeze automation architecture + isolated-user fixture`.
+**Commit (§5 ledger — 0 qualifying):** `Step 1: freeze automation architecture + isolated-user
+fixture`. Touches `playwright.config.ts`, `fixtures/`, `utils/` and docs — **no `.spec.ts`**, by
+design (§5.4).
 **Stop condition:** if isolation cannot be achieved per-worker → fall back to `workers: 1` and
 record the cost, rather than shipping a flaky suite.
 
@@ -300,9 +339,10 @@ the skill is extracted from.**
 
 **Exit criteria:** ≥12 cases × 3 browsers green-or-explained; all 3 assertion patterns used;
 report.md complete; defects filed; audit rows for every AI artifact.
-**Commit (§5 ledger — 3 qualifying):** `freeze: FR-04 specs batch A` · `freeze: FR-04 specs
-batch B` · `fix: FR-04 post-run corrections`. The report.md (3.8) and the copied HTML report
-(3.6) go in their own separate, non-qualifying commits (§5.3).
+**Commit (§5 ledger — 3 guaranteed qualifying):** `freeze: FR-04 specs batch A` · `batch B` ·
+`batch C`, each **before** its batch is first run. An optional `fix: FR-04 post-run corrections`
+may follow, but is **not** counted toward the floor (§5.2). The report.md (3.8) and the copied
+HTML report (3.6) go in their own separate, non-qualifying commits (§5.5).
 **Stop conditions:** a failing assertion is ambiguous (spec silent) → log an assumption, get a
 human decision, do not weaken the assertion to force green. Suspected state pollution → verify
 isolation before filing a bug.
@@ -390,8 +430,9 @@ cases exist.
 
 **Exit criteria:** ≥12 cases × 3 browsers, **each tracing to R1–R5**; R2 and R3 both covered;
 report.md complete; skill-vs-hand comparison recorded.
-**Commit (§5 ledger — 3 qualifying):** `freeze: FR-08 specs batch A` · `freeze: FR-08 specs
-batch B` · `fix: FR-08 post-run corrections`. Report/HTML-report commits stay separate (§5.3).
+**Commit (§5 ledger — 3 guaranteed qualifying):** `freeze: FR-08 specs batch A` · `batch B` ·
+`batch C`, each before its batch is first run. An optional `fix: FR-08 post-run corrections` may
+follow but is not counted (§5.2). Report/HTML-report commits stay separate (§5.5).
 **Stop conditions:** the skill produces materially worse output than Step 3 → record the gap and
 fix the *skill*, not just the output (the skill is the graded artifact). A candidate case cannot
 be traced to R1–R5 → it belongs to FR-07/FR-09/FR-10; drop it or demote it to non-counting setup.
@@ -408,8 +449,9 @@ be traced to R1–R5 → it belongs to FR-07/FR-09/FR-10; drop it or demote it t
 - 6.2–6.5 As Step 5 (apply skill → review → freeze → run → report).
 
 **Exit criteria:** ≥12 cases × 3 browsers; report.md complete.
-**Commit (§5 ledger — 3 qualifying):** `freeze: FR-15 specs batch A` · `freeze: FR-15 specs
-batch B` · `fix: FR-15 post-run corrections`. Report/HTML-report commits stay separate (§5.3).
+**Commit (§5 ledger — 3 guaranteed qualifying):** `freeze: FR-15 specs batch A` · `batch B` ·
+`batch C`, each before its batch is first run. An optional `fix: FR-15 post-run corrections` may
+follow but is not counted (§5.2). Report/HTML-report commits stay separate (§5.5).
 **Stop condition:** admin-origin (`:5174`) auth/CORS behaves differently than assumed → re-verify
 before mass-generating specs.
 
@@ -422,8 +464,9 @@ before mass-generating specs.
   passed/failed, browser runs, bugs, video link).
 - 7.2 `out/ai-critique.md` — 200–300 words, built from the logged corrections in Steps 2–6.
 - 7.3 Finalize `[AI-02]` §4 verdict counts and §5 conclusion.
-- 7.4 `git log --oneline > out/git_commit_log.txt`; verify the §5 ledger held:
-  `git log --oneline -- '*.spec.ts' | wc -l` must be **≥ 8** (planned floor: 10).
+- 7.4 `git log --oneline > out/git_commit_log.txt`; verify the §5 ledger held by running **both**
+  §5.5 commands — the **freeze commits alone** must reach ≥8 (planned floor: 10), independent of
+  any optional post-run correction commits.
 - 7.5 Record the demo video (§8 below).
 - 7.6 Mirror `docs/implementation-plan/*` → `out/docs/` (HW02 precedent).
 - 7.7 Markdown → PDF for the main reports, AI critique, AI audit (**no `pandoc` on this machine —
@@ -476,8 +519,19 @@ feature selection confirmed (FR-04/08/15), main-report location decided.
 
 ## > NEXT ACTION
 
-**Step 1** — write `docs/implementation-plan/automation-architecture.md` freezing §3.1–3.5, then
-implement the worker-scoped isolated-user fixture and prove isolation across 3 parallel browsers.
+**Step 1** — freeze **§3.1–§3.6** in `docs/implementation-plan/automation-architecture.md`.
+Concretely, in order:
+
+1. **1.0 — add the HTML reporter `title`** to `playwright.config.ts` (`Run by: 23127179` + ISO)
+   and **verify it** with the §3.6 `grep`: the rendered `<title>` must no longer be the default
+   `Playwright Test Report`. Metadata alone does not satisfy §11.
+2. **1.1** — write the architecture doc recording all six decisions with rationale.
+3. **1.2–1.3** — implement the worker-scoped isolated-user fixture and the thin login/nav helpers.
+4. **1.4** — prove isolation across 3 parallel browsers, paste the run output into the
+   architecture doc, then **delete the temporary isolation spec before committing** (§5.4).
+
+Step 1 commits **0 qualifying `.spec.ts`** by design — the first qualifying commit is Step 2's
+smoke freeze.
 
 **Known risk to carry:** FR-08 is 8 cases short of the minimum (§1.4). Do not discover this at
 Step 5 — the design work is real and is budgeted inside Step 5.1.
