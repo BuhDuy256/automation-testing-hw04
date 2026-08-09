@@ -237,7 +237,44 @@ enforce the rule.
 - Automated case: `automation/tests/fr-04-profile/phone-boundary-ui.spec.ts`, frozen at
   `8053add` **before** execution.
 
+### Additional evidence from Step 3 Batch B (2026-08-09)
+
+Batch B drove `PUT /api/users/me` directly for all five boundary values. It **widens this defect
+substantially** — same root cause (no validation), so recorded here rather than as a new bug.
+
+| Case | Value | Spec class | Reachable via UI? | Backend | Result |
+|---|---|---|---|---|---|
+| `TC-04-BVA-006-API` | `091234567` (9) | invalid | ❌ blocked by `BUG-04-101`'s regex | 200, **stored** | **FAIL** 3/3 |
+| `TC-04-BVA-007-API` | `0912345678` (10) | **valid** | ❌ blocked | 200, stored | PASS |
+| `TC-04-BVA-008-API` | `09123456789` (11) | **valid** | ❌ blocked | 200, stored | PASS |
+| `TC-04-BVA-009-API` | `091234567890` (12) | invalid | ❌ blocked | 200, **stored** | **FAIL** 3/3 |
+| `TC-04-BVA-010-API` | `1912345678` (lead `1`) | invalid | ✅ accepted | 200, **stored** | **FAIL** 3/3 |
+
+**6 passed / 9 failed.** Independently reproduced outside Playwright against fresh accounts —
+the endpoint returns **200 for every input** and stores all five verbatim:
+
+```
+phone=091234567     PUT=200  persisted="091234567"
+phone=0912345678    PUT=200  persisted="0912345678"
+phone=09123456789   PUT=200  persisted="09123456789"
+phone=091234567890  PUT=200  persisted="091234567890"
+phone=1912345678    PUT=200  persisted="1912345678"
+```
+
+**What this changes about the defect:**
+
+1. **Every invalid class is accepted**, not just the one the frontend leaks. The original report
+   evidenced only `1912345678`, because that is the sole invalid value `BUG-04-101`'s regex lets
+   through. Too-short and too-long values are stored just as readily.
+2. **Independence from `BUG-04-101` is now proven, not merely argued.** `BVA-006` and `BVA-009`
+   fail on inputs the frontend *already rejects*, so correcting `Profile.jsx` would leave both
+   failing. This is the direct evidence for the "survives any frontend fix" claim above.
+3. **The write path itself is sound** — `BVA-007`/`BVA-008` store valid values correctly. The
+   fault is precisely *absent validation*, which is why the fix is a guard clause, not a rewrite.
+
+Evidence: Batch B report `../html-report/batch-b.html`; spec frozen at `5af1749` before execution.
+
 ### GitHub issue
 
 **[#2 — BUG-04-102](https://github.com/BuhDuy256/automation-testing-hw04/issues/2)** · filed
-2026-08-09 · state: OPEN
+2026-08-09 · state: OPEN · updated with the Batch B evidence above.

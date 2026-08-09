@@ -379,3 +379,96 @@ validation at all): `BVA-007` and `BVA-008` should **pass** (spec-valid values a
 persists spec-invalid values verbatim. Expected tally: **2 pass / 3 fail** per project.
 
 **No assertion was relaxed** because `BUG-04-102` is already known.
+
+## 13. Batch B — execution results
+
+Spec frozen at `5af1749` before any run; run as a single invocation, no retries, no fixes needed.
+
+### 13.1 Results
+
+| Case | Value | Spec class | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-04-BVA-006-API` | `091234567` (9) | invalid | ❌ | ❌ | ❌ | FAIL → `BUG-04-102` |
+| `TC-04-BVA-007-API` | `0912345678` (10) | **valid** | ✅ | ✅ | ✅ | PASS |
+| `TC-04-BVA-008-API` | `09123456789` (11) | **valid** | ✅ | ✅ | ✅ | PASS |
+| `TC-04-BVA-009-API` | `091234567890` (12) | invalid | ❌ | ❌ | ❌ | FAIL → `BUG-04-102` |
+| `TC-04-BVA-010-API` | `1912345678` (lead `1`) | invalid | ❌ | ❌ | ❌ | FAIL → `BUG-04-102` |
+
+**6 passed / 9 failed** across 15 executions. All 9 failures are assertion failures — **zero
+timeouts**, first run, unlike Batch A. Total wall time 3.5s (68–408ms per test), which is itself
+the evidence that no browser was launched.
+
+### 13.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-04-BVA-006-API` | fail (`BUG-04-102`) | fail (`BUG-04-102`) | ✅ |
+| `TC-04-BVA-007-API` | pass | pass | ✅ |
+| `TC-04-BVA-008-API` | pass | pass | ✅ |
+| `TC-04-BVA-009-API` | fail (`BUG-04-102`) | fail (`BUG-04-102`) | ✅ |
+| `TC-04-BVA-010-API` | fail (`BUG-04-102`) | fail (`BUG-04-102`) | ✅ |
+
+**5/5 correct**, tally exactly as predicted (2 pass / 3 fail per project; 6 / 9 overall).
+
+### 13.3 Real-defect gate
+
+All 9 failures carry the same message shape — *"spec-invalid phone «X» ended up stored"*.
+Independent confirmation, run outside Playwright against fresh accounts:
+
+```
+phone=091234567     PUT=200  persisted="091234567"      <- spec-INVALID, stored
+phone=0912345678    PUT=200  persisted="0912345678"     <- spec-valid,   stored (correct)
+phone=09123456789   PUT=200  persisted="09123456789"    <- spec-valid,   stored (correct)
+phone=091234567890  PUT=200  persisted="091234567890"   <- spec-INVALID, stored
+phone=1912345678    PUT=200  persisted="1912345678"     <- spec-INVALID, stored
+```
+
+The backend returns **200 for every input** and stores all five verbatim. There is no validation
+and no error path at all.
+
+- **Test correctness:** each case sends a well-formed `PUT` with `name`/`shipping_address` valid
+  so only `phone` varies, then reads back through an independent `GET`. Nothing in the harness
+  is at fault.
+- **Oracle:** README FR-04 line 65, applied path-agnostically per HW02's reframed oracle.
+- **Verdict: CONFIRMED PRODUCT DEFECT**, all 9 → **`BUG-04-102`**. **No new root cause**, so
+  issue #2 was updated rather than a duplicate filed. No assertion was weakened.
+
+### 13.4 What Batch B adds beyond Batch A
+
+Batch A could only show the backend storing **one** invalid value (`1912345678`), because that is
+the only invalid class the buggy frontend regex lets through. Batch B reaches the backend
+directly and widens the finding decisively:
+
+| Value | Spec class | Reachable via UI? | Backend result |
+|---|---|---|---|
+| `091234567` (9) | invalid | ❌ blocked by regex | **stored** |
+| `091234567890` (12) | invalid | ❌ blocked by regex | **stored** |
+| `1912345678` (lead 1) | invalid | ✅ accepted by regex | **stored** |
+
+Two consequences, and they are the point of running this batch at all:
+
+1. **The backend accepts *every* invalid class**, not merely the one the frontend leaks. The
+   earlier evidence understated the defect.
+2. **`BUG-04-101` and `BUG-04-102` are provably independent.** `BVA-006` and `BVA-009` fail on
+   inputs the frontend already rejects — so fixing `Profile.jsx` would leave both failing. This
+   is the direct evidence for issue #2's central claim that the missing server-side validation
+   survives any frontend fix, and it is exactly why `TC-04-BVA-010-API` was kept despite
+   overlapping Batch A (review finding 16).
+
+The two passes matter too: `BVA-007`/`BVA-008` show the backend stores **valid** values correctly.
+The fault is specifically *absent validation*, not a broken write path — which is what makes the
+suggested fix a guard clause rather than a rewrite.
+
+### 13.5 Browser coverage — stated plainly
+
+Batch B never requests the `page` fixture, so **no browser was launched**. Its 15 executions are
+matrix uniformity, **not** cross-browser evidence, and are excluded from the HW04 §6 browser-run
+count. That requirement is carried by the UI cases (Step 2 smoke + Batch A). The sub-second
+runtimes above corroborate this.
+
+### 13.6 Review findings from this run
+
+**None.** The spec ran correctly on its first invocation, no test-side defect surfaced, and no
+`.spec.ts` change was required — so there is no `fix:` commit for Batch B. The pre-freeze review
+(§12) appears to have caught what mattered; Batch A's contention problem was already fixed by
+`workers: 3`, and API-only tests are not exposed to it in the first place.

@@ -516,7 +516,7 @@ before mass-generating specs.
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
-| 3 FR-04 full pilot (≥12) | **in progress** — A done; **B frozen (`5af1749`), awaiting run**; C pending |
+| 3 FR-04 full pilot (≥12) | **in progress** — A done; **B done** (freeze `5af1749`); C pending |
 | 4 Extract skill | [ ] |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
@@ -556,32 +556,36 @@ was weakened. Report stamp verified 5/5.
 `9e6a8bb` is an optional R commit and is **not** counted toward the §12 floor (§5.2), which
 rests on freeze commits alone.
 
-**Batch B is FROZEN at `5af1749`** (5 API-path cases `TC-04-BVA-006-API` … `-010-API`, plus their
-data). Review findings recorded at `c051027` before the freeze. **Not yet run.**
+**Batch B done (freeze `5af1749`, output below).** 5 API-path cases ran in one invocation:
+**6 passed / 9 failed**, zero timeouts, matching the pre-run prediction **5/5**. All 9 failures
+are `BUG-04-102`; issue [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2)
+updated, **no duplicate filed**, no assertion weakened, and **no `fix:` commit was needed**.
+Batch B widened the defect decisively: `BVA-006`/`BVA-009` fail on inputs the frontend already
+rejects, proving `BUG-04-102` is independent of `BUG-04-101` and survives any frontend fix.
+
+**10 of 16 FR-04 cases automated.** Remaining: Batch C's 6 EP cases.
 
 ## > NEXT ACTION
 
-**Step 3 — run Batch B.** Do **not** re-freeze it and do **not** restart Step 3 from 3.1.
+**Step 3 — Batch C freeze.** Do **not** restart Step 3, and do **not** re-run A or B in isolation.
 
-1. `cd automation && npx playwright test tests/fr-04-profile/phone-boundary-api.spec.ts`
-2. Record per-case/per-project results in the FR-04 automation report; compare against the
-   **pre-run prediction** (§12): `BVA-007`/`BVA-008` pass, `BVA-006`/`BVA-009`/`BVA-010` fail as
-   `BUG-04-102` → **2 pass / 3 fail per project, 6 pass / 9 fail total**.
-3. Real-defect gate on every failure. Failures matching `BUG-04-102` update issue
-   [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) — **no duplicate**; only a
-   distinct root cause gets a new bug.
-4. Copy the HTML report to `out/reports/FR-04-personal-profile/html-report/batch-b.html`
-   (keep `batch-a.html`); verify with `npm run verify:report` and against each copy.
-5. Then Batch C (6 EP cases): freeze first, then run.
+Batch C = the 6 EP cases: `TC-04-EP-001-API` … `-005-API` (all `APIRequestContext`) and
+`TC-04-EP-006-UI-API` (**dual-surface** — the UI assertion that the email field is `disabled`
+tests spec line 66's *"qua giao diện"* wording, while the API assertion that a forged `email` is
+ignored tests the underlying guarantee).
 
-**Honesty constraint for the report:** Batch B never requests the `page` fixture, so **no browser
-launches**. Those 15 executions are matrix uniformity, **not** browser-coverage evidence — HW04
-§6's multi-browser requirement is carried by the UI cases (smoke + Batch A). Do not inflate the
-browser-run count with them.
+1. Extend `data/fr-04-profile.json` with the 6 cases (no inline data). Note `EP-002`/`EP-003`
+   take their oracle from HW02's **accepted assumptions A2/A3**, not from README directly — cite
+   the assumption id in `expectedSource`.
+2. Generate + human-review; **freeze before running** — `freeze: FR-04 specs batch C`
+   (**4th freeze**, qualifying).
+3. Then run the **whole FR-04 suite together** (16 cases × 3 projects), make that combined run
+   `html-report/index.html` (see that folder's README for why `index.html` is still the Step 2
+   report until then), and complete the report + `out/README.md` summary.
 
-**Carry forward:** use `freshUser` (test-scoped), never the seeded `test@eshop.com`, and never
-`isolatedUser` where profile state is asserted. Do **not** relax any assertion because
-`BUG-04-102` is already known.
+**Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
+oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
+cases are **not** browser-coverage evidence.
 
 **Carry into Step 3:** `getByLabel` does **not** work anywhere on the profile form —
 `Profile.jsx` renders `<label>` as a sibling of `<input>` with no `for`/`id`. Use
