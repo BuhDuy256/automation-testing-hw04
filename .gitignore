@@ -1,0 +1,22 @@
+# SUT clone (own repo: ttbhanh/eshop-sut) — not part of this submission
+eshop-sut/
+
+# HW02 reference material — local only, not part of this submission
+references/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# run.sh runtime state (pidfile + logs)
+.run/
+
+# Playwright
+automation/test-results/
+automation/playwright-report/
+automation/playwright/.cache/
+automation/blob-report/
+
+# OS
+.DS_Store
+Thumbs.db
