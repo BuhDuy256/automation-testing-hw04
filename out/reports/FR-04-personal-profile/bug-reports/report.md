@@ -1,8 +1,14 @@
 # FR-04 — Bug Report
 
 > Defects confirmed through the real-defect gate during automated execution.
-> Found by: Nguyen Bao Duy (23127179). SUT: EShop `frontend-web`.
+> Found by: Nguyen Bao Duy (23127179). SUT: EShop `frontend-web` + backend.
 > Numbering starts at `BUG-04-101` to avoid colliding with HW02's `BUG-04-001..004`.
+>
+> **Combined-run confirmation (2026-08-09).** All 16 FR-04 cases were re-run together
+> (`../html-report/index.html`): **48 executions, 21 passed / 27 failed, zero timeouts**. The 27
+> failures collapse to exactly the three defects below — **no fourth root cause appeared**, and
+> every failure reproduces identically on all 3 projects. Executions per defect: `BUG-04-101` 9,
+> `BUG-04-102` 15, `BUG-04-103` 3.
 
 | ID | Title | Severity | Priority | Status | GitHub Issue |
 |---|---|---|---|---|---|
@@ -114,7 +120,13 @@ if (!/^0[0-9]{9,10}$/.test(phone)) {
   under an isolated test account, update refused. *(The native `alert` dialog is not part of the
   page and cannot appear in a screenshot; its exact text is captured verbatim by the automated
   assertion, quoted above.)*
-- Multi-browser HTML report: `../html-report/index.html` (carries `Run by: 23127179` + ISO).
+- Multi-browser HTML report: `../html-report/smoke.html` — the Step 2 run this defect was
+  originally filed from. *(That report was `index.html` at filing time, which is the path GitHub
+  issue #1 links to. `index.html` now holds the **combined** FR-04 run; the original artefact is
+  preserved unchanged as `smoke.html`, and the link is not broken — the combined report contains
+  the same failing case plus the rest of FR-04. See `../html-report/README.md`.)*
+- Combined FR-04 run: `../html-report/index.html` — `TC-04-BVA-002-UI`, `TC-04-BVA-003-UI` and
+  `TC-04-BVA-005-UI` all fail 3/3 browsers there, 9 executions evidencing this defect.
 - Automated case: `automation/tests/fr-04-profile/phone-boundary.spec.ts`, frozen at `e6cd87f`
   **before** execution.
 

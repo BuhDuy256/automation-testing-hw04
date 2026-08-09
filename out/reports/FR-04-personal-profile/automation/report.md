@@ -624,3 +624,105 @@ is carried by the Step 2 smoke and Batch A.
 `.spec.ts` change was required, so there is **no `fix:` commit for Batch C**. The pre-freeze
 review (§14) caught what mattered — notably finding 22's precondition, which is precisely what
 lets `EP-005`'s failure be attributed to the SUT with confidence.
+
+---
+
+# 16. Combined FR-04 run — the feature-level result
+
+`npx playwright test tests/fr-04-profile` — all 16 cases together, no retries, no fixes.
+Report: **`../html-report/index.html`**.
+
+## 16.1 Totals
+
+| Metric | Value |
+|---|---|
+| Cases automated | **16 / 16** (all HW02 FR-04 cases) |
+| Projects | 3 (chromium, firefox, webkit) |
+| **Executions** | **48** |
+| **Passed** | **21** (7 per project) |
+| **Failed** | **27** (9 per project) |
+| Timeouts / flakes | **0** |
+| Wall time | 1.5 min |
+
+**Matches the expectation derived from the batch runs exactly** — 48 executions, 7 pass / 9 fail
+per project, 21 / 27 overall. Running the cases together changed nothing: no interaction effect,
+no ordering dependency, no contention flakiness.
+
+That is a meaningful result in itself. The per-worker/per-test account isolation from architecture
+§3.2 is what makes it true — 48 executions mutate profile state concurrently against one shared
+SQLite database, and none of them interfere.
+
+## 16.2 Result by case
+
+| # | Case | Surface | Spec class | chromium | firefox | webkit | Root cause |
+|---|---|---|---|---|---|---|---|
+| 1 | `TC-04-BVA-001-UI` | UI | invalid | ✅ | ✅ | ✅ | — *(passes incidentally, §11.4)* |
+| 2 | `TC-04-BVA-002-UI` | UI | **valid** | ❌ | ❌ | ❌ | `BUG-04-101` |
+| 3 | `TC-04-BVA-003-UI` | UI | **valid** | ❌ | ❌ | ❌ | `BUG-04-101` |
+| 4 | `TC-04-BVA-004-UI` | UI | invalid | ✅ | ✅ | ✅ | — *(passes incidentally)* |
+| 5 | `TC-04-BVA-005-UI` | UI | invalid | ❌ | ❌ | ❌ | `BUG-04-101` + `BUG-04-102` |
+| 6 | `TC-04-BVA-006-API` | API | invalid | ❌ | ❌ | ❌ | `BUG-04-102` |
+| 7 | `TC-04-BVA-007-API` | API | **valid** | ✅ | ✅ | ✅ | — |
+| 8 | `TC-04-BVA-008-API` | API | **valid** | ✅ | ✅ | ✅ | — |
+| 9 | `TC-04-BVA-009-API` | API | invalid | ❌ | ❌ | ❌ | `BUG-04-102` |
+| 10 | `TC-04-BVA-010-API` | API | invalid | ❌ | ❌ | ❌ | `BUG-04-102` |
+| 11 | `TC-04-EP-001-API` | API | valid | ✅ | ✅ | ✅ | — |
+| 12 | `TC-04-EP-002-API` | API | invalid (A2) | ❌ | ❌ | ❌ | `BUG-04-102` |
+| 13 | `TC-04-EP-003-API` | API | valid (A3) | ✅ | ✅ | ✅ | — |
+| 14 | `TC-04-EP-004-API` | API | invalid | ❌ | ❌ | ❌ | `BUG-04-102` *(converges with #10)* |
+| 15 | `TC-04-EP-005-API` | API | invalid | ❌ | ❌ | ❌ | **`BUG-04-103`** |
+| 16 | `TC-04-EP-006-UI-API` | UI + API | invalid | ✅ | ✅ | ✅ | — |
+
+**7 passed / 9 failed per project**, identical across all three — every failure reproduces on
+every browser.
+
+## 16.3 Real-defect classification — no new root cause
+
+All 27 failures are **assertion** failures; zero timeouts. They collapse to exactly **three**
+already-filed root causes, with no fourth appearing:
+
+| Defect | Failing cases | Executions | Issue |
+|---|---|---|---|
+| `BUG-04-101` — frontend regex is the inverse of FR-04 line 65 | `BVA-002-UI`, `BVA-003-UI`, `BVA-005-UI` | 9 | [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1) |
+| `BUG-04-102` — `PUT /api/users/me` performs no input validation | `BVA-006/009/010-API`, `EP-002`, `EP-004` | 15 | [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) |
+| `BUG-04-103` — privilege escalation via client-supplied `role` | `EP-005` | 3 | [#3](https://github.com/BuhDuy256/automation-testing-hw04/issues/3) |
+
+*(`BVA-005-UI` is counted once under `BUG-04-101`; its persistence assertion also evidences
+`BUG-04-102`, which is why the executions column sums to 27 while the case count is 9.)*
+
+**No assertion was weakened**, and no `.spec.ts` was modified for this run — **no `fix:` commit**.
+
+## 16.4 Browser coverage — counted honestly
+
+| Surface | Cases | Executions | Counts as browser coverage? |
+|---|---|---|---|
+| **UI-path** (real browser) | 6 — `BVA-001…005-UI` + `EP-006`'s UI half | **18** | ✅ yes |
+| API-path (`APIRequestContext`) | 10 | 30 | ❌ no — no browser is launched |
+
+HW04 §6 asks for each feature to run on 3 browsers with ≥9 browser runs across the suite. FR-04
+contributes **18 genuine browser executions** from its 6 UI cases — comfortably above the bar on
+its own. The 30 API executions are matrix uniformity and are **excluded** from that count.
+
+The timings in `index.html` corroborate the split: UI cases take 1.9–23.5 s, API cases 93–273 ms.
+
+## 16.5 Assertion patterns exercised (HW04 §6 requires ≥3)
+
+| # | Pattern | Where |
+|---|---|---|
+| 1 | **UI state** | dialog capture (`BVA-001…005-UI`), `toBeVisible`/`toHaveValue`, `toBeDisabled` (`EP-006`) |
+| 2 | **Network response** | `page.waitForResponse` on `PUT /api/users/me` (UI cases); `APIRequestContext` status (`BVA-007/008`, `EP-001`, `EP-003`) |
+| 3 | **Persisted round-trip** | independent `GET /api/users/me` read-back in **every** case |
+| 4 | *(bonus)* **Negative/absence** | `not.toBe` for "must not be persisted"; `toEqual([])` for "no rejection dialog" |
+
+## 16.6 Step 3 exit criteria
+
+| Criterion | Status |
+|---|---|
+| ≥12 cases automated | ✅ **16** |
+| Run on 3 browsers | ✅ 48 executions, 18 of them real browser runs |
+| All 3 assertion patterns used | ✅ (4 including the bonus) |
+| Data externalized | ✅ `data/fr-04-profile.json`, zero inline test data |
+| Report carries `Run by` + ISO | ✅ verified on all 5 reports |
+| Frozen before execution | ✅ 4 freeze commits, each preceding its run |
+| Defects filed with evidence | ✅ 3 confirmed, issues #1–#3 with screenshots |
+| Non-automatable cases documented | ✅ none — all 16 automated (§9) |
