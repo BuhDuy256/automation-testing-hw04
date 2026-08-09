@@ -516,8 +516,8 @@ before mass-generating specs.
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
-| 3 FR-04 full pilot (≥12) | **in progress** — **A, B, C all executed**; 16/16 cases automated; combined run pending |
-| 4 Extract skill | [ ] |
+| 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
+| 4 Extract skill | **in progress** |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
@@ -539,7 +539,7 @@ frontend defect (`Profile.jsx:43` regex is the inverse of FR-04 line 65) — fil
 / GitHub issue [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1). No assertion
 was weakened. Report stamp verified 5/5.
 
-**Step 3 progress — 3.1 done, Batch A done (5 of 16 cases automated):**
+**Step 3 detail — 3.1 selection, then Batch A:**
 
 - **3.1 selection (`fb2f23d`):** all 16 HW02 FR-04 cases selected (min 12), each mapped to
   UI / `APIRequestContext`; `page.route()` not needed for FR-04; **none non-automatable**.
@@ -552,7 +552,7 @@ was weakened. Report stamp verified 5/5.
   the real-defect gate classified **test-side**, fixed by `waitUntil: 'domcontentloaded'` +
   `workers: 3`; runs 3–4 identical, zero timeouts. No assertion was weakened.
 
-**`.spec.ts` ledger (after Batch C freeze): 5 commits total — of which 4 are freezes**
+**`.spec.ts` ledger (final for FR-04): 5 commits total — of which 4 are freezes**
 (`e6cd87f` smoke, `8053add` batch A, `5af1749` batch B, `6942a0a` batch C). `9e6a8bb` is an
 optional R commit and is **not** counted toward the §12 floor (§5.2), which rests on freeze
 commits alone. **4 more freezes needed** from FR-08/FR-15 to clear the floor of 8.
@@ -576,31 +576,42 @@ signed admin JWT). No assertion weakened; no `fix:` commit needed.
 **All 16 FR-04 cases are automated AND executed** — smoke 1, Batch A 4, Batch B 5, Batch C 6, each
 run per batch. Three confirmed defects: `BUG-04-101` (#1), `BUG-04-102` (#2), `BUG-04-103` (#3).
 
+**Combined FR-04 run done (output `12c5585`) — Step 3 complete.** All 16 cases executed together
+in one invocation:
+
+| Metric | Value |
+|---|---|
+| Cases automated | **16 / 16** |
+| Executions | **48** (16 × 3 projects) |
+| Passed / failed | **21 / 27** (7 pass / 9 fail per project) |
+| Genuine browser executions | **18** (6 UI-path cases × 3; the 30 API executions launch no browser and are excluded) |
+| Timeouts / flakes | **0** |
+| Confirmed defects | **3** — `BUG-04-101` (#1), `BUG-04-102` (#2), `BUG-04-103` (#3) |
+
+Matched the batch-derived expectation exactly; **no fourth root cause appeared**. No assertion was
+weakened and no `.spec.ts` was touched, so there is **no `fix:` commit**. `html-report/index.html`
+was preserved as `smoke.html` before being overwritten, because issue #1 cites that path.
+
 ## > NEXT ACTION
 
-**Step 3 — the combined FR-04 run.** Every case has run inside its own batch; this executes them
-**together** to produce the single feature-level report. Do **not** start Step 4 / skill
-extraction yet.
+**Step 4 — extract the `test-automation-design` skill.** FR-04 is finished end to end; this
+converts the method that produced it into a reusable, repo-agnostic skill (HW04 §7, 10 pts).
+Do **not** start Step 5 / FR-08 yet.
 
-1. `cd automation && npx playwright test tests/fr-04-profile`
-2. Expected from the batch runs: **16 cases × 3 projects = 48 executions**, **7 pass / 9 fail per
-   project → 21 pass / 27 fail**. No new root cause is expected; anything else is either an
-   interaction effect or flakiness and goes through the real-defect gate.
-3. **Preserve `html-report/index.html` as `smoke.html` first** — it currently holds the Step 2
-   evidence that issue #1 references — then write the combined report to `index.html` and update
-   `html-report/README.md` so the mapping stays truthful.
-4. Complete the FR-04 automation report, cite combined-run evidence in the bug report, and fill
-   the FR-04 row of `out/README.md`.
+1. Extract methodology notes from what actually worked in FR-04 (freeze-before-run, data
+   externalization, oracle traceability, pre-run human review, the real-defect gate, no assertion
+   weakening, batch sizing, honest browser counting, issue-per-root-cause).
+2. Generate `.claude/skills/test-automation-design/SKILL.md` via the `generate-skill` skill — do
+   not hand-write an overfit script.
+3. Validate it reproduces an equivalent workflow against the FR-04 inputs, without overwriting any
+   FR-04 deliverable.
+4. Smell-test for coupling (0 hits), then mirror byte-identically to `.codex/skills/`.
 
 **Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
 oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
 cases are **not** browser-coverage evidence — only the 6 UI-path cases are.
 
-**Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
-oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
-cases are **not** browser-coverage evidence.
-
-**Carry into Step 3:** `getByLabel` does **not** work anywhere on the profile form —
+**Carry into Step 5:** `getByLabel` does **not** work anywhere on the profile form —
 `Profile.jsx` renders `<label>` as a sibling of `<input>` with no `for`/`id`. Use
 `getByPlaceholder` / `getByRole`, and log each as an AI-review finding (§6 graded content).
 
