@@ -11,9 +11,10 @@
 ## How to use this file
 
 - Do steps in order. Do not start a step until the previous step's **Exit Criteria** all pass.
-- Every step ends with a **Git commit**. Steps 2–6 touch `.spec.ts` files and therefore count
-  toward HW04 §12's 8-commit minimum (the 4-day span requirement was removed by the instructor
-  on 2026-08-09).
+- Every step ends with a **Git commit**. The **§5 commit schedule** below defines exactly which
+  commits touch `.spec.ts` and therefore qualify toward HW04 §12's 8-commit minimum (the 4-day
+  span requirement was removed by the instructor on 2026-08-09). Follow it literally — do not
+  batch two scheduled commits into one.
 - A step's **Stop Conditions** override the plan — if one triggers, halt and get a human decision.
 - **FR-04 is the pilot.** FR-08 and FR-15 are produced *through the extracted skill*.
 
@@ -45,7 +46,8 @@
 1. **Data externalization** — test data in `.csv`/`.json`, never inline (§6).
 2. **≥3 distinct assertion patterns** (§6).
 3. **Multi-browser** — 3 browsers × 3 features ≥ 9 runs (§6).
-4. **HTML report evidence** — must visibly carry `Run by: 23127179` + ISO timestamp (§6, §11).
+4. **HTML report evidence** — must **visibly** carry `Run by: 23127179` + ISO timestamp (§6, §11).
+   See §3.6 for the required mechanism; metadata alone is **not** sufficient.
 5. **Test isolation under parallelism** — see §2.2. HW02 executed serially by hand; this risk did not exist.
 
 ### 1.4 Raw-material inventory (input to Steps 3, 5, 6)
@@ -125,6 +127,30 @@ naming the fragility. Every last-resort selector is a documented AI-review findi
 **JSON** by default (nested expected values — status codes, field maps — flatten badly into CSV).
 Reversible: the spec permits either. One feature may use CSV to demonstrate both if desired.
 
+### 3.6 Run-by evidence in the HTML report (§6 + §11, non-negotiable)
+HW04 §11 lists the HTML report as **anti-cheat evidence a TA verifies by eye**. A value buried in
+report metadata can be missed; the report **title** cannot. Three layers, all required:
+
+| # | Layer | Mechanism | Visible where |
+|---|---|---|---|
+| 1 | **Reporter title** (**primary**) | `['html', { title: \`EShop Automation — Run by: 23127179 — ${ISO}\` }]` | Browser tab **and** the report's on-page header |
+| 2 | Config metadata | `metadata: { 'Run by': '23127179 @ <ISO>' }` | Report metadata panel + JSON reporter |
+| 3 | Per-test annotation | `runBy` auto-fixture in `fixtures/base.ts` | Every individual test's detail view |
+
+Mechanism note (verified 2026-08-09 against Playwright 1.62.1): the reporter resolves
+`process.env.PLAYWRIGHT_HTML_TITLE || options.title`. Setting the env var from inside
+`playwright.config.ts` was tried and did **not** change the rendered title; the `options.title`
+form is the reliable path. The ISO timestamp is generated at config load, so it reflects the run.
+
+**Verification (must actually be run, not assumed):** after a run, grep the generated report for
+the stamp and confirm a non-default `<title>`:
+```bash
+grep -o "<title>[^<]*</title>" automation/playwright-report/index.html
+# must contain "Run by: 23127179" — NOT the default "Playwright Test Report"
+```
+Layer 1 is the gating requirement. Layers 2–3 are defence in depth if a reporter override strips
+the title.
+
 ---
 
 ## 4. Folder structure (create minimally, per step — no speculative templates)
@@ -154,12 +180,60 @@ out/reports/FR-0X-*/              # DELIVERABLES
 
 ---
 
+## 5. Commit schedule — guaranteeing ≥8 qualifying commits
+
+**Qualifying commit** = a commit whose diff **changes at least one `.spec.ts` file** (HW04 §12).
+Commits touching only `README`/`report.md`/HTML reports/config/`SKILL.md` do **not** count.
+
+### 5.1 The three-commit-per-feature rule
+Each feature contributes **exactly three** qualifying commits, in this fixed order:
+
+| # | Commit | Trigger | Why it qualifies |
+|---|---|---|---|
+| **F** | `freeze: <feature> specs batch A` | Specs written, **before first run** | Creates `.spec.ts` — and *is* the freeze-before-execute proof (§2 rule 2) |
+| **F2** | `freeze: <feature> specs batch B` | Remaining specs written, before their first run | Creates more `.spec.ts` |
+| **R** | `fix: <feature> post-run corrections` | After the 3-browser run, once the real-defect gate has been passed | Edits `.spec.ts` |
+
+**The R commit is where the discipline bites.** It may only contain corrections to *test* defects
+(bad selector, missing wait, wrong precondition). If a failing assertion turned out to expose a
+**real product defect**, the assertion stays red and the finding goes to the bug report — it is
+**never** "fixed" into green. If an R commit would contain zero legitimate test-side fixes, skip
+it and record why; do not manufacture a commit.
+
+### 5.2 Ledger
+
+| Step | Qualifying commits | Running total |
+|---|---|---|
+| Step 2 — FR-04 smoke | 1 (`freeze: FR-04 smoke spec`) | **1** |
+| Step 3 — FR-04 full | 3 (F, F2, R) | **4** |
+| Step 4 — extract skill | **0 — does not qualify** (touches `SKILL.md` only) | **4** |
+| Step 5 — FR-08 | 3 (F, F2, R) | **7** |
+| Step 6 — FR-15 | 3 (F, F2, R) | **10** |
+| Step 7 — globals | 0 (docs/reports only) | **10** |
+
+**Floor: 10 qualifying commits — margin of 2 over the §12 minimum of 8.** Step 4 is explicitly
+called out as non-qualifying so it is never miscounted as one of the eight.
+
+### 5.3 Separation rule
+Never mix a `.spec.ts` change and a report/doc change in the same commit. Keeping them separate
+keeps `git log -- '*.spec.ts'` a clean, auditable list of exactly the qualifying commits.
+
+**Verification before submission (Step 7.4):**
+```bash
+git log --oneline -- '*.spec.ts' | wc -l    # must be >= 8
+```
+
+---
+
 ## Step 1 — Freeze the automation architecture
 
 **Goal:** decide §3's five questions once, with evidence, before any test exists.
 
 **Tasks**
-- 1.1 Write `docs/implementation-plan/automation-architecture.md` recording §3.1–3.5 as frozen
+- 1.0 Apply §3.6 layer 1: add `title` to the HTML reporter options in `playwright.config.ts`
+  (`Run by: 23127179` + ISO). Verify with the §3.6 `grep` — the rendered `<title>` must no longer
+  be the default `Playwright Test Report`.
+- 1.1 Write `docs/implementation-plan/automation-architecture.md` recording §3.1–3.6 as frozen
   decisions with rationale.
 - 1.2 Implement the worker-scoped isolated-user fixture in `automation/fixtures/base.ts`
   (register + login via API, expose `user` + `token`).
@@ -168,8 +242,9 @@ out/reports/FR-0X-*/              # DELIVERABLES
 - 1.4 Prove isolation: run one trivial test that mutates its own user's profile, on all 3
   browsers in parallel, and confirm no cross-worker interference.
 
-**Exit criteria:** architecture doc written; fixture yields a distinct user per worker; the
-parallel mutation test passes 3/3 with no flake across 2 consecutive runs.
+**Exit criteria:** architecture doc written; **§3.6 grep passes** (report `<title>` carries the
+Run-by stamp); fixture yields a distinct user per worker; the parallel mutation test passes 3/3
+with no flake across 2 consecutive runs.
 **Risks eliminated:** phantom cross-worker failures; dependence on seeded state; ad-hoc selector drift.
 **Commit:** `Step 1: freeze automation architecture + isolated-user fixture`.
 **Stop condition:** if isolation cannot be achieved per-worker → fall back to `workers: 1` and
@@ -189,14 +264,16 @@ Mirrors HW02's Step 3 (pipeline validation, not feature coverage).
   prompt + output to `[AI-02]`.
 - 2.3 Human review: fix selectors/waits/assertions. Record every fix — this is §6 graded content.
 - 2.4 **Commit the spec before running it** (freeze proof).
-- 2.5 Run on all 3 browsers; confirm the HTML report renders and carries `Run by: 23127179` + ISO
-  timestamp.
+- 2.5 Run on all 3 browsers; confirm the HTML report renders and carries all three §3.6 layers —
+  **run the §3.6 `grep` on the generated `index.html`**, do not assume the title took effect.
 
 **Exit criteria:** 3/3 browser runs; data is external; ≥1 assertion pattern demonstrated; HTML
-report shows the Run-by stamp; audit rows appended; git shows spec committed *before* results.
+report `<title>` contains `Run by: 23127179` + ISO (§3.6 grep passes); audit rows appended; git
+shows spec committed *before* results.
 **Risks eliminated:** "the config works but a real test doesn't"; report-evidence uncertainty;
 data-externalization mechanics.
-**Commit:** `Step 2: FR-04 vertical smoke (1 case, 3 browsers)`.
+**Commit (§5 ledger — 1 qualifying):** `freeze: FR-04 smoke spec` (before 2.5's run).
+Report/config changes go in a separate, non-qualifying commit.
 **Stop condition:** the Run-by stamp cannot be made visible in the HTML report → resolve before
 scaling (it is an anti-cheat requirement under §11, non-negotiable).
 
@@ -223,7 +300,9 @@ the skill is extracted from.**
 
 **Exit criteria:** ≥12 cases × 3 browsers green-or-explained; all 3 assertion patterns used;
 report.md complete; defects filed; audit rows for every AI artifact.
-**Commit:** per batch — `Step 3.x FR-04 <batch>`.
+**Commit (§5 ledger — 3 qualifying):** `freeze: FR-04 specs batch A` · `freeze: FR-04 specs
+batch B` · `fix: FR-04 post-run corrections`. The report.md (3.8) and the copied HTML report
+(3.6) go in their own separate, non-qualifying commits (§5.3).
 **Stop conditions:** a failing assertion is ambiguous (spec silent) → log an assumption, get a
 human decision, do not weaken the assertion to force green. Suspected state pollution → verify
 isolation before filing a bug.
@@ -245,7 +324,8 @@ isolation before filing a bug.
 
 **Exit criteria:** reproduces FR-04 equivalently; smell-test 0 hits; format matches
 `generate-skill`; Claude/Codex copies byte-identical.
-**Commit:** `Step 4: extract test-automation-design skill`.
+**Commit (§5 ledger — 0 qualifying):** `Step 4: extract test-automation-design skill`. This step
+touches `SKILL.md` only and **does not count** toward §12's 8-commit minimum.
 **Stop condition:** the skill cannot reproduce FR-04 without embedding HW04 specifics → fix the
 notes and regenerate; never hand-patch the generated file.
 
@@ -257,9 +337,50 @@ notes and regenerate; never hand-patch the generated file.
 cases exist.
 
 **Tasks**
-- 5.1 **Design ≥8 new cases** to reach ≥12. Candidate areas from the FR-08 spec: empty-cart
-  checkout, missing/invalid shipping address, quantity/stock edges, coupon interaction, order
-  status after checkout, auth-state transitions. Expected values from `eshop-sut/README.md` only.
+- 5.1 **Design ≥8 new cases to reach ≥12 — derived only from FR-08's own requirements.**
+
+  **Scope guard.** FR-08 in `eshop-sut/README.md` states exactly five requirements. Every counted
+  case must trace to one of them:
+
+  | Ref | FR-08 requirement (README) | Existing HW02 coverage |
+  |---|---|---|
+  | **R1** | Only a **logged-in** user can check out | `TC-08-EP-002`, `TC-08-EP-003` |
+  | **R2** | Total is **computed automatically from the cart** and not directly user-editable | **none** |
+  | **R3** | The UI displays the **full list of ordered products** | **none** |
+  | **R4** | Backend **recomputes** the total; a client-sent `total_amount` is not accepted | `TC-08-001` |
+  | **R5** | After a successful checkout, the **cart is cleared** | `TC-08-EP-004` |
+
+  **Out of scope — do not design counted cases for these** (they belong to other features and
+  would be graded against the wrong FR):
+  - **Coupon / discount code application → FR-09.** FR-09 owns the 5 conditions C1–C5 and the
+    discount formula. FR-08 is the checkout mechanism only.
+  - **Cart quantity `+/-`, line items, stock, empty-cart illustration → FR-07.**
+  - **Order status / state transitions after checkout → FR-10.**
+  - **Shipping-address validation rules** are not specified by FR-08. Address may appear in a case
+    only as part of checkout **submission / display / persistence** behaviour, never as a
+    validation-rule case of its own.
+
+  **Candidate new cases (≥8 required; R2 and R3 have zero existing coverage and take priority):**
+
+  | # | Ref | Case |
+  |---|---|---|
+  | N1 | R1 | Not-logged-in user navigating directly to the checkout URL is blocked/redirected (UI-level; complements the API-level EP-002/003) |
+  | N2 | R1 | Session ends / token cleared while on the checkout page → submission is refused |
+  | N3 | R2 | Displayed total equals `Σ(unit price × quantity)` of the cart contents |
+  | N4 | R2 | The total is not directly user-editable in the UI (no editable input bound to it) |
+  | N5 | R2 | Cart contents differing from a prior visit produce a correspondingly recomputed total (no stale total) |
+  | N6 | R3 | Every product in the cart appears on the checkout page with its name, quantity and line amount |
+  | N7 | R3 | A multi-product cart displays **all** distinct products — none omitted or truncated |
+  | N8 | R4 | Client-forged `total_amount` **higher** than the true total is not accepted (`TC-08-001` covers the lower-value direction) |
+  | N9 | R4 | `total_amount` omitted entirely from the request → backend still persists the correct computed total |
+  | N10 | R5 | After a successful checkout, returning to the cart shows it empty (UI-level assertion of the cleared state) |
+
+  **Setup vs counted case.** Seeding a cart before checkout necessarily exercises **FR-07**. That
+  setup is performed via a **helper/fixture** and is explicitly **non-counting** — it is a
+  precondition, not an FR-08 case, and no assertion in it is reported as FR-08 coverage. Same rule
+  for any login helper (FR-02). Only assertions on R1–R5 count toward the ≥12.
+
+  Expected values come from `eshop-sut/README.md` FR-08 only.
 - 5.2 Freeze + commit the new case designs before automating them.
 - 5.3 Apply `test-automation-design` to all ≥12 cases. Audit.
 - 5.4 Human review + fixes; commit specs before running.
@@ -267,10 +388,13 @@ cases exist.
 - 5.6 Write `out/reports/FR-08-checkout/automation/report.md`, including **how the skill performed
   vs the by-hand pilot** (evidence for §7 and the AI critique).
 
-**Exit criteria:** ≥12 cases × 3 browsers; report.md complete; skill-vs-hand comparison recorded.
-**Commit:** per batch.
-**Stop condition:** the skill produces materially worse output than Step 3 → record the gap and
-fix the *skill*, not just the output (the skill is the graded artifact).
+**Exit criteria:** ≥12 cases × 3 browsers, **each tracing to R1–R5**; R2 and R3 both covered;
+report.md complete; skill-vs-hand comparison recorded.
+**Commit (§5 ledger — 3 qualifying):** `freeze: FR-08 specs batch A` · `freeze: FR-08 specs
+batch B` · `fix: FR-08 post-run corrections`. Report/HTML-report commits stay separate (§5.3).
+**Stop conditions:** the skill produces materially worse output than Step 3 → record the gap and
+fix the *skill*, not just the output (the skill is the graded artifact). A candidate case cannot
+be traced to R1–R5 → it belongs to FR-07/FR-09/FR-10; drop it or demote it to non-counting setup.
 
 ---
 
@@ -284,7 +408,8 @@ fix the *skill*, not just the output (the skill is the graded artifact).
 - 6.2–6.5 As Step 5 (apply skill → review → freeze → run → report).
 
 **Exit criteria:** ≥12 cases × 3 browsers; report.md complete.
-**Commit:** per batch.
+**Commit (§5 ledger — 3 qualifying):** `freeze: FR-15 specs batch A` · `freeze: FR-15 specs
+batch B` · `fix: FR-15 post-run corrections`. Report/HTML-report commits stay separate (§5.3).
 **Stop condition:** admin-origin (`:5174`) auth/CORS behaves differently than assumed → re-verify
 before mass-generating specs.
 
@@ -297,7 +422,8 @@ before mass-generating specs.
   passed/failed, browser runs, bugs, video link).
 - 7.2 `out/ai-critique.md` — 200–300 words, built from the logged corrections in Steps 2–6.
 - 7.3 Finalize `[AI-02]` §4 verdict counts and §5 conclusion.
-- 7.4 `git log --oneline > out/git_commit_log.txt`; verify ≥8 commits touching `.spec.ts`.
+- 7.4 `git log --oneline > out/git_commit_log.txt`; verify the §5 ledger held:
+  `git log --oneline -- '*.spec.ts' | wc -l` must be **≥ 8** (planned floor: 10).
 - 7.5 Record the demo video (§8 below).
 - 7.6 Mirror `docs/implementation-plan/*` → `out/docs/` (HW02 precedent).
 - 7.7 Markdown → PDF for the main reports, AI critique, AI audit (**no `pandoc` on this machine —
