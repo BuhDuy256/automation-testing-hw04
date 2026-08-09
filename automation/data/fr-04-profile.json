@@ -1,0 +1,33 @@
+{
+  "feature": "FR-04",
+  "featureTitle": "Quản lý hồ sơ cá nhân (Personal Profile Management)",
+  "oracle": {
+    "source": "eshop-sut/README.md — FR-04, line 65",
+    "text": "Số điện thoại hợp lệ: bắt đầu bằng số `0`, từ 10–11 chữ số.",
+    "translation": "A valid phone number starts with 0 and is 10-11 digits long."
+  },
+  "note": "Expected values are derived ONLY from the oracle above, never from observed SUT behaviour (plan §2 rule 1). Do not edit an expected value to make a test pass.",
+  "cases": [
+    {
+      "id": "TC-04-BVA-002-UI",
+      "hw02Ref": "TC-04-BVA-002",
+      "technique": "BVA",
+      "boundaryPoint": "min (10 digits, leading 0)",
+      "title": "A spec-valid phone (10 digits, leading 0) must be accepted by the profile form",
+      "path": "UI",
+      "input": {
+        "phone": "0912345678",
+        "shippingAddress": "12 Nguyen Van Cu, Q5, TP.HCM"
+      },
+      "expected": {
+        "specClass": "valid",
+        "rejectedByUi": false,
+        "putRequestIssued": true,
+        "putStatus": 200,
+        "persistedPhone": "0912345678"
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (leading 0, 10-11 digits)",
+      "status": "frozen"
+    }
+  ]
+}
