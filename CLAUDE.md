@@ -35,8 +35,10 @@
 | `out/README.md` | Self-assessment table + test summary report |
 | `out/ai-critique.md` | AI Critique (200–300 words) |
 | `out/git_commit_log.txt` | Git commit log — populate with `git log --oneline` before submission |
-| `out/ai-declaration/[AI-02]...md` | AI Audit Report — log every AI interaction |
-| `out/reports/FR-0X-*/` | Copies of the multi-browser HTML reports + bug reports, mirrored for submission |
+| `out/ai-declaration/[AI-02]...md` | AI Audit Report — filled 6-section template already in place, log every AI interaction as a new artifact row |
+| `out/reports/FR-0X-*/automation/report.md` | **Main report** (§14) for that feature: script-generation log, human review/fix notes ("what AI got wrong and why"), gap analysis. One per feature, decided 2026-08-09. |
+| `out/reports/FR-0X-*/html-report/` | Copy of that feature's multi-browser Playwright HTML report, mirrored for submission |
+| `out/reports/FR-0X-*/bug-reports/` | Bug reports for genuine defects found, with GitHub Issue links + screenshots |
 
 ### Automation project (`automation/`)
 | Path | Purpose |
@@ -54,15 +56,14 @@ Each feature needs ≥12 automated test cases, ≥3 distinct assertion patterns,
 ## Running the System
 
 ```bash
-# Backend
-cd eshop-sut/backend && npm install && node database.js && node server.js   # http://localhost:3000
-
-# Frontend Web (customer-facing — FR-04, FR-08)
-cd eshop-sut/frontend-web && npm install && npm run dev                     # http://localhost:5173
-
-# Frontend Admin (FR-15)
-cd eshop-sut/frontend-admin && npm install && npm run dev                   # http://localhost:5174
+./run.sh start    # boots backend :3000 + frontend-web :5173 + frontend-admin :5174, installs deps if missing
+./run.sh status
+./run.sh stop
 ```
+
+**Note:** `eshop-sut/backend/database.js` re-seeds the whole DB unconditionally on every backend
+start (no `require.main` guard on `initDatabase()`) — restarting the backend wipes any data
+created through the UI in a previous run (registered users, orders, admin-added products).
 
 **Test Accounts:**
 - Admin: `admin@eshop.com` / `Admin123!`
