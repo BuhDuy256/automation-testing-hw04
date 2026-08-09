@@ -621,13 +621,17 @@ feature it was not derived from — which is also the real test of whether the e
 
 **Ledger:** 4 freezes so far; **4 more needed** from FR-08/FR-15 to clear the §12 floor of 8.
 
-**Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
-oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
-cases are **not** browser-coverage evidence — only the 6 UI-path cases are.
+**Do not carry FR-04's concrete findings into Step 5.** Fixture scope and selector strategy are
+**per-feature** conclusions, not project-wide constants — FR-04's were derived from the profile
+form's markup and from tests that mutate one user's own record. Checkout mutates cart and order
+state across two surfaces and has a different concurrency profile, so re-derive both from FR-08's
+own UI and API rather than inheriting the profile answers. The skill's Phase 3.1 (scope from *this*
+batch's mutation profile) and Phase 3.5 (selector order, log each compromise) are the method to
+apply; FR-04's specific choices are not the input.
 
-**Carry into Step 5:** `getByLabel` does **not** work anywhere on the profile form —
-`Profile.jsx` renders `<label>` as a sibling of `<input>` with no `for`/`id`. Use
-`getByPlaceholder` / `getByRole`, and log each as an AI-review finding (§6 graded content).
+What *is* method rather than feature-specific, and does carry: expected values come only from the
+spec or a recorded assumption; where the spec prescribes no refusal mechanism the oracle stays an
+outcome, not a status code; and non-interface cases are never counted as browser coverage.
 
 **Known risk to carry:** FR-08 is 8 cases short of the minimum (§1.4). Do not discover this at
 Step 5 — the design work is real and is budgeted inside Step 5.1.
