@@ -4,9 +4,9 @@
 > Found by: Nguyen Bao Duy (23127179). SUT: EShop `frontend-web`.
 > Numbering starts at `BUG-04-101` to avoid colliding with HW02's `BUG-04-001..004`.
 
-| ID | Title | Severity | Priority | Status |
-|---|---|---|---|---|
-| `BUG-04-101` | Profile form rejects every spec-valid phone number (client-side regex is the inverse of the spec) | **High** | High | Confirmed |
+| ID | Title | Severity | Priority | Status | GitHub Issue |
+|---|---|---|---|---|---|
+| `BUG-04-101` | Profile form rejects every spec-valid phone number (client-side regex is the inverse of the spec) | **High** | High | Confirmed | [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1) |
 
 ---
 
@@ -118,4 +118,10 @@ if (!/^0[0-9]{9,10}$/.test(phone)) {
 
 ### GitHub issue
 
-_Not yet filed — pending confirmation before posting publicly._
+**[#1 — BUG-04-101: Profile form rejects every spec-valid phone number (client-side regex is the
+inverse of FR-04)](https://github.com/BuhDuy256/automation-testing-hw04/issues/1)**
+· filed 2026-08-09 · state: OPEN
+
+The issue embeds the evidence screenshot inline (served from this repo at
+`out/reports/FR-04-personal-profile/bug-reports/evidence/BUG-04-101-profile-form-chromium.png`)
+and links the frozen spec, this report, and the multi-browser HTML report.

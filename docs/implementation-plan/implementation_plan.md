@@ -515,7 +515,7 @@ before mass-generating specs.
 | Step | State |
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
-| 2 FR-04 vertical smoke | [ ] |
+| 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [ ] |
 | 4 Extract skill | [ ] |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
@@ -530,24 +530,35 @@ projects + Run-by metadata, browsers installed, SUT health-checked, feature sele
 **Delivered by Step 1 (`569ac80`):** the six decisions frozen in `automation-architecture.md`;
 reporter `title` + metadata + per-test annotation (§3.6 layers 1–3); worker-scoped `api` /
 `isolatedUser` fixtures and `utils/api.ts`; `scripts/verify-report-stamp.js`. Isolation proven
-3 browsers × 2 runs (6/6, distinct ids, no leak). `.spec.ts` ledger still **0** — by design.
+3 browsers × 2 runs (6/6, distinct ids, no leak).
+
+**Delivered by Step 2 (freeze `e6cd87f`, output `64bff25`):** `TC-04-BVA-002-UI` automated from
+HW02's `TC-04-BVA-002`, data externalized to `data/fr-04-profile.json`, 3 assertion patterns,
+`utils/session.ts`. Ran 3/3 browsers → **all failed**; real-defect gate confirmed a genuine
+frontend defect (`Profile.jsx:43` regex is the inverse of FR-04 line 65) — filed as `BUG-04-101`
+/ GitHub issue [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1). No assertion
+was weakened. Report stamp verified 5/5. **`.spec.ts` ledger: 1 qualifying commit.**
 
 ## > NEXT ACTION
 
-**Step 2 — FR-04 vertical smoke.** One FR-04 case driven end to end so every §6 requirement is
-exercised at once before scaling to 36+ cases. In order:
+**Step 3 — FR-04 full pilot (≥12 cases), by hand, no skill.** This is the milestone the Step 4
+skill is extracted from. In order:
 
-1. **2.1** — pick one FR-04 HW02 case with a certain outcome; externalize its data to
-   `automation/data/fr-04-profile.json` (no inline test data).
-2. **2.2** — drive the AI step-by-step to generate the spec; log the verbatim prompt + output
-   to `[AI-02]`.
-3. **2.3** — human review: fragile selectors, wrong oracle, weak assertions, flaky waits.
-   Record every fix (§6 graded content).
-4. **2.4** — **commit the spec before running it** — `freeze: FR-04 smoke spec`. This is the
-   **first qualifying §12 commit**.
-5. **2.5** — run all 3 browsers, then verify the report stamp with
-   `cd automation && npm run verify:report` (**not** a grep on the static `<title>` — see the
-   correction note in §3.6).
+1. **3.1** — select ≥12 of FR-04's 16 HW02 cases; map each to UI / `page.route()` /
+   `APIRequestContext` (§3.1); list any non-automatable case with its reason.
+2. **3.2** — extend `data/fr-04-profile.json` with every selected case (no inline data).
+3. **3.3–3.5** — generate specs in **three batches**, human-reviewing each, and **commit each
+   batch before running it**: `freeze: FR-04 specs batch A` · `batch B` · `batch C`
+   (3 qualifying commits, §5.1).
+4. **3.6** — run all 3 browsers; copy the HTML report to `out/reports/FR-04-personal-profile/
+   html-report/`; verify with `npm run verify:report`.
+5. **3.7** — real-defect gate on each failure; confirmed defects → bug report + GitHub issue +
+   screenshot.
+6. **3.8** — complete `out/reports/FR-04-personal-profile/automation/report.md`.
+
+**Carry into Step 3:** `getByLabel` does **not** work anywhere on the profile form —
+`Profile.jsx` renders `<label>` as a sibling of `<input>` with no `for`/`id`. Use
+`getByPlaceholder` / `getByRole`, and log each as an AI-review finding (§6 graded content).
 
 **Known risk to carry:** FR-08 is 8 cases short of the minimum (§1.4). Do not discover this at
 Step 5 — the design work is real and is budgeted inside Step 5.1.
