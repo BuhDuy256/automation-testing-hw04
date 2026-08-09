@@ -520,3 +520,107 @@ is a **new defect requiring its own bug report and issue**, not a manifestation 
 one — that call will be made through the real-defect gate after the run, not now.
 
 **No assertion was relaxed** for the known `BUG-04-101` or `BUG-04-102`.
+
+## 15. Batch C — execution results
+
+Spec frozen at `6942a0a` before any run; single invocation, no retries, no fixes needed.
+
+*(The SUT had stopped between sessions and was restarted via `./run.sh start` before the run,
+which re-seeds the DB. Irrelevant here — every case registers its own account, which is exactly
+why the isolation decision in architecture §3.2 was made.)*
+
+### 15.1 Results
+
+| Case | Assertion target | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|
+| `TC-04-EP-001-API` | valid update of all 3 fields | ✅ | ✅ | ✅ | PASS |
+| `TC-04-EP-002-API` | empty `name` not persisted (A2) | ❌ | ❌ | ❌ | FAIL → `BUG-04-102` (widened) |
+| `TC-04-EP-003-API` | empty `shipping_address` stored (A3) | ✅ | ✅ | ✅ | PASS |
+| `TC-04-EP-004-API` | spec-invalid phone not persisted | ❌ | ❌ | ❌ | FAIL → `BUG-04-102` |
+| `TC-04-EP-005-API` | client `role` has no effect | ❌ | ❌ | ❌ | FAIL → **`BUG-04-103` (new, Critical)** |
+| `TC-04-EP-006-UI-API` | email immutable, UI + API | ✅ | ✅ | ✅ | PASS |
+
+**9 passed / 9 failed** across 18 executions, 11.8s. All 9 failures are assertion failures —
+**zero timeouts**.
+
+### 15.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `EP-001` | pass | pass | ✅ |
+| `EP-002` | fail | fail | ✅ |
+| `EP-003` | pass | pass | ✅ |
+| `EP-004` | fail (`BUG-04-102`) | fail (`BUG-04-102`) | ✅ |
+| `EP-005` | fail — **new** privilege escalation | fail — confirmed, filed as `BUG-04-103` | ✅ |
+| `EP-006` | pass, both surfaces | pass, both surfaces | ✅ |
+
+**6/6 correct**, tally exactly as predicted (3 pass / 3 fail per project; 9 / 9 overall).
+
+The predictions were derived by *reading* `server.js` and `Profile.jsx` — legitimate for locating
+what to test (architecture §2.1), never as the oracle. Every expected value still came from
+README/A2/A3 via the data file. Writing them down first is what made §15.3's classification a
+check rather than a rationalisation.
+
+### 15.3 Real-defect gate
+
+**`EP-004` → `BUG-04-102`, no new issue.** Identical input and assertion to `TC-04-BVA-010-API`,
+converging by design (finding 19). Adds no independent evidence; issue #2 already carries it.
+
+**`EP-002` → `BUG-04-102`, widened rather than duplicated.** `name: ""` was persisted verbatim.
+Same handler, same absent-validation fault, different field — one guard clause fixes both, so the
+defect is "no input validation", not "no *phone* validation". Recorded with an explicit
+**evidence-strength caveat**: this rests on accepted assumption **A2** (`confidence: MED`), not on
+a quoted requirement, unlike the phone findings which cite README line 65 directly. The two are
+not equally grounded and the report says so.
+
+**`EP-005` → `BUG-04-103`, NEW and Critical.** A client-supplied `role: "admin"` changed the
+stored role from `user` to `admin`.
+
+- **Distinct root cause:** `BUG-04-102` is missing *format* validation of a user's own data;
+  this is an *authorisation boundary being client-writable*. Different fault class, different
+  blast radius, different fix (stop reading `role` from the body at all).
+- **Directly spec-grounded**, needing no assumption — README line 67 *and* SEC-06 (line 283) both
+  state the rule explicitly.
+- **Exploitability verified end to end**, outside Playwright:
+
+  ```
+  1. role in ORIGINAL token:           user
+  2. stored role after self-update:    admin
+  3. role in NEW token after re-login: admin
+  ```
+
+  Step 3 is what makes it Critical: the escalated role is minted into a **legitimately signed
+  JWT**, which README line 179 / SEC-03 designate as the admin gate.
+- **Test correctness:** the case asserts a hard precondition that the account starts as
+  `role: "user"` (review finding 22), so a fixture handing over an already-elevated account
+  cannot be mistaken for the defect. That precondition passed.
+
+**Verdict: CONFIRMED PRODUCT DEFECT.** No assertion was weakened.
+
+### 15.4 What the passes establish
+
+`EP-001`, `EP-003` and `EP-006` passing is not filler — it constrains the diagnosis:
+
+- **`EP-001`**: the write path stores all three manageable fields correctly. The endpoint is not
+  broken; it is *unguarded*. That is why every fix above is a guard clause, not a rewrite.
+- **`EP-003`**: an empty `shipping_address` is accepted and stored as `""`, not coerced to `null`
+  — matching accepted assumption A3 exactly.
+- **`EP-006`**: **both** surfaces hold. The form renders `email` as `disabled` (spec line 66's
+  *"qua giao diện"*), **and** a forged `email` in the payload is ignored because the handler never
+  destructures it. Worth stating plainly: the SUT *does* correctly protect one immutable
+  field — which makes `role` being writable a specific omission rather than a blanket absence of
+  field protection.
+
+### 15.5 Browser coverage
+
+Five of six cases are API-path and launch no browser; only `EP-006`'s UI half drives a real
+browser (visible in the timings — 2.2–5.2s for `EP-006` versus 50–400ms for the rest). The other
+15 executions are matrix uniformity and are **excluded** from the HW04 §6 browser-run count, which
+is carried by the Step 2 smoke and Batch A.
+
+### 15.6 Review findings from this run
+
+**None.** The spec ran correctly on first invocation; no test-side defect surfaced and no
+`.spec.ts` change was required, so there is **no `fix:` commit for Batch C**. The pre-freeze
+review (§14) caught what mattered — notably finding 22's precondition, which is precisely what
+lets `EP-005`'s failure be attributed to the SUT with confidence.

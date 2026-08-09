@@ -12,6 +12,7 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-04-person
 | `index.html` | Step 2 — vertical smoke | `TC-04-BVA-002-UI` × 3 browsers | 0 passed / 3 failed |
 | `batch-a.html` | Step 3 Batch A | `TC-04-BVA-001/003/004/005-UI` × 3 browsers | 6 passed / 6 failed |
 | `batch-b.html` | Step 3 Batch B | `TC-04-BVA-006…010-API` × 3 projects | 6 passed / 9 failed |
+| `batch-c.html` | Step 3 Batch C | `TC-04-EP-001…006` × 3 projects | 9 passed / 9 failed |
 
 ## Why `index.html` is still the Step 2 report
 

@@ -7,7 +7,8 @@
 | ID | Title | Severity | Priority | Status | GitHub Issue |
 |---|---|---|---|---|---|
 | `BUG-04-101` | Profile form rejects every spec-valid phone number, and accepts a spec-invalid one (client-side regex is the inverse of the spec) | **High** | High | Confirmed | [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1) |
-| `BUG-04-102` | `PUT /api/users/me` performs no phone validation — a spec-invalid phone is persisted | **High** | High | Confirmed | [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) |
+| `BUG-04-102` | `PUT /api/users/me` performs no input validation — spec-invalid `phone`, and an empty `name`, are persisted | **High** | High | Confirmed | [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) |
+| `BUG-04-103` | **Privilege escalation** — `PUT /api/users/me` lets a user set their own `role`, and re-login mints a genuine admin JWT | **Critical** | Critical | Confirmed | [#3](https://github.com/BuhDuy256/automation-testing-hw04/issues/3) |
 
 ---
 
@@ -278,3 +279,140 @@ Evidence: Batch B report `../html-report/batch-b.html`; spec frozen at `5af1749`
 
 **[#2 — BUG-04-102](https://github.com/BuhDuy256/automation-testing-hw04/issues/2)** · filed
 2026-08-09 · state: OPEN · updated with the Batch B evidence above.
+
+### Additional evidence from Step 3 Batch C (2026-08-09) — the gap is not phone-specific
+
+`TC-04-EP-002-API` sent `name: ""` and the value was persisted verbatim (3/3 projects):
+
+```
+Error: name ended up persisted as "", which accepted assumption A2 defines as invalid
+expect(received).not.toBe(expected)   Expected: not ""
+```
+
+Same handler, same absent-validation fault, **different field** — so this is recorded here rather
+than as a new bug. One guard clause in `server.js:118-135` fixes both. The defect is therefore
+"no input validation", not "no *phone* validation"; the title above has been widened accordingly.
+
+**Evidence-strength note, stated plainly:** the phone findings rest on a **direct spec line**
+(README FR-04 line 65). The empty-`name` finding rests on **accepted assumption A2**
+(`{source: spec, confidence: MED, status: accepted}`) — HW02 reasoned that a profile cannot have a
+blank name, since `name` is mandatory at registration (FR-01) with no stated exception. That is a
+defensible but *weaker* basis than a quoted requirement, and it is flagged here so the two are not
+treated as equally grounded.
+
+`TC-04-EP-004-API` also failed 3/3 with the same phone finding; it **converges by design** with
+`TC-04-BVA-010-API` (same input, same assertion — see the automation report §14 finding 19) and
+adds no independent evidence.
+
+---
+
+## BUG-04-103 — Privilege escalation: a user can make themselves admin via `PUT /api/users/me`
+
+| Field | Value |
+|---|---|
+| **Feature** | FR-04 Personal Profile Management |
+| **Component** | `backend/server.js:124-127` (`PUT /api/users/me`) |
+| **Found by** | `TC-04-EP-005-API` (automated, Playwright) |
+| **HW02 lineage** | `TC-04-EP-005` |
+| **Severity** | **Critical** — complete vertical privilege escalation, self-service, no admin involvement |
+| **Priority** | Critical |
+| **Reproducible** | 3/3 projects, 100%, and directly via API |
+
+### Why this is a distinct defect, not part of `BUG-04-102`
+
+`BUG-04-102` is *missing validation of a user's own data* — bad data, one user's row.
+This is *an authorisation boundary being writable by the client* — a security control, not a
+format check. Different fault class, different severity, different fix:
+
+| | `BUG-04-102` | `BUG-04-103` |
+|---|---|---|
+| Fault | no format validation | a **privilege field is client-writable** |
+| Blast radius | the caller's own profile data | **the whole admin surface** |
+| Fix | add a validation guard | **stop accepting `role` from the request body at all** |
+| Basis | README line 65 / assumption A2 | README line 67 **and SEC-06 (line 283)** |
+
+### Expected (oracle)
+
+- `README.md` line 67: *"Người dùng chỉ có thể cập nhật hồ sơ của chính mình; **không thể tự thay
+  đổi thuộc tính `role`**."*
+- `README.md` line 283, **SEC-06**: *"API cập nhật hồ sơ **không được cho phép thay đổi trường
+  `role` từ client**."*
+
+Both state the rule directly — this finding needs no assumption.
+
+### Actual
+
+```
+Error: a client-supplied role="admin" changed the stored role. README line 67 says a user
+       cannot change their own role, and SEC-06 (line 283) says the profile update API must
+       not allow the client to change it
+expect(received).toBe(expected)
+Expected: "user"   Received: "admin"
+```
+
+### Exploitability — verified end to end, outside Playwright
+
+The stored value is not merely cosmetic. A fresh account escalates itself and then obtains a
+**genuine admin JWT**:
+
+```
+1. role in ORIGINAL token:          user
+2. stored role after self-update:   admin     <- PUT /api/users/me {"role":"admin"}
+3. role in NEW token after re-login: admin    <- the server signs role=admin into the JWT
+```
+
+Step 3 is what makes this Critical rather than a data-integrity bug: the escalated role is minted
+into a legitimately signed token, so any component that trusts `role` from the JWT — which
+`README.md` line 179 and SEC-03 specify as the admin gate — will treat the account as an
+administrator.
+
+### Steps to reproduce
+
+1. Register any ordinary account and log in.
+2. `PUT /api/users/me` with `{"name":"X","shipping_address":"Y","phone":"0912345678","role":"admin"}`.
+3. `GET /api/users/me` → `role` is now `"admin"`.
+4. Log in again → the new JWT payload contains `"role":"admin"`.
+
+### Root cause
+
+```js
+// backend/server.js:119-127
+const { name, shipping_address, phone, role } = req.body;   // `role` read from the CLIENT
+let query = "UPDATE users SET name = ?, shipping_address = ?, phone = ?";
+let params = [name, shipping_address, phone];
+
+if (role) {                       // <-- any truthy client value is applied
+  query += ", role = ?";
+  params.push(role);
+}
+```
+
+The handler deliberately destructures `role` from `req.body` and appends it to the `UPDATE`
+whenever it is truthy. There is no check that the caller is an admin, and no allow-list of
+updatable fields.
+
+### Suggested fix
+
+Do not read `role` from the request body at all:
+
+```js
+const { name, shipping_address, phone } = req.body;   // `role` is never client-supplied
+const query = "UPDATE users SET name = ?, shipping_address = ?, phone = ? WHERE id = ?";
+const params = [name, shipping_address, phone, req.user.id];
+```
+
+Role changes, if needed, belong on a separate admin-only endpoint that verifies
+`req.user.role === 'admin'` per SEC-03.
+
+### Evidence
+
+- Batch C HTML report: `../html-report/batch-c.html` (carries `Run by: 23127179` + ISO).
+- Automated case: `automation/tests/fr-04-profile/profile-fields.spec.ts`, frozen at `6942a0a`
+  **before** execution. The case asserts a hard precondition that the account starts as
+  `role: "user"`, so a fixture problem cannot be mistaken for the escalation.
+- Command-line reproduction above, run independently of Playwright.
+
+### GitHub issue
+
+**[#3 — BUG-04-103](https://github.com/BuhDuy256/automation-testing-hw04/issues/3)** · filed
+2026-08-09 · state: OPEN
