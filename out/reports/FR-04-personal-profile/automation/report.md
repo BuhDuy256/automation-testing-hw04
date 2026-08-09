@@ -472,3 +472,51 @@ runtimes above corroborate this.
 `.spec.ts` change was required — so there is no `fix:` commit for Batch B. The pre-freeze review
 (§12) appears to have caught what mattered; Batch A's contention problem was already fixed by
 `workers: 3`, and API-only tests are not exposed to it in the first place.
+
+## 14. Batch C — human review of the AI-generated specs (frozen, not yet run)
+
+Batch C = the six EP cases (`TC-04-EP-001-API` … `-005-API`, plus the dual-surface
+`TC-04-EP-006-UI-API`). Unlike A and B these assert different things, so each is its own `test`
+block reading its own frozen case; values stay external, only assertion logic lives in the spec.
+Reviewed **before** the freeze commit:
+
+| # | Finding | Why the AI missed it | Fix |
+|---|---|---|---|
+| 19 | **`TC-04-EP-004-API` duplicates `TC-04-BVA-010-API` exactly** — same input (`1912345678`), same assertion, same mechanism. It adds **no new coverage**. | Not an AI slip: the overlap is inherited from **HW02's own design**, where the EP report deliberately designed one *representative* invalid-phone case and the BVA report expanded the full boundary set. In HW02 they lived in separate reports, so the convergence was invisible. | Kept, because Step 3 converts HW02's frozen case list and silently dropping a frozen case would break traceability. But the convergence is **declared** — `convergesWith` / `convergenceNote` in the data file and a `Converges with` annotation in the report — so a reader is not misled into counting it as independent evidence. |
+| 20 | **The missing-comma failure recurred** (finding 14). Appending the six Batch C cases again left the preceding array element unterminated, breaking `fr-04-profile.json` for **all four** spec files. | Same mechanical cause as before; the risk scales with how often this shared file is appended to. | Caught by the parse gate before committing — the gate is now demonstrably load-bearing, not ceremonial. It has fired on **2 of 2** batch appends. |
+| 21 | **`EP-002` invited an invented oracle in a subtler form than before.** The natural assertion for "empty name is invalid" is a `400`, or `name === null`. A2 grants neither: it says the empty string is an invalid *class*, and HW02 deliberately froze the expectation as an **outcome** (`GET` must not return `name=""`) precisely because the SUT documents no error-response contract. | Model bias toward asserting a rejection mechanism when told an input is invalid — the same failure mode as findings 7 and 15, recurring because "invalid" reads like "should be refused". | No status assertion at all; the sole oracle is `name` not persisted as `""`, with the failure message naming **accepted assumption A2** as its source. |
+| 22 | **`EP-005` could fail for a reason that is not the defect.** If the `freshUser` fixture ever handed the test an already-elevated account, the "role must remain `user`" assertion would fail while proving nothing about role injection. | The AI trusted the fixture's starting state implicitly. | Added a **hard precondition**: read the account before the forged update and assert it starts as `role: "user"`. A fixture problem now fails loudly and separately from the security claim. |
+| 23 | **`EP-006`'s UI half needed a locator, and `getByLabel` is unusable here** (the recurring `Profile.jsx` problem — `<label>` is a *sibling* of `<input>` with no `for`/`id`). An index-based locator such as `getByRole('textbox').first()` would work today and break the moment a field is reordered. | Environment characteristic already documented in §6 finding 1, but it recurs for every new field touched on this form. | Used XPath from the label text — `//label[contains(., 'Email')]/following-sibling::input` — which expresses *"the input belonging to the Email field"* and survives reordering. Documented in the spec as a deliberate last-resort selector per architecture §3.3, with the reason. |
+
+**Checklist verified before freezing:** no `test@eshop.com` anywhere in `tests/`; `freshUser` used
+throughout (15 references, **zero** `isolatedUser`); no real `getByLabel` call (the only match is
+the comment explaining its absence); no `toBeNull` / `toBe(400)` / literal `toBe('')` in the spec;
+**zero** inline test-data literals — every value is read from the data file; 16 failure messages
+cite their oracle (`README …` or `assumption A…`).
+
+**Static gates (tests deliberately not run):**
+
+| Gate | Result |
+|---|---|
+| `node -e` parse of `fr-04-profile.json` | **16 cases** — smoke 1, A 4, B 5, **C 6** |
+| `npx tsc --noEmit` | exit **0** |
+| `npx playwright test …/profile-fields.spec.ts --list` | **18 tests** (6 × 3 projects) |
+
+**Predicted outcome, recorded before running.** From `server.js:118-135` (destructures
+`name, shipping_address, phone, role`, validates nothing, and applies `role` whenever it is
+truthy) and `Profile.jsx:119-124` (email input carries `disabled`):
+
+| Case | Prediction | Reasoning |
+|---|---|---|
+| `EP-001` | **pass** | valid values, and the write path is already shown sound by `BVA-007/008` |
+| `EP-002` | **fail** | no validation ⇒ `name` stored as `""` |
+| `EP-003` | **pass** | empty address is valid per A3 and is stored as sent |
+| `EP-004` | **fail** | same as `BVA-010-API` — `BUG-04-102` |
+| `EP-005` | **fail** | `if (role) { … }` applies a client-supplied role ⇒ **privilege escalation**, a *new* root cause distinct from `BUG-04-101`/`102` |
+| `EP-006` | **pass** (both surfaces) | the field is `disabled`, and the handler never destructures `email` |
+
+Expected tally: **3 pass / 3 fail per project → 9 / 9 overall.** If `EP-005` fails as predicted it
+is a **new defect requiring its own bug report and issue**, not a manifestation of either existing
+one — that call will be made through the real-defect gate after the run, not now.
+
+**No assertion was relaxed** for the known `BUG-04-101` or `BUG-04-102`.
