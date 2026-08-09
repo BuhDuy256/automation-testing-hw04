@@ -516,7 +516,7 @@ before mass-generating specs.
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
-| 3 FR-04 full pilot (≥12) | **in progress** — A, B done; **C frozen (`6942a0a`), awaiting run**; all 16 cases automated |
+| 3 FR-04 full pilot (≥12) | **in progress** — **A, B, C all executed**; 16/16 cases automated; combined run pending |
 | 4 Extract skill | [ ] |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
@@ -564,28 +564,37 @@ updated, **no duplicate filed**, no assertion weakened, and **no `fix:` commit w
 Batch B widened the defect decisively: `BVA-006`/`BVA-009` fail on inputs the frontend already
 rejects, proving `BUG-04-102` is independent of `BUG-04-101` and survives any frontend fix.
 
-**Batch C is FROZEN at `6942a0a`** (6 EP cases + their data; review findings at `997dc51`).
-**Not yet run.**
+**Batch C done (freeze `6942a0a`, output `985e51c`).** 6 EP cases ran in one invocation:
+**9 passed / 9 failed**, zero timeouts, matching the pre-run prediction **6/6**. `EP-002` widened
+`BUG-04-102` (same absent validation, different field — flagged as assumption-A2-grounded, weaker
+than the phone findings' direct spec citation); `EP-004` converged with `BVA-010-API` as declared;
+**`EP-005` exposed a new Critical defect** — `BUG-04-103` / issue
+[#3](https://github.com/BuhDuy256/automation-testing-hw04/issues/3), privilege escalation,
+verified exploitable end to end (self-update to `role: admin`, then re-login mints a genuinely
+signed admin JWT). No assertion weakened; no `fix:` commit needed.
 
-**All 16 FR-04 cases are now automated** — smoke 1, Batch A 4, Batch B 5, Batch C 6.
+**All 16 FR-04 cases are automated AND executed** — smoke 1, Batch A 4, Batch B 5, Batch C 6, each
+run per batch. Three confirmed defects: `BUG-04-101` (#1), `BUG-04-102` (#2), `BUG-04-103` (#3).
 
 ## > NEXT ACTION
 
-**Step 3 — run Batch C.** Do **not** re-freeze it, do **not** restart Step 3, and do **not** run
-the full combined FR-04 suite yet.
+**Step 3 — the combined FR-04 run.** Every case has run inside its own batch; this executes them
+**together** to produce the single feature-level report. Do **not** start Step 4 / skill
+extraction yet.
 
-1. `cd automation && npx playwright test tests/fr-04-profile/profile-fields.spec.ts`
-2. Compare against the **pre-run prediction** (§14): `EP-001` pass · `EP-002` fail · `EP-003`
-   pass · `EP-004` fail (converges with `BVA-010-API`) · `EP-005` fail · `EP-006` pass →
-   **3 pass / 3 fail per project, 9 / 9 overall**.
-3. Real-defect gate on every failure. `EP-004` is `BUG-04-102` → update issue #2, no duplicate.
-   **`EP-005` is predicted to expose privilege escalation** (`server.js:124` applies a
-   client-supplied `role` whenever it is truthy) — if confirmed that is a **new root cause**,
-   distinct from `BUG-04-101`/`102`, needing its own bug report and GitHub issue.
-4. Copy the report to `html-report/batch-c.html`; **do not overwrite `index.html`** — that is
-   reserved for the combined run.
-5. Then the **combined FR-04 run** (16 cases × 3 projects) → that becomes `index.html`, followed
-   by the report and `out/README.md` summary.
+1. `cd automation && npx playwright test tests/fr-04-profile`
+2. Expected from the batch runs: **16 cases × 3 projects = 48 executions**, **7 pass / 9 fail per
+   project → 21 pass / 27 fail**. No new root cause is expected; anything else is either an
+   interaction effect or flakiness and goes through the real-defect gate.
+3. **Preserve `html-report/index.html` as `smoke.html` first** — it currently holds the Step 2
+   evidence that issue #1 references — then write the combined report to `index.html` and update
+   `html-report/README.md` so the mapping stays truthful.
+4. Complete the FR-04 automation report, cite combined-run evidence in the bug report, and fill
+   the FR-04 row of `out/README.md`.
+
+**Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
+oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
+cases are **not** browser-coverage evidence — only the 6 UI-path cases are.
 
 **Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
 oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
