@@ -20,7 +20,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | No. | Criteria | Grade | Self-assessed |
 |---|---|---|---|
 | 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
-| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _not started_ |
+| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _design complete (15 cases) — automation pending_ |
 | 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _not started_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
 | 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
@@ -31,7 +31,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | Feature | Cases automated | Executions | Passed | Failed | Browser runs* | Confirmed defects |
 |---|---|---|---|---|---|---|
 | **FR-04** Personal Profile Management | **16** | **48** | **21** | **27** | **18** | **3** |
-| FR-08 Checkout | — | — | — | — | — | — |
+| FR-08 Checkout | _15 designed, 0 automated_ | — | — | — | — | — |
 | FR-15 Product Management CRUD | — | — | — | — | — | — |
 | **Total so far** | **16** | **48** | **21** | **27** | **18** | **3** |
 

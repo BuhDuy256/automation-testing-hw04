@@ -527,7 +527,7 @@ before mass-generating specs.
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
-| 5 FR-08 through skill (+8 new cases) | [ ] |
+| 5 FR-08 through skill (+8 new cases) | **in progress** — 5.1 design done (15 cases: 4 HW02 + **11 new**); Batch A freeze next |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
@@ -609,17 +609,35 @@ grep for the operator alone, produced 3 false positives on the legitimate captur
 pattern. Gate rewritten to match the operator *together with its target*; re-run scoped it returns
 zero. Three byte-identical copies (`.claude`, `.codex`, `out/agent-skill`), sha256 `2bb4b512…`.
 
+**Step 5.1 done — FR-08 case design.** 15 cases (4 HW02 + **11 new**, minimum 12), every one mapped
+to R1–R5. The zero-coverage requirements **R2 and R3 now have 3 cases each**. Batches: **A** = 6 UI
+(R2/R3), **B** = 6 API (R1/R4), **C** = 3 cross-surface (R5 + R1-UI). No case is non-automatable.
+Design: `out/reports/FR-08-checkout/automation/report.md`.
+
+Two findings from reading the SUT, recorded there: (1) **there are two disconnected carts** — server
+`userCarts[userId]` vs unpersisted client React state — so R5 needs an observation on each surface,
+and UI cases must seed *and* assert within one page session; (2) **`page.route()` interception is not
+needed for FR-08**, correcting architecture §3.1's worked example — `Checkout.jsx:93` renders the
+order total as an ordinary editable `<input type="number">`, so the forged-total case is reachable
+by any customer through the form.
+
 ## > NEXT ACTION
 
-**Step 5 — FR-08 (Checkout) through the skill.** First application of `test-automation-design` to a
-feature it was not derived from — which is also the real test of whether the extraction generalised.
+**Step 5 — FR-08 Batch A freeze.** The six R2/R3 UI cases, through skill Phases 2–4:
 
-1. **5.1 design work first (budgeted, not a surprise):** FR-08 has only 4 reusable HW02 cases and
-   needs **≥12**, so **≥8 new cases must be designed** before any automation. Derive them only from
-   FR-08's R1–R5 in the spec; FR-07/FR-09/FR-10 are explicitly out of scope.
-2. Then run the skill's phases 1–7 per batch, 3 freeze commits expected.
+1. Externalize the six cases to `automation/data/fr-08-checkout.json`, each carrying its
+   `expectedSource` (README line 105 / 106, or assumption **A-08-1** / **A-08-2** where noted —
+   flag the assumption-grounded ones as weaker evidence).
+2. Generate `automation/tests/fr-08-checkout/` Batch A. **Re-derive fixture scope and selectors from
+   the checkout UI** — do not inherit FR-04's profile answers.
+3. Review against the 8 recurring failure modes; run the static gates; record the pre-run prediction.
+4. Commit `freeze: FR-08 specs batch A` **before any run**.
 
-**Ledger:** 4 freezes so far; **4 more needed** from FR-08/FR-15 to clear the §12 floor of 8.
+Two constraints to honour in generation: no `page.reload()` between cart seeding and assertion (the
+client cart is unpersisted state), and register a dialog handler — `Checkout.jsx:63` calls `alert()`
+on a failed checkout.
+
+**Ledger:** 4 freezes so far; **4 more needed** from FR-08 (3) / FR-15 (3) to clear the §12 floor of 8.
 
 **Do not carry FR-04's concrete findings into Step 5.** Fixture scope and selector strategy are
 **per-feature** conclusions, not project-wide constants — FR-04's were derived from the profile
