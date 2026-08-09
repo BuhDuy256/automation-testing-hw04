@@ -125,18 +125,114 @@
       },
       "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (must start with 0)",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-04-BVA-006-API",
+      "hw02Ref": "TC-04-BVA-006",
+      "batch": "B",
+      "mechanism": "API",
+      "technique": "BVA",
+      "boundaryPoint": "min − 1 (9 digits, leading 0)",
+      "title": "A too-short phone (9 digits) must not be persisted by PUT /api/users/me",
+      "input": {
+        "name": "Nguyen Van A",
+        "shippingAddress": "123 Le Loi, Q1, TP.HCM",
+        "phone": "091234567"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "persistence": { "mode": "notEquals", "value": "091234567" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (10-11 digits required), applied path-agnostically per HW02's reframed oracle",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-007-API",
+      "hw02Ref": "TC-04-BVA-007",
+      "batch": "B",
+      "mechanism": "API",
+      "technique": "BVA",
+      "boundaryPoint": "min (10 digits, leading 0)",
+      "title": "A spec-valid phone (10 digits) must be persisted by PUT /api/users/me",
+      "input": {
+        "name": "Nguyen Van A",
+        "shippingAddress": "123 Le Loi, Q1, TP.HCM",
+        "phone": "0912345678"
+      },
+      "expected": {
+        "specClass": "valid",
+        "requestMustSucceed": true,
+        "persistence": { "mode": "equals", "value": "0912345678" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (leading 0, 10-11 digits)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-008-API",
+      "hw02Ref": "TC-04-BVA-008",
+      "batch": "B",
+      "mechanism": "API",
+      "technique": "BVA",
+      "boundaryPoint": "max (11 digits, leading 0)",
+      "title": "A spec-valid phone (11 digits) must be persisted by PUT /api/users/me",
+      "input": {
+        "name": "Nguyen Van A",
+        "shippingAddress": "123 Le Loi, Q1, TP.HCM",
+        "phone": "09123456789"
+      },
+      "expected": {
+        "specClass": "valid",
+        "requestMustSucceed": true,
+        "persistence": { "mode": "equals", "value": "09123456789" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (leading 0, 10-11 digits)",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-009-API",
+      "hw02Ref": "TC-04-BVA-009",
+      "batch": "B",
+      "mechanism": "API",
+      "technique": "BVA",
+      "boundaryPoint": "max + 1 (12 digits, leading 0)",
+      "title": "A too-long phone (12 digits) must not be persisted by PUT /api/users/me",
+      "input": {
+        "name": "Nguyen Van A",
+        "shippingAddress": "123 Le Loi, Q1, TP.HCM",
+        "phone": "091234567890"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "persistence": { "mode": "notEquals", "value": "091234567890" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (10-11 digits required), applied path-agnostically per HW02's reframed oracle",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-04-BVA-010-API",
+      "hw02Ref": "TC-04-BVA-010",
+      "batch": "B",
+      "mechanism": "API",
+      "technique": "BVA",
+      "boundaryPoint": "leading-digit boundary (10 digits, leading 1)",
+      "title": "A phone with the wrong leading digit must not be persisted by PUT /api/users/me",
+      "input": {
+        "name": "Nguyen Van A",
+        "shippingAddress": "123 Le Loi, Q1, TP.HCM",
+        "phone": "1912345678"
+      },
+      "expected": {
+        "specClass": "invalid",
+        "persistence": { "mode": "notEquals", "value": "1912345678" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-04 line 65 (must start with 0), applied path-agnostically per HW02's reframed oracle",
+      "status": "frozen"
     }
   ],
 
   "plannedCases": {
     "note": "Designed and mapped in Step 3.1; data added in the batch that automates them.",
-    "B": [
-      "TC-04-BVA-006-API",
-      "TC-04-BVA-007-API",
-      "TC-04-BVA-008-API",
-      "TC-04-BVA-009-API",
-      "TC-04-BVA-010-API"
-    ],
     "C": [
       "TC-04-EP-001-API",
       "TC-04-EP-002-API",
