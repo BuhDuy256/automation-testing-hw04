@@ -44,7 +44,12 @@ for (const testCase of batchA) {
     });
 
     await seedSession(page, freshUser.token);
-    await page.goto(`${WEB_URL}/profile`);
+    // `waitUntil: 'domcontentloaded'` rather than the default 'load': the SUT runs as a Vite DEV
+    // server, so 'load' blocks on every on-demand-compiled subresource. Under 3-browser parallel
+    // load that exceeded the 30s budget in Firefox and timed out the navigation before any
+    // assertion ran (see report §11). The element-level wait below is the real readiness signal
+    // and retries on its own, so this waits for what the test needs instead of for everything.
+    await page.goto(`${WEB_URL}/profile`, { waitUntil: 'domcontentloaded' });
 
     // Preconditions — hard: if the form never rendered, the case did not run.
     const phoneField = page.getByPlaceholder('VD: 0912345678');

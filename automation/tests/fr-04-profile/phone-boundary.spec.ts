@@ -34,7 +34,10 @@ test(`${testCase.id} — ${testCase.title}`, async ({ page, api, isolatedUser })
   });
 
   await seedSession(page, isolatedUser.token);
-  await page.goto(`${WEB_URL}/profile`);
+  // See phone-boundary-ui.spec.ts for the rationale: 'load' waits on every Vite dev-server
+  // subresource and timed out under parallel load. Same latent flake, fixed here too so the
+  // combined FR-04 run is not exposed to a known cause.
+  await page.goto(`${WEB_URL}/profile`, { waitUntil: 'domcontentloaded' });
 
   // Preconditions — hard assertions: if these fail the case never ran, so failing fast is right.
   const phoneField = page.getByPlaceholder('VD: 0912345678');
