@@ -514,7 +514,7 @@ before mass-generating specs.
 
 | Step | State |
 |---|---|
-| 1 Freeze automation architecture | [ ] |
+| 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [ ] |
 | 3 FR-04 full pilot (≥12) | [ ] |
 | 4 Extract skill | [ ] |
@@ -524,24 +524,30 @@ before mass-generating specs.
 | 8 Demo video | [ ] |
 
 **Already complete (pre-plan):** repo scaffold, `run.sh`, Playwright project with 3 browser
-projects + Run-by metadata (verified in the JSON reporter), browsers installed, SUT health-checked,
-feature selection confirmed (FR-04/08/15), main-report location decided.
+projects + Run-by metadata, browsers installed, SUT health-checked, feature selection confirmed
+(FR-04/08/15), main-report location decided.
+
+**Delivered by Step 1 (`569ac80`):** the six decisions frozen in `automation-architecture.md`;
+reporter `title` + metadata + per-test annotation (§3.6 layers 1–3); worker-scoped `api` /
+`isolatedUser` fixtures and `utils/api.ts`; `scripts/verify-report-stamp.js`. Isolation proven
+3 browsers × 2 runs (6/6, distinct ids, no leak). `.spec.ts` ledger still **0** — by design.
 
 ## > NEXT ACTION
 
-**Step 1** — freeze **§3.1–§3.6** in `docs/implementation-plan/automation-architecture.md`.
-Concretely, in order:
+**Step 2 — FR-04 vertical smoke.** One FR-04 case driven end to end so every §6 requirement is
+exercised at once before scaling to 36+ cases. In order:
 
-1. **1.0 — add the HTML reporter `title`** to `playwright.config.ts` (`Run by: 23127179` + ISO)
-   and **verify it** with the §3.6 `grep`: the rendered `<title>` must no longer be the default
-   `Playwright Test Report`. Metadata alone does not satisfy §11.
-2. **1.1** — write the architecture doc recording all six decisions with rationale.
-3. **1.2–1.3** — implement the worker-scoped isolated-user fixture and the thin login/nav helpers.
-4. **1.4** — prove isolation across 3 parallel browsers, paste the run output into the
-   architecture doc, then **delete the temporary isolation spec before committing** (§5.4).
-
-Step 1 commits **0 qualifying `.spec.ts`** by design — the first qualifying commit is Step 2's
-smoke freeze.
+1. **2.1** — pick one FR-04 HW02 case with a certain outcome; externalize its data to
+   `automation/data/fr-04-profile.json` (no inline test data).
+2. **2.2** — drive the AI step-by-step to generate the spec; log the verbatim prompt + output
+   to `[AI-02]`.
+3. **2.3** — human review: fragile selectors, wrong oracle, weak assertions, flaky waits.
+   Record every fix (§6 graded content).
+4. **2.4** — **commit the spec before running it** — `freeze: FR-04 smoke spec`. This is the
+   **first qualifying §12 commit**.
+5. **2.5** — run all 3 browsers, then verify the report stamp with
+   `cd automation && npm run verify:report` (**not** a grep on the static `<title>` — see the
+   correction note in §3.6).
 
 **Known risk to carry:** FR-08 is 8 cases short of the minimum (§1.4). Do not discover this at
 Step 5 — the design work is real and is budgeted inside Step 5.1.
