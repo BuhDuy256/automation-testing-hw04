@@ -137,17 +137,27 @@ report metadata can be missed; the report **title** cannot. Three layers, all re
 | 2 | Config metadata | `metadata: { 'Run by': '23127179 @ <ISO>' }` | Report metadata panel + JSON reporter |
 | 3 | Per-test annotation | `runBy` auto-fixture in `fixtures/base.ts` | Every individual test's detail view |
 
-Mechanism note (verified 2026-08-09 against Playwright 1.62.1): the reporter resolves
-`process.env.PLAYWRIGHT_HTML_TITLE || options.title`. Setting the env var from inside
-`playwright.config.ts` was tried and did **not** change the rendered title; the `options.title`
-form is the reliable path. The ISO timestamp is generated at config load, so it reflects the run.
+Mechanism (**measured** 2026-08-09 on Playwright 1.62.1, Step 1 — not assumed): the reporter
+resolves `process.env.PLAYWRIGHT_HTML_TITLE || options.title`. The `options.title` form works and
+is what the config uses; the ISO timestamp is generated at config load so it reflects the run.
 
-**Verification (must actually be run, not assumed):** after a run, grep the generated report for
-the stamp and confirm a non-default `<title>`:
+> **Correction — the original verification in this plan was wrong.** It said to
+> `grep "<title>"` on `playwright-report/index.html` and expect the stamp. That grep *always*
+> reports failure: the `<title>` tag is a **static Vite shell tag** permanently reading
+> `Playwright Test Report`. The real title lives at `report.json → options.title` inside a
+> **base64 zip embedded** in that same file, and the page sets `document.title` from it at
+> runtime. Grepping raw HTML cannot see it — plain text search cannot read compressed data.
+> Setting `PLAYWRIGHT_HTML_TITLE` does not change the static tag either, so the earlier claim
+> that "the env var does not work" was also a mis-read of the same false signal.
+
+**Verification (run it; do not assume):**
 ```bash
-grep -o "<title>[^<]*</title>" automation/playwright-report/index.html
-# must contain "Run by: 23127179" — NOT the default "Playwright Test Report"
+cd automation && npm run verify:report      # decodes the payload and asserts all 5 conditions
 ```
+`scripts/verify-report-stamp.js` exits non-zero if the stamp is missing. Confirmed visually in
+Step 1: the stamp renders as the page's `<h1>` heading *and* the browser-tab title — evidence at
+`docs/implementation-plan/evidence/report-run-by-2026-08-09.png`.
+
 Layer 1 is the gating requirement. Layers 2–3 are defence in depth if a reporter override strips
 the title.
 
@@ -158,7 +168,7 @@ the title.
 ```
 docs/implementation-plan/
   implementation_plan.md          # this file
-  automation-architecture.md      # Step 1 output — the five frozen decisions
+  automation-architecture.md      # Step 1 output — the six frozen decisions
 
 automation/
   playwright.config.ts            # exists — 3 projects + Run-by metadata
@@ -233,7 +243,7 @@ marked non-qualifying so they are never miscounted.
 holds at **8** (1 smoke + 3 + 2 + 2). Below that, add a batch — do not rely on an R commit.
 
 ### 5.4 Only feature scripts enter the ledger
-Step 1's isolation check (1.4) is scaffolding, not a feature script. Per §5 of Step 1 it is
+Step 1's isolation check (1.4) is scaffolding, not a feature script. Per Step 1 / §5.4 it is
 **run and then deleted before committing**, so `git log -- '*.spec.ts'` contains *only* the
 committed feature scripts and needs no exclusion filter. Evidence that isolation was proven lives
 in `automation-architecture.md` as pasted run output, not as a committed throwaway spec.
@@ -259,8 +269,8 @@ any correction commits.
 
 **Tasks**
 - 1.0 Apply §3.6 layer 1: add `title` to the HTML reporter options in `playwright.config.ts`
-  (`Run by: 23127179` + ISO). Verify with the §3.6 `grep` — the rendered `<title>` must no longer
-  be the default `Playwright Test Report`.
+  (`Run by: 23127179` + ISO). Verify with `npm run verify:report` (§3.6) — **not** a grep on the
+  static `<title>` tag, which always reads the default. See the correction note in §3.6.
 - 1.1 Write `docs/implementation-plan/automation-architecture.md` recording §3.1–3.6 as frozen
   decisions with rationale.
 - 1.2 Implement the worker-scoped isolated-user fixture in `automation/fixtures/base.ts`
@@ -278,8 +288,8 @@ any correction commits.
   `automation-architecture.md` — **that** is the durable evidence isolation was proven, not a
   committed spec file.
 
-**Exit criteria:** architecture doc written (§3.1–§3.6 frozen); **§3.6 grep passes** (report
-`<title>` carries the Run-by stamp); fixture yields a distinct user per worker; the parallel
+**Exit criteria:** architecture doc written (§3.1–§3.6 frozen); **`npm run verify:report` passes**
+(report title + metadata carry the Run-by stamp); fixture yields a distinct user per worker; the parallel
 mutation check passes 3/3 with no flake across 2 consecutive runs, its output pasted into the
 architecture doc; **the temporary isolation spec is deleted** (`git status` clean of it).
 **Risks eliminated:** phantom cross-worker failures; dependence on seeded state; ad-hoc selector drift.
@@ -304,10 +314,10 @@ Mirrors HW02's Step 3 (pipeline validation, not feature coverage).
 - 2.3 Human review: fix selectors/waits/assertions. Record every fix — this is §6 graded content.
 - 2.4 **Commit the spec before running it** (freeze proof).
 - 2.5 Run on all 3 browsers; confirm the HTML report renders and carries all three §3.6 layers —
-  **run the §3.6 `grep` on the generated `index.html`**, do not assume the title took effect.
+  **run `npm run verify:report`**, do not assume the title took effect.
 
 **Exit criteria:** 3/3 browser runs; data is external; ≥1 assertion pattern demonstrated; HTML
-report `<title>` contains `Run by: 23127179` + ISO (§3.6 grep passes); audit rows appended; git
+report title contains `Run by: 23127179` + ISO (`npm run verify:report` passes); audit rows appended; git
 shows spec committed *before* results.
 **Risks eliminated:** "the config works but a real test doesn't"; report-evidence uncertainty;
 data-externalization mechanics.

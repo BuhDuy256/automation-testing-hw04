@@ -8,7 +8,8 @@
     "test:chromium": "playwright test --project=chromium",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "verify:report": "node scripts/verify-report-stamp.js"
   },
   "keywords": [],
   "author": "",
