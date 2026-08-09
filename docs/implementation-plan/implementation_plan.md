@@ -516,7 +516,7 @@ before mass-generating specs.
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
-| 3 FR-04 full pilot (≥12) | **in progress** — A done; **B done** (freeze `5af1749`); C pending |
+| 3 FR-04 full pilot (≥12) | **in progress** — A, B done; **C frozen (`6942a0a`), awaiting run**; all 16 cases automated |
 | 4 Extract skill | [ ] |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
@@ -552,10 +552,10 @@ was weakened. Report stamp verified 5/5.
   the real-defect gate classified **test-side**, fixed by `waitUntil: 'domcontentloaded'` +
   `workers: 3`; runs 3–4 identical, zero timeouts. No assertion was weakened.
 
-**`.spec.ts` ledger (after Batch B): 4 commits total — of which 3 are freezes**
-(`e6cd87f` smoke, `8053add` batch A, `5af1749` batch B). `9e6a8bb` is an optional R commit and is
-**not** counted toward the §12 floor (§5.2), which rests on freeze commits alone. Batch C's freeze
-will be the **4th**, leaving 4 more needed from FR-08/FR-15 to clear the floor of 8.
+**`.spec.ts` ledger (after Batch C freeze): 5 commits total — of which 4 are freezes**
+(`e6cd87f` smoke, `8053add` batch A, `5af1749` batch B, `6942a0a` batch C). `9e6a8bb` is an
+optional R commit and is **not** counted toward the §12 floor (§5.2), which rests on freeze
+commits alone. **4 more freezes needed** from FR-08/FR-15 to clear the floor of 8.
 
 **Batch B done (freeze `5af1749`, output below).** 5 API-path cases ran in one invocation:
 **6 passed / 9 failed**, zero timeouts, matching the pre-run prediction **5/5**. All 9 failures
@@ -564,25 +564,28 @@ updated, **no duplicate filed**, no assertion weakened, and **no `fix:` commit w
 Batch B widened the defect decisively: `BVA-006`/`BVA-009` fail on inputs the frontend already
 rejects, proving `BUG-04-102` is independent of `BUG-04-101` and survives any frontend fix.
 
-**10 of 16 FR-04 cases automated.** Remaining: Batch C's 6 EP cases.
+**Batch C is FROZEN at `6942a0a`** (6 EP cases + their data; review findings at `997dc51`).
+**Not yet run.**
+
+**All 16 FR-04 cases are now automated** — smoke 1, Batch A 4, Batch B 5, Batch C 6.
 
 ## > NEXT ACTION
 
-**Step 3 — Batch C freeze.** Do **not** restart Step 3, and do **not** re-run A or B in isolation.
+**Step 3 — run Batch C.** Do **not** re-freeze it, do **not** restart Step 3, and do **not** run
+the full combined FR-04 suite yet.
 
-Batch C = the 6 EP cases: `TC-04-EP-001-API` … `-005-API` (all `APIRequestContext`) and
-`TC-04-EP-006-UI-API` (**dual-surface** — the UI assertion that the email field is `disabled`
-tests spec line 66's *"qua giao diện"* wording, while the API assertion that a forged `email` is
-ignored tests the underlying guarantee).
-
-1. Extend `data/fr-04-profile.json` with the 6 cases (no inline data). Note `EP-002`/`EP-003`
-   take their oracle from HW02's **accepted assumptions A2/A3**, not from README directly — cite
-   the assumption id in `expectedSource`.
-2. Generate + human-review; **freeze before running** — `freeze: FR-04 specs batch C`
-   (**4th freeze**, qualifying).
-3. Then run the **whole FR-04 suite together** (16 cases × 3 projects), make that combined run
-   `html-report/index.html` (see that folder's README for why `index.html` is still the Step 2
-   report until then), and complete the report + `out/README.md` summary.
+1. `cd automation && npx playwright test tests/fr-04-profile/profile-fields.spec.ts`
+2. Compare against the **pre-run prediction** (§14): `EP-001` pass · `EP-002` fail · `EP-003`
+   pass · `EP-004` fail (converges with `BVA-010-API`) · `EP-005` fail · `EP-006` pass →
+   **3 pass / 3 fail per project, 9 / 9 overall**.
+3. Real-defect gate on every failure. `EP-004` is `BUG-04-102` → update issue #2, no duplicate.
+   **`EP-005` is predicted to expose privilege escalation** (`server.js:124` applies a
+   client-supplied `role` whenever it is truthy) — if confirmed that is a **new root cause**,
+   distinct from `BUG-04-101`/`102`, needing its own bug report and GitHub issue.
+4. Copy the report to `html-report/batch-c.html`; **do not overwrite `index.html`** — that is
+   reserved for the combined run.
+5. Then the **combined FR-04 run** (16 cases × 3 projects) → that becomes `index.html`, followed
+   by the report and `out/README.md` summary.
 
 **Carry forward:** `freshUser` (test-scoped), never the seeded `test@eshop.com`; invalid-value
 oracles stay *"not persisted as X"*; assert a status code only where the spec states one; API
