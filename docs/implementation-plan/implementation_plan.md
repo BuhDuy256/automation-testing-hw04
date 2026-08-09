@@ -552,9 +552,10 @@ was weakened. Report stamp verified 5/5.
   the real-defect gate classified **test-side**, fixed by `waitUntil: 'domcontentloaded'` +
   `workers: 3`; runs 3–4 identical, zero timeouts. No assertion was weakened.
 
-**`.spec.ts` ledger: 3 commits total — but only 2 are freezes** (`e6cd87f`, `8053add`).
-`9e6a8bb` is an optional R commit and is **not** counted toward the §12 floor (§5.2), which
-rests on freeze commits alone.
+**`.spec.ts` ledger (after Batch B): 4 commits total — of which 3 are freezes**
+(`e6cd87f` smoke, `8053add` batch A, `5af1749` batch B). `9e6a8bb` is an optional R commit and is
+**not** counted toward the §12 floor (§5.2), which rests on freeze commits alone. Batch C's freeze
+will be the **4th**, leaving 4 more needed from FR-08/FR-15 to clear the floor of 8.
 
 **Batch B done (freeze `5af1749`, output below).** 5 API-path cases ran in one invocation:
 **6 passed / 9 failed**, zero timeouts, matching the pre-run prediction **5/5**. All 9 failures
