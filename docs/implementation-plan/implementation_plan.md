@@ -516,7 +516,7 @@ before mass-generating specs.
 |---|---|
 | 1 Freeze automation architecture | [x] **done 2026-08-09** (`569ac80`) |
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
-| 3 FR-04 full pilot (≥12) | [ ] |
+| 3 FR-04 full pilot (≥12) | **in progress** — Batch A done; B, C pending |
 | 4 Extract skill | [ ] |
 | 5 FR-08 through skill (+8 new cases) | [ ] |
 | 6 FR-15 through skill | [ ] |
@@ -537,24 +537,45 @@ HW02's `TC-04-BVA-002`, data externalized to `data/fr-04-profile.json`, 3 assert
 `utils/session.ts`. Ran 3/3 browsers → **all failed**; real-defect gate confirmed a genuine
 frontend defect (`Profile.jsx:43` regex is the inverse of FR-04 line 65) — filed as `BUG-04-101`
 / GitHub issue [#1](https://github.com/BuhDuy256/automation-testing-hw04/issues/1). No assertion
-was weakened. Report stamp verified 5/5. **`.spec.ts` ledger: 1 qualifying commit.**
+was weakened. Report stamp verified 5/5.
+
+**Step 3 progress — 3.1 done, Batch A done (5 of 16 cases automated):**
+
+- **3.1 selection (`fb2f23d`):** all 16 HW02 FR-04 cases selected (min 12), each mapped to
+  UI / `APIRequestContext`; `page.route()` not needed for FR-04; **none non-automatable**.
+- **Batch A (freeze `8053add`, optional R `9e6a8bb`, output `326ff83`):** 4 UI-path boundary
+  cases completing the 5-point set. **6 passed / 6 failed** over 12 browser runs, matching the
+  pre-run prediction **4/4**. Widened `BUG-04-101` (issue #1, commented — no duplicate) and
+  found a **distinct** defect `BUG-04-102` (issue
+  [#2](https://github.com/BuhDuy256/automation-testing-hw04/issues/2) — `server.js:118-135` has
+  no phone validation, survives any frontend fix). Runs 1–2 carried navigation timeouts that
+  the real-defect gate classified **test-side**, fixed by `waitUntil: 'domcontentloaded'` +
+  `workers: 3`; runs 3–4 identical, zero timeouts. No assertion was weakened.
+
+**`.spec.ts` ledger: 3 commits total — but only 2 are freezes** (`e6cd87f`, `8053add`).
+`9e6a8bb` is an optional R commit and is **not** counted toward the §12 floor (§5.2), which
+rests on freeze commits alone.
 
 ## > NEXT ACTION
 
-**Step 3 — FR-04 full pilot (≥12 cases), by hand, no skill.** This is the milestone the Step 4
-skill is extracted from. In order:
+**Step 3 — Batch B freeze.** Batch A is complete; do **not** restart Step 3 from 3.1.
 
-1. **3.1** — select ≥12 of FR-04's 16 HW02 cases; map each to UI / `page.route()` /
-   `APIRequestContext` (§3.1); list any non-automatable case with its reason.
-2. **3.2** — extend `data/fr-04-profile.json` with every selected case (no inline data).
-3. **3.3–3.5** — generate specs in **three batches**, human-reviewing each, and **commit each
-   batch before running it**: `freeze: FR-04 specs batch A` · `batch B` · `batch C`
-   (3 qualifying commits, §5.1).
-4. **3.6** — run all 3 browsers; copy the HTML report to `out/reports/FR-04-personal-profile/
-   html-report/`; verify with `npm run verify:report`.
-5. **3.7** — real-defect gate on each failure; confirmed defects → bug report + GitHub issue +
-   screenshot.
-6. **3.8** — complete `out/reports/FR-04-personal-profile/automation/report.md`.
+Batch B = the 5 API-path boundary cases, which assert what the **backend** stores:
+`TC-04-BVA-006-API` … `TC-04-BVA-010-API`. They use `APIRequestContext` because `BUG-04-101`
+means the UI blocks every leading-`0` value, so backend persistence is unreachable through the
+form (§3.1).
+
+1. Extend `data/fr-04-profile.json` with the 5 cases (no inline data); expected values from
+   FR-04 line 65 / HW02's accepted oracle only.
+2. Generate + human-review the Batch B spec. Invalid cases assert **"not persisted as the
+   invalid value"**, never an invented exact alternative such as `null`/`""` — HW02's own note
+   is explicit that the spec does not prescribe *how* the SUT avoids storing it.
+3. **Commit before running** — `freeze: FR-04 specs batch B` (**3rd freeze**, qualifying).
+4. Then Batch C (6 EP cases), then run, then report.
+
+**Carry into Batch B:** use `freshUser` (test-scoped), never the seeded `test@eshop.com`, and
+never `isolatedUser` where profile state is asserted — it is shared across a worker's tests.
+Do **not** relax any assertion because `BUG-04-102` is already known.
 
 **Carry into Step 3:** `getByLabel` does **not** work anywhere on the profile form —
 `Profile.jsx` renders `<label>` as a sibling of `<input>` with no `for`/`id`. Use
