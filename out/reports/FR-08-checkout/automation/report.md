@@ -499,7 +499,77 @@ writable — which is why the suggested fix is to make it read-only, not to rewr
 correctly, including per-line quantity and amount, and fabricates nothing for an empty cart. The
 checkout page is not broadly wrong; its total handling specifically is.
 
-## > NEXT — Batch B
+---
 
-Six API cases covering R1 and R4 (`TC-08-001`, `EP-002`, `EP-003`, `N08`, `N09`, `N10`), through
-skill Phases 2–4, frozen before any run.
+# Step 5.3 — Batch B (R1 + R4), frozen, not yet run
+
+Six API-path cases: `TC-08-001`, `TC-08-EP-002`, `TC-08-EP-003` (HW02) and `TC-08-N08-API`,
+`TC-08-N09-API`, `TC-08-N10-API` (new). File: `automation/tests/fr-08-checkout/checkout-api.spec.ts`.
+Batch A's six cases in `fr-08-checkout.json` are **byte-identical** to their frozen state
+(`git diff 9b0ab82` shows zero deleted lines).
+
+## 11. Human review of the AI-generated Batch B specs
+
+Reviewed **before** the freeze commit and before any run.
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 40 | **Appending Batch B broke Batch A's *already-frozen* spec — at the type level.** `input` is inferred as a union across every case in the shared data file. The moment Batch B introduced cases carrying `serverCart` instead of `products`, `testCase.input.products` typed as `possibly undefined` and `checkout-page.spec.ts` — frozen at `9b0ab82`, already run, already the basis of two filed defects — **stopped compiling**. Five call sites. | A cross-batch coupling that is invisible while only one batch exists. The data file is shared by design (one oracle source per feature), and that sharing has a cost nobody pays until the second batch lands. **This is the third distinct failure mode caused by appending to a shared data file** — after the two missing-comma incidents in FR-04. | Added a `seededProducts()` narrowing accessor to Batch A and `serverCartOf()` / `totalAmountSpecOf()` to Batch B, all of which **throw** on a missing key rather than casting it away. **No assertion, expected value or oracle in Batch A was touched** — the change is purely type narrowing, and `git diff` against the freeze confirms no expectation moved. |
+| 41 | **A status-code oracle was the obvious generation, and there is no source for one anywhere.** For `EP-002`/`EP-003` the natural assertion is `expect(status).toBe(401)`; the middleware really does return 401/403. But `api_specification.md` documents **no status code at all** — not for checkout, not for any endpoint in the file — and README line 104 says *who* may check out, not how a refusal is signalled. Asserting the observed code would be deriving the oracle from the implementation. | The recurring failure mode, entry 1 of the skill's table — **fourth batch running**. It is especially seductive here because the implementation's codes are conventional and *look* like a contract. | No status assertion anywhere in the file. Status is pushed as an **annotation** (`Checkout status`), so the report shows it as evidence while the assertion states only the outcome line 104 implies: **no order is created**. Same reframing HW02 recorded as assumption A6. |
+| 42 | **"No order was created" invited a global-count assertion.** The obvious check for `EP-002`/`EP-003` is to count orders before and after. That is meaningless here: three projects run in parallel, and every previous run's orders persist, so the count is shared with workers and history alike. | The generated form reached for the simplest observable. Nothing about a count *looks* wrong until concurrency is considered. | Each test stamps a **unique `shipping_address` marker** (`FR08-B <case> <ts>-<rand>`) and asserts that **zero orders carry that marker**. Identity, not arithmetic — and it stays correct under any amount of parallelism. |
+| 43 | **The unauthenticated cases have no "my orders" to look in**, because the request under test has no user. | Structural consequence of testing an auth boundary: the very thing being denied is the identity you would search with. | `GET /api/admin/orders` is used purely as a **verification channel** to search all orders for the marker, with a separate valid token that is never used on the request under test. Recorded explicitly as instrumentation, not coverage. |
+| 44 | **That verification channel is itself unguarded — and it must not be reported as an FR-08 finding.** `GET /api/admin/orders` applies only `authenticateToken` with **no role check**, so any authenticated user can list every order. | Noticed while choosing the channel. It is a genuine observation, and the temptation is to bank it as a third FR-08 defect. | Documented in the spec and here as **out of scope**: it belongs to the admin surface, not to FR-08's R1–R5, and no assertion in this batch touches it. Logged the same way as the `ProductDetail` click-count defect in Batch A — noted, attributed to the right feature, not claimed. |
+| 45 | **`omit` must mean absent, not `undefined`.** `TC-08-N08-API` requires `total_amount` to be **missing from the body**. Building the object with `total_amount: undefined` would serialise it away in JSON — accidentally correct — but `total_amount: null` would not, and the two test different things. | The distinction between "key absent" and "key present and empty" is easy to lose when a payload is assembled from a data-driven mode flag. | `checkoutBody()` adds the key **only** for `send` / `multiplyCartTotalBy`; for `omit` it never assigns it. The body actually sent is annotated on every case so the report shows exactly what was transmitted. |
+| 46 | **The two carts could have been confused, and it would have made the R4 cases meaningless.** Batch A drives the **client** React cart; a recomputing backend could only ever read the **server** cart. Seeding the wrong one would leave the server cart empty, so the "cart-derived total" would be 0 and the cases would prove nothing. | Both are called "the cart", and Batch A's helpers were right there to reuse. | Batch B seeds via `POST /api/cart` only, imports **none** of Batch A's UI helpers (verified: zero references to `utils/checkout`), and asserts the server cart actually holds the seeded lines before proceeding — as a **setup** check with its own message. |
+| 47 | **`TC-08-N10-API` needed a reason beyond "zero is a boundary".** Three R4 cases already converge on the same expected root cause; a fourth risks being ceremony. | Boundary values are easy to add without asking what they discriminate. | Kept, with the discriminating power recorded in the data file: **zero is the value at which a naive falsy guard (`if (total_amount)`) behaves differently from real validation**, so this case separates "no validation at all" from "a guard that happens to reject falsy values". The convergence of `TC-08-001` / `N09` / `N10` is declared, as in §4.2. |
+| 48 | **Fixture scope re-derived again, and the answer differs from Batch A's.** Batch A used worker-scoped `isolatedUser` for its five render-only cases. Every Batch B R4 case **persists an order**. | The correct scope is a property of what a case writes, not of a feature. | All Batch B tests use test-scoped **`freshUser`**, so `my-orders` contains only this test's orders — which, with the marker, makes "the order this test created" unambiguous without any count. |
+| 49 | **Browser-coverage inflation risk is at its highest here.** Batch B produces 18 executions across three "browser" projects while launching **no browser at all**. Added to Batch A's 18 it would read as 36. | Nothing in a green project matrix signals that a browser was never involved. | Stated in the spec header, in `html-report/README.md`, and in §12 below: these 18 are **matrix uniformity only** and are **excluded** from the browser-run count. FR-08's browser evidence remains Batch A's 18. |
+| 50 | **`BUG-08-102`'s assertions must not soften now that it is filed.** Four of these six cases are expected to fail against a defect already reported as Critical. | The pull toward "we know about that one" is strongest after an issue exists. | Every R4 case asserts the full cart-derived total, unchanged. No tolerance, no skip, no `expect.soft` downgrade of the claim itself. |
+
+## 12. Static gates — all passed before the freeze
+
+| Gate | Result |
+|---|---|
+| `fr-08-checkout.json` parses | **12 cases** — Batch A 6, Batch B 6 |
+| Batch A preserved unchanged | ✅ `git diff 9b0ab82` shows **zero** deleted lines |
+| Batch B cases carry `expectedSource` / `status: frozen` / `mechanism` | **6 / 6 / 6** |
+| Batch B requirement split | **R4 = 4, R1 = 2** |
+| `npx tsc --noEmit` | exit **0** (both spec files) |
+| `npx playwright test tests/fr-08-checkout/checkout-api.spec.ts --list` | **18 tests in 1 file** (6 × 3 projects) |
+| `page` fixture requested in Batch B | **none** — both tests destructure `{ api, freshUser }`; the only occurrence of the word is the comment explaining its absence |
+| Batch A UI helpers imported by Batch B | **0** references to `utils/checkout` or `utils/session` |
+| Seeded `test@eshop.com` anywhere in `tests/` | **0** |
+| Status-code assertions | **0** |
+| Global order-count assertions | **0** |
+| Inline data literals | **0** |
+| Batch B executed before freeze | **never** — 0 `checkout-api` entries in `test-results/` |
+
+## 13. Pre-run prediction, recorded before the freeze
+
+Derived by reading `server.js` — legitimate for **predicting**, never as the oracle.
+
+| Case | R | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|
+| `TC-08-001` | R4 | **FAIL** | `server.js:297-310` inserts `total_amount` from the body with no cart lookup; the forged `1` persists instead of 30,000,000 | **High** |
+| `TC-08-EP-002` | R1 | **PASS** | `authenticateToken` returns before the handler when no token is present, so no order can be created | **High** |
+| `TC-08-EP-003` | R1 | **PASS** | `jwt.verify` fails on a malformed token and the middleware returns before the handler | **High** |
+| `TC-08-N08-API` | R4 | **FAIL** | With `total_amount` absent, the destructured value is `undefined` and SQLite stores **NULL** — the backend never computes anything | **High** |
+| `TC-08-N09-API` | R4 | **FAIL** | Overstated value persists verbatim; same absent guard | **High** |
+| `TC-08-N10-API` | R4 | **FAIL** | `0` persists verbatim. **This is the case that discriminates**: were there a falsy guard, `0` would be rejected while the other three passed through | **Medium** — the outcome is high-confidence, but its *diagnostic* value depends on which failure shape appears |
+
+**Expected tally: 2 pass / 4 fail per project → 6 pass / 12 fail over 18 executions.**
+
+All four predicted failures should map to the **existing** `BUG-08-102` (issue #5) rather than a new
+root cause — they are the same absent guard reached through four different payload shapes. If any
+of them fails differently, that goes through the real-defect gate after the run.
+
+The two predicted passes matter: together they would show the **auth boundary is enforced** while
+the total is not, which sharpens `BUG-08-102` from "checkout is broken" to "checkout authenticates
+correctly and then trusts the caller's arithmetic".
+
+**No assertion has been relaxed** for the already-filed `BUG-08-102`.
+
+## > NEXT — run Batch B
+
+`cd automation && npx playwright test tests/fr-08-checkout/checkout-api.spec.ts`. The spec is frozen
+at the commit below, **before** any execution.
