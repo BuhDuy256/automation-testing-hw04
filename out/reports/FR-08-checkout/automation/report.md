@@ -762,7 +762,147 @@ that call is made **after** the run, not now.
 
 **No assertion has been relaxed** for any already-filed defect.
 
-## > NEXT — run Batch C
+### 17.1 Pre-run corrections (post-freeze, before first execution)
 
-`cd automation && npx playwright test tests/fr-08-checkout/checkout-cart-and-access.spec.ts`. The
-spec is frozen at the commit below, **before** any execution.
+Three defects found in the frozen spec before it ran, all in `TC-08-N11-UI` and all the **same
+class**: the test could not reach its own oracle unless the product behaved a particular way.
+Committed as `3e77f44`. **No oracle, expected value or assertion target changed.**
+
+| # | Finding | Fix |
+|---|---|---|
+| 60 | **The readiness signal required the correct outcome.** After the direct anonymous confirm, the test waited for the checkout button to still be visible. `Checkout.jsx:68-76` **replaces the entire form** with the success screen when `success` becomes true — so if an anonymous checkout wrongly *succeeded*, the button would vanish, the wait would time out, and the failure would read *"the checkout button never settled"* instead of the violation. The one defect this case exists to catch was the one it could not report. | Capture-then-assert: the `/api/checkout` response is captured as an **optional** value, absence and presence are both accepted, and the oracles are untouched. |
+| 61a | **The settle check admitted only the compliant outcomes.** After the in-app attempt it waited for a cart or login heading; had the app wrongly admitted an anonymous user, the *checkout* heading would have matched neither and it would have timed out before the URL oracle fired. | Regex widened to admit **every** outcome, including the violating one. |
+| 61b | **Requiring the checkout form to render would fail a *more* compliant implementation.** An app that guarded `/checkout` for anonymous users satisfies line 104 better than this one — yet would have errored here. | Presence probed with `count()`; the confirm step runs only if reachable, and the oracle holds either way — vacuously if unreachable, substantively if not. |
+
+This is the same failure mode as Batch A's finding 38, recurring in a new form: **a test must not
+require the defect to be present in order to run.** It is now the third time it has appeared, which
+is why it is stated as a general rule rather than a one-off fix.
+
+---
+
+# 18. Batch C — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-08-checkout/checkout-cart-and-access.spec.ts
+```
+
+No retries, run once. Spec frozen at `050a468`, corrections at `3e77f44`, both before execution.
+Report: `../html-report/batch-c.html`.
+
+## 18.1 Results
+
+| Case | R | Store | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-08-EP-004` | R5 | **server** cart | ❌ | ❌ | ❌ | FAIL → **`BUG-08-103`** |
+| `TC-08-N07-UI` | R5 | **client** cart | ❌ | ❌ | ❌ | FAIL → **`BUG-08-104`** |
+| `TC-08-N11-UI` | R1 | — | ✅ | ✅ | ✅ | PASS |
+
+**3 passed / 6 failed** over 9 executions, 56.7 s. All six failures are **assertion** failures —
+zero timeouts, zero setup failures, first invocation, no post-run correction needed.
+
+## 18.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-08-EP-004` | FAIL | FAIL | ✅ |
+| `TC-08-N07-UI` | FAIL | FAIL | ✅ |
+| `TC-08-N11-UI` | PASS | PASS | ✅ |
+
+**3/3 correct**, tally exactly as predicted. The pre-run corrections changed harness behaviour only,
+as intended — the tally is identical to the one recorded before them.
+
+## 18.3 Real-defect gate
+
+Both failures were reached **at an assertion**, reproduce on all three projects, and were
+corroborated independently.
+
+> **A classification trap worth recording.** A first pass over the failure files matched the string
+> *"setup failed"* inside `TC-08-N07-UI`'s output and briefly suggested a harness defect. Reading the
+> actual `Error:` line showed the opposite — the failure is the **oracle**
+> (*"the cart the customer sees still holds items… Expected: 0, Received: 2"*), and the matched
+> string came from a different message elsewhere in the same file. A grep over failure output is not
+> a classification; the gate has to be applied by reading what actually failed.
+
+**`TC-08-EP-004` — server cart.** Corroborated with no browser:
+
+```
+server cart BEFORE checkout: 1 line(s)
+checkout response          : {"message":"Checkout successful","orderId":42}
+server cart AFTER checkout : 1 line(s)  <- line 108 requires 0
+```
+
+`server.js`'s checkout handler contains **zero** references to `userCarts` — the cart it would have
+to clear is never reached.
+
+**`TC-08-N07-UI` — client cart.** `getByRole('row')` returned **2** (header + one product row) after
+a completed checkout. Code evidence is unusually clean: `clearCart` is **defined, exposed and
+destructured — but never called anywhere**.
+
+```
+context/CartContext.jsx:18   const clearCart = () => { setCart([]); }                       <- defined
+context/CartContext.jsx:29   value={{ cart, addToCart, removeFromCart, clearCart, cartTotal }}  <- exposed
+pages/Checkout.jsx:8         const { cart, cartTotal, clearCart } = useCart();               <- destructured
+```
+
+Three references, **zero call sites**.
+
+## 18.4 Two root causes, not one — decided by evidence
+
+§17 deliberately left this open. Applying *"would fixing one fix the other?"*:
+
+| Fix applied | `BUG-08-103` (server cart) | `BUG-08-104` (client cart) |
+|---|---|---|
+| Clear `userCarts[userId]` in the checkout handler | ✅ fixed | ❌ **still shows the items** — the server cannot clear the browser's React state |
+| Call `clearCart()` in `Checkout.jsx` | ❌ **still populated** — the UI never writes to the server cart at all | ✅ fixed |
+
+**No, in both directions.** Different components, different fixes, different observers — so **two**
+defects, filed separately:
+
+| Defect | Case | Executions | Severity | Issue |
+|---|---|---|---|---|
+| `BUG-08-103` — server cart not cleared | `TC-08-EP-004` | 3 | Medium | [#6](https://github.com/BuhDuy256/automation-testing-hw04/issues/6) |
+| `BUG-08-104` — client cart not cleared (`clearCart` never called) | `TC-08-N07-UI` | 3 | Medium | [#7](https://github.com/BuhDuy256/automation-testing-hw04/issues/7) |
+
+This is exactly why the design (§2.1) insisted the two carts be **observed separately and judged
+after the run**. Had they been merged into one case or one defect — the obvious simplification —
+the report would have claimed a single cart-clearing bug, and a backend-only fix would have shipped
+while the customer still saw items they had already paid for. `BUG-08-103` reconfirms HW02's
+`BUG-08-002`; **`BUG-08-104` has no HW02 precedent at all**, because HW02's FR-08 pass was entirely
+API-path and never observed the store the customer actually sees.
+
+## 18.5 What the pass establishes
+
+`TC-08-N11-UI` passing on all three browsers completes R1: an anonymous user is blocked **at the
+interface too**, not only at the API. Both observations held — the in-app cart→checkout route does
+not admit them, and a direct visit to `/checkout` produces no completed checkout and no successful
+checkout request.
+
+Combined with Batch B's `EP-002`/`EP-003`, **R1 is the one FR-08 requirement fully satisfied on both
+surfaces**. That is what makes the remaining findings precise rather than diffuse: checkout
+authenticates correctly, then fails to recompute the total (#5), exposes the total for editing (#4),
+and clears neither cart (#6, #7).
+
+## 18.6 Browser coverage
+
+| Case | Surface | Executions | Browser runs |
+|---|---|---|---|
+| `TC-08-EP-004` | API-path | 3 | **0** |
+| `TC-08-N07-UI` | UI-path | 3 | **3** |
+| `TC-08-N11-UI` | UI-path | 3 | **3** |
+| **Batch C** | | **9** | **6** |
+
+`TC-08-EP-004` never requests `page`, so its 3 executions are matrix uniformity and are excluded —
+the same treatment as all 18 of Batch B's.
+
+**FR-08 totals so far: 45 executions, 24 genuine browser runs** (Batch A 18 + Batch C 6).
+
+## 18.7 Evidence strength
+
+Every Batch C case rests on a **direct spec citation** — line 108 (R5) or line 104 (R1). No
+assumption-grounded case appears in this batch, so both new defects are at full evidence strength;
+neither depends on A-08-1 or A-08-2.
+
+## > NEXT — the combined FR-08 run
+
+All three batches have run individually. The combined run executes all 15 cases together to produce
+the feature-level report, following the FR-04 pattern.

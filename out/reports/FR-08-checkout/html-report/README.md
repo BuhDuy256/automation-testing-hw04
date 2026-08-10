@@ -11,8 +11,9 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-08-checko
 |---|---|---|---|
 | `batch-a.html` | Step 5 Batch A — **UI**, R2 + R3 | `TC-08-N01-UI` … `TC-08-N06-UI` × 3 browsers | **12 passed / 6 failed** |
 | `batch-b.html` | Step 5 Batch B — **API**, R1 + R4 | `TC-08-001`, `EP-002`, `EP-003`, `N08`, `N09`, `N10` × 3 projects | **6 passed / 12 failed** |
+| `batch-c.html` | Step 5 Batch C — **UI + API**, R5 + R1-UI | `TC-08-EP-004`, `TC-08-N07-UI`, `TC-08-N11-UI` × 3 projects | **3 passed / 6 failed** |
 
-Batch C is not yet automated; a combined FR-08 `index.html` will be added once all three have run,
+All three batches have now run. A combined FR-08 `index.html` will be added by the combined run,
 following the FR-04 layout.
 
 ## Browser coverage — 18 of 36, and the split is not cosmetic
@@ -21,7 +22,8 @@ following the FR-04 layout.
 |---|---|---|---|
 | A | UI-path — requests `page` | 18 | **18** |
 | **B** | **API-path — never requests `page`** | 18 | **0** |
-| **Total** | | **36** | **18** |
+| C | mixed — 2 UI cases, 1 API case | 9 | **6** |
+| **Total** | | **45** | **24** |
 
 **Batch A**: every case drives a real browser, because R2 and R3 are both rules about the interface
 and cannot be tested any other way. Nothing is deducted.
@@ -31,13 +33,16 @@ launched**. Its 18 executions run once per configured project for **matrix unifo
 identical backend results are not cross-browser evidence, and counting them would inflate FR-08's
 browser coverage from 18 to 36.
 
+**Batch C** is mixed and is counted case by case: `TC-08-N07-UI` and `TC-08-N11-UI` drive a browser
+(6 executions), `TC-08-EP-004` does not (3 excluded).
+
 The runtimes corroborate this beyond argument: Batch B completed all 18 executions in **7.5 s**,
 against Batch A's **1.1–2.9 min** for the same execution count.
 
 ## What the failures are
 
-**All 18 failures across both batches are assertion failures** — zero timeouts in the reported runs,
-identical on all three projects. Batch A's six:
+**All 24 failures across the three batches are assertion failures** — zero timeouts in the reported
+runs, identical on all three projects. Batch A's six:
 
 | Case | Defect | Issue |
 |---|---|---|
@@ -47,6 +52,16 @@ identical on all three projects. Batch A's six:
 Batch B's **12** failures (`TC-08-001`, `N08`, `N09`, `N10` × 3) are all the **same** `BUG-08-102`
 root cause reached through four payload shapes — issue #5 was updated, not duplicated. Its two
 passes (`EP-002`, `EP-003`) show the **auth boundary is enforced**.
+
+Batch C's **6** failures are **two distinct** defects — the same requirement (line 108) violated in
+two disconnected stores, proven independent because neither fix reaches the other's cart:
+
+| Case | Defect | Issue |
+|---|---|---|
+| `TC-08-EP-004` × 3 | `BUG-08-103` — the **server** cart is not cleared | [#6](https://github.com/BuhDuy256/automation-testing-hw04/issues/6) |
+| `TC-08-N07-UI` × 3 | `BUG-08-104` — the **client** cart is not cleared (`clearCart` never called) | [#7](https://github.com/BuhDuy256/automation-testing-hw04/issues/7) |
+
+`TC-08-N11-UI` passed 3/3, completing **R1** on the interface surface.
 
 ## Harness failures — fixed, and one residual environment flake
 

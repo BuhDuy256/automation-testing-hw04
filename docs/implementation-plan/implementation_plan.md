@@ -527,7 +527,7 @@ before mass-generating specs.
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
-| 5 FR-08 through skill (+8 new cases) | **in progress** — design done (15 cases); **Batches A+B executed** (freezes `9b0ab82`, `286f437`; 18/18 over 36 executions; 2 defects); **Batch C frozen `050a468`, not yet run** |
+| 5 FR-08 through skill (+8 new cases) | **in progress** — **all 3 batches executed** (freezes `9b0ab82`, `286f437`, `050a468`; 21 pass / 24 fail over 45 executions; **4 defects**, issues #4–#7); combined run pending |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
@@ -623,25 +623,31 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 5 — run FR-08 Batch C.** The spec is frozen at **`050a468`** (review findings and prediction
-recorded in `08d6237`), with pre-run corrections in `3e77f44`. Nothing in Batch C has executed.
+**Step 5 — the combined FR-08 run.** Every case has run inside its own batch; this executes all 15
+**together** to produce the single feature-level report, following the FR-04 pattern.
 
 ```bash
-cd automation && npx playwright test tests/fr-08-checkout/checkout-cart-and-access.spec.ts
+cd automation && npx playwright test tests/fr-08-checkout
 ```
 
-**Expected: 3 pass / 6 fail over 9 executions** — `TC-08-EP-004` FAIL (server cart), `TC-08-N07-UI`
-FAIL (client cart), `TC-08-N11-UI` PASS. The pre-run corrections changed harness behaviour only, so
-the tally is unchanged.
+**Expected from the batch runs: 15 cases × 3 projects = 45 executions, 21 pass / 24 fail** (7 pass /
+8 fail per project). No new root cause is expected; anything else is an interaction effect or
+flakiness and goes through the real-defect gate.
 
-**Decide after evidence, not before:** whether the two R5 failures are **one root cause or two**.
-They are different stores written by different code paths — clearing the server cart in the checkout
-handler would not empty React state, and calling `clearCart()` in `Checkout.jsx` would not empty the
-server cart — which points toward two, but the distinctness test must be applied to the actual
-results.
+Then: write the combined report to `out/reports/FR-08-checkout/html-report/index.html` (the per-batch
+files stay as the historical evidence the issues were filed against), complete the feature-level
+sections of the FR-08 report, and update `out/README.md`.
 
-**Then:** classify through the real-defect gate, update bug reports and issues, verify the report
-stamp, copy `batch-c.html`, and commit the output. **Stop before the combined FR-08 run.**
+**Batch C done (freeze `050a468`, corrections `3e77f44`, 3 pass / 6 fail).** Prediction **3/3
+correct**. Two **distinct** defects, separated by evidence rather than assumed: `BUG-08-103` (#6,
+server cart) and `BUG-08-104` (#7, client cart — `clearCart` is defined, exposed and destructured but
+**never called**). Neither fix reaches the other's store. `TC-08-N11-UI` passed 3/3, so **R1 is the
+one FR-08 requirement fully satisfied on both surfaces**.
+
+Three pre-run corrections (`3e77f44`) all fixed the same class: **a test must not require the defect
+to be present in order to run**. Third appearance of that failure mode — see report §17.1.
+
+**FR-08 defect summary:** R1 ✅ · R2 ❌ #4 · R3 ✅ · R4 ❌ #5 · R5 ❌ #6 **and** #7.
 
 **Ledger:** **7 freezes of the 8** required by §12 (`e6cd87f`, `8053add`, `5af1749`, `6942a0a`,
 `9b0ab82`, `286f437`, `050a468`). **One more needed, from FR-15.** `fix:` commits do not count.
