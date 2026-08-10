@@ -1,14 +1,15 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.1 complete — **case selection and design only**. No data file exists, no
-> `.spec.ts` has been written, and nothing has been run. Batch A freeze is the next action.
+> **Status:** Step 6.2 — Batch A **frozen, not yet run**. Selection and design §1–§6; Batch A
+> review §7, static gates §8, pre-run prediction §9. Batches B and C are not started, and nothing
+> in FR-15 has been executed.
 >
 > | Field | Value |
 > |---|---|
 > | Student | Nguyen Bao Duy — 23127179 — 23KTPM2 |
 > | Feature | FR-15 Product Management CRUD (Pool C, **admin**) |
 > | SUT surface | `frontend-admin` (a different app from FR-04/FR-08) + backend API |
-> | Method | `test-automation-design` skill, **Phase 1 only** |
+> | Method | `test-automation-design` skill — Phase 1 (§1–§6), then Phases 2–4 for Batch A (§7–§9) |
 
 ---
 
@@ -203,9 +204,73 @@ No assertion will be written to match any of this.
 
 ---
 
-## > NEXT — Batch A freeze
+---
 
-Apply skill Phases 2–4 to the six P2/P3 input-constraint cases: externalize their data with
-`expectedSource` per case, generate the batch, review it against the recurring failure modes, run the
-static gates, record the pre-run prediction — **then** commit as `freeze: FR-15 specs batch A`,
-before any run. That commit is the **eighth** qualifying one.
+# Step 6.2 — Batch A (P2 + P3), frozen, not yet run
+
+Six API-path cases: `TC-15-EP-002`, `TC-15-EP-003`, `TC-15-BVA-002`, `TC-15-BVA-003`,
+`TC-15-BVA-004`, `TC-15-BVA-005`. Files: `automation/data/fr-15-product-crud.json`,
+`automation/utils/admin.ts`, `automation/tests/fr-15-product-crud/product-constraints-api.spec.ts`.
+
+## 7. Human review of the AI-generated Batch A specs
+
+Reviewed **before** the freeze commit and before any run.
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 62 | **The invalid cases had no way to recognise their own row.** Products are global state, so a test must identify what it created — but `TC-15-EP-002` sends `name: ""` and `TC-15-EP-003` sends **no name at all**. The field that would normally identify the row *is the field under test*. A generated spec that looks the row up by name cannot work for the two cases that matter most. | The marker technique carried over from FR-08 assumed the identifying field is always available. Here the invalid input destroys it. | Every payload carries a unique marker in **`description`** (and in `imageUrl`), independent of `name`. The read-back additionally asserts `description === marker`, so a row mix-up is reported explicitly rather than silently shifting the assertion onto another product. |
+| 63 | **A refused create would have failed the test.** The obvious generated shape reads `id` from the POST response and immediately `GET`s it. But HW02's frozen expectation is *"the create is rejected, **or** if created, it must not be persisted with X"* — **both** shapes are compliant. A backend that correctly rejected an empty name returns no id, and the spec would have crashed or failed on a compliant implementation. | The same failure mode as FR-08 findings 38 and 60: writing the test against the behaviour actually in front of us. **Fourth appearance.** | The create result is captured as an **optional** id. When nothing was created the invalid-case oracle is satisfied and the test returns early; only a *valid* case failing to be created is an error. The test now passes against a compliant SUT and fails against this one. |
+| 64 | **Length and uniqueness pull against each other.** `BVA-002`/`BVA-003` need names of **exactly** 255 and 256 characters — but products are global, so a fixed `'A'.repeat(255)` would be identical across every worker, project and previous run. | Two correct requirements that happen to conflict; satisfying either one alone looks complete. | `uniqueNameOfLength()` pads the unique marker out to the exact length, so the boundary is exact to the character *and* no two executions collide. The spec asserts the generated length before sending, so a helper bug cannot silently move the boundary being tested. |
+| 65 | **`omit` must mean the key is absent, not `undefined`.** `TC-15-EP-003`'s entire point is *field absent* versus *field present-but-empty* (`EP-002`). Assigning `name: undefined` would serialise the key away — accidentally correct — but `name: null` would not, and the two test different things. | The distinction is easy to lose when a payload is assembled from a data-driven mode flag. Same shape as FR-08 finding 45. | The `name` key is only ever assigned for `literal` and `uniqueOfLength`; for `omit` it is never written. The payload actually sent is annotated on every case. |
+| 66 | **Admin auth had two wrong-but-tempting routes.** The suite already has `registerAndLogin()`, which produces a `role: 'user'` account — useless here. The other available route is to register a user and self-escalate through `BUG-04-103`. | `registerAndLogin` is the established helper, and the escalation route is *technically* available and would even look clever. | Neither. A dedicated `loginAsAdmin()` uses the seeded credential, memoised per worker so it costs one login rather than one per test. The reasoning is written into the helper: **self-escalating would make the whole FR-15 suite depend on a filed security defect remaining unfixed.** |
+| 67 | **`seedSession` would have been the wrong helper even if this were a UI batch.** It writes `localStorage.token`; the admin app reads **`adminToken`**. | Risk 2 from §5, checked explicitly rather than assumed. | Not used — this batch touches no browser at all. Verified: zero references in the spec. |
+| 68 | **Nothing may assert a product count.** The natural check for "the invalid product was not created" is to compare list lengths before and after. | It is the most obvious formulation of the requirement, and it is wrong here for the same reason it was wrong in FR-08's Batch B. | No count assertion anywhere. Non-persistence is judged from the created row itself — or from the create having been refused. Verified by gate. |
+| 69 | **A status-code oracle was available and unfounded.** The endpoints return 500 on a DB error and 200 otherwise, which is tempting to encode. | The recurring failure mode; **fifth batch running**. | No status assertion. `api_specification.md` §3.3 documents only the request body — no success status, no error contract, no status code in the entire document. Status is annotated as evidence. |
+
+## 8. Static gates — all passed before first execution
+
+| Gate | Result |
+|---|---|
+| `fr-15-product-crud.json` parses; Batch A count | **6**, all with `expectedSource`, all `status: frozen` |
+| Requirement split | **P2 = 4, P3 = 2** |
+| `npx tsc --noEmit` | exit **0** |
+| Batch A discovery | **18 tests in 1 file** (6 × 3 projects) |
+| `page` fixture requested | **none** — the only test signature is `async ({ api })` |
+| Status-code / count assertions | **0** |
+| `seedSession` or `BUG-04-103` escalation referenced | **0** |
+| Inline test-data literals in the spec | **0** |
+| FR-15 executed before freeze | **never** — 0 `fr-15` entries in `test-results/` |
+| FR-04 / FR-08 deliverables, fixtures, or `eshop-sut/` modified | **none** |
+
+## 9. Pre-run prediction, recorded before the freeze
+
+Derived by reading `server.js:167-177` — legitimate for **predicting**, never as the oracle. The
+handler destructures `name, price, description, imageUrl, category_id` and inserts them directly:
+there is no validation of any kind, and no middleware on the endpoint.
+
+| Case | Req | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|
+| `TC-15-EP-002` | P2 | **FAIL** | `name: ""` is inserted verbatim; nothing checks it | **High** |
+| `TC-15-EP-003` | P2 | **FAIL** | With the key absent the destructured value is `undefined`, which SQLite stores as **NULL** — exactly what line 195's *required* forbids | **High** |
+| `TC-15-BVA-002` | P2 | **PASS** | 255 characters is within the limit and the column has no length constraint, so it should store in full | **High** |
+| `TC-15-BVA-003` | P2 | **FAIL** | 256 characters is over the limit, but nothing truncates or rejects it | **High** |
+| `TC-15-BVA-004` | P3 | **FAIL** | `-1` is inserted verbatim | **High** |
+| `TC-15-BVA-005` | P3 | **FAIL** | `0` is inserted verbatim. **This is the discriminating case**: a naive falsy guard would reject `0` while still accepting `-1` | **Medium** — the outcome is high-confidence, but its *diagnostic* value depends on which failure shape appears |
+
+**Expected tally: 1 pass / 5 fail per project → 3 pass / 15 fail over 18 executions.**
+
+All five predicted failures should map to HW02's `BUG-15-001` (name validation absent) and
+`BUG-15-002` (price validation absent). Whether they are **one root cause or two** is left open
+deliberately: they are separate fields but possibly a single missing validation step, and the
+distinctness test must be applied to the evidence after the run, not now — the same discipline that
+produced two defects rather than one from FR-08's Batch C.
+
+`TC-15-BVA-002` passing would matter: it would show the write path stores a long name correctly, so
+the fault is *absent validation* rather than a broken column or a truncating driver.
+
+**No assertion has been relaxed** for any of HW02's seven known FR-15 defects.
+
+## > NEXT — run Batch A
+
+`cd automation && npx playwright test tests/fr-15-product-crud`. The spec is frozen at the commit
+below, **before** any execution.

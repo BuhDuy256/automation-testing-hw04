@@ -528,7 +528,7 @@ before mass-generating specs.
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
-| 6 FR-15 through skill | **in progress** — 6.1 selection done (**18 cases**: 16 HW02 + 2 new); Batch A freeze next |
+| 6 FR-15 through skill | **in progress** — 6.1 selection done (18 cases); **Batch A frozen `734c6d0`, not yet run** |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
 
@@ -623,42 +623,33 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 6 — FR-15 Batch A freeze.** Six API cases covering **P2** (name required, ≤255) and **P3**
-(price required, >0): `TC-15-EP-002`, `TC-15-EP-003`, `TC-15-BVA-002`, `TC-15-BVA-003`,
-`TC-15-BVA-004`, `TC-15-BVA-005`. Skill Phases 2–4, frozen before any run.
+**Step 6 — run FR-15 Batch A.** The spec is frozen at **`734c6d0`**, before any execution.
 
-**This freeze is the EIGHTH qualifying commit — it clears HW04 §12's minimum.**
+```bash
+cd automation && npx playwright test tests/fr-15-product-crud
+```
 
-**Step 6.1 done.** **18 cases selected** — 16 of HW02's 20 plus **2 new**. Four HW02 cases excluded
-as redundancy (`EP-004`/`EP-005` converge with their BVA twins; `BVA-001`/`BVA-008` repeat a valid
-class the spec does not further partition). The 2 new cases close a real hole: HW02 has **no positive
-delete case at all** (`N01-API`) and **19 of its 20 cases are API-path**, leaving the admin interface
-almost untested for a requirement written about what an admin can do (`N02-UI`).
-Design: `out/reports/FR-15-product-crud/automation/report.md`.
+**Expected: 3 pass / 15 fail over 18 executions** — only `TC-15-BVA-002` (255-char name) should
+pass. All five predicted failures should map to HW02's `BUG-15-001` / `BUG-15-002`; whether they are
+**one root cause or two** is left open for the evidence to decide.
 
-**Batches:** **A** = 6 API (P2/P3 constraints) · **B** = 6 API (valid classes + lifecycle + backend
-edit-isolation) · **C** = 4 API access-control + **2 UI**. Forecast browser coverage: **6** of 54.
+**§12 IS NOW CLEARED.** `734c6d0` is the **eighth** freeze commit: `e6cd87f`, `8053add`, `5af1749`,
+`6942a0a`, `9b0ab82`, `286f437`, `050a468`, `734c6d0`. Batches B and C will add two more.
 
-**Three risks to carry into Batch A, all newly binding for this feature:**
+**Batch A frozen** with 8 review findings (62–69). The two worth carrying: the marker had to live in
+`description` rather than `name`, because the two most important cases send an empty or absent name;
+and a **refused create is compliant**, so the id is captured as optional and only a spec-valid case
+failing to be created is an error — the fourth appearance of "a test must not require the defect to
+be present in order to run".
 
-1. **Products are global state** — architecture §3.2's shared-state rule finally bites. Unique product
-   names, assertions scoped to rows the test created, and **no assertion may use a total product
-   count**.
-2. **The admin token key is `adminToken`, not `token`.** `utils/session.ts`'s `seedSession()` writes
-   `token` and would leave the admin app logged out. **Do not inherit it** — write an admin-specific
-   helper.
-3. **FR-15 must use the seeded `admin@eshop.com` account**, an explicit exception to "never depend on
-   seeded data": `POST /api/register` cannot create an admin, and the alternative would be
-   self-escalating via `BUG-04-103` — making the suite depend on a filed security defect staying
-   unfixed. Used as a **credential only**; nothing is asserted about that account.
-
-Also: the admin form **does** expose `placeholder` attributes, so `getByPlaceholder` works here — the
-opposite of the storefront profile form. Re-derive selectors from `frontend-admin`; do not carry
-FR-04/FR-08's conclusions across.
-
-**Ledger:** **7 freezes of the 8** required by §12 (`e6cd87f`, `8053add`, `5af1749`, `6942a0a`,
-`9b0ab82`, `286f437`, `050a468`). **FR-15 Batch A clears it.** `fix:` commits do not count.
+**Carry into Batches B and C:**
+- Reuse `utils/admin.ts` (`loginAsAdmin` is memoised per worker; `productMarker`,
+  `uniqueNameOfLength`). Do **not** add an admin fixture to `fixtures/base.ts` — FR-04 and FR-08 both
+  depend on that file, and widening it already broke a frozen spec once (FR-08 finding 40).
+- **Batch C is the UI batch**: the admin app reads `localStorage.adminToken`, renders at least four
+  tables, exposes `placeholder` attributes on the product form, and alerts on update. Re-derive
+  selectors from `frontend-admin`; do not inherit storefront helpers.
+- Count only Batch C's two UI cases toward browser coverage — Batches A and B launch no browser.
 
 **Known risk to carry:** firefox shows intermittent Playwright *driver* instability (teardown
-protocol errors) unrelated to the SUT. It did not recur in the combined FR-08 run. Record it if it
-reappears; do not chase it.
+protocol errors) unrelated to the SUT. It never reaches an assertion. Record it; do not chase it.
