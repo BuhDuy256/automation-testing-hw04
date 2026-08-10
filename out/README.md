@@ -1,9 +1,9 @@
 # HW04 — Automation Testing on EShop (submission README)
 
 > **Status: in progress.** FR-04 is complete (16 cases automated and executed); FR-08 is designed
-> (15 cases) with Batches A and B executed (12 cases, 2 defects) and Batch C pending; FR-15 is not
-> started. The self-assessment table and totals below are provisional and will be finalised before
-> submission.
+> (15 cases) with Batches A and B executed (12 cases, 2 defects) and Batch C **frozen, not yet
+> executed**; FR-15 is not started. The self-assessment table and totals below are provisional and
+> will be finalised before submission.
 
 ## 1. Student information
 
@@ -22,7 +22,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | No. | Criteria | Grade | Self-assessed |
 |---|---|---|---|
 | 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
-| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _Batches A+B executed (12/15) — Batch C pending_ |
+| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _Batches A+B executed (12/15); Batch C frozen, not yet executed_ |
 | 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _not started_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
 | 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |

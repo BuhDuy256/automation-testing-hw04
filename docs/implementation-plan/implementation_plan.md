@@ -527,7 +527,7 @@ before mass-generating specs.
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
-| 5 FR-08 through skill (+8 new cases) | **in progress** — design done (15 cases); **Batches A+B executed** (freezes `9b0ab82`, `286f437`; 18/18 over 36 executions; 2 defects); Batch C next |
+| 5 FR-08 through skill (+8 new cases) | **in progress** — design done (15 cases); **Batches A+B executed** (freezes `9b0ab82`, `286f437`; 18/18 over 36 executions; 2 defects); **Batch C frozen `050a468`, not yet run** |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
@@ -623,34 +623,28 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 5 — FR-08 Batch C freeze.** The final three cases, cross-surface: `TC-08-EP-004` (server cart,
-API), `TC-08-N07-UI` (client cart, UI) and `TC-08-N11-UI` (anonymous checkout, UI). Skill Phases 2–4,
-frozen before any run.
+**Step 5 — run FR-08 Batch C.** The spec is frozen at **`050a468`** (review findings and prediction
+recorded in `08d6237`), with pre-run corrections in `3e77f44`. Nothing in Batch C has executed.
 
-**Batch B done (freeze `286f437`, 6 passed / 12 failed over 18 executions, 7.5 s).** Prediction
-**6/6 correct**, all 12 failures assertion failures, **zero timeouts and no post-run correction
-needed** — a direct contrast with Batch A's two fix commits, which locates that trouble in driving a
-UI under parallel load rather than in FR-08.
+```bash
+cd automation && npx playwright test tests/fr-08-checkout/checkout-cart-and-access.spec.ts
+```
 
-All 12 collapse into the existing `BUG-08-102`; **issue #5 updated, not duplicated**. Batch B
-sharpened the diagnosis twice: `N08` (field omitted → **NULL** persisted) proves there is **no
-recomputation at all**, and `N10` (`0` → `0`) rules out a falsy guard. `EP-002`/`EP-003` passed, so
-**R1 is enforced** — checkout authenticates correctly and then trusts the caller's arithmetic.
+**Expected: 3 pass / 6 fail over 9 executions** — `TC-08-EP-004` FAIL (server cart), `TC-08-N07-UI`
+FAIL (client cart), `TC-08-N11-UI` PASS. The pre-run corrections changed harness behaviour only, so
+the tally is unchanged.
 
-**Browser coverage stays 18.** Batch B's 18 executions launch **no browser** (7.5 s total, versus
-Batch A's 1.1–2.9 min) and are matrix uniformity only.
+**Decide after evidence, not before:** whether the two R5 failures are **one root cause or two**.
+They are different stores written by different code paths — clearing the server cart in the checkout
+handler would not empty React state, and calling `clearCart()` in `Checkout.jsx` would not empty the
+server cart — which points toward two, but the distinctness test must be applied to the actual
+results.
 
-**Carry into Batch C:**
-- R5 needs an observation on **each** cart — `EP-004` on the server cart, `N07-UI` on the client
-  cart. They are not duplicates; the corroboration run already showed the **server cart still holds
-  2 lines after a successful checkout**, so a defect here is likely.
-- Batch C mixes surfaces, so fixture scope must be derived **per case** again: `N07-UI`/`N11-UI` are
-  UI-path and need `test.slow()` plus the retry-until-navigated helpers; `EP-004` does not.
-- `N11-UI` expects a **failure path**, and `Checkout.jsx:63` calls `alert()` — register the dialog
-  handler.
-- Count only the **UI** cases toward browser coverage.
+**Then:** classify through the real-defect gate, update bug reports and issues, verify the report
+stamp, copy `batch-c.html`, and commit the output. **Stop before the combined FR-08 run.**
 
-**Ledger:** 6 freezes; **2 more needed** (FR-08 Batch C, FR-15) to clear the §12 floor of 8.
+**Ledger:** **7 freezes of the 8** required by §12 (`e6cd87f`, `8053add`, `5af1749`, `6942a0a`,
+`9b0ab82`, `286f437`, `050a468`). **One more needed, from FR-15.** `fix:` commits do not count.
 
 **Known risk to carry:** firefox shows intermittent Playwright *driver* instability (teardown
 protocol errors) unrelated to the SUT. It never reaches an assertion. Record it; do not chase it.

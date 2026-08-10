@@ -1,8 +1,8 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.3 — Batches **A and B executed**. Combined 18 passed / 18 failed over 36
-> executions; 2 confirmed defects (issues #4, #5). Design §1–§6; Batch A §7–§10; Batch B §11–§14.
-> **Batch C is not started.**
+> **Status:** Step 5.4 — Batches **A and B executed** (18 passed / 18 failed over 36 executions;
+> 2 confirmed defects, issues #4 and #5). **Batch C is frozen at `050a468`, not yet run.**
+> Design §1–§6; Batch A §7–§10; Batch B §11–§14; Batch C §15–§17.
 >
 > | Field | Value |
 > |---|---|
@@ -10,7 +10,7 @@
 > | Feature | FR-08 Checkout (Pool B) |
 > | SUT surface | `frontend-web` + backend API |
 > | Method | `test-automation-design` skill — Phase 1 (§1–§6), then Phases 2–7 per batch |
-> | Freezes | Batch A `9b0ab82`, Batch B `286f437` — each recorded **before** its first run |
+> | Freezes | Batch A `9b0ab82`, Batch B `286f437`, Batch C `050a468` — each recorded **before** its first run |
 
 ---
 
@@ -146,7 +146,7 @@ Minimum is 12. `N` in an ID means **new in HW04**, so provenance is visible at a
 | 12 | `TC-08-N10-API` | new | **R4** | API | Cart seeded to real total *X*; `total_amount: 0` | Persisted order total equals *X* | spec — README 107 | Fills an HW02-declared gap (*= 0* class) | **B** |
 | 13 | `TC-08-EP-004` | **HW02** | **R5** | API | Authenticated; 1 item added via `POST /api/cart`; successful `POST /api/checkout` | `GET /api/cart` returns empty for that user | spec — README 108 | Observes the **server** cart, which the UI never writes to (§2.1) | **C** |
 | 14 | `TC-08-N07-UI` | new | **R5** | UI | Cart seeded via UI; checkout completed through the UI to its success state | The **client** cart is empty afterwards | spec — README 108 | Observes the **client** cart — a different store with a different code path (§2.1) | **C** |
-| 15 | `TC-08-N11-UI` | new | **R1** | UI | **No session**; navigate directly to `/checkout` (the route is unguarded); seed cart; attempt to confirm | Checkout does not succeed — the success state is never reached and no order is created | spec — README 104 | R1's user-facing half; the API cases cover the header-level half | **C** |
+| 15 | `TC-08-N11-UI` | new | **R1** | UI | **No session**; cart seeded through the storefront. **Two in-app observations** (revised per finding 51 — the original single-step design was unimplementable): **(a)** from the cart, attempt to proceed to checkout; **(b)** with `/checkout` reached directly, attempt to confirm | **(a)** the anonymous user does not reach checkout; **(b)** no completed checkout — the success state never appears and no checkout request succeeds. *No order marker is possible: the UI never sends `shipping_address` (finding 52)* | spec — README 104 | R1's user-facing half; the API cases (`EP-002`/`EP-003`) cover the header-level half | **C** |
 
 ### 4.1 Coverage by requirement
 
