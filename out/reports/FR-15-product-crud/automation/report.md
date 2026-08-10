@@ -1,8 +1,8 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.2 — Batch A **executed**. **18 executions, 3 passed / 15 failed**, **2 confirmed
-> defects** (issues #8, #9). Selection and design §1–§6; Batch A review §7, gates §8, prediction §9,
-> **results §10–§11**. Batches B and C are not started.
+> **Status:** Step 6.3 — Batch A **executed** (18 executions, 3 passed / 15 failed, 2 defects:
+> issues #8 and #9); **Batch B frozen, not yet run**. Selection and design §1–§6; Batch A §7–§11;
+> Batch B sizing §12 and freeze §13. Batch C is not started.
 >
 > | Field | Value |
 > |---|---|
@@ -454,8 +454,80 @@ launched**. Its 18 executions run once per configured project for **matrix unifo
 
 FR-15's browser coverage will come entirely from **Batch C's two UI cases** (6 executions).
 
-## > NEXT — Batch B freeze
+---
 
-Six API cases covering P1, P3, P4 and P5 (`BVA-006`, `BVA-007`, `BVA-009`, `EP-001`, `N01-API`,
-`EP-010`), plus — newly — a case owning `BUG-15-102`, through skill Phases 2–4, frozen before any
-run.
+# 13. Batch B (P1, P3, P4, P5), frozen, not yet run
+
+Six API-path cases: `TC-15-BVA-006-API` (dual-purpose, §12), `TC-15-BVA-007`, `TC-15-BVA-009`,
+`TC-15-EP-001`, `TC-15-N01-API`, `TC-15-EP-010`. File:
+`automation/tests/fr-15-product-crud/product-lifecycle-api.spec.ts`. Batch A's data entries are
+**byte-identical** to their frozen state, and its spec file was not touched.
+
+## 13.1 Human review of the AI-generated Batch B specs
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 71 | **The `BUG-15-102` assertion would have passed vacuously about half the time.** The defect appears only on **even** product ids, so a case that creates one product and checks endpoint agreement passes whenever it happens to land on an odd id — while proving nothing. That is precisely the false pass finding 70 was about, and repeating it immediately after diagnosing it would be indefensible. | The natural generated shape creates one product and asserts on it. Nothing about that looks wrong unless you already know the defect is id-conditional. | The case creates products until it holds **one of each id parity**, annotates the ids used, and asserts agreement for **both**. Parity **selects inputs only**; the assertion says the two endpoints must report the same price for the same product and never mentions ids, parity or `toString()`. If the SUT's rule changed, the oracle would still be correct. |
+| 72 | **A seventh case would have broken the batch-size rule silently.** `BUG-15-102` needed an owning test and Batch B already held six. | The easy path is to append and move on. | Resolved **in the plan before any code was written** (§12): `TC-15-BVA-006-API` is dual-purpose, so Batch B stays at six. Alternatives — splitting the batch, or moving a case to the admin-UI batch — are recorded with their reasons for rejection. |
+| 73 | **`price` comparisons in a NEW file would have re-inherited the Batch A false pass.** The stringification affects any read of `price` through `GET /api/products/:id`, and this batch reads it in three cases. | A fix applied in one file does not travel; the trap is per-comparison, not per-suite. | A shared `asNumber()` normaliser is used for **every** price comparison in the file, with the reason and the issue number in its doc comment so the next person does not remove it as noise. |
+| 74 | **"Deleted" invited a global count.** The obvious check for `TC-15-N01-API` is that the product list shrank by one. | It is the most natural reading of "no longer there", and it is wrong under parallel execution for the same reason it was wrong in FR-08 Batch B. | The assertion filters the list for **this test's own id** and requires an empty result. It also asserts the product **was** present *before* the delete, so "gone afterwards" cannot pass vacuously. |
+| 75 | **`TC-15-EP-010`'s oracle had to be the sibling's own recorded values, not a constant.** Comparing the sibling against hardcoded expectations would fail for reasons unrelated to P5 — and would need updating whenever the fixture changed. | The requirement reads like "the sibling equals what it should be", which invites a literal. | The sibling's fields are read **before** the edit and compared afterwards, so the oracle is *"unchanged from its own recorded original"* — exactly what line 198 states. |
+| 76 | **Two different `test` objects were imported.** The file declared cases with the fixtures' `test` while calling `test.info()` on the plain Playwright import. It typechecked and would have run, because `test.info()` resolves to the active test either way. | A leftover from sketching the file against the raw API before wiring in the shared fixtures. | Unified on `import { test, expect } from '../../fixtures/base'`, consistent with every other spec in the suite. Caught by reading the file after the typecheck passed — `tsc` had nothing to object to. |
+| 77 | **Creation failures had to read as setup, not as FR-15 results.** Five of six cases must create a product before they can assert anything. | An unguarded `createProduct` would surface a setup failure as a requirement failure. | `createProduct()` asserts the id is non-null with a message naming it a **setup** failure, and `TC-15-N01-API` additionally asserts its precondition. |
+
+**Scope checks:** no status-code assertion; no product-count assertion; every created product carries
+a unique marker; every read-back asserts `description === marker` before judging the row; no browser
+is requested; `fixtures/base.ts` was **not** modified.
+
+## 13.2 Static gates — all passed before first execution
+
+| Gate | Result |
+|---|---|
+| `fr-15-product-crud.json` parses; batch counts | **12 cases — A = 6, B = 6** |
+| Batch A **data entries** unchanged | ✅ `git diff 734c6d0` shows **zero** deleted lines |
+| Batch A **spec file** touched | **no** |
+| Batch B `expectedSource` / `status: frozen` | 6 / 6 |
+| `npx tsc --noEmit` | exit **0** |
+| Batch B discovery | **18 tests in 1 file** (6 × 3 projects) |
+| Whole-feature discovery | **36 tests in 2 files** (12 × 3) |
+| `page` fixture requested | **none** — all five signatures are `async ({ api })` |
+| Status-code / global-count assertions | **0** |
+| Inline oracle data literals | **0** |
+| Failure messages citing an oracle | **11** |
+| Batch B executed before freeze | **never** — 0 `lifecycle` entries in `test-results/` |
+| FR-04 / FR-08 deliverables, fixtures, `utils/admin.ts`, `eshop-sut/` modified | **none** |
+
+## 13.3 Pre-run prediction, recorded before the freeze
+
+Derived by reading `server.js:167-197` — legitimate for **predicting**, never as the oracle.
+
+| Case | Req | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|
+| `TC-15-BVA-006-API` — P3 half | P3 | **PASS** | `price: 1` is valid and the column stores it unchanged | **High** |
+| `TC-15-BVA-006-API` — view half | P1 | **FAIL** | `GET /api/products/:id` stringifies `price` for even ids while the list does not, so the two disagree for the even-id product this case deliberately holds | **High** — already reproduced twice outside Playwright |
+| `TC-15-BVA-007` | P4 | **PASS** | `category_id: 1` exists and is inserted verbatim | **High** |
+| `TC-15-BVA-009` | P4 | **FAIL** | Nothing checks `category_id` against the categories table; `4` is inserted verbatim (HW02's `BUG-15-003`) | **High** |
+| `TC-15-EP-001` | P1 add | **PASS** | All three fields are valid and the insert stores them as sent | **High** |
+| `TC-15-N01-API` | P1 delete | **PASS** | `DELETE /api/products/:id` runs an unconditional `DELETE ... WHERE id = ?`, so the row goes | **High** |
+| `TC-15-EP-010` | P5 | **PASS** | `UPDATE ... WHERE id = ?` is scoped to one row, so the sibling is untouched. HW02 found the **backend** correctly isolated and only the admin UI wrong — the UI half is Batch C's `EP-011` | **Medium** — high on the mechanism, but the whole point of pairing it with `EP-011` is that the two surfaces disagreed in HW02 |
+
+**Expected tally: 4 pass / 2 fail per project → 12 pass / 6 fail over 18 executions.**
+
+Because `TC-15-BVA-006-API` is dual-purpose, one *case* can fail on its view half while its price
+half passes; it is counted as a failing case.
+
+Two predicted failures, mapping to **different** root causes: `TC-15-BVA-009` to a **new** defect
+(no category validation — HW02's `BUG-15-003`, not yet filed in HW04), and `TC-15-BVA-006-API` to the
+already-filed **`BUG-15-102`** (#9), which this batch finally gives an owning test.
+
+**The four predicted passes carry the batch's real argument.** If create, delete, edit-isolation and
+a valid category all work, then Batch A's fifteen failures cannot be explained by a broken endpoint —
+the write path demonstrably functions and is simply **unguarded**. That is what turns the
+recommendation into a guard clause rather than a rewrite.
+
+**No assertion has been relaxed** for any known defect.
+
+## > NEXT — run Batch B
+
+`cd automation && npx playwright test tests/fr-15-product-crud/product-lifecycle-api.spec.ts`. The
+spec is frozen at the commit below, **before** any execution.
