@@ -258,6 +258,34 @@ Reviewed **before** the freeze commit and before any run.
 | 36 | **Fixture scope had to be re-derived, not inherited.** FR-04 concluded "use `freshUser` wherever state is asserted". Applying that here blindly would cost six registrations for a batch where five cases mutate **nothing** server-side — the client cart is per-browser-context and Playwright already isolates it per test. | The plan's own risk: carrying a per-feature conclusion across features. | Scope derived per case from what it writes. `TC-08-N03-UI` **persists an order** → test-scoped `freshUser`, so *"the order this test created"* is unambiguous in `my-orders`. The five render-only cases → worker-scoped `isolatedUser`. Reasoning recorded in the spec. |
 | 37 | **Locale formatting would break a string comparison of the total.** The page renders `toLocaleString()`, whose separators vary by browser/locale, so `toContain('10.000.000')` could pass on one project and fail on another — a false cross-browser difference. | Not visible without considering all three projects. | Totals are stripped to digits and compared **numerically**. |
 
+### 7.1 Post-freeze, pre-run corrections
+
+Two test-quality defects found **after** the freeze commit but **before** first execution. Both are
+corrected here rather than after a run, so no result influenced them — and neither touches an
+expected value.
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 38 | **The spec required the defect to be present in order to run.** `TC-08-N01-UI` and `TC-08-N03-UI` called `totalInput(page).isEditable()` directly. Playwright's `isEditable()` **waits for the element**, so against a compliant implementation that simply **omits** the editable total field — the most obvious way to satisfy R2 — the locator would time out and the case would be reported as a **harness error rather than a pass**. Finding 26 fixed the `fill()` half of this and stopped one step short: guarding the *typing* while still requiring the *field*. | Anchoring on the SUT in front of us. The spec comments already stated that omitting the field would comply, but the code was still written against the only layout actually observed. A test that cannot pass against a correct implementation is measuring the implementation, not the requirement. | Added `attemptDirectTotalEdit()`, which probes presence with **`count()`** first, attempts the edit only when a field exists *and* accepts input, and returns `{present, editable, attempted}`. Both cases now assert the same outcome on every path — `N01`: the displayed effective total is still cart-derived; `N03`: the persisted order total is still cart-derived after checkout. The three observations are recorded as **annotations** (evidence). Still **no** assertion on `disabled`, `readonly`, or any prevention mechanism. |
+| 39 | **`TC-08-N05-UI`'s quantity assertion could pass without the quantity being rendered at all.** `expect(line).toContain('3')` is a substring test against the whole line — and the seeded product is *"Tai nghe AirPods Pro **2**"*, whose name already contains a digit. Verified: with a quantity of `2`, the old assertion passes on the product name alone, so the case would have reported success while proving nothing. | The generated assertion matched the *shape* of the requirement ("the quantity is visible") without considering that a substring match cannot distinguish where the digit came from. The specific data — a product name ending in a numeral — is what turns a weak assertion into a false pass. | The product name is stripped from the line first, then the quantity must match as a **standalone numeric token**, with lookarounds excluding digits and thousands separators so a digit inside a formatted line amount (`18.000.000`) cannot satisfy it either. No rendering format is asserted — `x 3`, `3 ×` and `Qty: 3` all pass — because **A-08-1** infers only that the quantity is *visible*. |
+
+**Finding 39's fix was proven to fail for the right reason** before being trusted, per the skill's
+Phase 5.4 rule:
+
+```
+line     : "Tai nghe AirPods Pro 2 x 3 — 18.000.000 ₫"
+stripped : "  x 3 — 18.000.000 ₫"
+quantity 3 matches as a standalone token   -> true    (correct pass)
+OLD toContain("2") satisfied by the name   -> true    (the false pass being removed)
+NEW check with quantity 2                  -> false   (no longer fooled by the name)
+NEW check on a line with no quantity       -> fails   (correctly)
+```
+
+**No oracle was weakened by either fix.** Finding 38 makes `N01`/`N03` *stricter* in the sense that
+matters — they now hold a compliant implementation to the same outcome instead of erroring on it —
+and finding 39 makes `N05` strictly harder to pass. Expected values are unchanged, and the
+§9 prediction stands.
+
 **Scope checks performed:** no assertion touches coupon behaviour (FR-09) despite the coupon panel
 being on the checkout page; none touches cart quantity/stock rules (FR-07) or order status (FR-10);
 login and add-to-cart appear only as setup. No case asserts that the UI clears the cart — R5 is
@@ -277,6 +305,7 @@ browser executions** (6 × 3). Nothing in this batch is API-path, so there is no
 | Seeded `test@eshop.com` referenced anywhere in `tests/` | **0** |
 | Inline test-data literals in the spec | **0** |
 | Mechanism-asserting oracle (`toBeDisabled` / `readonly` / status-for-invalid) | **0** (only the comment explaining its absence) |
+| Cases that error rather than pass against a compliant implementation | **0** (after finding 38) |
 | `page.route` / `page.reload` used | **0** (only the comment explaining why not) |
 | FR-04 deliverables modified | **none** |
 | FR-08 executed before freeze | **never** — no `fr-08` entry in `test-results/` |

@@ -5,6 +5,7 @@ import fixtureData from '../../data/fr-08-checkout.json';
 import {
   addToCartFromDetail,
   addToCartFromHome,
+  attemptDirectTotalEdit,
   captureDialogs,
   displayedTotal,
   fetchCatalogue,
@@ -13,9 +14,9 @@ import {
   openStorefront,
   orderedProductItems,
   priceOf,
-  totalInput,
   waitForLoggedIn,
   type CatalogueProduct,
+  type TotalEditAttempt,
 } from '../../utils/checkout';
 
 /**
@@ -96,6 +97,24 @@ const soleProduct = (testCase: CaseData): { name: string; quantity: number } => 
   return product;
 };
 
+/**
+ * Records what the page offered when a direct total edit was attempted.
+ *
+ * Evidence only — none of these is asserted. A compliant implementation may omit the field, render
+ * it read-only, or ignore the typed value; the report needs to show which of those happened, while
+ * the oracle stays fixed on the outcome (the effective total is still cart-derived).
+ */
+const annotateTotalEditAttempt = (attempt: TotalEditAttempt) => {
+  test.info().annotations.push(
+    { type: 'Total input present', description: String(attempt.present) },
+    {
+      type: 'Total input editable',
+      description: attempt.present ? String(attempt.editable) : 'n/a — field absent',
+    },
+    { type: 'Direct edit attempted', description: String(attempt.attempted) },
+  );
+};
+
 const annotate = (testCase: CaseData) => {
   test.info().annotations.push(
     { type: 'Requirement', description: testCase.requirement },
@@ -149,18 +168,11 @@ test(`${caseById('TC-08-N01-UI').id} — ${caseById('TC-08-N01-UI').title}`, asy
   await seedSession(page, isolatedUser.token);
   await seedCartAndOpenCheckout(page, testCase);
 
-  const field = totalInput(page);
-  // Whether the field resists editing is EVIDENCE, not the oracle. Recorded as an annotation so the
-  // report shows how the app behaved without the test claiming the spec prescribes a mechanism.
-  const editable = await field.isEditable();
-  test.info().annotations.push({
-    type: 'Total field editable',
-    description: String(editable),
-  });
-
-  if (editable) {
-    await field.fill(String(testCase.input.attemptToSetTotalTo));
-  }
+  // How the page resists the edit is EVIDENCE, not the oracle. All three observations are annotated
+  // so the report shows what the app offered, without the test claiming the spec prescribes any
+  // particular prevention mechanism. Absence of the field is COMPLIANT, not a harness error.
+  const attempt = await attemptDirectTotalEdit(page, testCase.input.attemptToSetTotalTo!);
+  annotateTotalEditAttempt(attempt);
 
   const shown = await displayedTotal(page);
   expect
@@ -220,10 +232,8 @@ test(`${caseById('TC-08-N03-UI').id} — ${caseById('TC-08-N03-UI').title}`, asy
   await seedSession(page, freshUser.token);
   await seedCartAndOpenCheckout(page, testCase);
 
-  const field = totalInput(page);
-  if (await field.isEditable()) {
-    await field.fill(String(testCase.input.attemptToSetTotalTo));
-  }
+  const attempt = await attemptDirectTotalEdit(page, testCase.input.attemptToSetTotalTo!);
+  annotateTotalEditAttempt(attempt);
 
   await page.getByRole('button', { name: 'Xác Nhận Thanh Toán' }).click();
   await expect(
@@ -310,14 +320,27 @@ test(`${caseById('TC-08-N05-UI').id} — ${caseById('TC-08-N05-UI').title}`, asy
   const line = (await items.first().textContent()) ?? '';
   const digitsOnly = line.replace(/[^0-9]/g, '');
 
+  // The product name is stripped first because it CONTAINS a digit ("Tai nghe AirPods Pro 2"), which
+  // is exactly how a substring check gives a false pass: `toContain('2')` would have been satisfied
+  // by the name alone, never testing whether the quantity was rendered at all.
+  //
+  // What remains is then required to carry the quantity as a STANDALONE numeric token. The
+  // lookarounds exclude neighbours that are digits or thousands separators, so a digit sitting
+  // inside a formatted line amount ("18.000.000") cannot satisfy it either. No rendering format is
+  // asserted — "x 3", "3 ×" and "Qty: 3" all pass — because A-08-1 infers only that the quantity is
+  // VISIBLE, and the spec prescribes no layout.
+  const lineWithoutProductName = line.split(product.name).join(' ');
+  const standaloneQuantity = new RegExp(`(?<![\\d.,])${product.quantity}(?![\\d.,])`);
+
   expect
     .soft(
-      line,
-      `the ordered-product line does not show the quantity (${product.quantity}). Per assumption ` +
-        `A-08-1 (MED confidence), README FR-08 line 106's "đầy đủ" is read as requiring the ` +
-        `quantity to be visible — this is an INFERENCE, not a quoted requirement`,
+      lineWithoutProductName,
+      `the ordered-product line does not show the quantity (${product.quantity}) as a distinct ` +
+        `number. Per assumption A-08-1 (MED confidence), README FR-08 line 106's "đầy đủ" is read ` +
+        `as requiring the quantity to be visible — this is an INFERENCE, not a quoted requirement. ` +
+        `Full line as rendered: "${line}"`,
     )
-    .toContain(String(product.quantity));
+    .toMatch(standaloneQuantity);
 
   expect
     .soft(

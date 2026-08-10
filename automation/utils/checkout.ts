@@ -188,6 +188,46 @@ export function totalInput(page: Page) {
   );
 }
 
+/** What the page offered when a direct edit of the total was attempted. Evidence, never an oracle. */
+export type TotalEditAttempt = {
+  /** Whether a direct total input exists on the page at all. */
+  present: boolean;
+  /** Whether that input accepted input. `false` when absent. */
+  editable: boolean;
+  /** Whether a value was actually typed. */
+  attempted: boolean;
+};
+
+/**
+ * Attempts to set the checkout total directly, tolerating a compliant implementation.
+ *
+ * R2 forbids the user editing the total; it prescribes NOTHING about how. Three shapes all comply:
+ * omitting the field entirely, rendering it read-only, or ignoring whatever is typed. An earlier
+ * version of this helper called `isEditable()` straight away, which WAITS for the element and throws
+ * when it never appears — so the most obviously compliant implementation (no field at all) would
+ * have been reported as a harness error rather than as a pass. That is a test defect: a test must
+ * not require the defect to be present in order to run.
+ *
+ * So presence is probed with `count()` first, the edit is attempted only when actually possible, and
+ * the caller asserts the OUTCOME either way. The three observations are returned for annotation as
+ * evidence; none of them is asserted, because asserting `disabled`/`readonly` would invent a
+ * mechanism the spec does not state.
+ */
+export async function attemptDirectTotalEdit(
+  page: Page,
+  value: number,
+): Promise<TotalEditAttempt> {
+  const field = totalInput(page);
+  const present = (await field.count()) > 0;
+  const editable = present ? await field.isEditable() : false;
+
+  if (present && editable) {
+    await field.fill(String(value));
+    return { present, editable, attempted: true };
+  }
+  return { present, editable, attempted: false };
+}
+
 /** The ordered-product list rendered by the checkout page (Checkout.jsx:84-88). */
 export function orderedProductItems(page: Page) {
   return page.getByRole('list').first().getByRole('listitem');
