@@ -1,7 +1,8 @@
 # FR-15 — Bug reports
 
 Confirmed product defects found by FR-15 automation. **All three batches have run** — A (P2, P3),
-B (P1, P3, P4, P5), C (P6, P5-UI, P1-UI). The combined FR-15 run is still pending.
+B (P1, P3, P4, P5), C (P6, P5-UI, P1-UI) — plus the combined FR-15 suite: **54 executions,
+18 passed / 36 failed**, which confirmed all five defects and produced **no new root cause**.
 
 Every defect below was **corroborated outside Playwright** before filing, reproduces identically on
 all three projects, and comes from a spec frozen **before any execution** — Batch A at `734c6d0`,

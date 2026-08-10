@@ -627,7 +627,7 @@ by any customer through the form.
 
 1. **`out/ai-critique.md`** (HW04 §10, 200–300 words) — still missing.
 2. **`out/git_commit_log.txt`** — `git log --oneline > out/git_commit_log.txt`.
-3. **`[AI-02]` §4 and §5** — the accuracy summary is already maintained (17 artifacts, all
+3. **`[AI-02]` §4 and §5** — the accuracy summary is already maintained (**18 artifacts**, all
    INCOMPLETE); §5's "when should AI be used" conclusion and §6's disclosure still need filling.
 4. **Finalise `out/README.md`** — replace the provisional self-assessment marks with final ones.
 5. Mirror `docs/` into `out/docs/` if the submission layout requires it, and decide the MD→PDF
