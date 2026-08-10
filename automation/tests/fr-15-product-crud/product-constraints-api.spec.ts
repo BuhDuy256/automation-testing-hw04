@@ -153,23 +153,49 @@ for (const testCase of batchA) {
     const describeValue = (value: unknown): string =>
       typeof value === 'string' && value.length > 40 ? `${value.slice(0, 30)}… (len ${value.length})` : JSON.stringify(value);
 
+    /**
+     * POST-RUN CORRECTION (observation only — the oracle is unchanged).
+     *
+     * A strict `toBe` is representation-blind: it compares type as well as value, so if the SUT
+     * returns a stored value in a different type than it was sent, the assertion passes while the
+     * value is in fact persisted. That is a FALSE PASS, and it happened — `GET /api/products/:id`
+     * returns `price` as a STRING for every even product id (`server.js`: `if (row.id % 2 === 0)
+     * row.price = row.price.toString();`), so `expect("0").not.toBe(0)` passed on the projects whose
+     * product happened to land on an even id, and failed on the one that landed odd.
+     *
+     * Normalising `price` numerically makes the assertion see the stored value in either
+     * representation. It only ever makes the check STRICTER — it can now fail where it previously
+     * passed, never the reverse — and the expected values are untouched.
+     */
+    const normalize = (value: unknown): unknown =>
+      rule.field === 'price' && value !== null && value !== undefined && value !== ''
+        ? Number(value)
+        : value;
+
+    test.info().annotations.push({
+      type: 'Persisted value (raw)',
+      description: `${rule.field} = ${describeValue(actual)} (typeof ${typeof actual})`,
+    });
+
     if (rule.mode === 'equals') {
       expect
         .soft(
-          actual,
+          normalize(actual),
           `spec-valid ${rule.field} was not persisted as sent (${describeValue(expectedValue)}); ` +
-            `${testCase.expectedSource}`,
+            `${testCase.expectedSource}. Raw stored value: ${describeValue(actual)} ` +
+            `(typeof ${typeof actual})`,
         )
-        .toBe(expectedValue);
+        .toBe(normalize(expectedValue));
     } else {
       expect
         .soft(
-          actual,
+          normalize(actual),
           `spec-invalid ${rule.field} ${describeValue(expectedValue)} ended up stored; ` +
             `${testCase.expectedSource}. The spec does not prescribe HOW the value must be refused — ` +
-            `only that this exact value must not be the stored result`,
+            `only that this exact value must not be the stored result. Raw stored value: ` +
+            `${describeValue(actual)} (typeof ${typeof actual})`,
         )
-        .not.toBe(expectedValue);
+        .not.toBe(normalize(expectedValue));
     }
   });
 }
