@@ -1,8 +1,8 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.2 — Batch A **frozen, not yet run**. Selection and design §1–§6; Batch A
-> review §7, static gates §8, pre-run prediction §9. Batches B and C are not started, and nothing
-> in FR-15 has been executed.
+> **Status:** Step 6.2 — Batch A **executed**. **18 executions, 3 passed / 15 failed**, **2 confirmed
+> defects** (issues #8, #9). Selection and design §1–§6; Batch A review §7, gates §8, prediction §9,
+> **results §10–§11**. Batches B and C are not started.
 >
 > | Field | Value |
 > |---|---|
@@ -277,7 +277,141 @@ the fault is *absent validation* rather than a broken column or a truncating dri
 
 **No assertion has been relaxed** for any of HW02's seven known FR-15 defects.
 
-## > NEXT — run Batch A
+---
 
-`cd automation && npx playwright test tests/fr-15-product-crud`. The spec is frozen at the commit
-below, **before** any execution.
+# 10. Batch A — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-15-product-crud/product-constraints-api.spec.ts
+```
+
+No retries. Spec frozen at `734c6d0`, post-run correction at `4dc1cd3` (§11).
+Report: `../html-report/batch-a.html`.
+
+## 10.1 Results
+
+| Case | Req | Input | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-15-EP-002` | P2 | `name: ""` | ❌ | ❌ | ❌ | FAIL → `BUG-15-101` |
+| `TC-15-EP-003` | P2 | `name` key absent | ❌ | ❌ | ❌ | FAIL → `BUG-15-101` |
+| `TC-15-BVA-002` | P2 | `name` 255 chars | ✅ | ✅ | ✅ | PASS |
+| `TC-15-BVA-003` | P2 | `name` 256 chars | ❌ | ❌ | ❌ | FAIL → `BUG-15-101` |
+| `TC-15-BVA-004` | P3 | `price: -1` | ❌ | ❌ | ❌ | FAIL → `BUG-15-101` |
+| `TC-15-BVA-005` | P3 | `price: 0` | ❌ | ❌ | ❌ | FAIL → `BUG-15-101` |
+
+**3 passed / 15 failed** over 18 executions. All 15 are **assertion** failures — zero timeouts, zero
+setup failures. Two consecutive runs produced identical results.
+
+## 10.2 Prediction vs actual
+
+| Case | Predicted | Actual (final) | Match |
+|---|---|---|---|
+| `TC-15-EP-002` | FAIL | FAIL | ✅ |
+| `TC-15-EP-003` | FAIL | FAIL | ✅ |
+| `TC-15-BVA-002` | PASS | PASS | ✅ |
+| `TC-15-BVA-003` | FAIL | FAIL | ✅ |
+| `TC-15-BVA-004` | FAIL | FAIL | ✅ |
+| `TC-15-BVA-005` | FAIL | FAIL | ✅ |
+
+**6/6 correct**, tally exactly as predicted (1 pass / 5 fail per project). **But the first run did not
+match**, and that discrepancy is the most valuable thing this batch produced — §11.
+
+## 10.3 Real-defect classification
+
+All 15 failures were reached **at an assertion**, are identical across all three projects, and were
+corroborated outside Playwright:
+
+```
+name empty       POST 200 -> PERSISTED name=""
+name absent      POST 200 -> PERSISTED name=null
+name 256 chars   POST 200 -> PERSISTED name="BBBB…" len 256
+price -1         POST 200 -> PERSISTED price=-1
+price 0          POST 200 -> PERSISTED price=0
+```
+
+**Verdict: CONFIRMED PRODUCT DEFECT — all 15 → `BUG-15-101` ([#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8)).**
+
+**One root cause, not two — and this differs from HW02 deliberately.** Applying *"would fixing one
+fix the other?"*: the fault is the **absence of any validation step in one handler**, so a single
+guard on `POST /api/products` fixes all five failing cases together. HW02 split them **by field**
+(`BUG-15-001` name, `BUG-15-002` price); HW04 groups **by fault**, the same convention already used
+for `BUG-04-102`, where an unvalidated `phone` and an empty `name` on one endpoint were reported as
+one missing-validation defect. The HW02 correspondence is recorded in the bug report so either view
+can be reconstructed.
+
+**What the single pass establishes.** `TC-15-BVA-002` stores a 255-character name **in full**, so the
+create path is sound. The fault is that it is *unguarded*, which is why the recommended fix is a
+guard clause rather than a rewrite. `price: 0` being stored additionally rules out a naive
+`if (price)` check, which would have rejected `0` while still accepting `-1` — the discrimination
+§9 predicted this case would provide.
+
+---
+
+# 11. The first run, and a test defect that produced a false pass
+
+Run 1 returned **5 passed / 13 failed**, not the predicted 3 / 15. The extra passes were
+`TC-15-BVA-005` (`price: 0`) on **chromium and firefox** — while the same case **failed on webkit**.
+
+A per-project split on a case that never launches a browser and sends a fixed payload is not a
+plausible product behaviour, so it went through the gate before anything was filed.
+
+## 11.1 What was actually happening
+
+`GET /api/products/:id` stringifies `price` for every **even** product id:
+
+```js
+if (row.id % 2 === 0) row.price = row.price.toString();
+```
+
+So a stored `0` comes back as `"0"` for half of all products. The assertion was
+`expect(persisted.price).not.toBe(0)` — and `"0" !== 0`, so it **passed**. The invalid value *was*
+persisted; strict equality simply could not see it. Which project passed depended on nothing but
+whether that worker's product happened to land on an even id.
+
+**This was a false pass — a test defect — and it was hiding a real product defect.**
+
+## 11.2 Finding 70 — strict equality is representation-blind
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 70 | **A strict `toBe` compares type as well as value.** Where a SUT can return the same stored value in more than one representation, the assertion passes on a value that is present. Here it inverted the result of an entire case on 2 of 3 projects. | Every earlier batch compared values the SUT returned in one consistent type, so the question never arose. Nothing about the assertion looks wrong in isolation — it is only wrong against *this* endpoint. | `price` is normalised numerically before comparison, and the **raw value and its type are annotated** so the report shows which representation came back. The change can only make the assertion **stricter** — it can now fail where it previously passed, never the reverse — and no expected value, oracle or data-file entry was touched (`git diff` against the freeze shows the JSON unchanged). |
+
+Committed separately as `4dc1cd3`, before the re-run.
+
+**Generalised lesson, worth carrying beyond FR-15:** *a passing assertion is only evidence if it could
+have failed for the right reason.* This is the same principle that replaced the report-stamp grep in
+Step 1 and that drove findings 38, 60 and 63 — but in the opposite direction. Those were tests that
+could not **pass** against a correct implementation; this was a test that could not **fail** against a
+defective one.
+
+## 11.3 The diagnosis surfaced a second, genuine defect
+
+The stringification is not a test artefact. `GET /api/products/:id` and `GET /api/products`
+**contradict each other about the same row**:
+
+```
+id 34  even: true  | detail "12345"  string | list 12345  number | AGREE: false
+id 35  even: false | detail 12345    number | list 12345  number | AGREE: true
+```
+
+Filed as **`BUG-15-102`** ([#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9)),
+Medium. It needs no argument about API typing conventions: whichever type is correct, one product
+cannot have two.
+
+**Provenance is stated honestly.** It was found while diagnosing a test failure, **not** by a designed
+case, and **no Batch A case asserts it** — so it is **not counted as Batch A coverage**. A dedicated
+case belongs in Batch B, where the product read path is already in scope.
+
+## 11.4 Browser coverage — Batch A contributes **zero**
+
+No test in `product-constraints-api.spec.ts` requests the `page` fixture, so **no browser was
+launched**. Its 18 executions run once per configured project for **matrix uniformity only** and are
+**excluded** from the browser-run count. The 14.6–18.6 s wall time for 18 executions corroborates it.
+
+FR-15's browser coverage will come entirely from **Batch C's two UI cases** (6 executions).
+
+## > NEXT — Batch B freeze
+
+Six API cases covering P1, P3, P4 and P5 (`BVA-006`, `BVA-007`, `BVA-009`, `EP-001`, `N01-API`,
+`EP-010`), plus — newly — a case owning `BUG-15-102`, through skill Phases 2–4, frozen before any
+run.

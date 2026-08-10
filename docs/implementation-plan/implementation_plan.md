@@ -528,7 +528,7 @@ before mass-generating specs.
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
-| 6 FR-15 through skill | **in progress** — 6.1 selection done (18 cases); **Batch A frozen `734c6d0`, not yet run** |
+| 6 FR-15 through skill | **in progress** — 18 cases selected; **Batch A executed** (freeze `734c6d0`, 3 pass / 15 fail, 2 defects #8/#9); Batch B next |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
 
@@ -623,33 +623,33 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 6 — run FR-15 Batch A.** The spec is frozen at **`734c6d0`**, before any execution.
+**Step 6 — FR-15 Batch B freeze.** Six API cases covering P1, P3, P4 and P5: `TC-15-BVA-006`,
+`TC-15-BVA-007`, `TC-15-BVA-009`, `TC-15-EP-001`, `TC-15-N01-API`, `TC-15-EP-010`. Skill Phases 2–4,
+frozen before any run.
 
-```bash
-cd automation && npx playwright test tests/fr-15-product-crud
-```
+**Add one case to Batch B**: `BUG-15-102` (issue #9) currently has **no owning test**. It was found
+while diagnosing a Batch A failure, not by a designed case, and is explicitly not counted as Batch A
+coverage. The product read path is already Batch B's territory, so a case asserting that
+`GET /api/products/:id` and `GET /api/products` agree about the same row belongs there.
 
-**Expected: 3 pass / 15 fail over 18 executions** — only `TC-15-BVA-002` (255-char name) should
-pass. All five predicted failures should map to HW02's `BUG-15-001` / `BUG-15-002`; whether they are
-**one root cause or two** is left open for the evidence to decide.
+**Batch A done (freeze `734c6d0`, correction `4dc1cd3`, 3 pass / 15 fail).** Prediction **6/6
+correct** on the final run. One defect, `BUG-15-101` (#8) — grouped by **fault** rather than by field,
+so HW02's `BUG-15-001`/`BUG-15-002` map to a single HW04 issue, the same convention as `BUG-04-102`.
 
-**§12 IS NOW CLEARED.** `734c6d0` is the **eighth** freeze commit: `e6cd87f`, `8053add`, `5af1749`,
-`6942a0a`, `9b0ab82`, `286f437`, `050a468`, `734c6d0`. Batches B and C will add two more.
+**The most important thing Batch A produced was a test defect, not a product one.** Run 1 gave
+5 pass / 13 failed because a strict `toBe` could not see a `0` the SUT returned as `"0"` — a **false
+pass** on 2 of 3 projects. Fixed in `4dc1cd3` (observation only; the data file is byte-identical to
+the freeze). Diagnosing it surfaced `BUG-15-102`.
 
-**Batch A frozen** with 8 review findings (62–69). The two worth carrying: the marker had to live in
-`description` rather than `name`, because the two most important cases send an empty or absent name;
-and a **refused create is compliant**, so the id is captured as optional and only a spec-valid case
-failing to be created is an error — the fourth appearance of "a test must not require the defect to
-be present in order to run".
+**Carry into Batch B:**
+- **Normalise before comparing** wherever the SUT may return a value in more than one representation.
+  `GET /api/products/:id` stringifies `price` for even ids — any price assertion is exposed to it.
+- Prefer `GET /api/products` (list) for read-back where the detail endpoint's quirk would interfere,
+  or assert on both deliberately.
+- Reuse `utils/admin.ts`; do **not** add an admin fixture to `fixtures/base.ts`.
+- Batch B launches no browser — count zero browser coverage, as Batch A did.
 
-**Carry into Batches B and C:**
-- Reuse `utils/admin.ts` (`loginAsAdmin` is memoised per worker; `productMarker`,
-  `uniqueNameOfLength`). Do **not** add an admin fixture to `fixtures/base.ts` — FR-04 and FR-08 both
-  depend on that file, and widening it already broke a frozen spec once (FR-08 finding 40).
-- **Batch C is the UI batch**: the admin app reads `localStorage.adminToken`, renders at least four
-  tables, exposes `placeholder` attributes on the product form, and alerts on update. Re-derive
-  selectors from `frontend-admin`; do not inherit storefront helpers.
-- Count only Batch C's two UI cases toward browser coverage — Batches A and B launch no browser.
+**Ledger:** **8 freezes**, §12's minimum already cleared by `734c6d0`. Batches B and C add two more.
 
 **Known risk to carry:** firefox shows intermittent Playwright *driver* instability (teardown
-protocol errors) unrelated to the SUT. It never reaches an assertion. Record it; do not chase it.
+protocol errors) unrelated to the SUT. It did not appear in FR-15 Batch A. Record it if it reappears.
