@@ -24,7 +24,7 @@ _Per HW04 §15. Provisional — completed rows only._
 |---|---|---|---|
 | 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
 | 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _complete — 15 cases, combined run done_ |
-| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _Batches A+B executed (12/18) — Batch C pending_ |
+| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _all 18 cases executed per batch; combined run pending_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
 | 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
 | | **Total** | **100** | — |
@@ -35,8 +35,8 @@ _Per HW04 §15. Provisional — completed rows only._
 |---|---|---|---|---|---|---|
 | **FR-04** Personal Profile Management | **16** | **48** | **21** | **27** | **18** | **3** |
 | **FR-08** Checkout | **15** | **45** | **21** | **24** | **24** | **4** |
-| FR-15 Product Management CRUD _(Batches A+B)_ | **12** of 18 | **36** | **15** | **21** | **0** | **3** |
-| **Total so far** | **43** | **129** | **57** | **72** | **42** | **10** |
+| FR-15 Product Management CRUD _(per-batch runs)_ | **18** | **54** | **18** | **36** | **6** | **5** |
+| **Total so far** | **49** | **147** | **60** | **87** | **48** | **12** |
 
 \* **Browser runs counted honestly.** Only UI-path cases launch a browser.
 **FR-04**: 6 of its 16 cases are UI-path → 6 × 3 = **18** genuine browser executions; the other 10
@@ -47,11 +47,12 @@ and R3 are rules about the interface and cannot be tested any other way. **B** �
 requesting `page` → **0 of 18**. **C** — mixed, counted case by case → **6 of 9** (`N07-UI` and
 `N11-UI` drive a browser; `EP-004` does not). Runtime corroborates: Batch B ran 18 executions in
 7.5 s against Batch A's 1.1–2.9 min. FR-08 therefore contributes **24**, not 45.
-**FR-15 Batches A and B**: all 12 cases are API-path → **0 of 36** count; no browser is launched by
-either. FR-15's browser coverage will come entirely from Batch C's two UI cases.
+**FR-15**: Batches A and B are entirely API-path → **0 of 36**. Batch C is mixed → **6 of 18** (only
+`EP-011-UI` and `N02-UI` drive a browser). FR-15 therefore contributes **6**, not 54 — counting every
+execution would overstate it ninefold.
 HW04 §6's "≥9 browser runs" bar is cleared several times over.
 
-**All 72 failures are confirmed product defects, not test defects.** Each was put through a
+**All 87 failures are confirmed product defects, not test defects.** Each was put through a
 real-defect gate, and no assertion was ever weakened to make a test pass. Every defect reproduces
 identically on all 3 projects. Harness failures did occur — 4 timeouts in FR-08 Batch A's first run
 — and were diagnosed as test-side and fixed without touching any expected value; had they been taken
@@ -71,6 +72,8 @@ at face value they would have become three fabricated bug reports.
 | `BUG-15-101` | `POST /api/products` performs no input validation — empty, absent, over-length names and non-positive prices are all persisted | **High** | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
 | `BUG-15-102` | `GET /api/products/:id` returns `price` as a string for even ids, contradicting `GET /api/products` | **Medium** | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
 | `BUG-15-103` | `POST /api/products` never checks `category_id` against existing categories | **Medium** | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
+| `BUG-15-104` | **No access control on any product write endpoint** — anyone can create, modify or delete any product | **Critical** | [#11](https://github.com/BuhDuy256/automation-testing-hw04/issues/11) |
+| `BUG-15-105` | Editing one product in the admin panel overwrites every listed product's displayed name | **Medium** | [#12](https://github.com/BuhDuy256/automation-testing-hw04/issues/12) |
 
 Full write-ups with root cause, exploitability and suggested fixes:
 `reports/FR-04-personal-profile/bug-reports/report.md`,
@@ -115,7 +118,7 @@ _Paths relative to this `out/` folder._
 | FR-08 HTML reports (combined + per batch) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
 | FR-15 main report (design, review, prediction, results) | `reports/FR-15-product-crud/automation/report.md` |
 | FR-15 bug reports | `reports/FR-15-product-crud/bug-reports/report.md` |
-| FR-15 HTML reports (per batch: A, B) | `reports/FR-15-product-crud/html-report/` (see its `README.md`) |
+| FR-15 HTML reports (per batch: A, B, C) | `reports/FR-15-product-crud/html-report/` (see its `README.md`) |
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique | `ai-critique.md` _(pending)_ |

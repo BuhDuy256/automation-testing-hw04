@@ -1,8 +1,8 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.4 — Batches **A and B executed** (36 executions, 15 passed / 21 failed,
-> 3 defects: issues #8, #9, #10); **Batch C frozen, not yet run**. Selection and design §1–§6;
-> Batch A §7–§11; Batch B §12–§14; **Batch C freeze §15**.
+> **Status:** Step 6.4 — **all three batches executed**. Per-batch totals: **54 executions,
+> 18 passed / 36 failed**, **5 confirmed defects** (issues #8–#12). The combined FR-15 run is still
+> pending. Selection and design §1–§6; Batch A §7–§11; Batch B §12–§14; Batch C §15–§16.
 >
 > | Field | Value |
 > |---|---|
@@ -735,7 +735,146 @@ were kept.
 
 **No assertion has been relaxed** for any of HW02's seven known FR-15 defects.
 
-## > NEXT — run Batch C
+---
 
-`cd automation && npx playwright test tests/fr-15-product-crud/product-access-and-admin-ui.spec.ts`.
-The spec is frozen at the commit below, **before** any execution.
+# 16. Batch C — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-15-product-crud/product-access-and-admin-ui.spec.ts
+```
+
+No retries. Spec frozen at `2d0f67d`, **unchanged before the run** and unchanged after it — no
+post-run correction was required. Report: `../html-report/batch-c.html`.
+
+## 16.1 Results
+
+| Case | Req | Surface | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-15-EP-006-API` | P6 | API | ❌ | ❌ | ❌ | FAIL → **`BUG-15-104`** |
+| `TC-15-EP-007-API` | P6 | API | ❌ | ❌ | ❌ | FAIL → **`BUG-15-104`** |
+| `TC-15-EP-008-API` | P6 | API | ❌ | ❌ | ❌ | FAIL → **`BUG-15-104`** |
+| `TC-15-EP-009-API` | P6 | API | ❌ | ❌ | ❌ | FAIL → **`BUG-15-104`** |
+| `TC-15-EP-011-UI` | P5 (UI) | **browser** | ❌ | ❌ | ❌ | FAIL → **`BUG-15-105`** |
+| `TC-15-N02-UI` | P1 (add) | **browser** | ✅ | ✅ | ✅ | PASS |
+
+**3 passed / 15 failed** over 18 executions, 41.2 s. All 15 are **assertion** failures (12 value
+comparisons, 3 locator counts) — zero timeouts, zero driver errors, zero setup failures. A stability
+re-run reproduced the result identically.
+
+## 16.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-15-EP-006-API` | FAIL | FAIL | ✅ |
+| `TC-15-EP-007-API` | FAIL | FAIL | ✅ |
+| `TC-15-EP-008-API` | FAIL | FAIL | ✅ |
+| `TC-15-EP-009-API` | FAIL | FAIL | ✅ |
+| `TC-15-EP-011-UI` | FAIL | FAIL | ✅ |
+| `TC-15-N02-UI` | PASS *(Medium confidence)* | PASS | ✅ |
+
+**6/6 correct**, tally exactly as predicted.
+
+`TC-15-N02-UI` was the Medium-confidence call — the first time this suite drove the admin panel, so an
+unforeseen selector, session or dialog problem would have surfaced there first. It passed on all three
+browsers on the first attempt, which retro-validates the three admin-specific decisions made at
+freeze time: `seedAdminSession` writing `adminToken`, the tab-opening helper, and `getByPlaceholder`
+on the product form.
+
+## 16.3 Real-defect classification
+
+All 15 failures were reached **at an assertion**, reproduce on all three projects, and were
+corroborated outside Playwright.
+
+### `BUG-15-104` — no access control on any product write endpoint ([#11](https://github.com/BuhDuy256/automation-testing-hw04/issues/11), **Critical**)
+
+```
+non-admin actor role = user
+
+POST   no auth       -> 200 | created id: 102
+POST   non-admin JWT -> 200 | created id: 103
+PUT    no auth       -> name now: "c-seed-1786363997005-HIJACKED"
+DELETE no auth       -> still present: false
+```
+
+None of the three routes carries **any** middleware — not an admin check, not even
+`authenticateToken`. The middleware exists in the codebase and is applied elsewhere
+(`app.get("/api/cart", authenticateToken, …)`); it is simply absent here.
+
+**Grouping — decided on evidence, and deliberately left open until now.** §15.3 recorded that the four
+failures *might* be one defect or several. The answer: **one**. The fault is a single access-control
+policy absent from a single resource, and the fix is one admin-guard middleware applied to the three
+write routes — one change-set.
+
+All four cases are nonetheless listed in the issue rather than inferred from one, because adding the
+guard to `POST` alone would leave `PUT` and `DELETE` open; each verb was tested and failed
+independently. HW02 split them **by verb** (`BUG-15-004`/`005`/`006`); HW04 groups **by fault**,
+consistent with `BUG-15-101` and `BUG-04-102` — and deliberately *unlike* `BUG-08-103`/`BUG-08-104`,
+which were split because their fixes lived in different components and neither reached the other.
+Here all three fixes are the same middleware in the same file.
+
+### `BUG-15-105` — the admin panel overwrites every listed product's displayed name ([#12](https://github.com/BuhDuy256/automation-testing-hw04/issues/12), Medium)
+
+```
+Error: editing one product changed another product's displayed name in the admin panel
+Locator: getByRole('row')…filter({ hasText: 'FR15-TC-15-EP-011-UI-…' })
+  Expected: 1
+  Received: 0
+```
+
+`handleProductSubmit` runs `products.map(p => ({ ...p, name: productForm.name }))` — the SUT's own
+variable for the result is named `fakeMassUpdatedProducts` — applying the edited name to **every**
+row in local state.
+
+**Kept independent of `TC-15-EP-010`, and the evidence justifies it.** `EP-010` **passed** in Batch B:
+after a `PUT`, the sibling's stored fields were byte-identical to their recorded originals. So the
+backend is provably correct and this failure is **client state only**. The two surfaces disagree, and
+that disagreement is the finding — the same two-surface shape as FR-08's two carts.
+
+**This is also why the case must not reload**, as recorded at freeze time (finding 78). Any refresh
+refetches from the correct backend and the display silently repairs itself; a version of this test
+that reloaded would have passed while the defect was fully present.
+
+**Upgrade over HW02.** HW02 could only verify `BUG-15-007` by evaluating the offending state
+expression in `node`. This is the first time it has been demonstrated **in a real browser**, on all
+three engines — the same kind of upgrade FR-04's `TC-04-BVA-002-UI` was over its HW02 form.
+
+## 16.4 What the pass establishes
+
+`TC-15-N02-UI` passing 3/3 shows the admin **create** flow works end to end: the form submits, the
+product appears in the panel's list, **and** it is retrievable through the API. Both surfaces were
+asserted deliberately — a panel that optimistically rendered a row without persisting would have
+passed a list-only check.
+
+That matters for reading the rest of FR-15: the admin interface is not broadly broken. Its create
+path is sound, and `BUG-15-105` is a specific local-state error in the edit path.
+
+## 16.5 Browser coverage — 6 of 18, and this is FR-15's only source
+
+| Surface | Cases | Executions | Counts as browser coverage? |
+|---|---|---|---|
+| **UI-path** (requests `page`) | 2 — `EP-011-UI`, `N02-UI` | **6** | ✅ yes |
+| API-path (`APIRequestContext`) | 4 — the access-control cases | 12 | ❌ no — no browser is launched |
+
+Batches A and B contribute **zero**, so **FR-15's entire browser coverage is these 6 executions**
+(2 cases × 3 browsers) out of 54 for the feature. Counting all 54 would overstate it ninefold.
+
+## 16.6 FR-15 requirement verdict after all three batches
+
+| Ref | Requirement | Verdict |
+|---|---|---|
+| **P1** — add / view / edit / delete | ⚠️ add ✅, delete ✅, **view ❌** `BUG-15-102` |
+| **P2** — name required, ≤ 255 | ❌ `BUG-15-101` |
+| **P3** — price required, > 0 | ❌ `BUG-15-101` *(the valid minimum itself passes)* |
+| **P4** — category from the existing list | ❌ `BUG-15-103` *(a valid category stores correctly)* |
+| **P5** — edit isolation | ⚠️ **backend ✅** (`EP-010`), **admin UI ❌** `BUG-15-105` |
+| **P6** — admin-only write APIs | ❌ `BUG-15-104` — **Critical** |
+
+Not one of FR-15's six requirement areas is fully satisfied on every surface. The positive operations
+all work; every failure is a **missing guard or a display error**, never a broken operation — which is
+what makes each recommended fix a validation step, a middleware, or a one-line state correction.
+
+## > NEXT — the combined FR-15 run
+
+All three batches have run individually. The combined run executes all 18 cases together to produce
+the feature-level report, following the FR-04 and FR-08 pattern. Expected from the batch runs:
+**54 executions, 18 passed / 36 failed**, with **6** genuine browser executions.
