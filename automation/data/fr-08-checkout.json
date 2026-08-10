@@ -147,6 +147,139 @@
       "expectedSource": "assumption A-08-2 (MED) — README FR-08 line 106 applied to the degenerate case; the spec does not discuss an empty-cart checkout",
       "evidenceStrength": "assumption",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-08-001",
+      "hw02Ref": "TC-08-001",
+      "batch": "B",
+      "requirement": "R4",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, forged total far BELOW the real cart total",
+      "title": "A forged low total_amount must not override the server-recomputed cart total",
+      "input": {
+        "auth": "valid",
+        "serverCart": [{ "name": "iPhone 15 Pro Max", "quantity": 1 }],
+        "totalAmount": { "mode": "send", "value": 1 }
+      },
+      "expected": {
+        "orderCreated": true,
+        "persistedTotal": "sumOfLineAmounts"
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 107 (backend must recompute; a client-sent total_amount is not accepted)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-EP-002",
+      "hw02Ref": "TC-08-EP-002",
+      "batch": "B",
+      "requirement": "R1",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state (Authorization header entirely absent)",
+      "title": "Checkout with no Authorization header must not create an order",
+      "input": {
+        "auth": "none",
+        "serverCart": [],
+        "totalAmount": { "mode": "send", "value": 100000 }
+      },
+      "expected": {
+        "orderCreated": false
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 104, reframed per HW02 assumption A6 to an outcome (no order persisted); the spec prescribes no status code",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-EP-003",
+      "hw02Ref": "TC-08-EP-003",
+      "batch": "B",
+      "requirement": "R1",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state (token present but malformed)",
+      "title": "Checkout with an invalid JWT must not create an order",
+      "input": {
+        "auth": "invalid",
+        "serverCart": [],
+        "totalAmount": { "mode": "send", "value": 100000 }
+      },
+      "expected": {
+        "orderCreated": false
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 104, reframed per HW02 assumption A6 to an outcome (no order persisted); the spec prescribes no status code",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N08-API",
+      "batch": "B",
+      "requirement": "R4",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — the client sends NO total at all, so only recomputation can produce one",
+      "title": "With total_amount omitted, the backend must still persist the cart-derived total",
+      "input": {
+        "auth": "valid",
+        "serverCart": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 }
+        ],
+        "totalAmount": { "mode": "omit" }
+      },
+      "expected": {
+        "orderCreated": true,
+        "persistedTotal": "sumOfLineAmounts",
+        "assertionNote": "Line 107 requires the backend to compute the total ITSELF ('phải tự tính lại'). With no client value to copy, a compliant backend still stores the cart-derived total. Not expressible through the UI, which always sends the field."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 107 (\"Backend phải tự tính lại tổng tiền\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N09-API",
+      "batch": "B",
+      "requirement": "R4",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, forged total far ABOVE the real cart total (HW02-declared gap: 'very large')",
+      "title": "A forged high total_amount must not override the server-recomputed cart total",
+      "input": {
+        "auth": "valid",
+        "serverCart": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 }
+        ],
+        "totalAmount": { "mode": "multiplyCartTotalBy", "value": 100 }
+      },
+      "expected": {
+        "orderCreated": true,
+        "persistedTotal": "sumOfLineAmounts"
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 107; fills an invalid class HW02 declared out of scope for its pass",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N10-API",
+      "batch": "B",
+      "requirement": "R4",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — total_amount at zero (HW02-declared gap: '= 0')",
+      "title": "A zero total_amount must not override the server-recomputed cart total",
+      "input": {
+        "auth": "valid",
+        "serverCart": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 }
+        ],
+        "totalAmount": { "mode": "send", "value": 0 }
+      },
+      "expected": {
+        "orderCreated": true,
+        "persistedTotal": "sumOfLineAmounts",
+        "assertionNote": "Zero is chosen because it is the boundary at which a naive falsy-check guard (`if (total_amount)`) would behave differently from an explicit validation — so this case distinguishes 'no validation at all' from 'a guard that happens to reject falsy values'."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 107; fills an invalid class HW02 declared out of scope for its pass",
+      "evidenceStrength": "spec",
+      "status": "frozen"
     }
   ]
 }

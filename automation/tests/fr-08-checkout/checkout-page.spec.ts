@@ -88,9 +88,26 @@ const caseById = (id: string): CaseData => {
   return found;
 };
 
+/**
+ * The products a case seeds into the client cart.
+ *
+ * Narrowing accessor, added when Batch B was appended to the shared data file: `input` is inferred
+ * as a union across every case in the file, so once Batch B introduced cases with `serverCart`
+ * instead of `products`, `testCase.input.products` typed as possibly `undefined` and this
+ * already-frozen file stopped typechecking. Throwing rather than casting keeps a missing key loud —
+ * same reasoning as `expectedLineItemCount` below. No assertion or expected value is affected.
+ */
+const seededProducts = (testCase: CaseData): Array<{ name: string; quantity: number }> => {
+  const products = testCase.input.products;
+  if (!products) {
+    throw new Error(`case ${testCase.id} declares no input.products in fr-08-checkout.json`);
+  }
+  return products;
+};
+
 /** Σ(catalogue price × quantity) — the spec's own rule for what the total must be. */
 const expectedTotalFor = (testCase: CaseData, catalogue: CatalogueProduct[]): number =>
-  testCase.input.products.reduce(
+  seededProducts(testCase).reduce(
     (sum, item) => sum + priceOf(catalogue, item.name) * item.quantity,
     0,
   );
@@ -113,7 +130,7 @@ const expectedLineItemCount = (testCase: CaseData): number => {
 
 /** Reads the single product a case seeds, failing loudly rather than yielding `undefined`. */
 const soleProduct = (testCase: CaseData): { name: string; quantity: number } => {
-  const product = testCase.input.products[0];
+  const product = seededProducts(testCase)[0];
   if (!product) {
     throw new Error(`case ${testCase.id} declares no seed product in fr-08-checkout.json`);
   }
@@ -155,7 +172,7 @@ async function seedCartAndOpenCheckout(
   await openStorefront(page);
   await waitForLoggedIn(page);
 
-  for (const item of testCase.input.products) {
+  for (const item of seededProducts(testCase)) {
     if (testCase.seedVia === 'productDetail') {
       await addToCartFromDetail(page, item.name, item.quantity);
     } else {
@@ -173,7 +190,7 @@ async function seedCartAndOpenCheckout(
   await expect(
     page.getByRole('row'),
     'cart did not contain the seeded products — setup failed, not an FR-08 result',
-  ).toHaveCount(testCase.input.products.length + 1, { timeout: 15_000 }); // +1 for the header row
+  ).toHaveCount(seededProducts(testCase).length + 1, { timeout: 15_000 }); // +1 for the header row
 
   await goToCheckoutFromCart(page);
 }
@@ -312,7 +329,7 @@ test(`${caseById('TC-08-N04-UI').id} — ${caseById('TC-08-N04-UI').title}`, asy
     )
     .toHaveCount(expectedLineItemCount(testCase));
 
-  for (const item of testCase.input.products) {
+  for (const item of seededProducts(testCase)) {
     await expect
       .soft(
         items.filter({ hasText: item.name }),
