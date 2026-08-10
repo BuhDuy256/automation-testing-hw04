@@ -54,6 +54,29 @@ import {
 
 type CaseData = (typeof fixtureData.cases)[number];
 
+/**
+ * POST-RUN CORRECTION (waits/mechanism only — no expected value is touched).
+ *
+ * Every case in this batch is UI-path and performs many sequential interactions: a full storefront
+ * load, one click per seeded product, then two client-side route changes (cart, checkout). Run
+ * three-at-a-time against a single Vite dev server that compiles modules on demand, they exceed the
+ * 30 s default before their assertions are reached.
+ *
+ * Measured, not guessed: TC-08-N04-UI passes on firefox in 4.1 s in isolation, and exceeded 30 s in
+ * the parallel batch — a >7x inflation with no change to the test. Some failures landed in
+ * "Tearing down context", i.e. in video/trace capture rather than in any test step at all.
+ *
+ * FR-04's batches did not need this because 10 of their 16 cases were API-path and finished in
+ * milliseconds, so only a third of the matrix was ever browser-heavy. Here all 18 executions are.
+ *
+ * `test.slow()` triples the budget for THIS file only, leaving the globally proven `workers: 3` and
+ * the 30 s default untouched for the rest of the suite. It changes how long the harness waits,
+ * never what any assertion expects.
+ */
+test.beforeEach(() => {
+  test.slow();
+});
+
 const batchA = fixtureData.cases.filter((c) => c.batch === 'A');
 if (batchA.length !== 6) {
   throw new Error(`expected 6 batch-A cases in fr-08-checkout.json, found ${batchA.length}`);
