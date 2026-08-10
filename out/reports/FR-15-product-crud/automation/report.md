@@ -52,11 +52,19 @@ cases** close a genuine hole in the requirement areas (§2.2).
 |---|---|
 | `TC-15-EP-004` — `price` negative | **Converges with `TC-15-BVA-004`** (`price = -1`): same input class, same mechanism, same assertion. The BVA case is kept because it sits on the boundary set alongside `0` and `1`, where the negative value earns its place as part of a triple |
 | `TC-15-EP-005` — `category_id` nonexistent | **Converges with `TC-15-BVA-009`** (`category_id = 4`): same class, same assertion. The BVA form is kept for the same reason |
-| `TC-15-BVA-001` — `name` = 1 character | Same **valid** class as `TC-15-BVA-002` (255 chars). P2's only stated length bound is the **maximum**; there is no stated minimum beyond "required", and *required* is already covered by `EP-002` (empty) and `EP-003` (omitted). A second valid-length sample adds no boundary the spec distinguishes |
-| `TC-15-BVA-008` — `category_id` = 3 | Same **valid** class as `TC-15-BVA-007` (`category_id = 1`). Both assert "an existing category is accepted"; the second adds no distinct partition |
+| `TC-15-BVA-001` — `name` = 1 character | **Selection tradeoff, not a judgement that the case is worthless.** HW02 designed it deliberately as the **lower valid boundary** of the name-length set, and it is a legitimate boundary. It is omitted because the selected 18 already cover P2 from both directions — `EP-002` (empty) and `EP-003` (omitted) for *required*, `BVA-002` (255) for the valid maximum and `BVA-003` (256) for the first invalid length — which is strong enough for this pass. Reinstate it if the name constraint later needs the full boundary set |
+| `TC-15-BVA-008` — `category_id` = 3 | **Selection tradeoff.** HW02 designed it as the **last valid member** of the seeded category enum `{1, 2, 3}`, which is a real boundary on that enum. It is omitted because P4's actual requirement is *"must be chosen from the existing list"* — an existing-versus-nonexistent distinction that `BVA-007` (exists) and `BVA-009` (does not exist) already cover. Enumerating every valid category id is not what FR-15 is about, and the category list is FR-14's subject. Reinstate it if enum completeness becomes the focus |
 
-All four exclusions are **redundancy**, not difficulty. None is dropped because it is hard to
-automate, and none reduces coverage of P1–P6.
+**None of the four is dropped because it is hard to automate**, and none reduces coverage of any
+requirement area — P1–P6 all retain at least two cases without them.
+
+The two kinds of exclusion above are **not** equivalent, and are stated separately on purpose:
+`EP-004` and `EP-005` are genuine **convergence** — same input class, same mechanism, same
+assertion as their BVA twins, so keeping both would double-count one piece of evidence.
+`BVA-001` and `BVA-008` are **selection tradeoffs** — each is a legitimate boundary HW02 designed
+on purpose, dropped to keep the selected set at 18 while P1–P6 stay covered. Calling the second
+pair "redundant" would misrepresent HW02's design; they are omissions this pass accepts, and
+either can be reinstated without disturbing the batch structure.
 
 ### 2.2 Two new cases, and why they are needed
 
