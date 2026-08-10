@@ -150,7 +150,7 @@ FR-04's `TC-04-BVA-002-UI` had to its HW02 form.
 | Batch | Surface | Cases | Requirements | Rationale |
 |---|---|---|---|---|
 | **A** | API | 6 — `EP-002`, `EP-003`, `BVA-002/003/004/005` | **P2, P3** | The input-constraint invalid/boundary set: one coherent review unit, all asserting *"not persisted as X"* |
-| **B** | API | 6 — `BVA-006/007/009`, `EP-001`, `N01-API`, `EP-010` | **P1, P3, P4, P5** | The valid classes and the product lifecycle — create, delete, edit-isolation. These establish the write path **works**, which is what makes Batch A's failures read as *unguarded* rather than *broken* |
+| **B** | API | 6 — `BVA-006`*, `BVA-007`, `BVA-009`, `EP-001`, `N01-API`, `EP-010` | **P1, P3, P4, P5** | The valid classes and the product lifecycle — create, delete, edit-isolation. These establish the write path **works**, which is what makes Batch A's failures read as *unguarded* rather than *broken*. \*`BVA-006` is **dual-purpose** — see §12 |
 | **C** | API + **UI** | 6 — `EP-006/007/008/009`, `EP-011`, `N02-UI` | **P6, P5, P1** | Access control (4 API) plus both admin-UI cases. Grouped because the UI cases need the admin app's own fixtures and selectors, which nothing else in FR-15 uses |
 
 **3 batches × 6 cases**, all within the skill's 4–6 range. **Batch A's freeze is the eighth
@@ -206,7 +206,9 @@ No assertion will be written to match any of this.
 
 ---
 
-# Step 6.2 — Batch A (P2 + P3), frozen, not yet run
+# Step 6.2 — Batch A (P2 + P3), **executed**
+
+Freeze `734c6d0` · post-run correction `4dc1cd3` · output `246928a`. Results in §10–§11.
 
 Six API-path cases: `TC-15-EP-002`, `TC-15-EP-003`, `TC-15-BVA-002`, `TC-15-BVA-003`,
 `TC-15-BVA-004`, `TC-15-BVA-005`. Files: `automation/data/fr-15-product-crud.json`,
@@ -276,6 +278,48 @@ produced two defects rather than one from FR-08's Batch C.
 the fault is *absent validation* rather than a broken column or a truncating driver.
 
 **No assertion has been relaxed** for any of HW02's seven known FR-15 defects.
+
+---
+
+# 12. Batch B sizing — resolving the seventh case before writing any code
+
+Batch A's diagnosis produced `BUG-15-102` (issue #9), which currently has **no owning test**. The plan
+called for adding one to Batch B — but Batch B already holds six cases, and the skill's batch rule is
+**4–6**. Adding a seventh would quietly break the rule that keeps a pre-freeze review tractable, so
+the sizing is resolved here, **before** the batch is written, rather than discovered afterwards.
+
+**Resolution: keep Batch B at 6 by making `TC-15-BVA-006-API` dual-purpose.**
+
+| Purpose | Requirement | Assertion |
+|---|---|---|
+| Original (HW02) | **P3** | `price = 1` is valid and is persisted as sent |
+| Added | **P1** (*"Xem"*, view) | `GET /api/products/:id` and `GET /api/products` **agree** about the same product's `price` |
+
+The two sit naturally together rather than being bolted on: the case already creates a product and
+reads its price back, so the added assertion observes the *same row* through the *other* endpoint. No
+new fixture, no new setup, and the case keeps a single subject — the price of a product it created.
+
+**Alternatives considered and rejected.** Splitting Batch B into two smaller freezes would add a
+freeze commit for one case and fragment the lifecycle group, whose value is that create / delete /
+edit-isolation are reviewed together. Moving a case to Batch C would put an API case into the batch
+whose whole purpose is the admin UI's fixtures and selectors.
+
+## 12.1 Making the `BUG-15-102` assertion deterministic
+
+The defect only manifests on **even** product ids, so a naive version of this assertion would pass
+vacuously whenever the created product happened to land on an odd id — **exactly the false pass that
+Batch A's finding 70 was about**. Repeating that mistake immediately after diagnosing it would be
+indefensible.
+
+The case therefore creates products until it holds **one of each id parity** (bounded, and both ids
+annotated), then asserts endpoint agreement for **both**. That guarantees the class where the SUT can
+differ is actually exercised.
+
+**Parity is used only to *select inputs*, never as the oracle.** The assertion says *"the two
+endpoints must report the same price for this product"* and never mentions ids, parity or
+`toString()`. If the SUT's rule changed from `id % 2` to something else, the oracle would still be
+correct and the case would still be meaningful — whereas an assertion written as *"even ids return a
+string"* would have encoded the defect as the expectation.
 
 ---
 
