@@ -127,7 +127,7 @@ _Paths relative to this `out/` folder._
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique (§10, 262 words) | `ai-critique.md` |
-| Git commit log (73 commits) | `git_commit_log.txt` |
+| Git commit log | `git_commit_log.txt` — 73 commits. **Regenerate immediately before zipping**: the file cannot contain the commit that adds it, so it is always one behind by construction |
 | Automation project | `../automation/` |
 | Implementation plan + architecture | `docs/implementation-plan/` (mirrored from `../docs/`) |
 

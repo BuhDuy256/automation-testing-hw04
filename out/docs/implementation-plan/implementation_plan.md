@@ -529,7 +529,7 @@ before mass-generating specs.
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
 | 6 FR-15 through skill | [x] **done 2026-08-10** — 18 cases, 3 freezes, combined run 18 pass / 36 fail over 54 executions, 6 browser runs, **5 defects** (#8–#12) |
-| 7 Globals + packaging | [x] **done 2026-08-11** — critique, commit log, `[AI-02]` §5/§6, final README, docs mirrored; **PDF export blocked, recorded** |
+| 7 Globals + packaging | [x] **done 2026-08-10** — critique, commit log, `[AI-02]` §5/§6, final README, docs mirrored; **PDF export blocked, recorded** |
 | 8 Demo video | [ ] |
 
 **Already complete (pre-plan):** repo scaffold, `run.sh`, Playwright project with 3 browser
