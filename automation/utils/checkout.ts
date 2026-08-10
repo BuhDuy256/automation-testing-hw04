@@ -155,9 +155,24 @@ export async function addToCartFromDetail(
   );
 }
 
-/** Navigates to the cart via the header link — client-side routing, so the cart survives. */
+/**
+ * Navigates to the cart via the header link — client-side routing, so the cart survives.
+ *
+ * POST-RUN CORRECTION (waits/mechanism only). The bare `click()` was not reliable: a click issued
+ * while React is still re-rendering from the preceding `addToCart` can be swallowed, leaving the app
+ * on the storefront. The failure that exposed this was diagnosed from the timeout's page snapshot —
+ * still on Home, with the last product button holding focus — after which the retrying row-count
+ * assertion polled a page that had no rows until the whole test budget expired.
+ *
+ * Retrying the click until the route actually changes makes the navigation deterministic. It waits
+ * on a real state transition rather than on a fixed delay, so it neither hides a genuine failure nor
+ * pads the run when the first click works.
+ */
 export async function goToCart(page: Page): Promise<void> {
-  await page.getByRole('link', { name: 'Giỏ hàng' }).click();
+  await expect(async () => {
+    await page.getByRole('link', { name: 'Giỏ hàng' }).click();
+    await expect(page).toHaveURL(/\/cart$/, { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
 }
 
 /**
@@ -165,7 +180,11 @@ export async function goToCart(page: Page): Promise<void> {
  * waitForLoggedIn), otherwise Cart.jsx alerts and redirects to /login.
  */
 export async function goToCheckoutFromCart(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Tiến hành thanh toán' }).click();
+  // Same swallowed-click hazard as goToCart, and the same deterministic remedy.
+  await expect(async () => {
+    await page.getByRole('button', { name: 'Tiến hành thanh toán' }).click();
+    await expect(page).toHaveURL(/\/checkout$/, { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
   await expect(
     page.getByRole('heading', { name: 'Xác Nhận Đơn Hàng' }),
     'checkout page never rendered — the cart→checkout navigation did not complete',

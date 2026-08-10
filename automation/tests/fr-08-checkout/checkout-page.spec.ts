@@ -166,10 +166,14 @@ async function seedCartAndOpenCheckout(
   await goToCart(page);
   // Confirms the seed actually landed before the checkout assertions depend on it — a failure here
   // is a setup failure and is reported as such, not as an FR-08 violation.
+  // Bounded timeout (post-run correction): `toHaveCount` retries, so a seeding shortfall used to
+  // consume the ENTIRE test budget and surface as a bare "test timeout" with no indication of cause.
+  // Failing fast here reports it as what it is — a setup failure — while still allowing time for the
+  // cart route to render under parallel load.
   await expect(
     page.getByRole('row'),
     'cart did not contain the seeded products — setup failed, not an FR-08 result',
-  ).toHaveCount(testCase.input.products.length + 1); // +1 for the header row
+  ).toHaveCount(testCase.input.products.length + 1, { timeout: 15_000 }); // +1 for the header row
 
   await goToCheckoutFromCart(page);
 }
