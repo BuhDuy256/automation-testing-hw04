@@ -1,9 +1,9 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.4 — **all three batches executed**: **45 executions, 21 passed / 24 failed**,
-> **4 confirmed defects** (issues #4–#7). **The combined FR-08 run is still pending.**
-> Design §1–§6; Batch A review/gates/prediction §7–§9 and results §10; Batch B §11–§13 and results
-> §14; Batch C §15–§17 (incl. pre-run corrections §17.1) and results **§18**.
+> **Status: FR-08 complete.** All 15 cases automated and executed, per batch and **combined**:
+> **45 executions, 21 passed / 24 failed**, **24 genuine browser runs**, **4 confirmed defects**
+> (issues #4–#7). This file is the §14 "main report" for FR-08.
+> Design §1–§6; Batch A §7–§10; Batch B §11–§14; Batch C §15–§18; **combined run §19**.
 >
 > | Field | Value |
 > |---|---|
@@ -903,7 +903,130 @@ Every Batch C case rests on a **direct spec citation** — line 108 (R5) or line
 assumption-grounded case appears in this batch, so both new defects are at full evidence strength;
 neither depends on A-08-1 or A-08-2.
 
-## > NEXT — the combined FR-08 run
+---
 
-All three batches have run individually. The combined run executes all 15 cases together to produce
-the feature-level report, following the FR-04 pattern.
+# 19. Combined FR-08 run — the feature-level result
+
+```bash
+cd automation && npx playwright test tests/fr-08-checkout
+```
+
+All 15 cases together, one invocation, no retries, **no `.spec.ts` edited beforehand**.
+Report: **`../html-report/index.html`**.
+
+## 19.1 Totals
+
+| Metric | Value |
+|---|---|
+| Cases automated | **15 / 15** |
+| Projects | 3 (chromium, firefox, webkit) |
+| **Executions** | **45** |
+| **Passed** | **21** (7 per project) |
+| **Failed** | **24** (8 per project) |
+| Timeouts / setup failures / driver crashes | **0** |
+| Wall time | 3.6 min |
+
+**Matches the batch-derived expectation exactly** — 45 executions, 21 / 24, 7 pass / 8 fail per
+project. Running the three batches together changed nothing: no interaction effect, no ordering
+dependency, no contention flakiness.
+
+That is a substantive result, not a formality. These 45 executions mix UI and API paths and mutate
+carts, orders and sessions concurrently against **one** SQLite database and **one** dev server. The
+per-test account isolation (architecture §3.2) and the per-test markers introduced in Batch B are
+what make it hold. Notably the firefox driver instability recorded in §10.3 **did not recur** — all
+45 executions completed.
+
+## 19.2 Result by case
+
+| # | Case | Batch | Surface | R | chromium | firefox | webkit | Root cause |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `TC-08-N01-UI` | A | UI | R2 | ❌ | ❌ | ❌ | `BUG-08-101` |
+| 2 | `TC-08-N02-UI` | A | UI | R2 | ✅ | ✅ | ✅ | — |
+| 3 | `TC-08-N03-UI` | A | UI | R2→R4 | ❌ | ❌ | ❌ | `BUG-08-102` |
+| 4 | `TC-08-N04-UI` | A | UI | R3 | ✅ | ✅ | ✅ | — |
+| 5 | `TC-08-N05-UI` | A | UI | R3 | ✅ | ✅ | ✅ | — *(oracle A-08-1, MED)* |
+| 6 | `TC-08-N06-UI` | A | UI | R3 | ✅ | ✅ | ✅ | — *(oracle A-08-2, MED)* |
+| 7 | `TC-08-001` | B | API | R4 | ❌ | ❌ | ❌ | `BUG-08-102` |
+| 8 | `TC-08-EP-002` | B | API | R1 | ✅ | ✅ | ✅ | — |
+| 9 | `TC-08-EP-003` | B | API | R1 | ✅ | ✅ | ✅ | — |
+| 10 | `TC-08-N08-API` | B | API | R4 | ❌ | ❌ | ❌ | `BUG-08-102` |
+| 11 | `TC-08-N09-API` | B | API | R4 | ❌ | ❌ | ❌ | `BUG-08-102` |
+| 12 | `TC-08-N10-API` | B | API | R4 | ❌ | ❌ | ❌ | `BUG-08-102` |
+| 13 | `TC-08-EP-004` | C | API | R5 | ❌ | ❌ | ❌ | `BUG-08-103` |
+| 14 | `TC-08-N07-UI` | C | UI | R5 | ❌ | ❌ | ❌ | `BUG-08-104` |
+| 15 | `TC-08-N11-UI` | C | UI | R1 | ✅ | ✅ | ✅ | — |
+
+**7 passed / 8 failed per project**, identical across all three — every failure reproduces on every
+browser.
+
+## 19.3 Real-defect classification — no new root cause
+
+All 24 failures are **assertion** failures (21 value comparisons, 3 locator-count comparisons); zero
+timeouts, zero setup failures, zero driver crashes. They collapse to exactly the **four**
+already-filed root causes, with **no fifth appearing**:
+
+| Defect | Failing cases | Executions | Severity | Issue |
+|---|---|---|---|---|
+| `BUG-08-101` — the order total is a user-editable form field | `N01-UI` | 3 | High | [#4](https://github.com/BuhDuy256/automation-testing-hw04/issues/4) |
+| `BUG-08-102` — the backend never recomputes the total | `N03-UI`, `TC-08-001`, `N08`, `N09`, `N10` | **15** | Critical | [#5](https://github.com/BuhDuy256/automation-testing-hw04/issues/5) |
+| `BUG-08-103` — the **server** cart is not cleared | `EP-004` | 3 | Medium | [#6](https://github.com/BuhDuy256/automation-testing-hw04/issues/6) |
+| `BUG-08-104` — the **client** cart is not cleared | `N07-UI` | 3 | Medium | [#7](https://github.com/BuhDuy256/automation-testing-hw04/issues/7) |
+
+The distinct received values confirm the diagnoses unchanged from the batch runs — `1`, `null`,
+`1000000000` and `0` all persisted verbatim for `BUG-08-102`, which is the evidence that there is no
+computation rather than weak validation.
+
+**No assertion was weakened**, and **no `.spec.ts` was modified for this run** — so there is **no
+`fix:` commit** attached to it.
+
+## 19.4 Browser coverage — counted honestly
+
+| Surface | Cases | Executions | Counts as browser coverage? |
+|---|---|---|---|
+| **UI-path** (requests `page`) | 8 — `N01`–`N06`, `N07-UI`, `N11-UI` | **24** | ✅ yes |
+| API-path (`APIRequestContext`) | 7 — Batch B's 6 + `EP-004` | 21 | ❌ no — no browser is launched |
+
+**FR-08 contributes 24 genuine browser executions**, not 45. Counting the API executions would
+inflate the figure by 87%. HW04 §6's "≥9 browser runs" bar is cleared by FR-08's UI cases alone, so
+the honest number was never in tension with the requirement.
+
+## 19.5 Requirement coverage — the feature-level verdict
+
+| Ref | Requirement | Cases | Verdict |
+|---|---|---|---|
+| **R1** | only a logged-in user can check out | 3 | ✅ **satisfied on both surfaces** |
+| **R2** | total auto-computed, not user-editable | 3 | ❌ `BUG-08-101` |
+| **R3** | full ordered-product list displayed | 3 | ✅ satisfied |
+| **R4** | backend recomputes; client `total_amount` not accepted | 4 | ❌ `BUG-08-102` |
+| **R5** | cart cleared after a successful checkout | 2 | ❌ `BUG-08-103` **and** `BUG-08-104` |
+
+Two of five requirements hold. R1 holding is what makes the rest precise rather than diffuse:
+**checkout authenticates correctly, then fails to recompute the total, exposes that total for
+editing, and clears neither cart.**
+
+## 19.6 Assertion patterns exercised (HW04 §6 requires ≥3)
+
+| # | Pattern | Where |
+|---|---|---|
+| 1 | **UI state** | displayed total (`N01`, `N02`), ordered-product list (`N04`–`N06`), cart rows (`N07-UI`), success-state absence (`N11-UI`) |
+| 2 | **Network response** | `APIRequestContext` status/body across Batch B; passive `/api/checkout` response capture (`N11-UI`) |
+| 3 | **Persisted round-trip** | independent `GET /api/orders/my-orders` read-back (`N03-UI`, all Batch B R4 cases); `GET /api/cart` read-back (`EP-004`) |
+| 4 | *(bonus)* **Absence / negative** | `toHaveCount(0)`, `not.toContain`, `toEqual([])` for "must not have happened" |
+
+## 19.7 Step 5 exit criteria
+
+| Criterion | Status |
+|---|---|
+| ≥12 cases automated | ✅ **15** (4 HW02 + **11 designed in Step 5.1**) |
+| Run on 3 browsers | ✅ 45 executions, **24** of them real browser runs |
+| ≥3 assertion patterns | ✅ 4 including the bonus |
+| Data externalized | ✅ `data/fr-08-checkout.json`, zero inline test data |
+| Report carries `Run by` + ISO | ✅ verified 5/5 on all four reports, distinct timestamps |
+| Frozen before execution | ✅ 3 freeze commits, each preceding its run |
+| Defects filed with evidence | ✅ 4 confirmed, issues #4–#7 |
+| Non-automatable cases documented | ✅ none — all 15 automated (§4.3) |
+
+## > NEXT — Step 6, FR-15
+
+FR-15 Product Management CRUD, through the skill. Its freeze will be the **eighth** qualifying
+commit, clearing HW04 §12's minimum.

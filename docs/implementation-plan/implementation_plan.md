@@ -527,7 +527,7 @@ before mass-generating specs.
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
-| 5 FR-08 through skill (+8 new cases) | **in progress** — **all 3 batches executed** (freezes `9b0ab82`, `286f437`, `050a468`; 21 pass / 24 fail over 45 executions; **4 defects**, issues #4–#7); combined run pending |
+| 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
@@ -623,34 +623,30 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 5 — the combined FR-08 run.** Every case has run inside its own batch; this executes all 15
-**together** to produce the single feature-level report, following the FR-04 pattern.
+**Step 6 — FR-15 Product Management CRUD, through the skill.** The last feature. Its **first freeze
+is the eighth qualifying commit**, which clears HW04 §12's minimum.
 
-```bash
-cd automation && npx playwright test tests/fr-08-checkout
-```
+1. **6.1 selection:** HW02 froze **20** FR-15 cases (11 EP + 9 BVA) against a minimum of 12 — a
+   surplus, so unlike FR-08 no new case design is required. Select ≥12 and record why the rest are
+   excluded.
+2. Then skill Phases 2–7 per batch, 3 freeze commits expected.
 
-**Expected from the batch runs: 15 cases × 3 projects = 45 executions, 21 pass / 24 fail** (7 pass /
-8 fail per project). No new root cause is expected; anything else is an interaction effect or
-flakiness and goes through the real-defect gate.
+**FR-15 is the admin surface** (`frontend-admin`, port 5174) — a different app from FR-04/FR-08.
+Re-derive fixtures and selectors from *it*, not from the storefront.
 
-Then: write the combined report to `out/reports/FR-08-checkout/html-report/index.html` (the per-batch
-files stay as the historical evidence the issues were filed against), complete the feature-level
-sections of the FR-08 report, and update `out/README.md`.
+**Carry into FR-15 — architecture §3.2's global-state rule finally bites.** Products are **shared**,
+not per-user. Every created product must take a unique name, assertions must target only rows the
+test created, and **no assertion may reference a total product count** — a parallel worker's row
+would break it. This is the same class as FR-08's order-marker problem, and the same solution.
 
-**Batch C done (freeze `050a468`, corrections `3e77f44`, 3 pass / 6 fail).** Prediction **3/3
-correct**. Two **distinct** defects, separated by evidence rather than assumed: `BUG-08-103` (#6,
-server cart) and `BUG-08-104` (#7, client cart — `clearCart` is defined, exposed and destructured but
-**never called**). Neither fix reaches the other's store. `TC-08-N11-UI` passed 3/3, so **R1 is the
-one FR-08 requirement fully satisfied on both surfaces**.
-
-Three pre-run corrections (`3e77f44`) all fixed the same class: **a test must not require the defect
-to be present in order to run**. Third appearance of that failure mode — see report §17.1.
-
-**FR-08 defect summary:** R1 ✅ · R2 ❌ #4 · R3 ✅ · R4 ❌ #5 · R5 ❌ #6 **and** #7.
+**Step 5 done (FR-08 complete).** 15 cases (4 HW02 + **11 designed in Step 5.1**), 45 executions,
+21 pass / 24 fail, **24 genuine browser runs**, 4 defects: R1 ✅ · R2 ❌ #4 · R3 ✅ · R4 ❌ #5 ·
+R5 ❌ #6 **and** #7. The combined run matched the batch-derived expectation exactly and produced
+**no new root cause**.
 
 **Ledger:** **7 freezes of the 8** required by §12 (`e6cd87f`, `8053add`, `5af1749`, `6942a0a`,
-`9b0ab82`, `286f437`, `050a468`). **One more needed, from FR-15.** `fix:` commits do not count.
+`9b0ab82`, `286f437`, `050a468`). **One more, from FR-15, clears it.** `fix:` commits do not count.
 
 **Known risk to carry:** firefox shows intermittent Playwright *driver* instability (teardown
-protocol errors) unrelated to the SUT. It never reaches an assertion. Record it; do not chase it.
+protocol errors) unrelated to the SUT. It did not recur in the combined run. Record it if it
+reappears; do not chase it.

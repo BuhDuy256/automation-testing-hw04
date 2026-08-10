@@ -1,7 +1,10 @@
 # FR-08 — Bug reports
 
-Confirmed product defects found by FR-08 automation. **All three batches have run** — A (R2, R3),
-B (R1, R4), C (R5, R1-UI).
+Confirmed product defects found by FR-08 automation. **All three batches have run, plus the combined
+FR-08 suite** — A (R2, R3), B (R1, R4), C (R5, R1-UI).
+
+The combined run (45 executions, 21 passed / 24 failed) **confirmed all four defects and produced no
+fifth root cause**, so every write-up and issue below stands on the evidence it was filed with.
 
 Every defect below reproduces **identically on all three projects**, was reached **at an assertion**
 (never a timeout), and comes from a spec frozen **before any execution** — Batch A at `9b0ab82`,

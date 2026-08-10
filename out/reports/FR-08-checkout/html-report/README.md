@@ -12,9 +12,12 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-08-checko
 | `batch-a.html` | Step 5 Batch A — **UI**, R2 + R3 | `TC-08-N01-UI` … `TC-08-N06-UI` × 3 browsers | **12 passed / 6 failed** |
 | `batch-b.html` | Step 5 Batch B — **API**, R1 + R4 | `TC-08-001`, `EP-002`, `EP-003`, `N08`, `N09`, `N10` × 3 projects | **6 passed / 12 failed** |
 | `batch-c.html` | Step 5 Batch C — **UI + API**, R5 + R1-UI | `TC-08-EP-004`, `TC-08-N07-UI`, `TC-08-N11-UI` × 3 projects | **3 passed / 6 failed** |
+| **`index.html`** | **Combined FR-08 run** — the feature-level report | **all 15 cases × 3 projects = 45 executions** | **21 passed / 24 failed** |
 
-All three batches have now run. A combined FR-08 `index.html` will be added by the combined run,
-following the FR-04 layout.
+`index.html` is the report to read for FR-08. The three batch files are kept as the historical
+per-batch evidence that the individual bug reports and GitHub issues were filed against, each one
+produced from a spec frozen *before* it ran. The combined run introduced **no new root cause** — its
+24 failures are the same four defects, so every issue's cited evidence remains accurate.
 
 ## Browser coverage — 24 of 45, and the split is not cosmetic
 
@@ -23,7 +26,10 @@ following the FR-04 layout.
 | A | UI-path — requests `page` | 18 | **18** |
 | **B** | **API-path — never requests `page`** | 18 | **0** |
 | C | mixed — 2 UI cases, 1 API case | 9 | **6** |
-| **Total** | | **45** | **24** |
+| **Total** | **8 UI cases, 7 API cases** | **45** | **24** |
+
+The combined run reproduces this split exactly: of its 45 executions, the 8 UI-path cases account
+for **24** genuine browser runs and the 7 API-path cases for 21 executions that launch nothing.
 
 **Batch A**: every case drives a real browser, because R2 and R3 are both rules about the interface
 and cannot be tested any other way. Nothing is deducted.

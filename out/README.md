@@ -1,9 +1,9 @@
 # HW04 — Automation Testing on EShop (submission README)
 
 > **Status: in progress.** FR-04 is complete (16 cases automated and executed); FR-08 is designed
-> (15 cases) with **all three batches executed** (15 cases, 4 defects); the combined FR-08 run is
-> still pending. FR-15 is not started. The self-assessment table and totals below are provisional and
-> will be finalised before submission.
+> (15 cases) and **complete** — all 15 executed per batch and combined, 4 defects. FR-15 is not
+> started. The self-assessment table and totals below are provisional and will be finalised before
+> submission.
 
 ## 1. Student information
 
@@ -22,7 +22,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | No. | Criteria | Grade | Self-assessed |
 |---|---|---|---|
 | 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
-| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _all 15 cases executed per batch; combined run pending_ |
+| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _complete — 15 cases, combined run done_ |
 | 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _not started_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
 | 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
@@ -33,7 +33,7 @@ _Per HW04 §15. Provisional — completed rows only._
 | Feature | Cases automated | Executions | Passed | Failed | Browser runs* | Confirmed defects |
 |---|---|---|---|---|---|---|
 | **FR-04** Personal Profile Management | **16** | **48** | **21** | **27** | **18** | **3** |
-| FR-08 Checkout _(per-batch runs)_ | **15** | **45** | **21** | **24** | **24** | **4** |
+| **FR-08** Checkout | **15** | **45** | **21** | **24** | **24** | **4** |
 | FR-15 Product Management CRUD | — | — | — | — | — | — |
 | **Total so far** | **31** | **93** | **42** | **51** | **42** | **7** |
 
@@ -87,7 +87,7 @@ _Paths relative to this `out/` folder._
 | FR-04 HTML reports (combined + per batch) | `reports/FR-04-personal-profile/html-report/` (see its `README.md`) |
 | FR-08 main report (design, review, prediction, results) | `reports/FR-08-checkout/automation/report.md` |
 | FR-08 bug reports | `reports/FR-08-checkout/bug-reports/report.md` |
-| FR-08 HTML reports (per batch: A, B, C) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
+| FR-08 HTML reports (combined + per batch) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique | `ai-critique.md` _(pending)_ |
