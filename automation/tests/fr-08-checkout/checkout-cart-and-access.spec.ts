@@ -221,8 +221,13 @@ test(`${caseById('TC-08-N11-UI').id} — ${caseById('TC-08-N11-UI').title}`, asy
 
   // --- Observation 1: the in-app route into checkout is not open to an anonymous user.
   await page.getByRole('button', { name: 'Tiến hành thanh toán' }).click();
+  // The settle check must admit EVERY outcome, including the violating one. An earlier version
+  // waited only for the cart or a login heading; had the app wrongly admitted an anonymous user, the
+  // checkout heading would have matched neither and this would have timed out BEFORE the oracle
+  // below could fire — reporting "the app did not settle" instead of the violation. Same defect
+  // class as finding 60.
   await expect(
-    page.getByRole('heading', { name: /Giỏ Hàng|Đăng/ }).first(),
+    page.getByRole('heading', { name: /Giỏ Hàng|Đăng|Xác Nhận Đơn Hàng/ }).first(),
     'the app did not settle after the checkout attempt',
   ).toBeVisible();
 
@@ -251,17 +256,39 @@ test(`${caseById('TC-08-N11-UI').id} — ${caseById('TC-08-N11-UI').title}`, asy
   });
 
   await page.goto(`${WEB_URL}/checkout`, { waitUntil: 'domcontentloaded' });
-  await expect(
-    page.getByRole('heading', { name: 'Xác Nhận Đơn Hàng' }),
-    'checkout page never rendered',
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Xác Nhận Thanh Toán' }).click();
 
-  // Give the app its own completion signal a chance to appear before asserting its absence.
-  await expect(
-    page.getByRole('button', { name: /Xác Nhận Thanh Toán|Đang xử lý/ }),
-    'the checkout button never settled',
-  ).toBeVisible({ timeout: 10_000 });
+  // Requiring the checkout form to render would again require the defect to be present: an
+  // implementation that guarded the /checkout route for anonymous users would be MORE compliant with
+  // line 104, yet would fail this case as a harness error. Presence is probed instead, and the
+  // oracle below holds either way — vacuously if the form is unreachable, substantively if it is.
+  const confirmButton = page.getByRole('button', { name: 'Xác Nhận Thanh Toán' });
+  const formReachable = (await confirmButton.count()) > 0;
+  test.info().annotations.push({
+    type: 'Checkout form reachable anonymously',
+    description: String(formReachable),
+  });
+  // CAPTURE-THEN-ASSERT (pre-run correction, finding 60). The readiness signal must not be the
+  // checkout button remaining visible: Checkout.jsx:68-76 REPLACES the entire form with the success
+  // screen when `success` becomes true, so if an anonymous checkout wrongly SUCCEEDED — precisely
+  // the defect this case exists to catch — the button would vanish, that assertion would time out,
+  // and the test would report "the checkout button never settled" instead of the actual violation.
+  // A test must not depend on the correct outcome in order to reach its own oracle.
+  //
+  // So the request is captured as an OPTIONAL value instead. Absent (client-side block) and present
+  // (server refusal) are both legitimate compliant shapes, and neither is asserted as a mechanism.
+  if (formReachable) {
+    const checkoutResponse = page
+      .waitForResponse((response) => response.url().includes('/api/checkout'), { timeout: 10_000 })
+      .catch(() => null);
+
+    await confirmButton.click();
+    const captured = await checkoutResponse;
+
+    test.info().annotations.push({
+      type: 'Checkout request observed',
+      description: captured ? `yes — status ${captured.status()}` : 'no request was issued',
+    });
+  }
 
   test.info().annotations.push(
     { type: 'Checkout response statuses', description: JSON.stringify(checkoutResponses) },
