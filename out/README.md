@@ -1,10 +1,10 @@
 # HW04 — Automation Testing on EShop (submission README)
 
 > **Status: in progress.** **FR-04 complete** (16 cases automated and executed, 3 defects).
-> **FR-08 complete** (15 cases, executed per batch and combined, 4 defects). **FR-15** has its case
-> design complete (18 cases), with **Batches A and B executed** (12 cases, 3 defects) and Batch C
-> pending. The self-assessment table and totals below are provisional and will be finalised before
-> submission.
+> **FR-08 complete** (15 cases, executed per batch and combined, 4 defects). **FR-15** has **all
+> three batches executed per batch** — 18 cases, 54 executions, **18 passed / 36 failed**, 5 defects
+> — with the combined run still pending. The self-assessment table and totals below are provisional
+> and will be finalised before submission.
 
 ## 1. Student information
 

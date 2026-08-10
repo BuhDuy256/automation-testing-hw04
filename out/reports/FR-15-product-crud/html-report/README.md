@@ -33,8 +33,8 @@ executions each, against Batch C's **41.2 s** once two real browsers are involve
 
 **Counting all 54 would overstate FR-15's browser coverage ninefold.**
 
-FR-15's browser coverage will come entirely from **Batch C's two UI cases** against the admin panel
-(2 × 3 = 6 executions).
+FR-15's browser coverage comes entirely from **Batch C's two UI cases** against the admin panel
+(2 × 3 = **6 executions**), which have now run.
 
 ## What the failures are
 
