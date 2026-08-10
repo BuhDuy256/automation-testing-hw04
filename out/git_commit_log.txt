@@ -1,0 +1,73 @@
+c970838 docs: FR-15 bug report records the combined run; plan audit count 17 -> 18
+23510fd Combined FR-15 run: 54 executions, 18 passed / 36 failed, no new root cause
+87ff332 docs: FR-15 status reflects all three batches executed
+933d434 Step 6 Batch C output: 3/15, BUG-15-104 (Critical) and BUG-15-105 filed
+5d380cc docs: FR-15 Batch C review findings and prediction, recorded before the run
+2d0f67d freeze: FR-15 specs batch C
+287751a docs: correct FR-15 html-report failure summary to 21 across three root causes
+5d9967d Step 6 Batch B output: 12/6, BUG-15-103 filed, BUG-15-102 gets an owning test
+e69c3c8 docs: fix Batch B page-fixture gate wording
+5850b88 docs: FR-15 Batch B review findings and prediction, recorded before the run
+102c6d1 freeze: FR-15 specs batch B
+13d7688 docs: correct Batch A heading and resolve Batch B sizing before coding
+246928a Step 6 Batch A output: 3/15, BUG-15-101 and BUG-15-102 filed
+4dc1cd3 fix: FR-15 Batch A post-run corrections
+434e595 docs: precision fixes to FR-15 audit row and static-gate wording
+3e27941 docs: FR-15 Batch A review findings and prediction, recorded before the run
+734c6d0 freeze: FR-15 specs batch A
+61ff6e1 docs: reframe two FR-15 exclusions as selection tradeoffs, not redundancy
+fe6d615 Step 6.1: FR-15 product CRUD case selection (18 cases, 16 HW02 + 2 new)
+f02d6a4 docs: record FR-08 in out/README s5 'test cases not automated'
+2b3de71 Combined FR-08 run: 45 executions, 21 passed / 24 failed, no new root cause
+910acc7 docs: correct FR-08 status line and browser-coverage heading
+f7458c9 Step 5 Batch C output: 3/6, BUG-08-103 and BUG-08-104 filed as distinct
+3448f25 docs: Batch C frozen state, corrected N11 case row, resume point
+3e77f44 fix: FR-08 Batch C pre-run review corrections
+08d6237 docs: FR-08 Batch C review findings and prediction, recorded before the run
+050a468 freeze: FR-08 specs batch C
+701c9d4 docs: deliverable index now lists both FR-08 batch HTML reports
+b9b3dde Step 5 Batch B output: 6/12, BUG-08-102 widened, issue #5 updated
+537e9d9 docs: state precisely what the Batch B freeze preserved in Batch A
+5d552db docs: FR-08 Batch B review findings and prediction, recorded before the run
+286f437 freeze: FR-08 specs batch B
+4d69aa8 docs: separate fixed harness defects from the residual environment flake
+f5f07c5 Step 5 Batch A output: 12/6, BUG-08-101 and BUG-08-102 filed
+70d2636 fix: FR-08 Batch A post-run corrections (2) - deterministic navigation
+bbe6361 fix: FR-08 Batch A post-run corrections
+26d9e3d fix: FR-08 Batch A pre-run review corrections
+02ba6fc docs: FR-08 Batch A review findings and prediction, recorded before the run
+9b0ab82 freeze: FR-08 specs batch A
+1dab57e docs: correct out/README.md status line for FR-08 design completion
+8cf17b6 Step 5.1: FR-08 checkout case design (15 cases, 11 new)
+5f2c3f1 docs: Step 5 must derive fixtures/selectors from FR-08, not inherit FR-04's
+9cf5dc1 Step 4: extract test-automation-design skill
+31015d3 docs: Step 3 complete (combined run 12c5585), NEXT ACTION is Step 4 skill extraction
+12c5585 Combined FR-04 run: 48 executions, 21 passed / 27 failed, no new root cause
+4070eca docs: all three FR-04 batches executed, NEXT ACTION is the combined run
+985e51c Step 3 Batch C output: BUG-04-103 privilege escalation, BUG-04-102 widened
+cd47c80 docs: Batch C frozen at 6942a0a, NEXT ACTION is the Batch C run
+6942a0a freeze: FR-04 specs batch C
+997dc51 docs: FR-04 Batch C review findings, recorded before the freeze
+9b45ddb docs: correct the .spec.ts ledger to 4 total / 3 freezes after Batch B
+88f188a Step 3 Batch B output: results, BUG-04-102 widened, batch-b report
+500268c docs: Batch B is frozen at 5af1749, NEXT ACTION is the Batch B run
+5af1749 freeze: FR-04 specs batch B
+c051027 docs: FR-04 Batch B review findings, recorded before the freeze
+f3503b7 docs: Step 3 in progress, Batch A recorded, NEXT ACTION is Batch B freeze
+326ff83 Step 3 Batch A output: results, BUG-04-102, multi-browser report
+9e6a8bb fix: FR-04 post-run corrections
+8053add freeze: FR-04 specs batch A
+fb2f23d docs: FR-04 Step 3.1 case selection and Batch A review findings
+0f07862 docs: file BUG-04-101 as issue #1, mark Step 2 done, point NEXT ACTION at Step 3
+64bff25 Step 2 output: FR-04 smoke results, BUG-04-101, multi-browser report
+e6cd87f freeze: FR-04 smoke spec
+0d1447e docs: mark Step 1 done, point NEXT ACTION at Step 2, un-abridge audit prompt
+569ac80 Step 1: freeze automation architecture and isolated-user fixture
+f2739a3 fix(plan): make the 8-commit floor unconditional; scope the ledger to feature scripts
+ed96be8 fix(plan): scope FR-08 cases to spec, pin commit schedule, harden report evidence
+f1b80e9 update .gitignore
+50c10df docs: add HW04 implementation plan reusing the HW02 method
+e25e3b7 docs: record main-report location decision and switch to run.sh
+b1ed2d0 docs: drop the 4-day commit-span requirement per instructor amendment
+cba3c4b Scaffold HW04 automation project (Playwright) and submission skeleton
+a6d0cff upload project req

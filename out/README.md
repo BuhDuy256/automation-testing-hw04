@@ -1,10 +1,9 @@
 # HW04 — Automation Testing on EShop (submission README)
 
-> **Status: in progress.** **FR-04 complete** (16 cases automated and executed, 3 defects).
-> **FR-08 complete** (15 cases, executed per batch and combined, 4 defects). **FR-15 complete**
-> (18 cases, executed per batch and combined, 5 defects). **All three features are done**; Step 7
-> packaging, the AI critique and the demo video remain. The self-assessment table below is
-> provisional until then.
+> **Status: all three features complete.** FR-04 (16 cases, 3 defects), FR-08 (15 cases,
+> 4 defects) and FR-15 (18 cases, 5 defects) are each automated and executed per batch **and**
+> combined. **Outstanding: the Task 2 demo video** — see §7. The self-assessment below is a
+> *proposed* mark; the total is not final until the video exists.
 
 ## 1. Student information
 
@@ -18,16 +17,16 @@
 
 ## 2. Self-assessment table
 
-_Per HW04 §15. Provisional — completed rows only._
+_Per HW04 §15. **Proposed** self-assessment. Task 2 is unscored because the demo video does not exist yet (§7), so the total is incomplete by design rather than by omission._
 
-| No. | Criteria | Grade | Self-assessed |
-|---|---|---|---|
-| 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
-| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _complete — 15 cases, combined run done_ |
-| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _complete — 18 cases, combined run done_ |
-| 2 | Task 2 — Demo video | 15 | _not started_ |
-| 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
-| | **Total** | **100** | — |
+| No. | Criteria | Max | Proposed | Basis |
+|---|---|---|---|---|
+| 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | **25** | 16 cases (≥12), 48 executions, 18 browser runs, 3 defects filed with evidence, 4 freeze commits |
+| 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | **25** | 15 cases (4 HW02 + **11 designed**), 45 executions, 24 browser runs, 4 defects, 3 freezes |
+| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | **25** | 18 cases, 54 executions, 6 browser runs, 5 defects, 3 freezes |
+| 2 | Task 2 — Demo video | 15 | **—** | **Not recorded.** See §7 |
+| 3 | Agent Skill | 10 | **10** | `agent-skill/SKILL.md` — 7 phases, repo- and framework-agnostic, extracted from FR-04 and then applied to FR-08 and FR-15 |
+| | **Total** | **100** | **85 + video** | The mark cannot be completed until Task 2 exists |
 
 ## 3. Test summary report
 
@@ -127,11 +126,37 @@ _Paths relative to this `out/` folder._
 | FR-15 HTML reports (combined + per batch) | `reports/FR-15-product-crud/html-report/` (see its `README.md`) |
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
-| AI Critique | `ai-critique.md` _(pending)_ |
-| Git commit log | `git_commit_log.txt` _(generated before submission)_ |
+| AI Critique (§10, 262 words) | `ai-critique.md` |
+| Git commit log (73 commits) | `git_commit_log.txt` |
 | Automation project | `../automation/` |
-| Implementation plan + architecture | `../docs/implementation-plan/` |
+| Implementation plan + architecture | `docs/implementation-plan/` (mirrored from `../docs/`) |
 
-## 7. Demo video
+## 7. Demo video — **outstanding**
 
-_Not yet recorded (HW04 Task 2)._
+**Not yet recorded.** HW04 Task 2 requires a video (unlisted YouTube link) that walks through the
+automation end to end, narrates at least one fix made to AI-generated output, and evidences
+authorship with either a face-cam or a terminal running `whoami` and `hostname`. HW04 §7 additionally
+asks that the Agent Skill be demonstrated on a complete feature.
+
+**No link is recorded here because none exists.** The proposed self-assessment in §2 therefore stops
+at 85 of 100, and the submission archive should not be built until the video is made and its link
+added to this section.
+
+Material for the narration is already written down: `reports/FR-15-product-crud/automation/report.md`
+§11 documents a **false pass** — a strict-equality assertion that could not see a value the SUT
+returned as a string — and `reports/FR-08-checkout/automation/report.md` §10.3 documents four harness
+timeouts that would have become three fabricated bug reports.
+
+---
+
+## 8. Packaging note — PDF export
+
+Every deliverable in this folder is **Markdown**, and all of it is complete.
+
+**No PDF has been generated, and none is claimed.** This machine has no Markdown-to-PDF converter
+available — `pandoc`, `wkhtmltopdf`, `libreoffice`/`soffice` and `md-to-pdf` are all absent, and
+nothing was installed to change that. If the Moodle submission requires PDF, the conversion must be
+done manually before upload; the Markdown sources here are the authoritative versions.
+
+The Playwright HTML reports are **not** affected — they are already self-contained `.html` files and
+open directly in a browser.
