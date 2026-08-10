@@ -1,8 +1,8 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.2 — Batch A **frozen, not yet run**. Design (§1–§6) complete; Batch A's review
-> findings, static gates and pre-run prediction are recorded in §7–§9. Nothing in FR-08 has been
-> executed. Batches B and C are not started.
+> **Status:** Step 5.2 — Batch A **executed**. 12 passed / 6 failed over 18 executions; 2 confirmed
+> defects (issues #4, #5). Design §1–§6, review §7, gates §8, prediction §9, results §10.
+> Batches B and C are not started.
 >
 > | Field | Value |
 > |---|---|
@@ -294,7 +294,12 @@ login and add-to-cart appear only as setup. No case asserts that the UI clears t
 **Browser coverage:** all six cases drive a real browser, so Batch A contributes **18 genuine
 browser executions** (6 × 3). Nothing in this batch is API-path, so there is no inflation risk here.
 
-## 8. Static gates — all passed before the freeze
+## 8. Static gates — all passed before first execution
+
+*(Wording corrected: the §7 gates ran before the freeze commit `9b0ab82`, but findings 38–39 in §7.1
+were found **after** that commit and **before** any run, so the gates were re-run then too. "Before
+first execution" is the property that actually matters and is the one that holds for every row
+below — nothing in this table was observed after a test had run.)*
 
 | Gate | Result |
 |---|---|
@@ -335,7 +340,166 @@ real-defect gate **after** the run, not now.
 
 **No assertion has been relaxed** for any known defect.
 
-## > NEXT — run Batch A
+---
 
-`cd automation && npx playwright test tests/fr-08-checkout`. The spec is frozen at the commit below,
-**before** any execution.
+# 10. Batch A — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-08-checkout
+```
+
+No retries. Spec frozen at `9b0ab82`; §7.1's corrections were made before the first run. Report:
+`../html-report/batch-a.html`.
+
+## 10.1 Results
+
+| Case | R | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|
+| `TC-08-N01-UI` | R2 | ❌ | ❌ | ❌ | FAIL → **`BUG-08-101`** |
+| `TC-08-N02-UI` | R2 | ✅ | ✅ | ✅ | PASS |
+| `TC-08-N03-UI` | R2→R4 | ❌ | ❌ | ❌ | FAIL → **`BUG-08-102`** |
+| `TC-08-N04-UI` | R3 | ✅ | ✅ | ✅ | PASS |
+| `TC-08-N05-UI` | R3 | ✅ | ✅ | ✅ | PASS *(oracle A-08-1, MED)* |
+| `TC-08-N06-UI` | R3 | ✅ | ✅ | ✅ | PASS *(oracle A-08-2, MED)* |
+
+**12 passed / 6 failed** over 18 executions. All six failures are **assertion** failures, identical
+on every browser.
+
+## 10.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-08-N01-UI` | FAIL | FAIL | ✅ |
+| `TC-08-N02-UI` | PASS | PASS | ✅ |
+| `TC-08-N03-UI` | FAIL | FAIL | ✅ |
+| `TC-08-N04-UI` | PASS | PASS | ✅ |
+| `TC-08-N05-UI` | PASS | PASS | ✅ |
+| `TC-08-N06-UI` | PASS | PASS | ✅ |
+
+**6/6 correct**, and the tally matched the predicted **12 pass / 6 fail** exactly — *once the
+harness noise was removed*. The first run did **not** match, and that story is §10.3.
+
+## 10.3 The real-defect gate, applied four times
+
+Run 1 produced **10** failures, not 6. Sorting them by the gate's question — *did it fail at an
+assertion?* — separated them cleanly:
+
+| Run | Config | Result | Assertion failures | Test-side failures |
+|---|---|---|---|---|
+| 1 | as frozen | 8 passed / 10 failed | **6** (N01×3, N03×3) | **4** timeouts — N02/ff, N04/ff, N04/wk, N05/ff |
+| 2 | `test.slow()` | 11 / 7 | 6 | 1 — N04/ff (still timing out at 90 s) |
+| 3 | + deterministic navigation | 12 / 6 | 5 | 1 — N01/ff (new retry predicate) |
+| 4 | unchanged | **12 / 6** | **6** | **0** |
+| 5 | unchanged | 11 / 7 | 6 | 1 — N05/ff (**driver crash in teardown**) |
+| 6 | unchanged | **12 / 6** | **6** | **0** |
+
+**The six assertion failures were identical in all six runs.** Nothing that changed between runs
+touched a product result — which is the point of separating the two categories rather than reporting
+a pass rate.
+
+**Correction 1 — the batch is genuinely slower than FR-04's.** Every case here is UI-path and
+performs a storefront load, a click per seeded product and two client-side route changes; three run
+concurrently against a single Vite dev server. Measured, not assumed: `TC-08-N04-UI` passes on
+firefox in **4.1 s in isolation** and exceeded **30 s** in the batch. FR-04's batches never hit this
+because 10 of their 16 cases were API-path and finished in milliseconds — only a third of that
+matrix was browser-heavy, where **all 18** executions here are. Fixed with `test.slow()` scoped to
+this file, leaving the globally proven `workers: 3` and the 30 s default untouched.
+
+**Correction 2 — a swallowed navigation click, diagnosed from the failure snapshot.** Raising the
+budget was not enough: `TC-08-N04-UI` still exceeded **90 s** on firefox, which is far beyond what
+contention explains for a 4.1 s test. The timeout's page snapshot showed the cause — the app was
+still on the **storefront**, with the last product button holding focus. A click issued while React
+was re-rendering from the preceding `addToCart` had been swallowed, so the retrying row-count
+assertion polled a page with no rows until the budget expired. Fixed by retrying the navigation
+click until the route actually changes (`expect.toPass` on `toHaveURL`), and by bounding the
+post-seed cart assertion to 15 s so a genuine seeding shortfall fails **fast, as a setup failure**,
+instead of surfacing as a causeless timeout.
+
+> **Worth stating plainly.** Had run 1 been taken at face value, `TC-08-N02-UI`, `TC-08-N04-UI` and
+> `TC-08-N05-UI` would have been written up as browser-specific FR-08 defects that do not exist —
+> three fabricated bugs. Every one of those failures was a timeout that never reached an assertion.
+
+**Neither correction changed an expected value.** Both are committed separately
+(`fix: FR-08 Batch A post-run corrections`, and `… (2) — deterministic navigation`) with the
+reasoning above, and `git diff` against the freeze shows no change to any assertion or oracle.
+
+### Residual environment flake, recorded rather than hidden
+
+Firefox in this environment shows intermittent Playwright **driver** instability unrelated to the
+SUT. Run 5's extra failure was:
+
+```
+browserContext.close: Protocol error (Browser.removeBrowserContext):
+can't access property "_maybeDontRestoreTabs", this._windows[aWindow.__SSi] is undefined
+```
+
+That is a crash in **context teardown**, after the test body completed — it cannot be evidence about
+the spec. Runs 4 and 6 were clean at 12/6; runs 3 and 5 each carried one such firefox failure. This
+is reported instead of re-running until a clean pair appeared, because the honest characterisation
+is "stable product result, occasionally noisy harness on one browser", not "clean".
+
+## 10.4 Real-defect classification
+
+Both defects were reached **at an assertion**, reproduce on **all three browsers**, and were
+**corroborated independently**. Grouped by root cause using *"would fixing one fix the other?"*:
+
+| Defect | Cases | Executions | R | Severity | Issue |
+|---|---|---|---|---|---|
+| `BUG-08-101` — the order total is a user-editable form field | `N01-UI` | 3 | R2 | **High** | [#4](https://github.com/BuhDuy256/automation-testing-hw04/issues/4) |
+| `BUG-08-102` — backend stores the client-sent `total_amount` verbatim | `N03-UI` | 3 | R4 | **Critical** | [#5](https://github.com/BuhDuy256/automation-testing-hw04/issues/5) |
+
+**They are distinct, and the evidence decided it — not the prediction.** §9 flagged this as an open
+question. The answer came from the corroboration run, which reproduced `BUG-08-102` **with no
+browser at all**: the backend defect therefore survives any frontend fix. Conversely, a backend that
+recomputed the total would still leave the user editing the displayed one, violating line 105. Full
+matrix in `../bug-reports/report.md`.
+
+**`BUG-08-102` is HW04's own evidence for HW02's `BUG-08-001`, not a citation of it.** HW02 reached
+the endpoint with a crafted request; `TC-08-N03-UI` reaches it **through the checkout form**, which
+changes the severity argument from *"an attacker who can craft requests"* to *"any customer who can
+type"*. That is why architecture §3.1's interception example was wrong (§2.2) and why this case is
+UI-path.
+
+**No assertion was weakened**, and no `.spec.ts` change altered an expectation.
+
+## 10.5 Browser coverage — all 18 count
+
+| Surface | Cases | Executions | Counts as browser coverage? |
+|---|---|---|---|
+| **UI-path** | **6 — all of them** | **18** | ✅ **yes, all of it** |
+| API-path | 0 | 0 | — |
+
+Every case requests Playwright's `page` fixture, so all 18 executions launch a real browser. Unlike
+FR-04 — where 30 of 48 executions were API-path and had to be excluded — **nothing is deducted
+here**. That follows from what R2 and R3 are: both are rules about the interface, so neither can be
+tested any other way. FR-08's API-path cases are Batch B's, and will be counted separately.
+
+## 10.6 Evidence-strength caveat — the two assumption-backed passes
+
+`TC-08-N05-UI` and `TC-08-N06-UI` both **passed**, but they are **not equally grounded** with the
+other four and must not be presented as if they were:
+
+| Case | Oracle | Confidence | If the assumption is rejected |
+|---|---|---|---|
+| `TC-08-N05-UI` | **A-08-1** — "đầy đủ" implies quantity and line amount are visible | **MED** | The case has no test basis and should be **withdrawn**, not counted. R3 coverage drops from 3 to 2 |
+| `TC-08-N06-UI` | **A-08-2** — R3 applied to an empty cart means no lines are shown | **MED** | Same — withdraw rather than count |
+
+Both are **inferences** from line 106's wording, not quoted requirements. Neither produced a defect,
+so nothing is *filed* on assumption-grade evidence — the caveat affects only the coverage claim.
+The four spec-cited cases (`N01`–`N04`) and both filed defects rest on **direct citations** of lines
+105 / 106 / 107.
+
+## 10.7 What the passes establish
+
+`N02` passing matters for the diagnosis: the total **is** computed correctly from the cart before the
+user touches it, so the derivation logic is sound and the fault is precisely that the value is left
+writable — which is why the suggested fix is to make it read-only, not to rewrite the calculation.
+
+`N04`/`N05`/`N06` passing means **R3 is met**: the checkout page renders the ordered-product list
+correctly, including per-line quantity and amount, and fabricates nothing for an empty cart. The
+checkout page is not broadly wrong; its total handling specifically is.
+
+## > NEXT — Batch B
+
+Six API cases covering R1 and R4 (`TC-08-001`, `EP-002`, `EP-003`, `N08`, `N09`, `N10`), through
+skill Phases 2–4, frozen before any run.

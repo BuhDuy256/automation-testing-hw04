@@ -527,7 +527,7 @@ before mass-generating specs.
 | 2 FR-04 vertical smoke | [x] **done 2026-08-09** (freeze `e6cd87f`, output `64bff25`) |
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
-| 5 FR-08 through skill (+8 new cases) | **in progress** — 5.1 design done (15 cases: 4 HW02 + **11 new**); Batch A freeze next |
+| 5 FR-08 through skill (+8 new cases) | **in progress** — 5.1 design done (15 cases); **Batch A executed** (freeze `9b0ab82`, 12/6, 2 defects); Batch B next |
 | 6 FR-15 through skill | [ ] |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
@@ -623,33 +623,29 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 5 — FR-08 Batch A freeze.** The six R2/R3 UI cases, through skill Phases 2–4:
+**Step 5 — FR-08 Batch B freeze.** Six API cases covering R1 and R4: `TC-08-001`, `TC-08-EP-002`,
+`TC-08-EP-003`, `TC-08-N08-API`, `TC-08-N09-API`, `TC-08-N10-API`. Skill Phases 2–4, frozen before
+any run.
 
-1. Externalize the six cases to `automation/data/fr-08-checkout.json`, each carrying its
-   `expectedSource` (README line 105 / 106, or assumption **A-08-1** / **A-08-2** where noted —
-   flag the assumption-grounded ones as weaker evidence).
-2. Generate `automation/tests/fr-08-checkout/` Batch A. **Re-derive fixture scope and selectors from
-   the checkout UI** — do not inherit FR-04's profile answers.
-3. Review against the 8 recurring failure modes; run the static gates; record the pre-run prediction.
-4. Commit `freeze: FR-08 specs batch A` **before any run**.
+**Batch A done (freeze `9b0ab82`, 12 passed / 6 failed over 18 executions).** Prediction **6/6
+correct**. Two confirmed defects, both directly spec-cited and proven distinct by evidence rather
+than assumed: `BUG-08-101` (issue #4, the order total is a user-editable form field — High) and
+`BUG-08-102` (issue #5, the backend stores the client-sent `total_amount` verbatim — Critical). All
+18 executions are genuine browser runs; nothing deducted.
 
-Two constraints to honour in generation: no `page.reload()` between cart seeding and assertion (the
-client cart is unpersisted state), and register a dialog handler — `Checkout.jsx:63` calls `alert()`
-on a failed checkout.
+**Two post-run test-side corrections were needed**, both waits/mechanism only, neither touching an
+expected value: `test.slow()` for this file (all six cases are UI-heavy, where FR-04's batches were
+two-thirds API-path), and retry-until-navigated for the client-side route changes (a click issued
+during a React re-render was being swallowed). Run 1's four timeouts would have become three
+fabricated bug reports if taken at face value.
 
-**Ledger:** 4 freezes so far; **4 more needed** from FR-08 (3) / FR-15 (3) to clear the §12 floor of 8.
+**Carry into Batch B:** the backend defect is already corroborated **without a browser**, so Batch B's
+API cases should re-confirm it independently rather than restate it; assert a status code only where
+the spec states one; and count Batch B's executions as **matrix uniformity, not browser coverage** —
+FR-08's browser evidence is carried entirely by Batch A's 18.
 
-**Do not carry FR-04's concrete findings into Step 5.** Fixture scope and selector strategy are
-**per-feature** conclusions, not project-wide constants — FR-04's were derived from the profile
-form's markup and from tests that mutate one user's own record. Checkout mutates cart and order
-state across two surfaces and has a different concurrency profile, so re-derive both from FR-08's
-own UI and API rather than inheriting the profile answers. The skill's Phase 3.1 (scope from *this*
-batch's mutation profile) and Phase 3.5 (selector order, log each compromise) are the method to
-apply; FR-04's specific choices are not the input.
+**Ledger:** 5 freezes; **3 more needed** from FR-08 (B, C) / FR-15 to clear the §12 floor of 8.
 
-What *is* method rather than feature-specific, and does carry: expected values come only from the
-spec or a recorded assumption; where the spec prescribes no refusal mechanism the oracle stays an
-outcome, not a status code; and non-interface cases are never counted as browser coverage.
-
-**Known risk to carry:** FR-08 is 8 cases short of the minimum (§1.4). Do not discover this at
-Step 5 — the design work is real and is budgeted inside Step 5.1.
+**Known risk to carry:** firefox in this environment shows intermittent Playwright *driver*
+instability (teardown protocol errors) unrelated to the SUT. It never reaches an assertion. Record
+it; do not chase it, and do not let it be counted as a product result.
