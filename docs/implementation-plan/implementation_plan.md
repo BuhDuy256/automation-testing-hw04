@@ -528,7 +528,7 @@ before mass-generating specs.
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
-| 6 FR-15 through skill | **in progress** — **all 3 batches executed** (54 executions, 18 pass / 36 fail, **5 defects** #8–#12); combined run pending |
+| 6 FR-15 through skill | [x] **done 2026-08-10** — 18 cases, 3 freezes, combined run 18 pass / 36 fail over 54 executions, 6 browser runs, **5 defects** (#8–#12) |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
 
@@ -623,41 +623,33 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 6 — the combined FR-15 run.** Every case has run inside its own batch; this executes all 18
-**together** to produce the feature-level report, as FR-04 and FR-08 did.
+**Step 7 — globals and packaging.** All three features are complete; nothing further needs to run.
 
-```bash
-cd automation && npx playwright test tests/fr-15-product-crud
-```
+1. **`out/ai-critique.md`** (HW04 §10, 200–300 words) — still missing.
+2. **`out/git_commit_log.txt`** — `git log --oneline > out/git_commit_log.txt`.
+3. **`[AI-02]` §4 and §5** — the accuracy summary is already maintained (17 artifacts, all
+   INCOMPLETE); §5's "when should AI be used" conclusion and §6's disclosure still need filling.
+4. **Finalise `out/README.md`** — replace the provisional self-assessment marks with final ones.
+5. Mirror `docs/` into `out/docs/` if the submission layout requires it, and decide the MD→PDF
+   question (**no pandoc installed** — still unresolved; flag it rather than assume).
 
-**Expected from the batch runs: 54 executions, 18 pass / 36 fail** (6 pass / 12 fail per project),
-with **6** genuine browser executions. No new root cause is expected; anything else goes through the
-real-defect gate.
+**Step 6 done (FR-15 complete).** 18 cases (16 HW02 + 2 designed in Step 6.1), 3 freezes
+(`734c6d0`, `102c6d1`, `2d0f67d`), combined run **18 pass / 36 fail over 54 executions** matching the
+batch-derived expectation exactly, **no new root cause**, **6** genuine browser runs.
+Verdict: P1 ⚠️ · P2 ❌ · P3 ❌ · P4 ❌ · P5 ⚠️ · P6 ❌ **Critical**.
 
-Then write the combined report to `out/reports/FR-15-product-crud/html-report/index.html`, keeping
-`batch-a/b/c.html` as the per-batch evidence the issues were filed against.
+**Whole-submission totals:** **49 cases · 147 executions · 60 pass / 87 fail · 48 browser runs ·
+12 confirmed defects** (issues #1–#12), across FR-04, FR-08 and FR-15.
 
-**Batch C done (freeze `2d0f67d`, 3 pass / 15 fail).** Prediction **6/6 correct**, no post-run
-correction. Two defects: **`BUG-15-104`** (#11, **Critical** — the three product write endpoints have
-**no middleware at all**, so anyone can create, modify or delete any product) and **`BUG-15-105`**
-(#12, Medium — the admin panel overwrites every listed product's displayed name).
+**Ledger:** **10 freeze commits**, against §12's minimum of 8 — cleared at `734c6d0`. Every `.spec.ts`
+was committed before its first run; the 6 `fix:` commits are all documented as test-side and none
+changed an expected value.
 
-**Grouping resolved on evidence**, as §15.3 left open: the four access-control failures are **one**
-defect — one policy absent from one resource, fixed by one middleware — grouped by *fault* as with
-`BUG-15-101`, and deliberately unlike `BUG-08-103`/`104` whose fixes lived in different components.
-
-**`BUG-15-105` is independent of `EP-010`**, which passed: the backend isolates edits correctly, so
-this is client state only. The case deliberately does not reload — a refresh refetches correct data
-and hides it entirely.
-
-**Browser coverage: 6 of 54**, all from Batch C's two UI cases. State it explicitly in the combined
-report, as FR-08's 24-of-45 was.
-
-**FR-15 verdict so far:** P1 ⚠️ (add/delete ✅, view ❌ #9) · P2 ❌ #8 · P3 ❌ #8 · P4 ❌ #10 ·
-P5 ⚠️ (backend ✅, UI ❌ #12) · P6 ❌ #11. No requirement is fully satisfied on every surface, but
-every *positive* operation works — each failure is a missing guard or a display error.
-
-**Ledger:** **10 freezes**; §12's minimum of 8 was cleared at `734c6d0`. No further freeze is planned.
-
-**After the combined run: Step 7** — globals (`out/ai-critique.md`, `git_commit_log.txt`, final
-`out/README.md`, `[AI-02]` §4/§5), then Step 8, the demo video.
+**Two things worth carrying into Step 7's write-up**, because they are the strongest evidence of
+method rather than output:
+- **Browser coverage is reported as 48, not 147.** Only UI-path cases launch a browser; counting
+  every matrix execution would inflate the figure roughly threefold, and FR-15 alone ninefold.
+- **Three false-signal episodes were caught and recorded** rather than shipped: FR-08 Batch A's four
+  harness timeouts (would have become three fabricated bug reports), FR-15 Batch A's
+  representation-blind assertion (a *false pass* that hid a real defect), and a dead-backend run
+  discarded before it was read.

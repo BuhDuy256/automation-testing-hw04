@@ -1,10 +1,10 @@
 # HW04 — Automation Testing on EShop (submission README)
 
 > **Status: in progress.** **FR-04 complete** (16 cases automated and executed, 3 defects).
-> **FR-08 complete** (15 cases, executed per batch and combined, 4 defects). **FR-15** has **all
-> three batches executed per batch** — 18 cases, 54 executions, **18 passed / 36 failed**, 5 defects
-> — with the combined run still pending. The self-assessment table and totals below are provisional
-> and will be finalised before submission.
+> **FR-08 complete** (15 cases, executed per batch and combined, 4 defects). **FR-15 complete**
+> (18 cases, executed per batch and combined, 5 defects). **All three features are done**; Step 7
+> packaging, the AI critique and the demo video remain. The self-assessment table below is
+> provisional until then.
 
 ## 1. Student information
 
@@ -24,7 +24,7 @@ _Per HW04 §15. Provisional — completed rows only._
 |---|---|---|---|
 | 1 | Task 1 — Feature A (**FR-04** Personal Profile Management) | 25 | _pending final review_ |
 | 1 | Task 1 — Feature B (**FR-08** Checkout) | 25 | _complete — 15 cases, combined run done_ |
-| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _all 18 cases executed per batch; combined run pending_ |
+| 1 | Task 1 — Feature C (**FR-15** Product Management CRUD) | 25 | _complete — 18 cases, combined run done_ |
 | 2 | Task 2 — Demo video | 15 | _not started_ |
 | 3 | Agent Skill | 10 | _extracted — `agent-skill/SKILL.md`, pending demo video_ |
 | | **Total** | **100** | — |
@@ -35,8 +35,8 @@ _Per HW04 §15. Provisional — completed rows only._
 |---|---|---|---|---|---|---|
 | **FR-04** Personal Profile Management | **16** | **48** | **21** | **27** | **18** | **3** |
 | **FR-08** Checkout | **15** | **45** | **21** | **24** | **24** | **4** |
-| FR-15 Product Management CRUD _(per-batch runs)_ | **18** | **54** | **18** | **36** | **6** | **5** |
-| **Total so far** | **49** | **147** | **60** | **87** | **48** | **12** |
+| **FR-15** Product Management CRUD | **18** | **54** | **18** | **36** | **6** | **5** |
+| **Total** | **49** | **147** | **60** | **87** | **48** | **12** |
 
 \* **Browser runs counted honestly.** Only UI-path cases launch a browser.
 **FR-04**: 6 of its 16 cases are UI-path → 6 × 3 = **18** genuine browser executions; the other 10
@@ -86,6 +86,12 @@ Full write-ups with root cause, exploitability and suggested fixes:
 `reports/FR-04-personal-profile/automation/report.md` §9 for the case-by-case mechanism mapping
 and the one HW02 gap-analysis item deliberately logged as future work rather than silently added.
 
+**None for FR-15** — all 18 selected cases (16 converted from HW02 + **2 designed in Step 6.1** to
+close a real hole: HW02 had no positive delete case at all, and 19 of its 20 cases were API-path).
+Four HW02 cases were deliberately **not selected**; the reasons are in
+`reports/FR-15-product-crud/automation/report.md` §2.1, and two of them are **selection tradeoffs**
+rather than redundancy — legitimate boundaries that can be reinstated.
+
 **None for FR-08** — all 15 selected cases (4 converted from HW02 + **11 designed in Step 5.1**)
 were automated *and* executed. Request interception proved unnecessary for this feature, so no case
 fell outside the available mechanisms; see `reports/FR-08-checkout/automation/report.md` §4.3.
@@ -118,7 +124,7 @@ _Paths relative to this `out/` folder._
 | FR-08 HTML reports (combined + per batch) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
 | FR-15 main report (design, review, prediction, results) | `reports/FR-15-product-crud/automation/report.md` |
 | FR-15 bug reports | `reports/FR-15-product-crud/bug-reports/report.md` |
-| FR-15 HTML reports (per batch: A, B, C) | `reports/FR-15-product-crud/html-report/` (see its `README.md`) |
+| FR-15 HTML reports (combined + per batch) | `reports/FR-15-product-crud/html-report/` (see its `README.md`) |
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique | `ai-critique.md` _(pending)_ |

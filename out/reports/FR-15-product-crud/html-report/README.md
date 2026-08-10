@@ -12,9 +12,12 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-15-produc
 | `batch-a.html` | Step 6 Batch A — **API**, P2 + P3 | `TC-15-EP-002/003`, `TC-15-BVA-002/003/004/005` × 3 projects | **3 passed / 15 failed** |
 | `batch-b.html` | Step 6 Batch B — **API**, P1 + P3 + P4 + P5 | `TC-15-BVA-006-API/007/009`, `TC-15-EP-001`, `TC-15-N01-API`, `TC-15-EP-010` × 3 projects | **12 passed / 6 failed** |
 | `batch-c.html` | Step 6 Batch C — **API + UI**, P6 + P5-UI + P1-UI | `TC-15-EP-006/007/008/009-API`, `TC-15-EP-011-UI`, `TC-15-N02-UI` × 3 projects | **3 passed / 15 failed** |
+| **`index.html`** | **Combined FR-15 run** — the feature-level report | **all 18 cases × 3 projects = 54 executions** | **18 passed / 36 failed** |
 
-All three batches have now run. A combined FR-15 `index.html` will be added by the combined run,
-following the FR-04 and FR-08 layout.
+`index.html` is the report to read for FR-15. The three batch files are kept as the historical
+per-batch evidence the individual bug reports and GitHub issues were filed against, each produced
+from a spec frozen *before* it ran. The combined run introduced **no new root cause** — its 36
+failures are the same five defects, so every issue's cited evidence remains accurate.
 
 ## Browser coverage — **6 of 54**, all of it from Batch C
 
@@ -24,6 +27,9 @@ following the FR-04 and FR-08 layout.
 | B | 6 API | 18 | **0** |
 | C | 4 API + **2 UI** | 18 | **6** |
 | **Total** | **18 cases** | **54** | **6** |
+
+The combined run reproduces this split exactly: of its 54 executions, only the 2 UI-path cases
+launch a browser.
 
 Neither `product-constraints-api.spec.ts` nor `product-lifecycle-api.spec.ts` requests Playwright's
 `page` fixture, and only two of Batch C's six cases do. Every other execution runs once per
@@ -38,9 +44,9 @@ FR-15's browser coverage comes entirely from **Batch C's two UI cases** against 
 
 ## What the failures are
 
-**All 36 failures across the three batches are assertion** failures — 15 from A, 6 from B, 15 from
-C — stable across consecutive runs and identical on all three projects. They split across **five**
-distinct root causes:
+**All 36 failures are assertion** failures — 15 from A, 6 from B, 15 from C, and the same 36 in the
+combined run — stable across consecutive runs and identical on all three projects. They split
+across **five** distinct root causes:
 
 | Batch | Cases | Executions | Defect | Issue |
 |---|---|---|---|---|

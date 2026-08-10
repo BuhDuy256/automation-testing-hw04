@@ -1,8 +1,9 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.4 — **all three batches executed**. Per-batch totals: **54 executions,
-> 18 passed / 36 failed**, **5 confirmed defects** (issues #8–#12). The combined FR-15 run is still
-> pending. Selection and design §1–§6; Batch A §7–§11; Batch B §12–§14; Batch C §15–§16.
+> **Status: FR-15 complete.** All 18 cases automated and executed, per batch and **combined**:
+> **54 executions, 18 passed / 36 failed**, **6 genuine browser runs**, **5 confirmed defects**
+> (issues #8–#12). This file is the §14 "main report" for FR-15.
+> Selection and design §1–§6; Batch A §7–§11; Batch B §12–§14; Batch C §15–§16; **combined run §17**.
 >
 > | Field | Value |
 > |---|---|
@@ -873,8 +874,146 @@ Not one of FR-15's six requirement areas is fully satisfied on every surface. Th
 all work; every failure is a **missing guard or a display error**, never a broken operation — which is
 what makes each recommended fix a validation step, a middleware, or a one-line state correction.
 
-## > NEXT — the combined FR-15 run
+---
 
-All three batches have run individually. The combined run executes all 18 cases together to produce
-the feature-level report, following the FR-04 and FR-08 pattern. Expected from the batch runs:
-**54 executions, 18 passed / 36 failed**, with **6** genuine browser executions.
+# 17. Combined FR-15 run — the feature-level result
+
+```bash
+cd automation && npx playwright test tests/fr-15-product-crud
+```
+
+All 18 cases together, one invocation, no retries, **no `.spec.ts` edited beforehand**.
+Report: **`../html-report/index.html`**.
+
+## 17.1 Totals
+
+| Metric | Value |
+|---|---|
+| Cases automated | **18 / 18** |
+| Projects | 3 (chromium, firefox, webkit) |
+| **Executions** | **54** |
+| **Passed** | **18** (6 per project) |
+| **Failed** | **36** (12 per project) |
+| Timeouts / setup failures / driver crashes | **0** |
+| Wall time | 47.1 s |
+
+**Matches the batch-derived expectation exactly** — 54 executions, 18 / 36, 6 pass / 12 fail per
+project. Running the three batches together changed nothing: no interaction effect, no ordering
+dependency, no contention flakiness.
+
+That is worth stating for this feature in particular. FR-15's cases mutate **global** state — products
+belong to no user — and 54 executions create, edit and delete rows concurrently in one shared table.
+Nothing interfered, which retro-validates the unique-marker discipline and the rule that no assertion
+may reference a product count.
+
+## 17.2 Result by case
+
+| # | Case | Batch | Surface | Req | chromium | firefox | webkit | Root cause |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `TC-15-EP-002` | A | API | P2 | ❌ | ❌ | ❌ | `BUG-15-101` |
+| 2 | `TC-15-EP-003` | A | API | P2 | ❌ | ❌ | ❌ | `BUG-15-101` |
+| 3 | `TC-15-BVA-002` | A | API | P2 | ✅ | ✅ | ✅ | — |
+| 4 | `TC-15-BVA-003` | A | API | P2 | ❌ | ❌ | ❌ | `BUG-15-101` |
+| 5 | `TC-15-BVA-004` | A | API | P3 | ❌ | ❌ | ❌ | `BUG-15-101` |
+| 6 | `TC-15-BVA-005` | A | API | P3 | ❌ | ❌ | ❌ | `BUG-15-101` |
+| 7 | `TC-15-BVA-006-API` | B | API | P3 + P1 | ❌ | ❌ | ❌ | `BUG-15-102` *(P3 half passes)* |
+| 8 | `TC-15-BVA-007` | B | API | P4 | ✅ | ✅ | ✅ | — |
+| 9 | `TC-15-BVA-009` | B | API | P4 | ❌ | ❌ | ❌ | `BUG-15-103` |
+| 10 | `TC-15-EP-001` | B | API | P1 add | ✅ | ✅ | ✅ | — |
+| 11 | `TC-15-N01-API` | B | API | P1 delete | ✅ | ✅ | ✅ | — |
+| 12 | `TC-15-EP-010` | B | API | P5 backend | ✅ | ✅ | ✅ | — |
+| 13 | `TC-15-EP-006-API` | C | API | P6 | ❌ | ❌ | ❌ | `BUG-15-104` |
+| 14 | `TC-15-EP-007-API` | C | API | P6 | ❌ | ❌ | ❌ | `BUG-15-104` |
+| 15 | `TC-15-EP-008-API` | C | API | P6 | ❌ | ❌ | ❌ | `BUG-15-104` |
+| 16 | `TC-15-EP-009-API` | C | API | P6 | ❌ | ❌ | ❌ | `BUG-15-104` |
+| 17 | `TC-15-EP-011-UI` | C | **browser** | P5 UI | ❌ | ❌ | ❌ | `BUG-15-105` |
+| 18 | `TC-15-N02-UI` | C | **browser** | P1 add | ✅ | ✅ | ✅ | — |
+
+**6 passed / 12 failed per project**, identical across all three — every failure reproduces on every
+browser.
+
+## 17.3 Real-defect classification — no new root cause
+
+All 36 failures are **assertion** failures (33 value comparisons, 3 locator counts); zero timeouts,
+zero setup failures, zero driver crashes. They collapse to exactly the **five** already-filed root
+causes, with **no sixth appearing**:
+
+| Defect | Failing cases | Executions | Severity | Issue |
+|---|---|---|---|---|
+| `BUG-15-101` — no input validation on create | `EP-002`, `EP-003`, `BVA-003`, `BVA-004`, `BVA-005` | **15** | High | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
+| `BUG-15-102` — detail and list endpoints disagree about `price` | `BVA-006-API` (view half) | 3 | Medium | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
+| `BUG-15-103` — `category_id` never checked against categories | `BVA-009` | 3 | Medium | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
+| `BUG-15-104` — **no access control on any product write endpoint** | `EP-006`, `EP-007`, `EP-008`, `EP-009` | **12** | **Critical** | [#11](https://github.com/BuhDuy256/automation-testing-hw04/issues/11) |
+| `BUG-15-105` — admin panel overwrites every listed product's name | `EP-011-UI` | 3 | Medium | [#12](https://github.com/BuhDuy256/automation-testing-hw04/issues/12) |
+
+15 + 3 + 3 + 12 + 3 = **36**. **No assertion was weakened**, and **no `.spec.ts` was modified for this
+run** — so there is **no `fix:` commit** attached to it, and no issue needed updating.
+
+## 17.4 Browser coverage — counted honestly
+
+| Surface | Cases | Executions | Counts as browser coverage? |
+|---|---|---|---|
+| **UI-path** (requests `page`) | 2 — `EP-011-UI`, `N02-UI` | **6** | ✅ yes |
+| API-path (`APIRequestContext`) | 16 | 48 | ❌ no — no browser is launched |
+
+**FR-15 contributes 6 genuine browser executions**, not 54. This is the widest gap between raw
+executions and real browser coverage of any feature in this submission — counting all 54 would
+overstate it **ninefold** — and it follows directly from what FR-15 *is*: a backend CRUD contract
+with an admin front-end, where all but two of the requirements are claims about what the server
+stores and who may store it.
+
+## 17.5 Requirement coverage — the feature-level verdict
+
+| Ref | Requirement | Cases | Verdict |
+|---|---|---|---|
+| **P1** | add / view / edit / delete | 4 | ⚠️ add ✅ (API **and** UI), delete ✅, **view ❌** `BUG-15-102` |
+| **P2** | name required, ≤ 255 chars | 4 | ❌ `BUG-15-101` |
+| **P3** | price required, > 0 | 3 | ❌ `BUG-15-101` — though the valid minimum itself persists |
+| **P4** | category from the existing list | 2 | ❌ `BUG-15-103` — though a valid category stores correctly |
+| **P5** | edit isolation | 2 | ⚠️ **backend ✅**, **admin UI ❌** `BUG-15-105` |
+| **P6** | admin-only write APIs | 4 | ❌ `BUG-15-104` — **Critical** |
+
+**Not one of FR-15's six requirement areas holds on every surface**, yet **every positive operation
+works**: create round-trips, delete removes, a valid category stores, a valid minimum price persists,
+the backend isolates edits, and the admin panel's create flow works end to end. Every failure is a
+**missing guard** or a **display error** — never a broken operation. That is what makes each
+recommended fix a validation step, a middleware, or a one-line state correction rather than a
+rewrite.
+
+**The two surface splits are the sharpest findings.** P1 and P5 each pass on one surface and fail on
+the other, and in both cases the two were deliberately kept as separate cases and judged only after
+the run:
+
+- **P5:** `EP-010` (backend) passes while `EP-011-UI` fails — the data is safe, the display is not.
+- **P1:** create works everywhere, but *viewing* a product returns a different type depending on the
+  row's id.
+
+Had either pair been merged into a single case — the obvious simplification — the report would have
+claimed one verdict for a requirement that genuinely has two.
+
+## 17.6 Assertion patterns exercised (HW04 §6 requires ≥3)
+
+| # | Pattern | Where |
+|---|---|---|
+| 1 | **UI state** | admin table rows (`EP-011-UI`, `N02-UI`), form field values, dialog capture |
+| 2 | **Network response** | `APIRequestContext` across all 16 API cases; POST/PUT/DELETE outcomes |
+| 3 | **Persisted round-trip** | independent `GET /api/products/:id` and `GET /api/products` read-back in every case |
+| 4 | *(bonus)* **Absence / negative** | `not.toBe` for "must not be persisted"; `toEqual([])` and `toHaveLength` for "must not exist" |
+
+## 17.7 Step 6 exit criteria
+
+| Criterion | Status |
+|---|---|
+| ≥12 cases automated | ✅ **18** (16 HW02 + 2 designed in Step 6.1) |
+| Run on 3 browsers | ✅ 54 executions, **6** of them real browser runs |
+| ≥3 assertion patterns | ✅ 4 including the bonus |
+| Data externalized | ✅ `data/fr-15-product-crud.json`, zero inline test data |
+| Report carries `Run by` + ISO | ✅ verified 5/5 on all four reports, distinct timestamps |
+| Frozen before execution | ✅ 3 freeze commits, each preceding its run |
+| Defects filed with evidence | ✅ 5 confirmed, issues #8–#12, each corroborated outside Playwright |
+| Non-automatable cases documented | ✅ none — all 18 automated (§3.3) |
+
+## > NEXT — Step 7, globals and packaging
+
+All three features are complete. Step 7 finalises `out/README.md`, writes `out/ai-critique.md`,
+generates `git_commit_log.txt`, and completes §4/§5 of the AI Audit Report.
