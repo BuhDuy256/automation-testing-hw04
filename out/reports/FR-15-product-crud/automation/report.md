@@ -1,8 +1,8 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.3 — Batches **A and B executed**. Combined so far: **36 executions, 15 passed /
-> 21 failed**, **3 confirmed defects** (issues #8, #9, #10). Selection and design §1–§6; Batch A
-> §7–§11; Batch B sizing §12, freeze §13, **results §14**. Batch C is not started.
+> **Status:** Step 6.4 — Batches **A and B executed** (36 executions, 15 passed / 21 failed,
+> 3 defects: issues #8, #9, #10); **Batch C frozen, not yet run**. Selection and design §1–§6;
+> Batch A §7–§11; Batch B §12–§14; **Batch C freeze §15**.
 >
 > | Field | Value |
 > |---|---|
@@ -652,7 +652,90 @@ count, exactly as Batch A's were. The 6.1 s wall time for 18 executions corrobor
 **FR-15 so far: 36 executions, 0 browser runs.** All of FR-15's browser coverage will come from Batch
 C's two UI cases (6 executions).
 
-## > NEXT — Batch C freeze
+---
 
-Six cases: four API access-control (`EP-006`, `EP-007`, `EP-008`, `EP-009`) and the **two admin-UI
-cases** (`EP-011`, `N02-UI`) — the only ones in FR-15 that launch a browser.
+# 15. Batch C (P6, P5-UI, P1-UI), frozen, not yet run
+
+Six cases: `TC-15-EP-006-API`, `TC-15-EP-007-API`, `TC-15-EP-008-API`, `TC-15-EP-009-API`
+(access control) plus `TC-15-EP-011-UI` and `TC-15-N02-UI` (admin panel). File:
+`automation/tests/fr-15-product-crud/product-access-and-admin-ui.spec.ts`. Batch A and B data
+entries and spec files are **unchanged**.
+
+**This is the only FR-15 batch that launches a browser**, and only for two of its six cases.
+
+## 15.1 Human review of the AI-generated Batch C specs
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 78 | **`EP-011-UI` would have hidden the defect it exists to find, had it reloaded.** The natural way to check a table after an edit is to refresh it. But `TC-15-EP-010` has already **passed** — the backend isolates edits correctly — so any refetch repopulates the table with correct data and the case passes while proving nothing. The defect is in *client state*, and only survives until the next fetch. | The two cases test the same requirement line, so it is easy to treat them as interchangeable. HW02 found they **disagree**, which is the whole reason both exist. | The assertion runs **without any reload**, on the table as the panel left it. Recorded in the spec as the reason the case exists on this surface at all, and the failure message states it is judged independently of `EP-010`. |
+| 79 | **A status-code oracle was the obvious shape for all four access-control cases** — `expect(status).toBe(401)` or `403`. | It is what an access-control test "looks like", and the endpoints do return *something*. **Sixth batch running** for this failure mode. | No status assertion. `api_specification.md` §3.3 documents only the request body and no error contract anywhere, so the oracle is the **outcome**: no product created, not modified, not deleted. Status is annotated as evidence. |
+| 80 | **"No product was created" invited a count comparison** for `EP-006`/`EP-007`. | The most natural formulation of the requirement, and wrong here for the same reason it was wrong in FR-08 Batch B and FR-15 Batch B. | Each case tags its payload with a unique marker and asserts that **zero products carry it**. Identity, not arithmetic — correct under any amount of parallelism. |
+| 81 | **`EP-007` needed a genuinely non-admin actor, and the tempting shortcut was a filed security defect.** `BUG-04-103` (issue #3) lets a user set their own `role`, which would have produced an "admin" quickly. | It is available and would have looked clever. | A fresh account from `registerAndLogin()`, which always yields `role: 'user'`. The case **asserts that precondition explicitly** via `GET /api/users/me`, so a fixture problem cannot be mistaken for the access-control result. Using the escalation would have made the suite depend on that defect remaining unfixed. |
+| 82 | **`EP-008`/`EP-009` could have passed vacuously.** "Not modified" and "still present" are trivially true if nothing was there to begin with. | The requirement is phrased as a negative, and negatives are satisfiable by absence. | Both create a product **as admin** first and assert the precondition — readable back, and present in the list — *before* sending the unauthenticated request. `EP-008` then compares the row against **its own recorded originals**, not constants. |
+| 83 | **`seedSession` would have left the admin panel logged out.** It writes `localStorage.token`; the admin app reads **`adminToken`**. | It is the established helper for every FR-04 and FR-08 UI test. Risk 2 of the design, checked rather than assumed. | A dedicated `seedAdminSession()` writing `adminToken`, with the reason in its doc comment. |
+| 84 | **`N02-UI` asserting only the admin list would have been half a test.** A panel that optimistically renders a row without persisting it would pass. | The requirement is about the interface, so the interface looks like the place to assert. | **Both** surfaces are asserted — the row appears in the admin table **and** the product is retrievable via the API. Either alone could pass while the other failed. |
+| 85 | **Risk 4 of the design was wrong, and is corrected here.** It stated the admin page "renders at least four tables", making table locators ambiguous. Re-reading `App.jsx` shows every section is gated on `activeTab === "…"`, so **only one table is mounted at a time**. | The original reading came from grepping for `<table>` and finding four, without checking whether they render simultaneously. | The ambiguity does not exist. The real constraint is simply that the product section must be **opened first**, which `openAdminProducts()` does. The correction is recorded in the helper rather than silently dropped. |
+
+**Selector notes (architecture §3.3).** The admin navigation entries are plain `<li>` elements with
+`onClick` handlers — no role, no href, no label — so an exact-text match is the only option without
+modifying the SUT; logged as a last resort. Conversely the product **form** exposes `placeholder`
+attributes (`Tên sản phẩm`, `Giá tiền`, `Mô tả`), so `getByPlaceholder` works here — the **opposite**
+of the storefront profile form, and re-derived rather than inherited.
+
+**Dialog handling.** `App.jsx` alerts on a successful update, so a handler is registered as the first
+statement of both UI tests. `EP-011-UI` additionally uses the captured dialog as its completion
+signal, rather than waiting on a reload it must not perform.
+
+## 15.2 Static gates — all passed before first execution
+
+| Gate | Result |
+|---|---|
+| `fr-15-product-crud.json` parses; batch counts | **18 cases — A = 6, B = 6, C = 6** |
+| Batch A + B **data entries** unchanged | ✅ `git diff 102c6d1` shows **zero** deleted lines |
+| Batch A + B **spec files** touched | **none** |
+| Batch C `expectedSource` / `status: frozen` | 6 / 6 |
+| `npx tsc --noEmit` | exit **0** |
+| Batch C discovery | **18 tests in 1 file** (6 × 3 projects) |
+| Whole-feature discovery | **54 tests in 3 files** (18 × 3) |
+| `page` fixture usage | **2 cases only** — `EP-011-UI`, `N02-UI`; the four access-control cases use `async ({ api })` |
+| Status-code assertions | **0** |
+| Global-count assertions | **0** |
+| Inline oracle literals | **0** |
+| Seeded `test@eshop.com` referenced | **0** |
+| `BUG-04-103` escalation used to obtain rights | **0 call sites** |
+| Batch C executed before freeze | **never** — 0 `access-and-admin` entries in `test-results/` |
+| FR-04 / FR-08 deliverables, shared fixtures, `eshop-sut/` modified | **none** |
+
+## 15.3 Pre-run prediction, recorded before the freeze
+
+Derived by reading `server.js:167-197` and `frontend-admin/src/App.jsx` — legitimate for
+**predicting**, never as the oracle.
+
+| Case | Req | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|
+| `TC-15-EP-006-API` | P6 | **FAIL** | `app.post("/api/products", ...)` has **no middleware at all** — not even `authenticateToken`. An anonymous create succeeds | **High** |
+| `TC-15-EP-007-API` | P6 | **FAIL** | Same absent middleware; a non-admin token is not even inspected | **High** |
+| `TC-15-EP-008-API` | P6 | **FAIL** | `app.put("/api/products/:id", ...)` likewise carries no middleware | **High** |
+| `TC-15-EP-009-API` | P6 | **FAIL** | `app.delete("/api/products/:id", ...)` likewise | **High** |
+| `TC-15-EP-011-UI` | P5 (UI) | **FAIL** | `handleProductSubmit` runs `products.map(p => ({ ...p, name: productForm.name }))` — the variable is literally named `fakeMassUpdatedProducts` — overwriting **every** listed product's displayed name | **High** |
+| `TC-15-N02-UI` | P1 (add) | **PASS** | The create path is sound (`TC-15-EP-001` passed) and the form posts then refetches | **Medium** — high on the backend, but this is the first time this suite drives the admin panel, so an unforeseen UI issue would surface here first |
+
+**Expected tally: 1 pass / 5 fail per project → 3 pass / 15 fail over 18 executions.**
+
+**Root-cause grouping is deliberately left open.** The four access-control failures may be one defect
+or several: they are three different HTTP verbs on the same resource, and HW02 filed them as
+**three** separate defects (`BUG-15-004`, `005`, `006`). The question *"would one fix fix all?"*
+depends on whether a single middleware registration covers all three routes — which is a judgement to
+make against the evidence after the run, not now.
+
+`TC-15-EP-011-UI` is expected to map to HW02's `BUG-15-007`, and is **independent of `EP-010`**:
+`EP-010` passed, so the backend is correct and any failure here is purely client-side. That is the
+same two-surface split as FR-08's two carts and FR-15's two cart stores — and it is why both cases
+were kept.
+
+**No assertion has been relaxed** for any of HW02's seven known FR-15 defects.
+
+## > NEXT — run Batch C
+
+`cd automation && npx playwright test tests/fr-15-product-crud/product-access-and-admin-ui.spec.ts`.
+The spec is frozen at the commit below, **before** any execution.
