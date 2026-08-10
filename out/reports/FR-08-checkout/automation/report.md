@@ -531,7 +531,8 @@ Reviewed **before** the freeze commit and before any run.
 | Gate | Result |
 |---|---|
 | `fr-08-checkout.json` parses | **12 cases** — Batch A 6, Batch B 6 |
-| Batch A preserved unchanged | ✅ `git diff 9b0ab82` shows **zero** deleted lines |
+| Batch A **data entries** preserved | ✅ `git diff 9b0ab82 -- automation/data/fr-08-checkout.json` shows **zero** deleted lines — Batch B was appended, nothing was rewritten |
+| Batch A **spec** changed? | ⚠️ **Yes — type narrowing only.** Five call sites moved to a throwing `seededProducts()` accessor after the shared data union widened (finding 40). **No oracle, expected value or assertion changed** — see the note below |
 | Batch B cases carry `expectedSource` / `status: frozen` / `mechanism` | **6 / 6 / 6** |
 | Batch B requirement split | **R4 = 4, R1 = 2** |
 | `npx tsc --noEmit` | exit **0** (both spec files) |
@@ -543,6 +544,19 @@ Reviewed **before** the freeze commit and before any run.
 | Global order-count assertions | **0** |
 | Inline data literals | **0** |
 | Batch B executed before freeze | **never** — 0 `checkout-api` entries in `test-results/` |
+
+**Precisely what "preserved" means here**, since the distinction matters for the freeze discipline:
+
+| Artefact | Changed by the Batch B freeze? | Detail |
+|---|---|---|
+| Batch A **data entries** in `fr-08-checkout.json` | **No** | Batch B was appended after `TC-08-N06-UI`; no existing entry was edited, reordered or removed |
+| Batch A **spec** `checkout-page.spec.ts` | **Yes, mechanically** | Five reads of `testCase.input.products` moved to a throwing `seededProducts()` accessor, because appending Batch B widened the shared file's inferred union and the frozen spec stopped compiling (finding 40) |
+| Batch A **oracles, expected values, assertions** | **No** | Nothing in `expected`, no `expectedSource`, and no `expect(...)` call was altered. The change is type narrowing that throws on a missing key — strictly louder than the code it replaced, never more permissive |
+
+Batch A's **results are therefore still valid as reported**: the 12/6 outcome and both filed defects
+came from assertions this change did not touch. Claiming the Batch A spec was "unchanged" would have
+been false, so it is stated as what it is — an unavoidable mechanical edit to an already-frozen file,
+forced by a shared data file, with its blast radius measured rather than asserted.
 
 ## 13. Pre-run prediction, recorded before the freeze
 
