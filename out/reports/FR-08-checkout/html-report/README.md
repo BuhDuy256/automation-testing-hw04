@@ -16,7 +16,7 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-08-checko
 All three batches have now run. A combined FR-08 `index.html` will be added by the combined run,
 following the FR-04 layout.
 
-## Browser coverage — 18 of 36, and the split is not cosmetic
+## Browser coverage — 24 of 45, and the split is not cosmetic
 
 | Batch | Surface | Executions | Browser runs |
 |---|---|---|---|
@@ -30,8 +30,13 @@ and cannot be tested any other way. Nothing is deducted.
 
 **Batch B**: no test in `checkout-api.spec.ts` requests the `page` fixture, so **no browser is
 launched**. Its 18 executions run once per configured project for **matrix uniformity only** — three
-identical backend results are not cross-browser evidence, and counting them would inflate FR-08's
-browser coverage from 18 to 36.
+identical backend results are not cross-browser evidence.
+
+**What the honest number avoids.** FR-08's real browser coverage is **24**. Counting Batch B's 18 as
+browser runs would inflate it to **42**; counting every matrix execution, including `TC-08-EP-004`'s
+three, would inflate it to **45** — nearly double the truth. Both inflated figures would still be
+"true" statements about how many test executions occurred, which is exactly why the distinction is
+stated explicitly rather than left to the reader.
 
 **Batch C** is mixed and is counted case by case: `TC-08-N07-UI` and `TC-08-N11-UI` drive a browser
 (6 executions), `TC-08-EP-004` does not (3 excluded).

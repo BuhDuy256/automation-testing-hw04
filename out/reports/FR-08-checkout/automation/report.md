@@ -1,8 +1,9 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.4 — Batches **A and B executed** (18 passed / 18 failed over 36 executions;
-> 2 confirmed defects, issues #4 and #5). **Batch C is frozen at `050a468`, not yet run.**
-> Design §1–§6; Batch A §7–§10; Batch B §11–§14; Batch C §15–§17.
+> **Status:** Step 5.4 — **all three batches executed**: **45 executions, 21 passed / 24 failed**,
+> **4 confirmed defects** (issues #4–#7). **The combined FR-08 run is still pending.**
+> Design §1–§6; Batch A review/gates/prediction §7–§9 and results §10; Batch B §11–§13 and results
+> §14; Batch C §15–§17 (incl. pre-run corrections §17.1) and results **§18**.
 >
 > | Field | Value |
 > |---|---|
