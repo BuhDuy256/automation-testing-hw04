@@ -486,7 +486,9 @@ before mass-generating specs.
 - 7.4 `git log --oneline > out/git_commit_log.txt`; verify the §5 ledger held by running **both**
   §5.5 commands — the **freeze commits alone** must reach ≥8 (planned floor: 10), independent of
   any optional post-run correction commits.
-- 7.5 Record the demo video (§8 below).
+- 7.5 Record the demo video (§8 below). **Done:** Task 2 video
+  https://youtu.be/4X_cNxSEe8c?si=QXdmFXKcrOrW3e6v; Agent Skill demo
+  https://youtu.be/OYRspFcq90g?si=vUab9AZqG7kaPnG7.
 - 7.6 Mirror `docs/implementation-plan/*` → `out/docs/` (HW02 precedent).
 - 7.7 Markdown → PDF for the main reports, AI critique, AI audit (**no `pandoc` on this machine —
   resolve before this step**).
@@ -503,7 +505,7 @@ before mass-generating specs.
 - Shows one automation script running end to end, the multi-browser run, and the HTML report.
 - **Narrates at least one fix made to AI-generated script** (pull from a Step 3/5/6 review log).
 - Authorship evidence: face-cam **or** terminal running `whoami` and `hostname`.
-- A second video may demonstrate the skill end-to-end (§7).
+- Agent Skill demo video (§7): https://youtu.be/OYRspFcq90g?si=vUab9AZqG7kaPnG7.
 
 **Stop condition:** none — but do not defer; this is 15 points and cannot be reconstructed late.
 
@@ -530,7 +532,7 @@ before mass-generating specs.
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
 | 6 FR-15 through skill | [x] **done 2026-08-10** — 18 cases, 3 freezes, combined run 18 pass / 36 fail over 54 executions, 6 browser runs, **5 defects** (#8–#12) |
 | 7 Globals + packaging | [x] **done 2026-08-10** — critique, commit log, `[AI-02]` §5/§6, final README, docs mirrored; **PDF export blocked, recorded** |
-| 8 Demo video | [ ] |
+| 8 Demo video | [x] **done 2026-08-10** — Task 2 video https://youtu.be/4X_cNxSEe8c?si=QXdmFXKcrOrW3e6v; Agent Skill demo https://youtu.be/OYRspFcq90g?si=vUab9AZqG7kaPnG7 |
 
 **Already complete (pre-plan):** repo scaffold, `run.sh`, Playwright project with 3 browser
 projects + Run-by metadata, browsers installed, SUT health-checked, feature selection confirmed
@@ -623,8 +625,12 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 8 — the demo video.** It is the only outstanding deliverable, and the submission archive
-should not be built without it.
+**Final packaging.** Step 8 video links have been recorded:
+
+| Requirement | Link |
+|---|---|
+| Task 2 automation demo video | https://youtu.be/4X_cNxSEe8c?si=QXdmFXKcrOrW3e6v |
+| Agent Skill demo video | https://youtu.be/OYRspFcq90g?si=vUab9AZqG7kaPnG7 |
 
 HW04 §6 requires: a walkthrough of the automation, narration of **at least one fix made to
 AI-generated output**, and authorship evidence — face-cam **or** a terminal running `whoami` and
@@ -639,8 +645,8 @@ Two episodes are already written up and make the strongest narration material:
   value, would have become **three fabricated bug reports**.
 
 **Step 7 done.** `out/ai-critique.md` (262 words), `out/git_commit_log.txt` (73 commits), `[AI-02]`
-§5 (142 words) and §6 disclosure written concretely, `out/README.md` finalised with a **proposed**
-85/100 that stops short of Task 2, and `docs/implementation-plan/` mirrored byte-identically into
+§5 (142 words) and §6 disclosure written concretely, `out/README.md` finalised with a
+self-assessed 100/100 including the video links, and `docs/implementation-plan/` mirrored into
 `out/docs/`.
 
 **PDF export is blocked and is recorded rather than worked around.** No converter exists on this

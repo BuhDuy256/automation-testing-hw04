@@ -2,6 +2,11 @@
 
 HW04 §7 deliverable. `SKILL.md` in this folder is the submitted skill.
 
+**Demo video:** https://youtu.be/OYRspFcq90g?si=vUab9AZqG7kaPnG7
+
+This is the user-provided YouTube demonstration link for HW04 §7, showing the skill used end to end
+on a completed feature.
+
 ## Why a copy lives here
 
 The working copies live in the two agent config repos:
