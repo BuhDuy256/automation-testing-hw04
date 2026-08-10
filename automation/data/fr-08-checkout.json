@@ -1,0 +1,152 @@
+{
+  "feature": "FR-08",
+  "featureTitle": "Checkout",
+  "oracle": {
+    "R1": "eshop-sut/README.md line 104 — only a logged-in user can check out",
+    "R2": "eshop-sut/README.md line 105 — the total is computed automatically from the cart and the user may not edit it directly",
+    "R3": "eshop-sut/README.md line 106 — the interface displays the full list of ordered products",
+    "R4": "eshop-sut/README.md line 107 — the backend must recompute the total; a client-sent total_amount is not accepted",
+    "R5": "eshop-sut/README.md line 108 — after a successful checkout, the cart is cleared"
+  },
+  "assumptions": {
+    "A-08-1": {
+      "confidence": "MED",
+      "statement": "R3's \"đầy đủ\" (full/complete) is read as requiring each ordered product's identity to be visible. Whether the quantity and line amount must ALSO be shown is an inference from \"full\", not a quoted requirement.",
+      "usedBy": ["TC-08-N05-UI"]
+    },
+    "A-08-2": {
+      "confidence": "MED",
+      "statement": "R3 applied to an empty cart means the displayed list is empty — the page must not fabricate line items. The spec does not discuss checkout with an empty cart at all.",
+      "usedBy": ["TC-08-N06-UI"]
+    }
+  },
+  "note": "Expected totals are NEVER hardcoded. R2 states a RELATIONSHIP (total = computed from cart), so the expected value is computed at runtime as the sum of line amounts, using catalogue prices read from GET /api/products — an independent source, not the checkout page's own display. Hardcoding 30000000 here would make the oracle depend on the SUT's seed data instead of on the spec, and would break silently whenever the catalogue changes.",
+  "schemaNote": "expectedTotalRule: 'sumOfLineAmounts' means expected = Σ(catalogue price × quantity) over the seeded products. seedVia: 'home' adds quantity 1 per click from the product grid; 'productDetail' uses the detail page's quantity input (required for quantity > 1, because addToCart appends a new line rather than merging).",
+  "cases": [
+    {
+      "id": "TC-08-N01-UI",
+      "batch": "A",
+      "requirement": "R2",
+      "mechanism": "UI",
+      "technique": "EP — invalid class, user-edit of a non-editable field",
+      "title": "The user must not be able to change the checkout total directly",
+      "seedVia": "home",
+      "input": {
+        "products": [{ "name": "Tai nghe AirPods Pro 2", "quantity": 1 }],
+        "attemptToSetTotalTo": 1000
+      },
+      "expected": {
+        "displayedTotalAfterEditAttempt": "sumOfLineAmounts",
+        "assertionNote": "Asserts the OUTCOME (the edit did not take effect), never the mechanism. The spec does not prescribe readonly / disabled / absent, so no assertion is made on how the field must resist editing."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 105 (\"không cho phép người dùng chỉnh sửa trực tiếp\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N02-UI",
+      "batch": "A",
+      "requirement": "R2",
+      "mechanism": "UI",
+      "technique": "EP — valid class, total derivation",
+      "title": "The checkout total must equal the sum of the cart's line amounts",
+      "seedVia": "home",
+      "input": {
+        "products": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 }
+        ]
+      },
+      "expected": {
+        "displayedTotal": "sumOfLineAmounts"
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 105 (\"được tính tự động từ giỏ hàng\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N03-UI",
+      "batch": "A",
+      "requirement": "R2 (→R4)",
+      "mechanism": "UI",
+      "technique": "EP — invalid class, forged total via the form field the app provides",
+      "title": "A total edited in the form must not become the persisted order total",
+      "seedVia": "home",
+      "input": {
+        "products": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 }
+        ],
+        "attemptToSetTotalTo": 1000
+      },
+      "expected": {
+        "persistedOrderTotal": "sumOfLineAmounts",
+        "assertionNote": "Two products are seeded deliberately so the expected total is a SUM and cannot coincide with any single catalogue price."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 lines 105 and 107",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N04-UI",
+      "batch": "A",
+      "requirement": "R3",
+      "mechanism": "UI",
+      "technique": "EP — valid class, list completeness",
+      "title": "Checkout must display every product in the cart",
+      "seedVia": "home",
+      "input": {
+        "products": [
+          { "name": "Tai nghe AirPods Pro 2", "quantity": 1 },
+          { "name": "Bàn phím cơ Keychron Q1", "quantity": 1 },
+          { "name": "Samsung Galaxy S24 Ultra", "quantity": 1 }
+        ]
+      },
+      "expected": {
+        "lineItemCount": 3,
+        "allSeededNamesVisible": true
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 106 (\"hiển thị đầy đủ danh sách sản phẩm đặt mua\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N05-UI",
+      "batch": "A",
+      "requirement": "R3",
+      "mechanism": "UI",
+      "technique": "EP — valid class, per-line detail",
+      "title": "Checkout must display the quantity and line amount of an ordered product",
+      "seedVia": "productDetail",
+      "input": {
+        "products": [{ "name": "Tai nghe AirPods Pro 2", "quantity": 3 }]
+      },
+      "expected": {
+        "lineItemCount": 1,
+        "showsQuantity": true,
+        "showsLineAmount": true
+      },
+      "expectedSource": "assumption A-08-1 (MED) — inferred from README FR-08 line 106's \"đầy đủ\"; NOT a direct spec citation",
+      "evidenceStrength": "assumption",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N06-UI",
+      "batch": "A",
+      "requirement": "R3",
+      "mechanism": "UI",
+      "technique": "BVA — minimum of the list-size domain (empty cart)",
+      "title": "Checkout must not display any product line when the cart is empty",
+      "seedVia": "none",
+      "input": {
+        "products": []
+      },
+      "expected": {
+        "lineItemCount": 0
+      },
+      "expectedSource": "assumption A-08-2 (MED) — README FR-08 line 106 applied to the degenerate case; the spec does not discuss an empty-cart checkout",
+      "evidenceStrength": "assumption",
+      "status": "frozen"
+    }
+  ]
+}
