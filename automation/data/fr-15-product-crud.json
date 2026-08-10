@@ -1,0 +1,150 @@
+{
+  "feature": "FR-15",
+  "featureTitle": "Product Management CRUD (admin)",
+  "oracle": {
+    "P1": "eshop-sut/README.md line 193 — admin can add / view / edit / delete products",
+    "P2": "eshop-sut/README.md line 195 — product name: required, at most 255 characters",
+    "P3": "eshop-sut/README.md line 196 — price: required, must be a positive number (> 0)",
+    "P4": "eshop-sut/README.md line 197 — category: required, must be chosen from the existing list",
+    "P5": "eshop-sut/README.md line 198 — editing one product changes only that product",
+    "P6": "eshop-sut/README.md lines 177-179 (FR-12) — POST/PUT/DELETE /api/products require a valid JWT AND role = 'admin'"
+  },
+  "note": "No status code is asserted anywhere. api_specification.md §3.3 documents only the request body for the product write endpoints — no success status, no error contract, no status code in the whole document. HW02 froze these expectations at outcome level for exactly that reason: 'the create is rejected, OR if created, it must not be persisted with X'. Both shapes are compliant and both must pass.",
+  "globalStateNote": "Products are GLOBAL state — they belong to no user and are shared by every worker, project and previous run. Every case therefore (a) tags its payload with a unique marker in `description`, (b) targets ONLY the row it created, via the id returned by POST, and (c) NEVER asserts on a total product count. A count assertion would be broken by any parallel worker.",
+  "schemaNote": "input.name.mode: 'literal' sends the given value; 'omit' leaves the key off the body entirely; 'uniqueOfLength' generates a name of EXACTLY that many characters that still begins with the test's unique marker, so a length boundary and global uniqueness hold at the same time. expected.persistence.compareTo: 'sentValue' compares the read-back field against what this test actually sent; 'literal' compares against the given literal.",
+  "cases": [
+    {
+      "id": "TC-15-EP-002",
+      "hw02Ref": "TC-15-EP-002",
+      "batch": "A",
+      "requirement": "P2",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class for `name` (present but empty)",
+      "title": "An empty product name must not be persisted",
+      "input": {
+        "name": { "mode": "literal", "value": "" },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "name", "mode": "notEquals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 195 (name required); outcome-level per HW02's frozen expectation",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-003",
+      "hw02Ref": "TC-15-EP-003",
+      "batch": "A",
+      "requirement": "P2",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class for `name` (key absent), distinct from the empty string",
+      "title": "A product created with no name field must not be persisted with a null name",
+      "input": {
+        "name": { "mode": "omit" },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "name", "mode": "notEquals", "compareTo": "literal", "literal": null }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 195 (name required); outcome-level per HW02's frozen expectation",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-002",
+      "hw02Ref": "TC-15-BVA-002",
+      "batch": "A",
+      "requirement": "P2",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `name` at the maximum permitted length (255, inclusive)",
+      "title": "A 255-character product name is valid and must be persisted in full",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 255 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "persistence": { "field": "name", "mode": "equals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 195 (at most 255 characters — 255 is inside the limit)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-003",
+      "hw02Ref": "TC-15-BVA-003",
+      "batch": "A",
+      "requirement": "P2",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `name` at maximum + 1 (256), the first invalid length",
+      "title": "A 256-character product name must not be persisted",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 256 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "name", "mode": "notEquals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 195 (at most 255 characters)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-004",
+      "hw02Ref": "TC-15-BVA-004",
+      "batch": "A",
+      "requirement": "P3",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `price` below the exclusive lower bound (negative)",
+      "title": "A negative price must not be persisted",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": -1,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "price", "mode": "notEquals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 196 (price must be positive, > 0)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-005",
+      "hw02Ref": "TC-15-BVA-005",
+      "batch": "A",
+      "requirement": "P3",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `price` exactly at the excluded bound (0)",
+      "title": "A price of zero must not be persisted",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 0,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "price", "mode": "notEquals", "compareTo": "sentValue" },
+        "assertionNote": "Zero is the discriminating value: a naive falsy guard (`if (price)`) would reject 0 while still accepting -1, so this case separates 'no validation at all' from 'a guard that happens to reject falsy values'. Same reasoning as FR-08's TC-08-N10-API."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 196 (price must be > 0, so 0 is excluded)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    }
+  ]
+}
