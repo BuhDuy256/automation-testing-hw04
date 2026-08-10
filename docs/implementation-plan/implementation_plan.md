@@ -528,7 +528,7 @@ before mass-generating specs.
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
-| 6 FR-15 through skill | [ ] |
+| 6 FR-15 through skill | **in progress** — 6.1 selection done (**18 cases**: 16 HW02 + 2 new); Batch A freeze next |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
 
@@ -623,30 +623,42 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 6 — FR-15 Product Management CRUD, through the skill.** The last feature. Its **first freeze
-is the eighth qualifying commit**, which clears HW04 §12's minimum.
+**Step 6 — FR-15 Batch A freeze.** Six API cases covering **P2** (name required, ≤255) and **P3**
+(price required, >0): `TC-15-EP-002`, `TC-15-EP-003`, `TC-15-BVA-002`, `TC-15-BVA-003`,
+`TC-15-BVA-004`, `TC-15-BVA-005`. Skill Phases 2–4, frozen before any run.
 
-1. **6.1 selection:** HW02 froze **20** FR-15 cases (11 EP + 9 BVA) against a minimum of 12 — a
-   surplus, so unlike FR-08 no new case design is required. Select ≥12 and record why the rest are
-   excluded.
-2. Then skill Phases 2–7 per batch, 3 freeze commits expected.
+**This freeze is the EIGHTH qualifying commit — it clears HW04 §12's minimum.**
 
-**FR-15 is the admin surface** (`frontend-admin`, port 5174) — a different app from FR-04/FR-08.
-Re-derive fixtures and selectors from *it*, not from the storefront.
+**Step 6.1 done.** **18 cases selected** — 16 of HW02's 20 plus **2 new**. Four HW02 cases excluded
+as redundancy (`EP-004`/`EP-005` converge with their BVA twins; `BVA-001`/`BVA-008` repeat a valid
+class the spec does not further partition). The 2 new cases close a real hole: HW02 has **no positive
+delete case at all** (`N01-API`) and **19 of its 20 cases are API-path**, leaving the admin interface
+almost untested for a requirement written about what an admin can do (`N02-UI`).
+Design: `out/reports/FR-15-product-crud/automation/report.md`.
 
-**Carry into FR-15 — architecture §3.2's global-state rule finally bites.** Products are **shared**,
-not per-user. Every created product must take a unique name, assertions must target only rows the
-test created, and **no assertion may reference a total product count** — a parallel worker's row
-would break it. This is the same class as FR-08's order-marker problem, and the same solution.
+**Batches:** **A** = 6 API (P2/P3 constraints) · **B** = 6 API (valid classes + lifecycle + backend
+edit-isolation) · **C** = 4 API access-control + **2 UI**. Forecast browser coverage: **6** of 54.
 
-**Step 5 done (FR-08 complete).** 15 cases (4 HW02 + **11 designed in Step 5.1**), 45 executions,
-21 pass / 24 fail, **24 genuine browser runs**, 4 defects: R1 ✅ · R2 ❌ #4 · R3 ✅ · R4 ❌ #5 ·
-R5 ❌ #6 **and** #7. The combined run matched the batch-derived expectation exactly and produced
-**no new root cause**.
+**Three risks to carry into Batch A, all newly binding for this feature:**
+
+1. **Products are global state** — architecture §3.2's shared-state rule finally bites. Unique product
+   names, assertions scoped to rows the test created, and **no assertion may use a total product
+   count**.
+2. **The admin token key is `adminToken`, not `token`.** `utils/session.ts`'s `seedSession()` writes
+   `token` and would leave the admin app logged out. **Do not inherit it** — write an admin-specific
+   helper.
+3. **FR-15 must use the seeded `admin@eshop.com` account**, an explicit exception to "never depend on
+   seeded data": `POST /api/register` cannot create an admin, and the alternative would be
+   self-escalating via `BUG-04-103` — making the suite depend on a filed security defect staying
+   unfixed. Used as a **credential only**; nothing is asserted about that account.
+
+Also: the admin form **does** expose `placeholder` attributes, so `getByPlaceholder` works here — the
+opposite of the storefront profile form. Re-derive selectors from `frontend-admin`; do not carry
+FR-04/FR-08's conclusions across.
 
 **Ledger:** **7 freezes of the 8** required by §12 (`e6cd87f`, `8053add`, `5af1749`, `6942a0a`,
-`9b0ab82`, `286f437`, `050a468`). **One more, from FR-15, clears it.** `fix:` commits do not count.
+`9b0ab82`, `286f437`, `050a468`). **FR-15 Batch A clears it.** `fix:` commits do not count.
 
 **Known risk to carry:** firefox shows intermittent Playwright *driver* instability (teardown
-protocol errors) unrelated to the SUT. It did not recur in the combined run. Record it if it
+protocol errors) unrelated to the SUT. It did not recur in the combined FR-08 run. Record it if it
 reappears; do not chase it.
