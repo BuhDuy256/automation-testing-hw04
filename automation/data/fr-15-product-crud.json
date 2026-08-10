@@ -287,6 +287,146 @@
       "expectedSource": "spec — eshop-sut/README.md FR-15 line 198 (editing one product changes only that product)",
       "evidenceStrength": "spec",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-15-EP-006-API",
+      "hw02Ref": "TC-15-EP-006",
+      "batch": "C",
+      "requirement": "P6",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state (Authorization header entirely absent)",
+      "title": "POST /api/products with no Authorization header must not create a product",
+      "input": {
+        "auth": "none",
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "productCreated": false,
+        "assertionNote": "Judged by searching the product list for THIS test's unique marker — zero matches means nothing was created. Never by a total product count, which is shared with every parallel worker and every previous run."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-12 lines 177-179 (POST /api/products requires a valid JWT and role='admin'); no status code is documented, so the oracle is outcome-level",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-007-API",
+      "hw02Ref": "TC-15-EP-007",
+      "batch": "C",
+      "requirement": "P6",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state (valid JWT but role='user')",
+      "title": "POST /api/products with a non-admin JWT must not create a product",
+      "input": {
+        "auth": "normalUser",
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "productCreated": false,
+        "assertionNote": "The non-admin account is registered fresh via POST /api/register, which always yields role='user'. The test asserts that precondition explicitly, so a fixture problem cannot be mistaken for the access-control result. BUG-04-103 self-escalation is NOT used — depending on it would make this suite require a filed security defect to stay unfixed."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-12 lines 177-179 (requires role='admin' in the token, so an authenticated non-admin is still refused)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-008-API",
+      "hw02Ref": "TC-15-EP-008",
+      "batch": "C",
+      "requirement": "P6",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state on the update verb",
+      "title": "PUT /api/products/:id with no Authorization header must not modify a product",
+      "input": {
+        "auth": "none",
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2,
+        "forgedPrice": 111111
+      },
+      "expected": {
+        "specClass": "invalid",
+        "productUnchanged": ["name", "price", "category_id"],
+        "assertionNote": "A product is first created BY THIS TEST as admin and its original values recorded; the unauthenticated PUT is then sent against that row, and the row is compared to its own recorded originals. No constants, no counts."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-12 lines 177-179 (PUT /api/products requires a valid JWT and role='admin')",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-009-API",
+      "hw02Ref": "TC-15-EP-009",
+      "batch": "C",
+      "requirement": "P6",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — invalid class, auth state on the delete verb",
+      "title": "DELETE /api/products/:id with no Authorization header must not delete a product",
+      "input": {
+        "auth": "none",
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "invalid",
+        "productStillPresent": true,
+        "assertionNote": "The product is created by this test and asserted PRESENT before the unauthenticated DELETE, so 'still present afterwards' cannot pass vacuously. Presence is judged by this test's own id, never by a list length."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-12 lines 177-179 (DELETE /api/products requires a valid JWT and role='admin')",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-011-UI",
+      "hw02Ref": "TC-15-EP-011",
+      "batch": "C",
+      "requirement": "P5",
+      "mechanism": "UI",
+      "technique": "EP — valid-class postcondition, admin-frontend enforcement path",
+      "title": "Editing one product in the admin panel must leave other products' displayed names unchanged",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2,
+        "productsToCreate": 2,
+        "editedNameSuffix": "-edited"
+      },
+      "expected": {
+        "specClass": "valid",
+        "siblingDisplayedNameUnchanged": true,
+        "assertionNote": "Judged INDEPENDENTLY of TC-15-EP-010. That case passed, proving the BACKEND isolates edits correctly — which says nothing about what the admin panel renders. The sibling's displayed name is recorded from the table BEFORE the edit and compared afterwards, so the oracle is 'unchanged from its own recorded original'. Must be observed WITHOUT reloading: a refetch would repopulate the table from the backend and hide a client-state defect."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 198 (editing one product changes only that product; the postcondition is user-observable, not only a storage claim)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-N02-UI",
+      "batch": "C",
+      "requirement": "P1 (add)",
+      "mechanism": "UI",
+      "technique": "EP — valid class, product creation through the admin interface",
+      "title": "An admin can add a product through the panel, and it appears in the list and via the API",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "valid",
+        "appearsInAdminList": true,
+        "retrievableViaApi": true,
+        "assertionNote": "New in HW04: 19 of HW02's 20 FR-15 cases are API-path, leaving the admin interface almost untested for a requirement written about what an admin can do. Both surfaces are asserted — what the panel shows AND what the backend stores — because either alone could pass while the other failed."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 193 (admin can add products)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
     }
   ]
 }

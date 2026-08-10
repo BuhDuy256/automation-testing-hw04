@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { expect, type APIRequestContext } from '@playwright/test';
+import { expect, type APIRequestContext, type Page } from '@playwright/test';
 
 /**
  * Admin authentication for FR-15.
@@ -72,4 +72,49 @@ export const productMarker = (caseId: string): string =>
 export function uniqueNameOfLength(marker: string, length: number): string {
   if (marker.length >= length) return marker.slice(0, length);
   return (marker + '-' + 'A'.repeat(length)).slice(0, length);
+}
+
+/**
+ * Puts a logged-in ADMIN session in place before the admin app boots.
+ *
+ * WHY NOT `seedSession` FROM utils/session.ts: that helper writes `localStorage.token`, which is
+ * what the storefront reads. `frontend-admin/src/App.jsx:7` reads **`adminToken`** — a different
+ * key in a different app. Reusing the storefront helper here would leave the admin panel logged
+ * OUT, and the failure would present as a routing or rendering problem rather than an
+ * authentication one. This was recorded as risk 2 of the FR-15 design before any code was written.
+ *
+ * `addInitScript` runs before any page script, so the value exists by the time `useState` reads it
+ * on mount. The app then sets its own `Authorization` header and fetches its data, so the session
+ * is genuine rather than mocked.
+ */
+export async function seedAdminSession(page: Page, token: string): Promise<void> {
+  await page.addInitScript((value) => {
+    window.localStorage.setItem('adminToken', value);
+  }, token);
+}
+
+/**
+ * Opens the admin panel's product section.
+ *
+ * SELECTOR NOTE (architecture §3.3 — last resort, logged deliberately): the navigation entries are
+ * plain `<li>` elements with `onClick` handlers, carrying no role, href or label, so `getByRole`
+ * cannot reach them. An exact-text match on the tab caption is the most stable option available
+ * without modifying the SUT.
+ *
+ * CORRECTION to the FR-15 design's risk 4: that risk stated the admin page "renders at least four
+ * tables", making table locators ambiguous. Re-reading `App.jsx` shows each section is gated on
+ * `activeTab === "…"`, so only ONE table is mounted at a time. The ambiguity does not exist; the
+ * real constraint is simply that the product table must be opened first.
+ */
+export async function openAdminProducts(page: Page): Promise<void> {
+  await page.getByText('Sản phẩm', { exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Lưu sản phẩm' }),
+    'the admin product section did not open',
+  ).toBeVisible();
+}
+
+/** The admin product table's data rows, excluding the header row. */
+export function adminProductRows(page: Page) {
+  return page.getByRole('row').filter({ hasNot: page.getByRole('columnheader') });
 }
