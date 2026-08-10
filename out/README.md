@@ -1,6 +1,7 @@
 # HW04 — Automation Testing on EShop (submission README)
 
-> **Status: in progress.** FR-04 is complete; FR-08 and FR-15 are not started. The
+> **Status: in progress.** FR-04 is complete (16 cases automated and executed); FR-08 has its
+> case design complete (15 cases) with automation pending; FR-15 is not started. The
 > self-assessment table and totals below are provisional and will be finalised before submission.
 
 ## 1. Student information
