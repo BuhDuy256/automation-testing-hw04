@@ -1,16 +1,16 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.2 — Batch A **executed**. 12 passed / 6 failed over 18 executions; 2 confirmed
-> defects (issues #4, #5). Design §1–§6, review §7, gates §8, prediction §9, results §10.
-> Batches B and C are not started.
+> **Status:** Step 5.3 — Batches **A and B executed**. Combined 18 passed / 18 failed over 36
+> executions; 2 confirmed defects (issues #4, #5). Design §1–§6; Batch A §7–§10; Batch B §11–§14.
+> **Batch C is not started.**
 >
 > | Field | Value |
 > |---|---|
 > | Student | Nguyen Bao Duy — 23127179 — 23KTPM2 |
 > | Feature | FR-08 Checkout (Pool B) |
 > | SUT surface | `frontend-web` + backend API |
-> | Method | `test-automation-design` skill — Phase 1 (§1–§6), then Phases 2–4 for Batch A (§7–§9) |
-> | Batch A freeze | see the freeze commit in the ledger; recorded **before** any run |
+> | Method | `test-automation-design` skill — Phase 1 (§1–§6), then Phases 2–7 per batch |
+> | Freezes | Batch A `9b0ab82`, Batch B `286f437` — each recorded **before** its first run |
 
 ---
 
@@ -583,7 +583,119 @@ correctly and then trusts the caller's arithmetic".
 
 **No assertion has been relaxed** for the already-filed `BUG-08-102`.
 
-## > NEXT — run Batch B
+---
 
-`cd automation && npx playwright test tests/fr-08-checkout/checkout-api.spec.ts`. The spec is frozen
-at the commit below, **before** any execution.
+# 14. Batch B — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-08-checkout/checkout-api.spec.ts
+```
+
+No retries. Spec frozen at `286f437`. Report: `../html-report/batch-b.html`.
+
+## 14.1 Results
+
+| Case | R | `total_amount` sent | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|---|
+| `TC-08-001` | R4 | `1` | ❌ | ❌ | ❌ | FAIL → `BUG-08-102` |
+| `TC-08-EP-002` | R1 | *(no auth header)* | ✅ | ✅ | ✅ | PASS |
+| `TC-08-EP-003` | R1 | *(invalid JWT)* | ✅ | ✅ | ✅ | PASS |
+| `TC-08-N08-API` | R4 | **field absent** | ❌ | ❌ | ❌ | FAIL → `BUG-08-102` |
+| `TC-08-N09-API` | R4 | `1000000000` | ❌ | ❌ | ❌ | FAIL → `BUG-08-102` |
+| `TC-08-N10-API` | R4 | `0` | ❌ | ❌ | ❌ | FAIL → `BUG-08-102` |
+
+**6 passed / 12 failed** over 18 executions, in **7.5 s**. All 12 are **assertion** failures — zero
+timeouts, zero setup failures, first invocation, no corrections needed.
+
+## 14.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-08-001` | FAIL | FAIL | ✅ |
+| `TC-08-EP-002` | PASS | PASS | ✅ |
+| `TC-08-EP-003` | PASS | PASS | ✅ |
+| `TC-08-N08-API` | FAIL | FAIL | ✅ |
+| `TC-08-N09-API` | FAIL | FAIL | ✅ |
+| `TC-08-N10-API` | FAIL | FAIL | ✅ |
+
+**6/6 correct**, tally exactly as predicted (2 pass / 4 fail per project; 6 / 12 overall).
+
+Unlike Batch A, **no post-run correction was required**. The pre-freeze review (§11) plus the
+absence of any browser in this batch removed the entire class of contention and navigation problems
+that cost Batch A two fix commits — which is itself a useful comparison: Batch A's harness trouble
+came from driving a UI under parallel load, not from anything about FR-08.
+
+## 14.3 Real-defect gate
+
+All 12 failures were reached **at an assertion**, are identical across all three projects, and were
+**corroborated outside Playwright** with a freshly registered account per case:
+
+```
+real cart total = 10000000
+
+omitted      sent: (field absent) -> persisted: null
+zero         sent: 0              -> persisted: 0
+overstated   sent: 1000000000     -> persisted: 1000000000
+forged low   sent: 1              -> persisted: 1
+```
+
+**Verdict: CONFIRMED PRODUCT DEFECT — all 12 → `BUG-08-102`, no new root cause.**
+
+Applying *"would fixing one fix the other?"*: **yes, in every direction.** A single server-side
+recomputation in `POST /api/checkout` would make all four cases pass simultaneously. One root cause
+reached through four payload shapes, so **issue #5 was updated, not duplicated**.
+
+### What Batch B adds that Batch A could not
+
+Batch A's `TC-08-N03-UI` showed a compound result — *the form lets you type a total **and** the order
+stores it*. Batch B isolates the backend half and sharpens the diagnosis twice:
+
+1. **There is no recomputation at all — not merely absent validation.** `TC-08-N08-API` omits
+   `total_amount` entirely; a backend that recomputed from the cart would be unaffected by the
+   field's absence. This one stores **NULL**. The server cart was verified non-empty first
+   (2 lines, 10,000,000), so the data needed to compute the total was present and simply never read.
+2. **There is no falsy guard either.** `TC-08-N10-API` sends `0`, and `0` is stored. That rules out
+   the most common partial mitigation, `if (total_amount) { … }`, which would have rejected `0` while
+   still accepting `1` and `1000000000`. This is exactly the discrimination §13 predicted the case
+   would provide, and it is why the case earned its place despite converging with the other three.
+
+Together these change the recommended fix from *"tighten a validation rule"* to *"add a computation
+that does not exist"*.
+
+### The two passes are load-bearing
+
+`TC-08-EP-002` and `TC-08-EP-003` passing (6/6 executions) shows the **auth boundary is enforced** —
+no order is created for a missing header or a malformed token, confirmed independently (status `401`,
+zero orders bearing the test's unique marker).
+
+So checkout **authenticates correctly and then trusts the caller's arithmetic completely**. That is a
+more precise and more damaging statement than "checkout is broken": the boundary that exists works,
+and the missing one is the financial one. It also means `BUG-08-102` cannot be explained away as a
+general absence of request handling.
+
+## 14.4 Browser coverage — Batch B contributes **zero**
+
+| Batch | Cases | Executions | Browser runs |
+|---|---|---|---|
+| A (UI-path) | 6 | 18 | **18** |
+| **B (API-path)** | 6 | 18 | **0** |
+| **FR-08 so far** | **12** | **36** | **18** |
+
+**No test in `checkout-api.spec.ts` requests the `page` fixture, so no browser was launched.** Its 18
+executions run once per configured project for **matrix uniformity only**; three identical backend
+results are not cross-browser evidence and are **excluded** from the browser-run count.
+
+The runtimes corroborate it beyond doubt: Batch B completed **all 18 executions in 7.5 s**, against
+Batch A's 1.1–2.9 min for the same number of executions. FR-08's browser coverage remains **18**,
+carried entirely by Batch A.
+
+## 14.5 Evidence strength
+
+Every Batch B case rests on a **direct spec citation** — README line 104 (R1) or line 107 (R4). No
+assumption-grounded case appears in this batch, so unlike `TC-08-N05/N06-UI` there is no confidence
+caveat attached to any of these results, and the defect evidence is at full strength.
+
+## > NEXT — Batch C
+
+Three cross-surface cases covering R5 and R1's UI half (`TC-08-EP-004`, `TC-08-N07-UI`,
+`TC-08-N11-UI`), through skill Phases 2–4, frozen before any run.

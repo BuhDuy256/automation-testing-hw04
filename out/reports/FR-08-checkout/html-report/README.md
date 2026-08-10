@@ -9,34 +9,53 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-08-checko
 
 | File | Run | Contents | Result |
 |---|---|---|---|
-| `batch-a.html` | Step 5 Batch A | `TC-08-N01-UI` … `TC-08-N06-UI` × 3 browsers | **12 passed / 6 failed** |
+| `batch-a.html` | Step 5 Batch A — **UI**, R2 + R3 | `TC-08-N01-UI` … `TC-08-N06-UI` × 3 browsers | **12 passed / 6 failed** |
+| `batch-b.html` | Step 5 Batch B — **API**, R1 + R4 | `TC-08-001`, `EP-002`, `EP-003`, `N08`, `N09`, `N10` × 3 projects | **6 passed / 12 failed** |
 
-Batches B and C are not yet automated; a combined FR-08 `index.html` will be added once all three
-have run, following the FR-04 layout.
+Batch C is not yet automated; a combined FR-08 `index.html` will be added once all three have run,
+following the FR-04 layout.
 
-## Browser coverage — all 18 executions are genuine
+## Browser coverage — 18 of 36, and the split is not cosmetic
 
-Unlike FR-04, **every** case in this batch is UI-path and requests Playwright's `page` fixture, so
-all **6 cases × 3 browsers = 18 executions launch a real browser**. Nothing here rides the project
-matrix without exercising it, and nothing is excluded from the browser-run count.
+| Batch | Surface | Executions | Browser runs |
+|---|---|---|---|
+| A | UI-path — requests `page` | 18 | **18** |
+| **B** | **API-path — never requests `page`** | 18 | **0** |
+| **Total** | | **36** | **18** |
 
-That is a property of what R2 and R3 *are*: both are rules about the interface, so neither can be
-tested any other way. FR-08's API-path cases live in Batch B, and those will be counted separately
-and honestly when they run.
+**Batch A**: every case drives a real browser, because R2 and R3 are both rules about the interface
+and cannot be tested any other way. Nothing is deducted.
 
-## What the 6 failures are
+**Batch B**: no test in `checkout-api.spec.ts` requests the `page` fixture, so **no browser is
+launched**. Its 18 executions run once per configured project for **matrix uniformity only** — three
+identical backend results are not cross-browser evidence, and counting them would inflate FR-08's
+browser coverage from 18 to 36.
 
-All six are **assertion** failures, stable and identical across all three browsers:
+The runtimes corroborate this beyond argument: Batch B completed all 18 executions in **7.5 s**,
+against Batch A's **1.1–2.9 min** for the same execution count.
+
+## What the failures are
+
+**All 18 failures across both batches are assertion failures** — zero timeouts in the reported runs,
+identical on all three projects. Batch A's six:
 
 | Case | Defect | Issue |
 |---|---|---|
 | `TC-08-N01-UI` × 3 | `BUG-08-101` — the order total is a user-editable form field | [#4](https://github.com/BuhDuy256/automation-testing-hw04/issues/4) |
 | `TC-08-N03-UI` × 3 | `BUG-08-102` — the backend stores the client-sent `total_amount` verbatim | [#5](https://github.com/BuhDuy256/automation-testing-hw04/issues/5) |
 
+Batch B's **12** failures (`TC-08-001`, `N08`, `N09`, `N10` × 3) are all the **same** `BUG-08-102`
+root cause reached through four payload shapes — issue #5 was updated, not duplicated. Its two
+passes (`EP-002`, `EP-003`) show the **auth boundary is enforced**.
+
 ## Harness failures — fixed, and one residual environment flake
 
-These are kept separate on purpose: one category was **our defect and is fixed**, the other is
-**not ours and remains**. Neither ever reached an assertion, so neither is evidence about the SUT.
+**Batch A only.** Batch B ran clean on its first invocation: 18 executions in 7.5 s, no timeouts, no
+setup failures, no corrections needed — which is itself informative, since it locates Batch A's
+trouble in *driving a UI under parallel load*, not in anything about FR-08.
+
+The two categories below are kept separate on purpose: one was **our defect and is fixed**, the other
+is **not ours and remains**. Neither ever reached an assertion, so neither is evidence about the SUT.
 
 **Fixed — harness defects in the test code.** Both were diagnosed and corrected, not tolerated:
 
