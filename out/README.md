@@ -85,7 +85,7 @@ _Paths relative to this `out/` folder._
 | FR-04 HTML reports (combined + per batch) | `reports/FR-04-personal-profile/html-report/` (see its `README.md`) |
 | FR-08 main report (design, review, prediction, results) | `reports/FR-08-checkout/automation/report.md` |
 | FR-08 bug reports | `reports/FR-08-checkout/bug-reports/report.md` |
-| FR-08 HTML report (Batch A) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
+| FR-08 HTML reports (per batch so far: A, B) | `reports/FR-08-checkout/html-report/` (see its `README.md`) |
 | **Agent Skill** (HW04 §7) | `agent-skill/SKILL.md` — provenance + validation trace in `agent-skill/README.md` |
 | AI Audit Report | `ai-declaration/[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md` |
 | AI Critique | `ai-critique.md` _(pending)_ |
