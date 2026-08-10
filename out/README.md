@@ -76,6 +76,24 @@ Full write-ups with root cause, exploitability and suggested fixes:
 `reports/FR-04-personal-profile/automation/report.md` §9 for the case-by-case mechanism mapping
 and the one HW02 gap-analysis item deliberately logged as future work rather than silently added.
 
+**None for FR-08** — all 15 selected cases (4 converted from HW02 + **11 designed in Step 5.1**)
+were automated *and* executed. Request interception proved unnecessary for this feature, so no case
+fell outside the available mechanisms; see `reports/FR-08-checkout/automation/report.md` §4.3.
+
+Two FR-08 cases carry a **weaker oracle**, which is a separate matter from being unautomated and is
+recorded so the two are not conflated:
+
+| Case | Oracle | Confidence |
+|---|---|---|
+| `TC-08-N05-UI` | **A-08-1** — R3's *"đầy đủ"* is read as requiring the quantity and line amount to be visible | **MED** |
+| `TC-08-N06-UI` | **A-08-2** — R3 applied to an empty cart means no line items are displayed | **MED** |
+
+Both are **inferences** from README line 106, not quoted requirements. **Both passed**, so no defect
+rests on assumption-grade evidence — all four FR-08 defects cite a spec line directly. If a reviewer
+rejects either inference, the correct response is to **withdraw that case** rather than count it,
+which would reduce R3 coverage from 3 cases to 2. They are listed here as an evidence-strength
+caveat, **not** as coverage gaps.
+
 ## 6. Deliverable index
 
 _Paths relative to this `out/` folder._
