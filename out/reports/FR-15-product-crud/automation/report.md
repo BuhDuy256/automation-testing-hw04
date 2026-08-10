@@ -490,7 +490,7 @@ is requested; `fixtures/base.ts` was **not** modified.
 | `npx tsc --noEmit` | exit **0** |
 | Batch B discovery | **18 tests in 1 file** (6 × 3 projects) |
 | Whole-feature discovery | **36 tests in 2 files** (12 × 3) |
-| `page` fixture requested | **none** — all five signatures are `async ({ api })` |
+| `page` fixture requested | **none** — all Batch B tests use only `async ({ api })`; **6 cases** discovered across 3 projects |
 | Status-code / global-count assertions | **0** |
 | Inline oracle data literals | **0** |
 | Failure messages citing an oracle | **11** |
