@@ -528,7 +528,7 @@ before mass-generating specs.
 | 3 FR-04 full pilot (≥12) | [x] **done 2026-08-09** — 16/16 automated, A/B/C + combined run executed (combined output `12c5585`) |
 | 4 Extract skill | [x] **done 2026-08-09** — `test-automation-design`, 7 phases, smell-test 0 hits, 3 byte-identical copies |
 | 5 FR-08 through skill (+8 new cases) | [x] **done 2026-08-10** — 15 cases, 3 freezes (`9b0ab82`, `286f437`, `050a468`), combined run 21 pass / 24 fail over 45 executions, 24 browser runs, **4 defects** (issues #4–#7) |
-| 6 FR-15 through skill | **in progress** — Batch A executed (3 pass / 15 fail, #8/#9); **Batch B frozen `102c6d1`, not yet run** |
+| 6 FR-15 through skill | **in progress** — **Batches A+B executed** (36 executions, 15 pass / 21 fail, 3 defects #8/#9/#10); Batch C next |
 | 7 Globals + packaging | [ ] |
 | 8 Demo video | [ ] |
 
@@ -623,31 +623,35 @@ by any customer through the form.
 
 ## > NEXT ACTION
 
-**Step 6 — run FR-15 Batch B.** The spec is frozen at **`102c6d1`**, before any execution.
+**Step 6 — FR-15 Batch C freeze.** The final six cases, and **the only ones in FR-15 that launch a
+browser**: four API access-control cases (`TC-15-EP-006`, `EP-007`, `EP-008`, `EP-009`) plus the two
+admin-UI cases (`TC-15-EP-011`, `TC-15-N02-UI`). Skill Phases 2–4, frozen before any run.
 
-```bash
-cd automation && npx playwright test tests/fr-15-product-crud/product-lifecycle-api.spec.ts
-```
+**Batch B done (freeze `102c6d1`, 12 pass / 6 fail).** Prediction **7/7 correct**, no post-run
+correction needed. One **new** defect — `BUG-15-103` (#10, category never checked against existing
+categories) — and `BUG-15-102` (#9) **finally acquired an owning test**, `TC-15-BVA-006-API`, whose
+parity mechanism made the failure deterministic (it caught id 34, even).
 
-**Expected: 12 pass / 6 fail over 18 executions.** Two predicted failures, and they map to
-**different** root causes — `TC-15-BVA-009` to a **new** defect (no category validation; HW02's
-`BUG-15-003`, not yet filed in HW04) and `TC-15-BVA-006-API` to the already-filed `BUG-15-102` (#9),
-which this batch finally gives an owning test.
+**Batch B's four passes are the load-bearing result.** A valid create round-trips, a valid category
+stores, delete removes the row, and editing one product leaves its sibling byte-identical — so the
+write path **works**, and every FR-15 failure so far is an *absent guard* rather than a broken
+operation. That is what makes each recommended fix a validation step, not a rewrite.
 
-**The four predicted passes carry the argument.** If create, delete, edit-isolation and a valid
-category all work, Batch A's 15 failures cannot be blamed on a broken endpoint — the write path
-functions and is simply **unguarded**, which is what makes the fix a guard clause.
+**One run was discarded before it was read:** the first Batch B invocation returned 18 failures
+because the backend was down (`curl` → HTTP `000`). Not classified, not reported — a failure that
+cannot reach the SUT says nothing about it. Restarted via `./run.sh start` and re-run.
 
-**Batch B stayed at six.** `BUG-15-102` needed an owning test, which would have made seven; rather
-than ship an unreviewed 7-case batch, `TC-15-BVA-006-API` was made dual-purpose (report §12), with
-the rejected alternatives recorded.
+**Carry into Batch C — it is unlike every other FR-15 batch:**
+- The admin app reads **`localStorage.adminToken`**, not `token`. `seedSession()` would leave it
+  logged out and the failure would look like a routing bug.
+- It renders **at least four tables** (categories, products, coupons, users), so `getByRole('table')`
+  and `getByRole('row')` are ambiguous — scope every locator.
+- The product form **does** expose `placeholder` attributes, so `getByPlaceholder` works there — the
+  opposite of the storefront profile form. Re-derive; do not inherit.
+- `App.jsx` **alerts on update** — register a dialog handler before any interaction.
+- `EP-011` is the UI half of P5. HW02 found the backend correct and the **UI** wrong
+  (`fakeMassUpdatedProducts` overwrites every visible product's name). `EP-010` has now passed, so
+  the two surfaces must be judged **separately** — the FR-08 two-carts pattern.
+- Count **only** the two UI cases toward browser coverage; the four API cases contribute zero.
 
-**Then:** classify through the real-defect gate, corroborate outside Playwright, file the category
-defect if confirmed, copy `batch-b.html`, verify the stamp, and commit the output.
-
-**Ledger:** **9 freezes** (§12's minimum of 8 already cleared). Batch C adds the tenth.
-
-**Carry into Batch C — the UI batch, and the only one that launches a browser:** the admin app reads
-`localStorage.adminToken` (not `token`), renders at least four tables, exposes `placeholder`
-attributes on the product form, and alerts on update. Re-derive selectors from `frontend-admin`; do
-not inherit storefront helpers. Count only its two UI cases toward browser coverage.
+**Ledger:** **9 freezes** (§12's minimum of 8 cleared at `734c6d0`). Batch C adds the tenth.

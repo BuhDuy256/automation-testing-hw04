@@ -1,8 +1,8 @@
 # FR-15 — Automation Report (Product Management CRUD)
 
-> **Status:** Step 6.3 — Batch A **executed** (18 executions, 3 passed / 15 failed, 2 defects:
-> issues #8 and #9); **Batch B frozen, not yet run**. Selection and design §1–§6; Batch A §7–§11;
-> Batch B sizing §12 and freeze §13. Batch C is not started.
+> **Status:** Step 6.3 — Batches **A and B executed**. Combined so far: **36 executions, 15 passed /
+> 21 failed**, **3 confirmed defects** (issues #8, #9, #10). Selection and design §1–§6; Batch A
+> §7–§11; Batch B sizing §12, freeze §13, **results §14**. Batch C is not started.
 >
 > | Field | Value |
 > |---|---|
@@ -527,7 +527,132 @@ recommendation into a guard clause rather than a rewrite.
 
 **No assertion has been relaxed** for any known defect.
 
-## > NEXT — run Batch B
+---
 
-`cd automation && npx playwright test tests/fr-15-product-crud/product-lifecycle-api.spec.ts`. The
-spec is frozen at the commit below, **before** any execution.
+# 14. Batch B — execution results
+
+```bash
+cd automation && npx playwright test tests/fr-15-product-crud/product-lifecycle-api.spec.ts
+```
+
+No retries. Spec frozen at `102c6d1`, unchanged before the run.
+Report: `../html-report/batch-b.html`.
+
+## 14.1 Results
+
+| Case | Req | chromium | firefox | webkit | Verdict |
+|---|---|---|---|---|---|
+| `TC-15-BVA-006-API` | P3 + **P1 view** | ❌ | ❌ | ❌ | **P3 half PASSED**; view half FAIL → `BUG-15-102` |
+| `TC-15-BVA-007` | P4 | ✅ | ✅ | ✅ | PASS |
+| `TC-15-BVA-009` | P4 | ❌ | ❌ | ❌ | FAIL → **`BUG-15-103`** |
+| `TC-15-EP-001` | P1 add | ✅ | ✅ | ✅ | PASS |
+| `TC-15-N01-API` | P1 delete | ✅ | ✅ | ✅ | PASS |
+| `TC-15-EP-010` | P5 | ✅ | ✅ | ✅ | PASS |
+
+**12 passed / 6 failed** over 18 executions, 6.1 s. All 6 failures are **assertion** failures — zero
+timeouts, zero setup failures. Identical on a stability re-run.
+
+## 14.2 Prediction vs actual
+
+| Case | Predicted | Actual | Match |
+|---|---|---|---|
+| `TC-15-BVA-006-API` — P3 half | PASS | PASS | ✅ |
+| `TC-15-BVA-006-API` — view half | FAIL | FAIL | ✅ |
+| `TC-15-BVA-007` | PASS | PASS | ✅ |
+| `TC-15-BVA-009` | FAIL | FAIL | ✅ |
+| `TC-15-EP-001` | PASS | PASS | ✅ |
+| `TC-15-N01-API` | PASS | PASS | ✅ |
+| `TC-15-EP-010` | PASS *(Medium confidence)* | PASS | ✅ |
+
+**7/7 correct**, tally exactly as predicted (4 pass / 2 fail per project). No post-run correction was
+needed.
+
+`TC-15-EP-010` was the one Medium-confidence call, and it resolved as HW02 found: the **backend**
+isolates edits correctly. That makes Batch C's `TC-15-EP-011` (the admin-UI half) the real question,
+and the two remain judged separately.
+
+## 14.3 A run discarded before it was read
+
+The first invocation returned **18 failures**. It was **not** classified, because the backend was
+down — `curl` returned HTTP `000` before the run started, and the SUT had died between sessions.
+
+Every failure in that invocation was infrastructure, not evidence. The SUT was restarted with
+`./run.sh start` and the batch re-run; the results above are from that run and were reproduced
+identically by a further stability run.
+
+This is the cheapest possible application of the real-defect gate — a failure that cannot reach the
+system under test says nothing about it — but it is recorded because a suite that reports 18 red
+tests is exactly the moment when it is tempting to start writing bug reports.
+
+## 14.4 Real-defect classification
+
+Both failures were reached **at an assertion**, reproduce on all three projects, and were
+corroborated outside Playwright.
+
+**`TC-15-BVA-009` → `BUG-15-103` ([#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10)), NEW.**
+
+```
+existing category ids: 1, 2, 3
+
+category_id 4     -> POST 200, PERSISTED category_id = 4
+category_id 999   -> POST 200, PERSISTED category_id = 999
+category_id -1    -> POST 200, PERSISTED category_id = -1
+```
+
+The string `categories` does not appear anywhere in the create handler.
+
+**Distinct from `BUG-15-101`, and the distinction is not cosmetic.** `BUG-15-101` is missing
+**format/presence** validation — synchronous, local checks on the request body. This is missing
+**referential integrity**: confirming a value exists in *another table*, which needs a lookup or a
+real foreign-key constraint. Applying *"would fixing one fix the other?"* — **no**: a developer
+adding *"name non-empty and ≤ 255, price > 0"* has no reason to also query the categories table, and
+the two fixes live in different parts of the handler. HW02 separated them the same way
+(`BUG-15-001`/`002` versus `BUG-15-003`).
+
+**`TC-15-BVA-006-API` view half → `BUG-15-102` ([#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9)), issue UPDATED, not duplicated.**
+
+```
+Error: GET /api/products/34 and GET /api/products disagree about the same product's price —
+detail returned "1" (string) and the list returned 1 (number)
+  Expected: 1
+  Received: "1"
+```
+
+This is the defect **finally acquiring an owning test**. When filed from Batch A's diagnosis it had
+none, and was explicitly excluded from Batch A's coverage; #9 has been updated to record that it is
+now owned by `TC-15-BVA-006-API`.
+
+**The parity mechanism worked as designed.** The failing product was id **34** — even, the class where
+the SUT differs. Had the case created a single product and landed on an odd id, it would have passed
+vacuously, which is precisely how this defect stayed hidden through Batch A. Selecting inputs by
+parity while keeping parity out of the oracle is what made the result deterministic.
+
+## 14.5 The four passes are the batch's real argument
+
+Batch A showed fifteen executions storing invalid data. On its own that is ambiguous — an endpoint
+that stores everything might simply be broken. Batch B settles it:
+
+- **`TC-15-EP-001`** — a valid create round-trips all three fields exactly.
+- **`TC-15-BVA-007`** — a valid category is stored correctly.
+- **`TC-15-N01-API`** — delete removes the row (and it was asserted present beforehand, so the check
+  cannot pass vacuously).
+- **`TC-15-EP-010`** — editing one product leaves the sibling's stored fields byte-identical to their
+  recorded originals.
+- Plus `TC-15-BVA-006-API`'s P3 half — the minimum valid price persists.
+
+**The write path demonstrably works.** Batch A's failures are therefore *absent guards*, not a broken
+endpoint — which is what makes every recommended fix a validation step rather than a rewrite.
+
+## 14.6 Browser coverage — Batch B contributes **zero**
+
+No test in `product-lifecycle-api.spec.ts` requests the `page` fixture, so **no browser was
+launched**. Its 18 executions are matrix uniformity only and are **excluded** from the browser-run
+count, exactly as Batch A's were. The 6.1 s wall time for 18 executions corroborates it.
+
+**FR-15 so far: 36 executions, 0 browser runs.** All of FR-15's browser coverage will come from Batch
+C's two UI cases (6 executions).
+
+## > NEXT — Batch C freeze
+
+Six cases: four API access-control (`EP-006`, `EP-007`, `EP-008`, `EP-009`) and the **two admin-UI
+cases** (`EP-011`, `N02-UI`) — the only ones in FR-15 that launch a browser.

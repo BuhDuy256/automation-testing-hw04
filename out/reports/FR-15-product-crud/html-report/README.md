@@ -10,16 +10,19 @@ cd automation && node scripts/verify-report-stamp.js ../out/reports/FR-15-produc
 | File | Run | Contents | Result |
 |---|---|---|---|
 | `batch-a.html` | Step 6 Batch A — **API**, P2 + P3 | `TC-15-EP-002/003`, `TC-15-BVA-002/003/004/005` × 3 projects | **3 passed / 15 failed** |
+| `batch-b.html` | Step 6 Batch B — **API**, P1 + P3 + P4 + P5 | `TC-15-BVA-006-API/007/009`, `TC-15-EP-001`, `TC-15-N01-API`, `TC-15-EP-010` × 3 projects | **12 passed / 6 failed** |
 
-Batches B and C are not yet automated. A combined FR-15 `index.html` will be added once all three
-have run, following the FR-04 and FR-08 layout.
+Batch C is not yet automated. A combined FR-15 `index.html` will be added once all three have run,
+following the FR-04 and FR-08 layout.
 
-## Browser coverage — Batch A contributes **zero**
+## Browser coverage — Batches A and B both contribute **zero**
 
-No test in `product-constraints-api.spec.ts` requests Playwright's `page` fixture, so **no browser is
-launched**. Its 18 executions run once per configured project for **matrix uniformity only** — three
-identical backend results are not cross-browser evidence. The 14.6–18.6 s wall time for all 18
-corroborates this.
+Neither `product-constraints-api.spec.ts` nor `product-lifecycle-api.spec.ts` requests Playwright's
+`page` fixture, so **no browser is launched by either**. Their 36 executions run once per configured
+project for **matrix uniformity only** — three identical backend results are not cross-browser
+evidence. The wall times corroborate it: 14.6–18.6 s for Batch A's 18 and **6.1 s** for Batch B's.
+
+**FR-15 so far: 36 executions, 0 browser runs.**
 
 FR-15's browser coverage will come entirely from **Batch C's two UI cases** against the admin panel
 (2 × 3 = 6 executions).
@@ -29,12 +32,16 @@ FR-15's browser coverage will come entirely from **Batch C's two UI cases** agai
 All 15 are **assertion** failures, stable across two consecutive runs and identical on all three
 projects. They collapse to **one** root cause:
 
-| Cases | Defect | Issue |
-|---|---|---|
-| `EP-002`, `EP-003`, `BVA-003`, `BVA-004`, `BVA-005` × 3 | `BUG-15-101` — `POST /api/products` performs no input validation | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
+| Batch | Cases | Defect | Issue |
+|---|---|---|---|
+| A | `EP-002`, `EP-003`, `BVA-003`, `BVA-004`, `BVA-005` × 3 | `BUG-15-101` — `POST /api/products` performs no input validation | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
+| B | `BVA-009` × 3 | `BUG-15-103` — `category_id` is never checked against existing categories | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
+| B | `BVA-006-API` × 3 (view half) | `BUG-15-102` — detail and list endpoints disagree about the same product's price | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
 
-`TC-15-BVA-002` (255-character name) **passed** 3/3: the create path stores a long name in full, so
-the fault is *absent validation*, not a broken write.
+**Batch B's four passes carry the argument.** A valid create round-trips, a valid category is stored,
+delete removes the row, and editing one product leaves its sibling byte-identical. The write path
+demonstrably **works** — so Batch A's fifteen failures are *absent guards*, not a broken endpoint,
+which is what makes every recommended fix a validation step rather than a rewrite.
 
 ## Read this alongside §11 of the automation report
 

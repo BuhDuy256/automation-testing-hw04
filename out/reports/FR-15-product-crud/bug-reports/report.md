@@ -1,16 +1,17 @@
 # FR-15 — Bug reports
 
-Confirmed product defects found by FR-15 automation. **Batch A only** (P2, P3); Batches B and C have
-not run.
+Confirmed product defects found by FR-15 automation. **Batches A (P2, P3) and B (P1, P3, P4, P5)**;
+Batch C has not run.
 
-Both defects were **corroborated outside Playwright** before filing, reproduce identically on all
-three projects (or independently of any browser), and come from a spec frozen at `734c6d0` **before
-any execution**. No assertion was weakened.
+Every defect below was **corroborated outside Playwright** before filing, reproduces identically on
+all three projects, and comes from a spec frozen **before any execution** — Batch A at `734c6d0`,
+Batch B at `102c6d1`. No assertion was weakened.
 
 | ID | Title | Severity | Req | Issue |
 |---|---|---|---|---|
 | `BUG-15-101` | `POST /api/products` performs no input validation | **High** | P2, P3 | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
 | `BUG-15-102` | `GET /api/products/:id` returns `price` as a string for even ids | **Medium** | P1 (view) | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
+| `BUG-15-103` | `POST /api/products` never checks `category_id` against existing categories | **Medium** | P4 | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
 
 ---
 
@@ -102,22 +103,87 @@ deleting the stringification would not validate anything. Different endpoints, d
 **Suggested fix.** Delete the `if (row.id % 2 === 0)` line so the detail endpoint returns the stored
 value unmodified.
 
-**Owning test.** None yet — no Batch A case asserts this, and it is **not counted as Batch A
-coverage**. A dedicated case belongs in Batch B, where the product read path is already in scope.
+**Owning test — now assigned.** When filed there was none, and it was explicitly excluded from Batch
+A's coverage. **`TC-15-BVA-006-API`** (Batch B, frozen `102c6d1`) now owns it and fails 3/3:
+
+```
+Error: GET /api/products/34 and GET /api/products disagree about the same product's price —
+detail returned "1" (string) and the list returned 1 (number)
+  Expected: 1
+  Received: "1"
+```
+
+**The case cannot pass by luck.** The defect appears only on **even** ids, so a single product
+landing on an odd id would pass vacuously — which is exactly how this defect stayed hidden through
+Batch A. The case creates products until it holds **one of each id parity** and asserts agreement
+for both; in this run it held id 34 (even) and failed deterministically. **Parity selects inputs
+only** — the oracle says the two endpoints must report the same price for the same product and never
+mentions ids, parity or `toString()`.
+
+---
+
+## BUG-15-103 — `category_id` is never checked against existing categories
+
+| Field | Value |
+|---|---|
+| **Requirement** | P4 — `README.md` line 197: category is required and must be **chosen from the existing list** |
+| **Found by** | `TC-15-BVA-009` (Batch B) — 3/3 projects, stable across two runs |
+| **Severity** | **Medium** |
+| **Evidence strength** | **Direct spec citation** — line 197 |
+| **HW02 relationship** | Reconfirms `BUG-15-003` with fresh HW04 evidence |
+
+**Observed.** `Expected: not 4` — the nonexistent category was stored. Corroborated outside
+Playwright:
+
+```
+existing category ids: 1, 2, 3
+
+category_id 4     -> POST 200, PERSISTED category_id = 4
+category_id 999   -> POST 200, PERSISTED category_id = 999
+category_id -1    -> POST 200, PERSISTED category_id = -1
+```
+
+**Root cause** (code-derived — *not* the oracle). `server.js:167-177` inserts `category_id` as
+given. The string `categories` does not appear anywhere in the handler, and `products` carries no
+enforced foreign key.
+
+**`TC-15-BVA-007` passes** (`category_id: 1`, which exists, is stored correctly), so the field is
+written properly — the fault is specifically that nothing verifies the value refers to a real
+category.
+
+### Why this is distinct from BUG-15-101
+
+`BUG-15-101` is missing **format/presence** validation — synchronous, local checks on the request
+body. This is missing **referential integrity** — confirming a value exists in *another table*,
+which requires a lookup or a real foreign-key constraint, not a guard clause.
+
+*"Would fixing one fix the other?"* — **no**. A developer implementing *"name non-empty and ≤ 255,
+price > 0"* has no reason to also query the categories table, and the two fixes live in different
+parts of the handler. HW02 separated them the same way (`BUG-15-001`/`002` versus `BUG-15-003`).
+
+**Suggested fix.** Verify `category_id` exists in `categories` before insert, and/or declare an
+enforced foreign key on `products.category_id`.
 
 ---
 
 ## Summary
 
-**2 confirmed defects** from Batch A. Severity: **High — 1**, **Medium — 1**.
+**3 confirmed defects** across Batches A and B. Severity: **High — 1**, **Medium — 2**.
 
-| Requirement | Status after Batch A |
+| Requirement | Status after Batches A and B |
 |---|---|
+| P1 — add / delete | ✅ both work (`EP-001`, `N01-API`) |
+| P1 — view | ❌ `BUG-15-102`, now owned by `TC-15-BVA-006-API` |
 | P2 — name required, ≤ 255 | ❌ `BUG-15-101` |
-| P3 — price required, > 0 | ❌ `BUG-15-101` |
-| P1 — view | ❌ `BUG-15-102` *(incidental; no owning case yet)* |
-| P1 add/edit/delete, P4, P5, P6 | not yet exercised — Batches B and C |
+| P3 — price required, > 0 | ❌ `BUG-15-101` (the valid minimum itself passes) |
+| P4 — category from the existing list | ❌ `BUG-15-103` (a valid category is stored correctly) |
+| P5 — edit isolation, **backend** | ✅ the sibling is untouched (`EP-010`) |
+| P5 — edit isolation, **admin UI** | not yet exercised — Batch C's `EP-011` |
+| P6 — admin-only write APIs | not yet exercised — Batch C |
 
-Only `TC-15-BVA-002` passed, and it matters: a 255-character name is stored in full, so the product
-create path works. Everything failing in Batch A fails because nothing checks the input, not because
-the operation is broken.
+**Batch B settled the ambiguity Batch A left.** An endpoint that stores everything might simply be
+broken — but a valid create round-trips all three fields, a valid category is stored, delete removes
+the row, editing one product leaves its sibling byte-identical, and the minimum valid price
+persists. **The write path demonstrably works.** Every FR-15 failure so far is therefore an *absent
+guard*, not a broken operation, which is what makes each recommended fix a validation step rather
+than a rewrite.
