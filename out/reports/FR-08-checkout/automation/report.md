@@ -1,14 +1,16 @@
 # FR-08 — Automation Report (Checkout)
 
-> **Status:** Step 5.1 complete — **case design only**. No automation script exists yet, nothing has
-> been run, and no data file is frozen. Batch A freeze is the next action.
+> **Status:** Step 5.2 — Batch A **frozen, not yet run**. Design (§1–§6) complete; Batch A's review
+> findings, static gates and pre-run prediction are recorded in §7–§9. Nothing in FR-08 has been
+> executed. Batches B and C are not started.
 >
 > | Field | Value |
 > |---|---|
 > | Student | Nguyen Bao Duy — 23127179 — 23KTPM2 |
 > | Feature | FR-08 Checkout (Pool B) |
 > | SUT surface | `frontend-web` + backend API |
-> | Method | `test-automation-design` skill, **Phase 1 only** (select cases, map mechanisms, flag convergence, size batches) |
+> | Method | `test-automation-design` skill — Phase 1 (§1–§6), then Phases 2–4 for Batch A (§7–§9) |
+> | Batch A freeze | see the freeze commit in the ledger; recorded **before** any run |
 
 ---
 
@@ -228,8 +230,83 @@ No assertion will be written to match any of this. Expected values come from §1
 
 ---
 
-## > NEXT — Batch A freeze
+---
 
-Apply skill Phases 2–4 to the six R2/R3 UI cases: externalize their data with `expectedSource` per
-case, generate the batch, review it against the 8 recurring failure modes, run the static gates,
-record the pre-run prediction — **then** commit as `freeze: FR-08 specs batch A`, before any run.
+# Step 5.2 — Batch A (R2 + R3), frozen, not yet run
+
+Six UI cases, `TC-08-N01-UI` … `TC-08-N06-UI`. Files: `automation/data/fr-08-checkout.json`,
+`automation/utils/checkout.ts`, `automation/tests/fr-08-checkout/checkout-page.spec.ts`.
+
+## 7. Human review of the AI-generated specs — findings and fixes
+
+Reviewed **before** the freeze commit and before any run.
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 24 | **Hardcoding the expected total would have made the oracle depend on SUT seed data.** The obvious generated form puts `"expectedTotal": 10000000` in the data file. R2 does not state a number — it states a **relationship** (*total = computed from the cart*). A literal would silently become wrong the moment the catalogue changed, and it would encode the SUT's fixture data as if it were the spec. | Model bias toward a concrete, comparable literal; a number in a data file *looks* like externalized data even when it is an invented expectation. | Expected totals are computed at runtime as Σ(catalogue price × quantity), with prices read from **`GET /api/products`** — a source independent of the page under test. The data file carries the **rule** (`"sumOfLineAmounts"`), not a value. |
+| 25 | **Asserting the total field is `disabled`/`readonly` would invent a mechanism.** The natural assertion for "the user may not edit it" is `toBeDisabled()`. Line 105 forbids the *outcome* (a user-set total taking effect); it prescribes **no** mechanism — omitting the field, ignoring its value, or making it read-only would all comply. | The recurring failure mode from the skill's table, entry 1 — "invalid" and "not allowed" read like "must be blocked *this way*". Third feature in a row it has appeared. | No assertion on the mechanism. `TC-08-N01-UI` attempts the edit and asserts the **effective total is still the cart-derived value**; whether the field was editable is recorded as an **annotation** (evidence, not oracle). |
+| 26 | **`fill()` on a non-editable field would error instead of asserting.** If the app *had* correctly made the total read-only, `fill()` throws — the test would report a Playwright error, not a pass, so a compliant implementation would fail the test. | The generated happy path assumed the field is editable, because in this SUT it is. Writing a test that only works against the buggy behaviour is a subtle form of encoding observed behaviour as expectation. | Guarded with `isEditable()`; the edit is attempted only if possible, and the same outcome assertion runs either way. The case now passes against a compliant implementation and fails against this one. |
+| 27 | **Circular assertion risk on R2.** Reading the product prices from the checkout page and then asserting the checkout total against them would pass for *any* total the page chose to display. | The cart and the total render on the same page, so the nearest source of prices is the wrong one. | Prices come from the catalogue API; the page supplies only the value under test. |
+| 28 | **`getByLabel` is unusable for the total field — verified, not assumed.** `Checkout.jsx:92-102` renders `<label>` as a **sibling** of `<input>` with no `for`/`id`. | Environment characteristic. It is the same shape as the FR-04 profile form, but the plan explicitly forbids inheriting FR-04's conclusions, so it was re-confirmed against `Checkout.jsx` directly. | XPath from the label text — `//label[contains(., 'Tổng tiền thanh toán')]/following-sibling::input` — expressing *"the input belonging to the total field"*. Logged as a deliberate last-resort selector (architecture §3.3) with its fragility named. A bare `input[type=number]` was rejected: it is unique **today** only because the coupon input is `type=text`. |
+| 29 | **A full navigation destroys the cart, and the obvious `page.goto('/checkout')` does exactly that.** The client cart is `useState([])` with no persistence, so any `goto`/`reload` remounts `CartProvider` and empties it. The test would then assert against an empty checkout page and fail for a reason unrelated to the spec. | The natural way to reach a page is to navigate to its URL; nothing about the URL suggests the state is in memory. | All post-seed navigation goes through **in-app links** (react-router, client-side). `page.goto` appears exactly once after seeding — in `TC-08-N06-UI`, whose cart is *deliberately empty*, where it is the only way to reach the route and is therefore safe. `page.reload` is used nowhere. |
+| 30 | **The seeded session resolves asynchronously, and `Cart.jsx` races it.** `seedSession` only writes a token; `AuthContext` then fetches `/api/users/me` and sets `user`. `Cart.jsx:12` reads that `user` and, if it is still `null`, alerts and redirects to `/login`. | A flaky wait: it would pass whenever the fetch happened to win the race. | `waitForLoggedIn()` waits for the header's *"Chào, …"* link — a real readiness signal for the state the next click depends on — before any cart interaction. |
+| 31 | **Seeding via the product-detail page silently under-adds.** `ProductDetail.jsx:21-31` ignores the **first** click (`if (clickCount === 0) { … return; }`), so a single click adds nothing and the cart would be empty with no error. | A deliberate SUT defect on the **add-to-cart** path, invisible without reading the handler. | Clicked twice, then gated on the button's own `"Đã thêm"` confirmation so the workaround cannot silently fail. Recorded as a **setup-path** observation: it belongs to the cart feature, is **out of FR-08 scope**, is not asserted on, and is **not** filed as an FR-08 defect. |
+| 32 | **Clicking the grid button *N* times does not create a line of quantity *N*.** `CartContext.addToCart` **appends** a line rather than merging by product, so three clicks yield three lines of quantity 1 — not the single quantity-3 line `TC-08-N05-UI` is about. | Reasonable assumption about cart semantics that this implementation does not hold. | `TC-08-N05-UI` seeds through the detail page's quantity input (`seedVia: "productDetail"`); the distinction is recorded in the data file's `schemaNote`. |
+| 33 | **A heterogeneous `expected` shape typed `lineItemCount` as `number \| undefined`.** The cases assert different things, so three `toHaveCount(testCase.expected.lineItemCount)` calls did not typecheck. The tempting fixes — `!` or a cast — would let a data-file edit that drops the key reach `toHaveCount(undefined)`: a silent, meaningless assertion. | Consequence of one data file serving cases with different assertion targets. | Added `expectedLineItemCount()` / `soleProduct()` accessors that **throw** when the key is absent — same spirit as the batch-size guard. Caught by `npx tsc --noEmit` **before** the freeze. |
+| 34 | **A careless bulk edit introduced infinite recursion.** Applying finding 33's accessor with a regex rewrote the helper's **own body** into `const product = soleProduct(testCase)` instead of the call site. **Typecheck still passed** — unbounded recursion is a runtime fault, not a type error. | Editing error, not a reasoning error. Notable because the gate that caught finding 33 could not catch this: `tsc` proves types, not termination. | Both sites corrected by hand and verified by reading the helper back. Reinforces that a static gate certifies only what it observes — the same lesson as the report-stamp grep in Step 1. |
+| 35 | **Cart-seeding failure would have been reported as an FR-08 violation.** If a click silently failed, the checkout page would show fewer products and `TC-08-N04-UI` would fail its count assertion — indistinguishable from the SUT genuinely omitting a product. | The generated code trusted its own setup. | A cart-page row-count check runs **between** seeding and checkout, with a message naming it a **setup** failure. A setup problem now fails separately from the FR-08 claim. |
+| 36 | **Fixture scope had to be re-derived, not inherited.** FR-04 concluded "use `freshUser` wherever state is asserted". Applying that here blindly would cost six registrations for a batch where five cases mutate **nothing** server-side — the client cart is per-browser-context and Playwright already isolates it per test. | The plan's own risk: carrying a per-feature conclusion across features. | Scope derived per case from what it writes. `TC-08-N03-UI` **persists an order** → test-scoped `freshUser`, so *"the order this test created"* is unambiguous in `my-orders`. The five render-only cases → worker-scoped `isolatedUser`. Reasoning recorded in the spec. |
+| 37 | **Locale formatting would break a string comparison of the total.** The page renders `toLocaleString()`, whose separators vary by browser/locale, so `toContain('10.000.000')` could pass on one project and fail on another — a false cross-browser difference. | Not visible without considering all three projects. | Totals are stripped to digits and compared **numerically**. |
+
+**Scope checks performed:** no assertion touches coupon behaviour (FR-09) despite the coupon panel
+being on the checkout page; none touches cart quantity/stock rules (FR-07) or order status (FR-10);
+login and add-to-cart appear only as setup. No case asserts that the UI clears the cart — R5 is
+**Batch C's** subject and is not claimed here.
+
+**Browser coverage:** all six cases drive a real browser, so Batch A contributes **18 genuine
+browser executions** (6 × 3). Nothing in this batch is API-path, so there is no inflation risk here.
+
+## 8. Static gates — all passed before the freeze
+
+| Gate | Result |
+|---|---|
+| `fr-08-checkout.json` parses; Batch A case count | **6**; all carry `expectedSource`; all `status: frozen` |
+| Assumption-grounded cases flagged | `TC-08-N05-UI` (A-08-1), `TC-08-N06-UI` (A-08-2), both **MED** |
+| `npx tsc --noEmit` | exit **0** |
+| `npx playwright test tests/fr-08-checkout --list` | **18 tests in 1 file** (6 × 3 projects) |
+| Seeded `test@eshop.com` referenced anywhere in `tests/` | **0** |
+| Inline test-data literals in the spec | **0** |
+| Mechanism-asserting oracle (`toBeDisabled` / `readonly` / status-for-invalid) | **0** (only the comment explaining its absence) |
+| `page.route` / `page.reload` used | **0** (only the comment explaining why not) |
+| FR-04 deliverables modified | **none** |
+| FR-08 executed before freeze | **never** — no `fr-08` entry in `test-results/` |
+
+## 9. Pre-run prediction, recorded before the freeze
+
+Derived by reading `Checkout.jsx`, `CartContext.jsx` and `server.js` — legitimate for **predicting**,
+never as the oracle. Every expected value still comes from §1's table via the data file.
+
+| Case | R | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|
+| `TC-08-N01-UI` | R2 | **FAIL** | `Checkout.jsx:14` holds the total in `editableTotal` state and lines 93–102 render it as a plain `<input type="number">` with an `onChange` that sets it. The user's edit takes effect immediately in the summary line | **High** — directly readable from the markup |
+| `TC-08-N02-UI` | R2 | **PASS** | `useState(cartTotal)` initialises from `CartContext.cartTotal`, which is `reduce((t,i) => t + i.price*i.quantity, 0)` — exactly the spec's rule | **High** |
+| `TC-08-N03-UI` | R2→R4 | **FAIL** | `server.js:297` destructures `total_amount` from the body and inserts it directly; there is no recomputation and the handler never reads either cart. The forged value persists | **High** — this is HW02's `BUG-08-001` reproduced through the UI |
+| `TC-08-N04-UI` | R3 | **PASS** | `Checkout.jsx:85` maps over the whole cart array and renders one `<li>` per entry | **High** |
+| `TC-08-N05-UI` | R3 | **PASS** | Line 86 renders `{item.name} x {item.quantity} — {price*quantity} ₫`, so quantity and line amount are both present | **Medium** — the *observation* is high-confidence, but the **oracle rests on A-08-1 (MED)**. If a reviewer rejects the inference that "đầy đủ" mandates quantity display, this case has no test basis and should be withdrawn rather than counted |
+| `TC-08-N06-UI` | R3 | **PASS** | An empty `cart` array maps to zero `<li>` elements | **Medium** — observation high-confidence, but the **oracle rests on A-08-2 (MED)**; the spec does not discuss empty-cart checkout |
+
+**Expected tally: 4 pass / 2 fail per project → 12 pass / 6 fail over 18 executions.**
+
+Both predicted failures are expected to be **R2/R4 defects**, and `TC-08-N03-UI` is expected to
+reproduce HW02's `BUG-08-001` — through the **UI**, which strengthens that defect's severity claim
+from *"a crafted request can forge the total"* to *"any customer can type a different number"*.
+`TC-08-N01-UI` may be a **distinct** root cause from `TC-08-N03-UI` (a frontend affordance versus an
+absent backend guard, exactly the `BUG-04-101`/`BUG-04-102` shape). That call is made through the
+real-defect gate **after** the run, not now.
+
+**No assertion has been relaxed** for any known defect.
+
+## > NEXT — run Batch A
+
+`cd automation && npx playwright test tests/fr-08-checkout`. The spec is frozen at the commit below,
+**before** any execution.
