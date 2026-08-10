@@ -280,6 +280,68 @@
       "expectedSource": "spec — eshop-sut/README.md FR-08 line 107; fills an invalid class HW02 declared out of scope for its pass",
       "evidenceStrength": "spec",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-08-EP-004",
+      "hw02Ref": "TC-08-EP-004",
+      "batch": "C",
+      "requirement": "R5",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — valid-class postcondition, observed on the SERVER cart",
+      "title": "After a successful checkout, the server cart must be empty",
+      "input": {
+        "auth": "valid",
+        "serverCart": [{ "name": "Tai nghe AirPods Pro 2", "quantity": 1 }],
+        "totalAmount": { "mode": "useCartTotal" }
+      },
+      "expected": {
+        "orderCreated": true,
+        "serverCartLinesAfterCheckout": 0
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 108 (\"Sau thanh toán thành công, giỏ hàng được xóa\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N07-UI",
+      "batch": "C",
+      "requirement": "R5",
+      "mechanism": "UI",
+      "technique": "EP — valid-class postcondition, observed on the CLIENT cart",
+      "title": "After a successful checkout through the UI, the cart the customer sees must be empty",
+      "seedVia": "home",
+      "input": {
+        "products": [{ "name": "Tai nghe AirPods Pro 2", "quantity": 1 }]
+      },
+      "expected": {
+        "cartRowsAfterCheckout": 0,
+        "assertionNote": "Judged INDEPENDENTLY of TC-08-EP-004. The SUT keeps two disconnected carts (design report §2.1) — the server cart written by POST /api/cart, and the client React cart the customer actually sees. Line 108 says 'the cart is cleared'; each store is a separate observation of that one rule, and whether they share a root cause is decided after the run, not assumed."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 108",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-08-N11-UI",
+      "batch": "C",
+      "requirement": "R1",
+      "mechanism": "UI",
+      "technique": "EP — invalid class, auth state observed through the interface",
+      "title": "An anonymous user must never reach a completed checkout",
+      "seedVia": "home",
+      "input": {
+        "products": [{ "name": "Tai nghe AirPods Pro 2", "quantity": 1 }],
+        "anonymous": true
+      },
+      "expected": {
+        "reachesCheckoutFromCart": false,
+        "reachesSuccessState": false,
+        "assertionNote": "Two in-app observations of one rule. The oracle is the OUTCOME (an anonymous user does not complete a checkout), never the mechanism: no assertion names a redirect target, a status code or an alert. 'No order was created' cannot be verified by marker here — Checkout.jsx sends only {items, total_amount, coupon_id} and never shipping_address — so the observable is the app's own completion signal plus the checkout response."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-08 line 104 (\"Chỉ người dùng đã đăng nhập mới tiến hành thanh toán được\")",
+      "evidenceStrength": "spec",
+      "status": "frozen"
     }
   ]
 }
