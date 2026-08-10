@@ -695,7 +695,74 @@ Every Batch B case rests on a **direct spec citation** — README line 104 (R1) 
 assumption-grounded case appears in this batch, so unlike `TC-08-N05/N06-UI` there is no confidence
 caveat attached to any of these results, and the defect evidence is at full strength.
 
-## > NEXT — Batch C
+---
 
-Three cross-surface cases covering R5 and R1's UI half (`TC-08-EP-004`, `TC-08-N07-UI`,
-`TC-08-N11-UI`), through skill Phases 2–4, frozen before any run.
+# Step 5.4 — Batch C (R5 + R1's UI half), frozen, not yet run
+
+Three cross-surface cases: `TC-08-EP-004` (HW02, API), `TC-08-N07-UI` and `TC-08-N11-UI` (new, UI).
+File: `automation/tests/fr-08-checkout/checkout-cart-and-access.spec.ts`. Batch A and Batch B **data
+entries are unchanged** (`git diff 286f437 -- automation/data/fr-08-checkout.json` shows zero deleted
+lines), and neither of their spec files was touched by this freeze.
+
+## 15. Human review of the AI-generated Batch C specs
+
+| # | Finding | Why it was missed | Fix |
+|---|---|---|---|
+| 51 | **`TC-08-N11-UI` could not be implemented as designed.** §4 specified: *no session; navigate directly to `/checkout`; seed cart; attempt to confirm.* That sequence is impossible. Seeding the client cart requires the storefront, and the only way to then reach `/checkout` anonymously is `page.goto` — which remounts `CartProvider` and **empties the cart**. The in-app route is closed too: `Cart.jsx:12` sends an anonymous user to `/login`. So the case as designed would have tested an empty-cart checkout while claiming to test an anonymous one. | The design was written before the client cart's non-persistence was traced through *this* particular flow. §2.1 recorded the constraint; §4 did not re-check `N11`'s specific step order against it. | Restructured into **two in-app observations of the same rule**, which together prove more than the original: (1) from the cart, an anonymous user **does not reach** `/checkout`; (2) reached directly, confirming **does not produce a completed checkout**. The `page.goto` in step 2 is deliberate and safe — the cart is irrelevant to an authentication claim — and is commented so it is not mistaken for the Batch A mistake. |
+| 52 | **"No order was created" cannot be verified by marker in the UI.** Batch B's technique relies on a unique `shipping_address`. `Checkout.jsx:45-49` sends only `{items, total_amount, coupon_id}` — **`shipping_address` is never sent from the UI at all**, so a UI-created order carries no identifying token. | The marker technique worked so well in Batch B that carrying it forward was the obvious move; the UI's payload shape is what makes it unavailable. | The observable becomes the app's **own completion signal** (the success heading must not appear), corroborated on a second channel by passively observing `/api/checkout` responses and asserting **none succeeded**. A global order count was rejected outright — meaningless under parallel execution. Neither assertion names a status code or a redirect target. |
+| 53 | **The two carts must not be merged into one defect before evidence.** Both `EP-004` and `N07-UI` test line 108, and the tempting generated shape is one case, or two cases sharing an assertion helper and a defect ID. | They read as the same requirement, and in a normal application they would be. | Kept as two cases with **separate assertions, separate stores and separate failure messages**, each naming the other as independently judged. The data file records the reasoning in `assertionNote`. Whether they share a root cause is a **post-run** decision — merging now would presuppose it, and a disagreement between them would itself be the finding. |
+| 54 | **`R5` is a postcondition, so "the cart is empty" is trivially satisfiable.** A generated test that checks an empty cart after a checkout that never happened — or that started empty — passes while proving nothing. | The requirement's phrasing invites asserting only the "after" state. | Both cases assert their **precondition explicitly**: the cart is non-empty *before* checkout (as a **setup** failure with its own message), and the checkout **succeeded** — `EP-004` requires an `orderId`, `N07-UI` requires the success heading. Line 108 applies only *"sau thanh toán thành công"*, so without those the postcondition does not apply at all. |
+| 55 | **Returning to the cart in `N07-UI` is where the case could silently fabricate a pass.** The obvious way back is `page.goto('/cart')` — which remounts `CartProvider` and **empties the client cart by itself**, making the assertion pass regardless of whether the app cleared anything. | The Batch A lesson applied to a new step: the hazard is not "navigation" in general but *any full page load after seeding*. | Return is via the success screen's in-app control (`Checkout.jsx:73`, `navigate('/')`) and then the header link — both client-side. Marked in the spec as the single most important mechanic in the case. |
+| 56 | **`EP-004` must not assert on the persisted total.** It sends a `total_amount`, and the pull is to check it — but that is R4's subject and is already covered by four Batch B cases. | Adjacent observable, easy to bank. | `EP-004` sends a valid cart-derived total purely so the checkout succeeds, and asserts **only** the cart-clearing postcondition. Its checkout status is annotated, not asserted. |
+| 57 | **Batch C mixes surfaces, so `test.slow()` must not be applied file-wide.** Batch A needed a tripled budget for UI contention; `EP-004` is API-only and would just inherit a budget it does not need, masking a genuine slowdown there. | Copying Batch A's file-level `beforeEach` would have been the quick path. | `test.slow()` is called **inside the two UI tests only**. `EP-004` keeps the default 30 s. |
+| 58 | **Fixture scope re-derived per case for the third time, and `N11-UI` needs none.** `EP-004` and `N07-UI` persist orders → test-scoped `freshUser`. `N11-UI` is **anonymous by construction** — requesting any user fixture would create an account the test must not have. | The habit of always taking a user fixture. | `N11-UI` requests only `{ page }`. Verified: no session is seeded and no user fixture appears in its signature. |
+| 59 | **A dialog would block the run if registered late.** `Cart.jsx:13` alerts on an anonymous checkout attempt and `Checkout.jsx:63` alerts on a failed one — `N11-UI` triggers **both** by design. | Dialog handling only matters on the failure path, which is exactly this case's happy path. | `captureDialogs(page)` is the first statement in both UI tests, before any navigation or click. The captured messages are annotated as evidence and never asserted on — the spec prescribes no dialog text. |
+
+**Scope checks:** no coupon (FR-09), quantity/stock (FR-07) or order-status (FR-10) assertion; login
+and add-to-cart remain setup; `EP-004`'s 3 executions launch **no browser** and are excluded from
+browser coverage, leaving Batch C contributing **6** genuine browser runs from its two UI cases.
+
+## 16. Static gates — all passed before first execution
+
+| Gate | Result |
+|---|---|
+| `fr-08-checkout.json` parses; batch counts | **15 cases — A = 6, B = 6, C = 3** |
+| Batch A + B **data entries** unchanged | ✅ `git diff 286f437` shows **zero** deleted lines |
+| Batch A + B **spec files** touched by this freeze | **none** |
+| Batch C `expectedSource` / `status: frozen` | 3 / 3 |
+| `npx tsc --noEmit` | exit **0** |
+| Batch C discovery | **9 tests in 1 file** (3 × 3 projects) |
+| Whole-feature discovery | **45 tests in 3 files** (15 × 3) |
+| Batch C executed before freeze | **never** — 0 `cart-and-access` entries in `test-results/` |
+| Seeded `test@eshop.com` anywhere in `tests/` | **0** |
+| Inline oracle data in the spec | **0** |
+| Invented status-code / global-count assertions | **0** |
+| `page.reload` after seeding | **0** (only the comment explaining why not) |
+| `page` fixture requested by `EP-004` | **no** — signature is `{ api, freshUser }` |
+
+## 17. Pre-run prediction, recorded before the freeze
+
+Derived by reading `server.js` and `CartContext.jsx` — legitimate for **predicting**, never as the
+oracle.
+
+| Case | R | Store | Prediction | Reasoning | Confidence |
+|---|---|---|---|---|---|
+| `TC-08-EP-004` | R5 | **server** cart | **FAIL** | `server.js:297-310` inserts the order and returns; it never touches `userCarts[userId]`. The Batch B corroboration already observed the server cart still holding **2 lines** after a successful checkout | **High** — directly observed once already |
+| `TC-08-N07-UI` | R5 | **client** cart | **FAIL** | `Checkout.jsx:8` destructures `clearCart` from `useCart()` and **never calls it**; `handleCheckout` sets `success` and stops | **High** |
+| `TC-08-N11-UI` | R1 | — | **PASS** | `authenticateToken` rejects a request with no token before the handler runs, so no order is created and the UI never reaches its success state; `Cart.jsx:12` additionally blocks the in-app route | **High** |
+
+**Expected tally: 1 pass / 2 fail per project → 3 pass / 6 fail over 9 executions.**
+
+**Whether the two R5 failures are one defect or two is deliberately left open.** Both would violate
+line 108, but they are different stores written by different code paths, and the distinctness test
+(*would fixing one fix the other?*) can only be answered against evidence. A single fix that clears
+the server cart in the checkout handler would **not** empty the client's React state, and calling
+`clearCart()` in `Checkout.jsx` would **not** empty the server cart — which points toward two, but
+that call is made **after** the run, not now.
+
+**No assertion has been relaxed** for any already-filed defect.
+
+## > NEXT — run Batch C
+
+`cd automation && npx playwright test tests/fr-08-checkout/checkout-cart-and-access.spec.ts`. The
+spec is frozen at the commit below, **before** any execution.
