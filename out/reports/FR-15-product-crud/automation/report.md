@@ -237,10 +237,17 @@ Reviewed **before** the freeze commit and before any run.
 | Batch A discovery | **18 tests in 1 file** (6 × 3 projects) |
 | `page` fixture requested | **none** — the only test signature is `async ({ api })` |
 | Status-code / count assertions | **0** |
-| `seedSession` or `BUG-04-103` escalation referenced | **0** |
+| `seedSession` **used** | **0 call sites** — this batch touches no browser |
+| `BUG-04-103` self-escalation **used** to obtain admin rights | **0 call sites** — auth is the seeded credential via `loginAsAdmin()` |
 | Inline test-data literals in the spec | **0** |
 | FR-15 executed before freeze | **never** — 0 `fr-15` entries in `test-results/` |
 | FR-04 / FR-08 deliverables, fixtures, or `eshop-sut/` modified | **none** |
+
+**A note on how that last gate is worded.** It asserts **no use**, not "no mention". `utils/admin.ts`
+deliberately *documents* `BUG-04-103` in prose, to record why self-escalation is forbidden — a
+comment explaining a rejected approach is the opposite of using it, and a grep that counted such
+mentions as violations would push the reasoning out of the code precisely where it is most worth
+keeping. The gate therefore checks call sites, and the one textual match is the explanation itself.
 
 ## 9. Pre-run prediction, recorded before the freeze
 
