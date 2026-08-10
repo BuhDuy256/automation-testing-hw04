@@ -145,6 +145,148 @@
       "expectedSource": "spec — eshop-sut/README.md FR-15 line 196 (price must be > 0, so 0 is excluded)",
       "evidenceStrength": "spec",
       "status": "frozen"
+    },
+
+    {
+      "id": "TC-15-BVA-006-API",
+      "hw02Ref": "TC-15-BVA-006",
+      "batch": "B",
+      "requirement": "P3 (+ P1 view)",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `price` at the minimum valid value (1), plus an endpoint-consistency check on the same rows",
+      "title": "A price of 1 is valid and persists, and both read endpoints agree about it",
+      "dualPurpose": true,
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 1,
+        "categoryId": 2,
+        "productsToCreate": 2,
+        "requireBothIdParities": true
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "persistence": { "field": "price", "mode": "equals", "compareTo": "sentValue" },
+        "readEndpointsAgree": true,
+        "assertionNote": "Owns BUG-15-102 (issue #9). The oracle is that GET /api/products/:id and GET /api/products report the SAME price for the SAME product — it never mentions ids, parity or toString(). Parity is used only to SELECT inputs: the case holds one product of each id parity so the class where the SUT can differ is actually exercised, rather than passing vacuously on an odd id. That vacuous pass is exactly the false pass finding 70 was about."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 196 for the price rule (HW02 assumption A1 for the concrete integer 1); line 193 (\"Xem\") for the view-consistency half",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-007",
+      "hw02Ref": "TC-15-BVA-007",
+      "batch": "B",
+      "requirement": "P4",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `category_id` inside the existing enum",
+      "title": "An existing category id is valid and must be persisted",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 1
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "persistence": { "field": "category_id", "mode": "equals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 197 (category must be chosen from the existing list; ids 1-3 are seeded)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-BVA-009",
+      "hw02Ref": "TC-15-BVA-009",
+      "batch": "B",
+      "requirement": "P4",
+      "mechanism": "APIRequestContext",
+      "technique": "BVA — `category_id` outside the existing enum (first nonexistent id)",
+      "title": "A nonexistent category id must not be persisted",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 4
+      },
+      "expected": {
+        "specClass": "invalid",
+        "mustBeCreated": false,
+        "persistence": { "field": "category_id", "mode": "notEquals", "compareTo": "sentValue" }
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 197 (must be chosen from the existing list; only 1-3 exist)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-001",
+      "hw02Ref": "TC-15-EP-001",
+      "batch": "B",
+      "requirement": "P1 (add)",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — valid class, the happy path for product creation",
+      "title": "An admin can add a product, and every field is persisted as sent",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "allFieldsPersisted": ["name", "price", "category_id"],
+        "assertionNote": "Establishes that the write path WORKS. Without it, Batch A's failures could be read as a broken endpoint rather than an unguarded one — which is the difference between recommending a guard clause and recommending a rewrite."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 193 (admin can add products)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-N01-API",
+      "batch": "B",
+      "requirement": "P1 (delete)",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — valid class, the positive delete path (no HW02 case existed)",
+      "title": "An admin can delete a product, and it is no longer retrievable",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "goneAfterDelete": true,
+        "assertionNote": "Closes the hole recorded in §2.2: HW02 covers DELETE without authorisation (EP-009) but never covers deletion succeeding, so half of P1 was untested. 'No longer retrievable' is judged from the list endpoint by this test's own marker — never from a total product count."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 193 (admin can delete products)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
+    },
+    {
+      "id": "TC-15-EP-010",
+      "hw02Ref": "TC-15-EP-010",
+      "batch": "B",
+      "requirement": "P5",
+      "mechanism": "APIRequestContext",
+      "technique": "EP — valid-class postcondition, backend enforcement path",
+      "title": "Editing one product must leave another product's stored fields untouched",
+      "input": {
+        "name": { "mode": "uniqueOfLength", "length": 40 },
+        "price": 500000,
+        "categoryId": 2,
+        "productsToCreate": 2,
+        "editTargetPrice": 777777
+      },
+      "expected": {
+        "specClass": "valid",
+        "mustBeCreated": true,
+        "siblingUnchanged": ["name", "price", "category_id"],
+        "assertionNote": "The sibling's fields are recorded BEFORE the edit and compared afterwards, so the oracle is 'unchanged from its own recorded original', not 'equal to some expected constant'. This is the backend half of P5; the admin-UI half is TC-15-EP-011 in Batch C, and the two are judged separately because HW02 found they disagree."
+      },
+      "expectedSource": "spec — eshop-sut/README.md FR-15 line 198 (editing one product changes only that product)",
+      "evidenceStrength": "spec",
+      "status": "frozen"
     }
   ]
 }
