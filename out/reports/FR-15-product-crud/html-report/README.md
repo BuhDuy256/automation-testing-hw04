@@ -29,19 +29,24 @@ FR-15's browser coverage will come entirely from **Batch C's two UI cases** agai
 
 ## What the failures are
 
-All 15 are **assertion** failures, stable across two consecutive runs and identical on all three
-projects. They collapse to **one** root cause:
+**All 21 failures across Batches A and B are assertion** failures — 15 from Batch A and 6 from
+Batch B — stable across consecutive runs and identical on all three projects. They split across
+**three** distinct root causes:
 
-| Batch | Cases | Defect | Issue |
-|---|---|---|---|
-| A | `EP-002`, `EP-003`, `BVA-003`, `BVA-004`, `BVA-005` × 3 | `BUG-15-101` — `POST /api/products` performs no input validation | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
-| B | `BVA-009` × 3 | `BUG-15-103` — `category_id` is never checked against existing categories | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
-| B | `BVA-006-API` × 3 (view half) | `BUG-15-102` — detail and list endpoints disagree about the same product's price | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
+| Batch | Cases | Executions | Defect | Issue |
+|---|---|---|---|---|
+| A | `EP-002`, `EP-003`, `BVA-003`, `BVA-004`, `BVA-005` × 3 | **15** | `BUG-15-101` — `POST /api/products` performs no input validation | [#8](https://github.com/BuhDuy256/automation-testing-hw04/issues/8) |
+| B | `BVA-009` × 3 | **3** | `BUG-15-103` — `category_id` is never checked against existing categories | [#10](https://github.com/BuhDuy256/automation-testing-hw04/issues/10) |
+| B | `BVA-006-API` × 3 (view half) | **3** | `BUG-15-102` — detail and list endpoints disagree about the same product's price | [#9](https://github.com/BuhDuy256/automation-testing-hw04/issues/9) |
+
+The three are **not** variations of one fault: `BUG-15-101` is missing format/presence validation on
+the write path, `BUG-15-103` is missing referential integrity against another table, and `BUG-15-102`
+is a read-path transformation. No single fix delivers the other two.
 
 **Batch B's four passes carry the argument.** A valid create round-trips, a valid category is stored,
 delete removes the row, and editing one product leaves its sibling byte-identical. The write path
-demonstrably **works** — so Batch A's fifteen failures are *absent guards*, not a broken endpoint,
-which is what makes every recommended fix a validation step rather than a rewrite.
+demonstrably **works** — so the failures above are *absent guards*, not a broken endpoint, which is
+what makes every recommended fix a validation step rather than a rewrite.
 
 ## Read this alongside §11 of the automation report
 
