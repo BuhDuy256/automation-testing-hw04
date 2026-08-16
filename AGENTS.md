@@ -10,6 +10,14 @@
 - **HW05 requirement:** `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md`
 - **Allowed tools:** Apache JMeter (default) or k6, an AI tool, and a resource monitor
 
+## Chat Language and Explanation Style
+
+- Always respond in Vietnamese during chat sessions.
+- Explain concepts as if the user is a complete beginner.
+- Explain each idea in one short, simple sentence.
+- This Vietnamese language rule applies only to chat responses.
+- Write all project outputs, including code, filenames, comments, documentation, reports, and other artifacts, in English.
+
 ## Authoritative Inputs
 
 | File | Purpose |
