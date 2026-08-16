@@ -1,5 +1,11 @@
 # HW02 reference material — local only, not part of this submission
-references/
+references/*
+!references/hw04/
+!references/hw04/**
+references/hw04/automation/test-results/
+references/hw04/automation/playwright-report/
+references/hw04/automation/playwright/.cache/
+references/hw04/automation/blob-report/
 
 # Node
 node_modules/
