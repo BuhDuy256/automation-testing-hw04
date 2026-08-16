@@ -1,0 +1,13 @@
+# HW05 Git Commit Log
+#
+# TODO: Replace this template with the final output of:
+#   git log --oneline --decorate --all
+#
+# The final log must show separate commits for meaningful HW05 milestones, such as:
+# - Load test plan
+# - Stress test plan
+# - Spike test plan
+# - Execution evidence
+# - AI analysis and review
+# - Continuous performance-testing proposal
+# - Final report and submission packaging
