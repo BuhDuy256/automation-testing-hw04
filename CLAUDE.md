@@ -1,80 +1,66 @@
-# CLAUDE.md — HW04 Automation Testing on EShop
+# HW05 Performance Testing on EShop
 
 ## Project Context
 
-- **Course:** Software Testing — HW04 Automation Testing (AI-first)
-- **SUT:** EShop (Vietnamese e-commerce demo, intentionally buggy)
-- **Student:** Nguyen Bao Duy — 23127179 — 23KTPM2
-- **Your 3 features (one per pool, same trio as HW02):**
-  - **FR-04** — Personal Profile Management (Pool A)
-  - **FR-08** — Checkout (Pool B)
-  - **FR-15** — Product Management CRUD (Pool C, admin)
-- **Tooling:** Playwright (TypeScript), HTML reporter, 3 browsers (Chromium/Firefox/WebKit)
+- **Course:** Software Testing - HW05 Performance Testing (AI-first)
+- **Student:** Nguyen Bao Duy - 23127179 - 23KTPM2
+- **Active branch:** `hw05-performance`
+- **HW04 baseline:** frozen at tag `hw04-complete`; do not modify files under `references/hw04/`
+- **SUT:** EShop, a Vietnamese e-commerce demo application
+- **HW05 requirement:** `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md`
+- **Allowed tools:** Apache JMeter (default) or k6, an AI tool, and a resource monitor
 
----
-
-## Input Documents (Read These First)
+## Authoritative Inputs
 
 | File | Purpose |
 |---|---|
-| `docs/hw04-req/2026.HW04.Automation Testing_En.md` | Full HW04 assignment spec |
-| `eshop-sut/README.md` | Feature specifications (FR-01–FR-20), Vietnamese |
-| `eshop-sut/api_specification.md` | Backend API details and validation rules |
-| `eshop-sut/setup_guide.md` | How to run the system manually |
-| `references/hw2/eshop-sut-hw2-testing/out/reports/FR-{04,08,15}-*/` | HW02 domain-testing + BVA test cases for these same 3 features — the source test-case list to convert into automation scripts (Task 1 says "convert ≥12 test cases into automation scripts") |
+| `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md` | Full HW05 assignment specification |
+| `eshop-sut/README.md` | SUT feature specifications |
+| `eshop-sut/api_specification.md` | Backend API endpoints and validation rules |
+| `eshop-sut/setup_guide.md` | How to run the SUT |
+| `references/hw04/` | Completed HW04 automation, reports, and requirements for reference only |
+| `references/hw2/` | Local HW02 material used only when needed for historical context |
 
-`references/` is HW02 material kept for local reference only — it is gitignored, not part of this submission.
+## Repository Workflow
 
----
+- `references/hw04/` is frozen reference material. Do not add HW05 work there.
+- `work/` contains intermediate plans, drafts, raw experiments, exploratory logs, and temporary evidence.
+- `out/` contains only finalized files intended for the HW05 submission ZIP.
+- `eshop-sut/` is the shared system under test and remains at the repository root.
+- Keep required HW05 evidence (`.jtl`, HTML reports, screenshots, hardware reports, and test plans) in `out/` once finalized; do not ignore it.
 
-## Output Documents (Write These During Homework)
+## HW05 Required Outputs
 
-### Root outputs (`out/`)
-| File | Purpose |
-|---|---|
-| `out/README.md` | Self-assessment table + test summary report |
-| `out/ai-critique.md` | AI Critique (200–300 words) |
-| `out/git_commit_log.txt` | Git commit log — populate with `git log --oneline` before submission |
-| `out/ai-declaration/[AI-02]...md` | AI Audit Report — filled 6-section template already in place, log every AI interaction as a new artifact row |
-| `out/reports/FR-0X-*/automation/report.md` | **Main report** (§14) for that feature: script-generation log, human review/fix notes ("what AI got wrong and why"), gap analysis. One per feature, decided 2026-08-09. |
-| `out/reports/FR-0X-*/html-report/` | Copy of that feature's multi-browser Playwright HTML report, mirrored for submission |
-| `out/reports/FR-0X-*/bug-reports/` | Bug reports for genuine defects found, with GitHub Issue links + screenshots |
+The root `out/` directory should contain, as applicable:
 
-### Automation project (`automation/`)
-| Path | Purpose |
-|---|---|
-| `automation/playwright.config.ts` | 3-browser config + HTML reporter ("Run by: 23127179" + ISO timestamp) |
-| `automation/tests/fr-04-profile/*.spec.ts` | FR-04 automation scripts |
-| `automation/tests/fr-08-checkout/*.spec.ts` | FR-08 automation scripts |
-| `automation/tests/fr-15-product-crud/*.spec.ts` | FR-15 automation scripts |
-| `automation/data/fr-0X-*.csv\|json` | Data-driven test data (never hardcode arrays in specs) |
+- Three test plans named `23127179_{Load|Stress|Spike}_YYYYMMDD`.
+- CSV-driven workflow data.
+- Three raw `.jtl` logs and three HTML report folders.
+- Resource-monitor captures and hardware specifications.
+- Endurance/soak-test results with concrete threshold numbers.
+- AI Audit Report and 200-300 word AI Critique.
+- Continuous performance-testing proposal with flowchart and trade-offs.
+- Bug reports with screenshots, demo video link, README summary, and Git commit log.
 
-Each feature needs ≥12 automated test cases, ≥3 distinct assertion patterns, and a run on all 3 browsers (≥9 browser runs total).
+All three scenarios must exercise one end-to-end workflow covering auth-heavy, read-heavy, and transactional endpoint groups. Review AI-generated plans before execution and record corrections and metric misinterpretations using the raw logs.
 
----
-
-## Running the System
+## Running the SUT
 
 ```bash
-./run.sh start    # boots backend :3000 + frontend-web :5173 + frontend-admin :5174, installs deps if missing
+./run.sh start    # boots backend :3000 + frontend-web :5173 + frontend-admin :5174
 ./run.sh status
 ./run.sh stop
 ```
 
-**Note:** `eshop-sut/backend/database.js` re-seeds the whole DB unconditionally on every backend
-start (no `require.main` guard on `initDatabase()`) — restarting the backend wipes any data
-created through the UI in a previous run (registered users, orders, admin-added products).
+The backend re-seeds the database on every start. Restarting it wipes users, orders, and admin-created products.
 
-**Test Accounts:**
+Test accounts:
+
 - Admin: `admin@eshop.com` / `Admin123!`
 - User: `test@eshop.com` / `Test1234!`
 
-## Running the automation suite
+## Commit Discipline
 
-```bash
-cd automation
-npm install
-npx playwright install          # first time only
-npm test                        # all 3 browsers, all 3 features
-npm run report                  # open the last HTML report
-```
+- Keep HW04 unchanged and use `references/hw04/` only as a reference.
+- Create a separate commit for each meaningful HW05 step, such as each test plan, execution evidence, AI analysis, and continuous-testing proposal.
+- Update `out/git_commit_log.txt` from the final HW05 branch history before submission.
