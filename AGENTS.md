@@ -29,6 +29,36 @@
 | `references/hw04/` | Completed HW04 automation, reports, and requirements for reference only |
 | `references/hw2/` | Local HW02 material used only when needed for historical context |
 
+## Selected HW05 Performance Workflow
+
+This is the current authoritative HW05 workflow unless explicitly changed later.
+
+**Workflow name:** New Customer Onboarding and First Order
+
+`Register -> Login -> Read Profile -> Update Profile -> Read Categories -> Read Products -> Read Product Detail -> Add Product to Cart -> Checkout`
+
+Verified runtime constraints:
+
+1. Every test user needs a unique email because registration requires email uniqueness.
+2. Register creates persistent user data for the current SUT run.
+3. Checkout creates persistent order data for the current SUT run.
+4. Register does not return the email or password; preserve the original inputs for Login.
+5. Login returns the JWT at `$.token`; reuse it for authenticated Profile, Cart, and Checkout requests.
+6. `PUT /api/users/me` persists `shipping_address`, but Checkout does not read it automatically.
+7. Preserve or reread `shipping_address` and include it explicitly in the Checkout request.
+8. Checkout accepts an omitted `shipping_address` and creates an order with `shipping_address = null`; HTTP 200 alone is not a sufficient correctness assertion.
+9. Keep Category and Product selection logically correlated through `category_id`.
+10. Use Product Detail fields `$.id`, `$.name`, and `$.price` as the authoritative runtime values for Add to Cart.
+11. Give each virtual user an isolated account to prevent cart and order state interference.
+12. Restarting the backend reseeds the database and removes runtime-created users and orders.
+
+Authoritative verification artifacts:
+
+- `work/workflow_api_mapping.md`
+- `work/workflow_candidates.md`
+- `work/workflow3_runtime_contract.md`
+- `work/workflow1_runtime_contract.md`
+
 ## Repository Workflow
 
 - `references/hw04/` is frozen reference material. Do not add HW05 work there.
