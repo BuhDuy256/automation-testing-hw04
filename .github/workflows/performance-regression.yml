@@ -3,16 +3,22 @@ name: Performance Regression
 # HW05 Task 3 — continuous performance regression pipeline for the EShop backend.
 #
 # Two independent jobs, split by cost:
-#   - regression: short, deterministic 3-VU/~70s profile on every push/PR. Enforces the
-#     HUMAN-APPROVED correctness + latency regression guards (see
-#     work/task3_continuous_performance_pipeline.md).
+#   - regression: short, deterministic 3-VU/~70s profile on every push/PR. Enforces correctness
+#     strictly and latency as a PROVISIONAL guard (see Hardware Scope below).
 #   - endurance: the full, unmodified 12-VU/12-minute official Soak protocol
-#     (out/23127179_Soak_20260817.js). Enforces the throughput/clean-workflow-rate/
-#     degradation guards that require that full profile. Runs only on manual dispatch or a
-#     weekly schedule — never on every commit — because it is far more expensive.
+#     (out/23127179_Soak_20260817.js). Enforces correctness and the early-to-late degradation
+#     guard strictly; reports the absolute throughput/clean-workflow-rate numbers as
+#     informational only. Runs only on manual dispatch or a weekly schedule — never on every
+#     commit — because it is far more expensive.
 #
-# Neither job is a business SLO gate: both guard against measurable regressions relative to
-# the HUMAN-REVIEWED Task 1/2 baseline, on this repository's own hardware/dataset/harness.
+# HARDWARE SCOPE: both jobs run on GitHub-hosted `runs-on: ubuntu-latest`, not the local Dell
+# hardware the Task 1/2 numeric guards (25ms/50ms/7.983 req/s/0.829 workflows/s) were measured
+# on. Task 2 explicitly scoped those guards to "comparable hardware, dataset, harness/profile."
+# Correctness guards and the same-run relative degradation guard are hardware-independent and
+# remain fully gating. The absolute latency numbers are kept as PROVISIONAL CI-environment
+# guards (same values, not yet re-baselined on ubuntu-latest); the absolute throughput/
+# workflow-rate numbers are reported for visibility only and do not fail CI on this runner. See
+# "Hardware Scope" in work/task3_continuous_performance_pipeline.md for the full reasoning.
 
 on:
   push:

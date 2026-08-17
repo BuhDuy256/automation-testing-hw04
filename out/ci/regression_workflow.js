@@ -8,16 +8,20 @@
 // out/ci/lib/workflow_steps.js and out/ci/lib/csv_contract.js — nothing about the workflow
 // itself is re-implemented or simplified.
 //
-// Scope of the enforced thresholds (see work/task3_continuous_performance_pipeline.md):
-// - Correctness guards (http_req_failed, checks, workflow_success) are scenario-agnostic and
-//   apply at any VU count.
-// - Latency guards (p95 <= 25ms, p99 <= 50ms) are the HUMAN-APPROVED Task 2 regression guards,
-//   established from Load/Stress/Spike/Soak runs (4-24 VUs) on this same hardware/dataset/
-//   harness where tail latency did not scale materially with VU count. They are valid only
-//   for this comparable harness/profile, not a business SLO.
-// - Throughput/endurance guards (sustained req/s, clean workflow rate, early-to-late
-//   degradation) require the full 12-VU/12-minute protocol and are intentionally NOT
-//   evaluated here; see out/ci/evaluate_endurance.js and the dedicated endurance CI job.
+// Scope of the enforced thresholds (see "Hardware Scope" in
+// work/task3_continuous_performance_pipeline.md):
+// - Correctness guards (http_req_failed, checks, workflow_success) are hardware-independent and
+//   scenario-agnostic; they apply at any VU count and any CI runner as-is.
+// - Latency guards (p95 <= 25ms, p99 <= 50ms) reuse the numeric values from the HUMAN-APPROVED
+//   Task 2 regression guards (established from Load/Stress/Spike/Soak runs on the student's own
+//   Dell hardware), but this job runs on GitHub-hosted `ubuntu-latest` — different hardware from
+//   that baseline. They are therefore PROVISIONAL CI-environment guards, not a re-validated or
+//   re-baselined threshold for this runner; see out/ci/evaluate_regression.js for the exact
+//   caveat text emitted with every run.
+// - Throughput/endurance guards (sustained req/s, clean workflow rate) are Dell-hardware-
+//   specific absolute numbers and are NOT gated at all on ubuntu-latest; the early-to-late
+//   degradation guard (a same-run relative comparison) is gated. See
+//   out/ci/evaluate_endurance.js and the dedicated endurance CI job.
 import { Rate, Trend } from 'k6/metrics';
 import exec from 'k6/execution';
 import { open } from 'k6/experimental/fs';

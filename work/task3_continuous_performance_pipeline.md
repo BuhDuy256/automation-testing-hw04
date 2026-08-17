@@ -18,6 +18,30 @@ demonstrated rather than only described. The implementation is scoped to this re
 hardware/dataset/harness — it is a regression-detection tool, not a business SLO or a
 capacity/production guarantee.
 
+## Hardware Scope
+
+**Found in human review (round 2), fixed in this revision.** Task 2 explicitly scoped every
+numeric guard to "comparable hardware, dataset, harness/profile"
+(`work/task2_performance_analysis.md` §7). Both CI jobs run on GitHub-hosted `runs-on:
+ubuntu-latest` — not the student's local Dell hardware the 25ms/50ms/7.983 req/s/0.829
+workflows/s numbers were measured on. Silently reusing those numbers as CI gates would compare
+two different machines and call a difference a "regression" against a baseline that was never
+established on this runner. The fix applied here, consistently across the YAML, both evaluator
+scripts, and this document:
+
+| Guard | Independent of hardware? | Treatment on `ubuntu-latest` |
+|---|---|---|
+| `http_req_failed==0`, `checks==1`, `workflow_success==1` | Yes — correctness, not a timing measurement | Fully gated, unchanged. |
+| Early-to-late throughput degradation `<=5%` | Yes — a same-run relative comparison (late window vs. early window on the same run/hardware) | Fully gated, unchanged. |
+| HTTP p95 `<=25ms` / p99 `<=50ms` | No — absolute timing measured on Dell hardware | Kept as a **PROVISIONAL CI-environment guard**: same numeric values, still gates CI, but explicitly labeled as not re-baselined on `ubuntu-latest`. A FAIL is a signal to investigate, not a confirmed regression against the Dell baseline. |
+| Sustained throughput `>=7.983 req/s` / clean workflow rate `>=0.829 workflows/s` | No — absolute rates measured on Dell hardware | **Informational only**: computed and reported every run, but does **not** gate CI on this runner. |
+
+This is a deliberate, documented trade-off (see AskUserQuestion decision in the AI Audit Report,
+Artifact #28): the alternative — a self-hosted runner on the student's own Dell machine so the
+hardware genuinely matches — was rejected because it would require that machine to be online
+whenever CI runs, including whenever a TA re-triggers the workflow for grading, which is not
+reproducible for someone without access to that machine.
+
 ## Pipeline Design
 
 ```mermaid
@@ -32,7 +56,7 @@ flowchart TD
     C3 -- timeout --> CFAIL[FAIL: SUT did not start]
     C3 -- healthy --> C4[k6 run regression_workflow.js<br/>3 VUs, ~70s, 9-step E2E workflow]
     C4 --> C5[evaluate_regression.js<br/>parses summary.json]
-    C5 --> C6{All guards PASS?<br/>http_req_failed==0, checks==1,<br/>workflow_success==1,<br/>p95<=25ms, p99<=50ms}
+    C5 --> C6{All GATED guards PASS?<br/>http_req_failed==0, checks==1,<br/>workflow_success==1,<br/>p95<=25ms, p99<=50ms PROVISIONAL<br/>on ubuntu-latest}
     C6 -- no --> C7[Job FAILS<br/>PASS/FAIL table in logs + artifact]
     C6 -- yes --> C8[Job PASSES]
     C7 --> C9[Stop backend]
@@ -45,7 +69,7 @@ flowchart TD
     D3 -- timeout --> DFAIL[FAIL: SUT did not start]
     D3 -- healthy --> D4[k6 run official Soak script unchanged<br/>12 VUs, 12 min + ramp]
     D4 --> D5[evaluate_endurance.js<br/>groups raw NDJSON by soak_window tag]
-    D5 --> D6{All guards PASS?<br/>throughput>=7.983 req/s,<br/>workflow rate>=0.829/s,<br/>degradation<=5%,<br/>+ correctness}
+    D5 --> D6{All GATED guards PASS?<br/>correctness + degradation<=5%.<br/>throughput/workflow-rate reported<br/>INFO-only, not gated on ubuntu-latest}
     D6 -- no --> D7[Job FAILS]
     D6 -- yes --> D8[Job PASSES]
     D7 --> D9[Stop backend]
@@ -58,9 +82,11 @@ frozen "New Customer Onboarding and First Order" E2E workflow (Register -> Login
 Profile -> Update Profile -> Read Categories -> Read Products -> Read Product Detail -> Add
 Product to Cart -> Checkout), just at different VU counts/durations:
 
-- **`regression`** — cheap, runs on every push/PR. Correctness + latency guards only.
-- **`endurance`** — expensive, runs only on manual dispatch or a weekly schedule. Full 12-VU
-  throughput/degradation guards, which are only meaningful at that VU count and duration.
+- **`regression`** — cheap, runs on every push/PR. Correctness (gated) + latency (gated,
+  provisional — see Hardware Scope) guards only.
+- **`endurance`** — expensive, runs only on manual dispatch or a weekly schedule. Correctness and
+  degradation are gated; absolute throughput/clean-workflow-rate are reported informationally
+  (see Hardware Scope).
 
 ## Trigger Strategy
 
@@ -114,35 +140,41 @@ Enforced in the `regression` job by `out/ci/evaluate_regression.js`, reading the
 `--summary-export` JSON (k6's own native `thresholds` block enforces the same values as a
 redundant safety net — see `out/ci/regression_workflow.js`):
 
-| Metric | Guard | Source |
-|---|---|---|
-| `http_req_failed` | `== 0` | HUMAN-APPROVED, `work/task2_performance_analysis.md` §7 |
-| `checks` | `== 1` | same |
-| `workflow_success` | `== 1` | same |
-| HTTP `p(95)` | `<= 25 ms` | same |
-| HTTP `p(99)` | `<= 50 ms` | same |
+| Metric | Guard | Gated? | Source |
+|---|---|---|---|
+| `http_req_failed` | `== 0` | Yes | HUMAN-APPROVED, `work/task2_performance_analysis.md` §7 |
+| `checks` | `== 1` | Yes | same |
+| `workflow_success` | `== 1` | Yes | same |
+| HTTP `p(95)` | `<= 25 ms` | Yes, provisional | same numeric value; **not re-baselined on `ubuntu-latest`** — see Hardware Scope |
+| HTTP `p(99)` | `<= 50 ms` | Yes, provisional | same numeric value; **not re-baselined on `ubuntu-latest`** — see Hardware Scope |
 
-**Scope caveat (explicit, per instructions):** the p95/p99 numbers were established from
-Load/Stress/Spike/Soak runs at 4-24 VUs on this same hardware/dataset/harness, where tail
-latency did not scale materially with VU count (13-33ms across that range). Applying them to a
-3-VU short CI profile assumes that same non-scaling relationship holds down to 3 VUs — it is a
-reasonable extrapolation on the same harness, not a re-validated guard. These are **not**
-business SLOs, maximum capacity, or production guarantees, and they are only meaningful when
-compared against a run on comparable hardware/dataset/harness.
+**Scope caveat (revised after human review round 2):** the p95/p99 numbers were established from
+Load/Stress/Spike/Soak runs at 4-24 VUs on the student's local Dell hardware, where tail latency
+did not scale materially with VU count (13-33ms across that range). Applying them to a 3-VU
+short CI profile carries two separate, stacked assumptions: (1) that the non-scaling-with-VUs
+relationship holds down to 3 VUs, and (2) that GitHub-hosted `ubuntu-latest` performs comparably
+to the Dell hardware in the first place. The first is a reasonable same-hardware extrapolation;
+the second is **not yet validated at all** — no CI-native calibration run has been performed on
+`ubuntu-latest`. That is why these two guards are labeled PROVISIONAL rather than treated as the
+Task 2 human-approved baseline itself: they still gate CI (a real functional guard exists), but
+a FAIL should be read as "investigate," not "confirmed regression against the reviewed
+baseline." These are **not** business SLOs, maximum capacity, or production guarantees.
 
 ## Endurance Guard Strategy
 
 The three throughput/degradation guards from `work/context_handoff_after_task2_before_task3.md`
 are **not** applied in the short `regression` job — they were derived from and are only
-meaningful at the full 12-VU/12-minute protocol:
+meaningful at the full 12-VU/12-minute protocol. Within the dedicated `endurance` job itself,
+they further split by hardware-dependence (see Hardware Scope):
 
-| Metric | Guard |
-|---|---|
-| Sustained throughput (min steady-window req/s) | `>= 7.983 req/s` |
-| Clean workflow rate (min steady-window workflows/s) | `>= 0.829 workflows/s` |
-| Early-to-late throughput degradation | `<= 5%` |
+| Metric | Guard | Gated on `ubuntu-latest`? |
+|---|---|---|
+| Early-to-late throughput degradation | `<= 5%` | **Yes** — same-run relative comparison, hardware-independent. |
+| Sustained throughput (min steady-window req/s) | `>= 7.983 req/s` | **No — informational only.** Absolute number measured on Dell hardware; not comparable to `ubuntu-latest` without a CI-native re-baseline that has not been performed. |
+| Clean workflow rate (min steady-window workflows/s) | `>= 0.829 workflows/s` | **No — informational only.** Same reason. |
 
-They are instead enforced in the dedicated `endurance` job, which runs the **unmodified**
+The degradation and correctness guards are instead enforced in the dedicated `endurance` job,
+which runs the **unmodified**
 official Soak script `out/23127179_Soak_20260817.js` (same CSV, same 12-VU/12-minute/warmup/
 exit-ramp schedule already reviewed and executed for Task 1/2 — official run ID
 `20260818t000551547`). `out/ci/evaluate_endurance.js` groups the run's raw NDJSON output by the
@@ -164,7 +196,8 @@ Both jobs fail the same way: an evaluator script (`evaluate_regression.js` /
 log, writes it to an artifact, and sets `process.exitCode = 1` if any guard failed — which fails
 the CI step and therefore the job. No raw k6 log inspection is required to see why CI failed.
 
-Example table (this exact format, reused for both jobs):
+Example table (this exact format, reused for both jobs — real regenerated output from the
+synthetic FAIL fixture described in Local Validation):
 
 ```
 | Metric | Observed | Guard | Result |
@@ -172,11 +205,15 @@ Example table (this exact format, reused for both jobs):
 | http_req_failed | 0.05 | == 0 | FAIL |
 | checks | 1 | == 1 | PASS |
 | workflow_success | 1 | == 1 | PASS |
-| http_req_duration p(95) | 31.2 ms | <= 25 ms | FAIL |
-| http_req_duration p(99) | 19.731 ms | <= 50 ms | PASS |
+| http_req_duration p(95) [provisional, not re-baselined on ubuntu-latest] | 31.2 ms | <= 25 ms | FAIL |
+| http_req_duration p(99) [provisional, not re-baselined on ubuntu-latest] | 19.731 ms | <= 50 ms | PASS |
 
 Overall: **FAIL**
 ```
+
+The endurance job's table additionally carries two `INFO`-result rows (sustained throughput,
+clean workflow rate) that never affect `Overall` — see Example PASS / FAIL Interpretation below
+for the full real output.
 
 ## Generated Artifacts
 
@@ -230,7 +267,8 @@ node out/ci/evaluate_endurance.js out/raw-results.ndjson endurance-result.json
 
 ## Example PASS / FAIL Interpretation
 
-**PASS** (real local run, see Local Validation below):
+**Regression job — PASS** (real local run reproduced with the current evaluator, see Local
+Validation below):
 
 ```
 | Metric | Observed | Guard | Result |
@@ -238,19 +276,21 @@ node out/ci/evaluate_endurance.js out/raw-results.ndjson endurance-result.json
 | http_req_failed | 0 | == 0 | PASS |
 | checks | 1 | == 1 | PASS |
 | workflow_success | 1 | == 1 | PASS |
-| http_req_duration p(95) | 17.162 ms | <= 25 ms | PASS |
-| http_req_duration p(99) | 44.046 ms | <= 50 ms | PASS |
+| http_req_duration p(95) [provisional, not re-baselined on ubuntu-latest] | 14.799 ms | <= 25 ms | PASS |
+| http_req_duration p(99) [provisional, not re-baselined on ubuntu-latest] | 19.731 ms | <= 50 ms | PASS |
 
 Overall: **PASS**
 ```
 
-Read as: no configured regression guard was violated under this CI regression profile. This is
-not a claim that the commit "behaves the same as" the HUMAN-REVIEWED Task 1/2 baseline — the
-3-VU/~70s CI profile differs from the reviewed 4-24 VU baseline runs in VU count, duration, and
-think-time, so the two are not directly comparable experiments. PASS only means this specific
-short profile, on this commit, did not cross any of the guard thresholds.
+Read as: no configured guard was violated under this CI regression profile. This is not a claim
+that the commit "behaves the same as" the HUMAN-REVIEWED Task 1/2 baseline: the 3-VU/~70s CI
+profile differs from the reviewed 4-24 VU Dell baseline runs in VU count, duration, and
+think-time, and (per Hardware Scope) the correctness result is fully authoritative but the
+latency result is provisional because `ubuntu-latest` itself has never been compared to the Dell
+baseline. PASS only means this specific short profile, on this commit, on this runner, did not
+cross any of the guard thresholds.
 
-**FAIL** (synthetic fixture, not a real SUT run — see Local Validation):
+**Regression job — FAIL** (synthetic fixture, not a real SUT run — see Local Validation):
 
 ```
 | Metric | Observed | Guard | Result |
@@ -258,15 +298,37 @@ short profile, on this commit, did not cross any of the guard thresholds.
 | http_req_failed | 0.05 | == 0 | FAIL |
 | checks | 1 | == 1 | PASS |
 | workflow_success | 1 | == 1 | PASS |
-| http_req_duration p(95) | 31.2 ms | <= 25 ms | FAIL |
-| http_req_duration p(99) | 19.731 ms | <= 50 ms | PASS |
+| http_req_duration p(95) [provisional, not re-baselined on ubuntu-latest] | 31.2 ms | <= 25 ms | FAIL |
+| http_req_duration p(99) [provisional, not re-baselined on ubuntu-latest] | 19.731 ms | <= 50 ms | PASS |
 
 Overall: **FAIL**
 ```
 
 Read as: either the commit introduced a real latency/error-rate regression, or the CI runner was
 noisy for this run (see the false-alarm trade-off above) — re-run once to distinguish the two
-before treating it as a confirmed regression.
+before treating it as a confirmed regression. An `http_req_failed` FAIL is unambiguous
+(hardware-independent); a latency-only FAIL is a weaker signal given the provisional guard.
+
+**Endurance job — PASS** (real local run against the official Soak evidence, see Local
+Validation below):
+
+```
+| Metric | Observed | Guard | Result |
+|---|---:|---|---|
+| http_req_failed | 0 | == 0 | PASS |
+| checks | 1 | == 1 | PASS |
+| workflow_success | 1 | == 1 | PASS |
+| early-to-late throughput degradation | 0.468 | <= 5% | PASS |
+| sustained throughput (min steady-window req/s) [INFORMATIONAL ONLY on ubuntu-latest] | 7.983 | >= 7.983 req/s (Dell-hardware absolute number, not gated here) | INFO (at/above Dell baseline) |
+| clean workflow rate (min steady-window workflows/s) [INFORMATIONAL ONLY on ubuntu-latest] | 0.829 | >= 0.829 workflows/s (Dell-hardware absolute number, not gated here) | INFO (at/above Dell baseline) |
+
+Overall: **PASS**
+```
+
+Read as: correctness held and throughput did not meaningfully degrade within this run — the two
+`INFO` rows are reported for visibility (this particular data happens to come from the Dell run
+itself, so it trivially matches; a real `ubuntu-latest` run could show `INFO (below Dell
+baseline)` without failing CI, which is expected and not itself a regression signal).
 
 ## Human Review
 
@@ -279,23 +341,43 @@ Prepared for review, not yet finalized:
 - **Triggers:** `push`/`pull_request` to `main`/`hw05-performance` → `regression`;
   `workflow_dispatch` → both; weekly `schedule` (`0 18 * * 0`) → `endurance`.
 - **Regular regression profile:** 3 VUs, ~70-90s, same 9-step E2E workflow.
-- **Guards enforced (regular job):** `http_req_failed==0`, `checks==1`, `workflow_success==1`,
-  HTTP p95 `<=25ms`, HTTP p99 `<=50ms`.
+- **Guards enforced (regular job):** `http_req_failed==0`, `checks==1`, `workflow_success==1`
+  (fully authoritative), HTTP p95 `<=25ms`, HTTP p99 `<=50ms` (gated but PROVISIONAL — see
+  Hardware Scope).
 - **Endurance strategy:** unmodified official 12-VU/12-minute Soak script, run only on
-  `workflow_dispatch`/weekly schedule; guards: throughput `>=7.983 req/s`, workflow rate
-  `>=0.829/s`, degradation `<=5%`.
+  `workflow_dispatch`/weekly schedule; gated guards: correctness + degradation `<=5%`;
+  informational-only (not gated) on `ubuntu-latest`: throughput `>=7.983 req/s`, workflow rate
+  `>=0.829/s` — see Hardware Scope.
 - **Local validation performed:**
   - One real PASS execution of the regression profile against the live local backend (twice,
     from both `out/` and repo-root working directories, matching the exact CI invocation path).
   - `evaluate_regression.js` validated against that real summary.json (PASS) and a synthetic
-    fixture with a forced `p(95)=31.2ms` / `http_req_failed=0.05` (FAIL, exit code 1).
+    fixture with a forced `p(95)=31.2ms` / `http_req_failed=0.05` (FAIL, exit code 1) — reproduced
+    again after adding the provisional-guard labeling in human review round 2, same PASS/FAIL
+    results.
   - `evaluate_endurance.js` validated against the **existing official Soak raw NDJSON**
     (`out/23127179_Soak_20260817_evidence/20260818t000551547/raw-results.ndjson`) — reproduced
-    the exact HUMAN-REVIEWED numbers (7.983 req/s and 0.829 workflows/s minima, PASS) — and
-    against a synthetic degraded fixture (late-window throughput dropped 25%, FAIL, exit
-    code 1).
+    the exact HUMAN-REVIEWED numbers (7.983 req/s and 0.829 workflows/s minima, now reported as
+    `INFO`, not gating) — and against a synthetic degraded fixture (late-window throughput
+    dropped 25%, still FAILs via the gated degradation guard, exit code 1) — reproduced again
+    after splitting gated/informational guards in human review round 2.
+  - `out/23127179_Soak_20260817.js` (endurance job's target script) confirmed to load correctly
+    from the fixed relative path (`23127179_Soak_20260817.js` under `working-directory: out`) by
+    triggering the script's own `K6_RUN_ID` validation error rather than a file-not-found error —
+    contrasted directly against the original buggy path, which does fail with "couldn't be found
+    on local disk."
   - Backend start/health-check pattern (`node server.js` + `/api/products` polling) validated
     locally; identical logic is used in the workflow YAML.
+- **Human review round 2 (hardware scope):** the reviewer approved all five core logic files
+  (`regression_workflow.js`, `evaluate_regression.js`, `evaluate_endurance.js`,
+  `workflow_steps.js`, `csv_contract.js`) on correctness of the 9-step workflow, CSV contract,
+  and evaluator math, then flagged that both CI jobs run on GitHub-hosted `ubuntu-latest` while
+  the Task 2 guards were scoped to "comparable hardware" — the student's local Dell machine.
+  Resolved by relabeling p95/p99 as PROVISIONAL (same values, still gated, explicit caveat) and
+  demoting the absolute throughput/workflow-rate numbers to informational-only on this runner;
+  see Hardware Scope. The rejected alternative (self-hosted runner on the Dell machine) was
+  explicitly declined because it would require that machine to be online whenever a TA
+  re-triggers CI for grading.
 - **Not validated:** the actual GitHub Actions execution (no `gh` run was triggered) — the
   workflow YAML has only been checked for valid syntax (`yaml.safe_load`) and its steps have
   been reproduced locally command-by-command, not run inside an Actions runner. The
