@@ -60,6 +60,12 @@ if (Test-Path -LiteralPath $runDirectory) {
     New-Item -ItemType Directory -Path $runDirectory | Out-Null
 }
 
+$reservationMarker = Join-Path $runDirectory 'PREPARED-NOT-EXECUTED.md'
+$preRunPreparationRecord = Join-Path $runDirectory 'pre-run-preparation-record.md'
+if (Test-Path -LiteralPath $reservationMarker) {
+    Move-Item -LiteralPath $reservationMarker -Destination $preRunPreparationRecord
+}
+
 $evidenceScript = Join-Path $runDirectory '23127179_Stress_20260817.js'
 $evidenceReportHelper = Join-Path $runDirectory 'stress_stage_report.js'
 $evidenceCsv = Join-Path $runDirectory 'user_workflow_data.csv'
@@ -76,8 +82,8 @@ New-Item -ItemType Directory -Force -Path (Join-Path $runDirectory 'screenshots'
 
 $rawPath = Join-Path $runDirectory 'raw-results.ndjson'
 $summaryPath = Join-Path $runDirectory 'summary.json'
-$stdoutPath = Join-Path $runDirectory 'stdout.txt'
-$stderrPath = Join-Path $runDirectory 'stderr.txt'
+$stdoutPath = Join-Path $runDirectory 'stdout.log'
+$stderrPath = Join-Path $runDirectory 'stderr.log'
 $markdownPath = Join-Path $runDirectory 'stress-stage-summary.md'
 $baseUrl = 'http://localhost:3000'
 $arguments = @(
@@ -102,6 +108,12 @@ $scriptHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $evidenceScript).Hash
 $reportHelperHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $evidenceReportHelper).Hash
 $csvHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $evidenceCsv).Hash
 $k6Version = (& $k6Path version | Out-String).Trim()
+$hashRecord = @(
+    "$scriptHash  23127179_Stress_20260817.js"
+    "$reportHelperHash  stress_stage_report.js"
+    "$csvHash  user_workflow_data.csv"
+)
+$hashRecord | Set-Content -LiteralPath (Join-Path $runDirectory 'hashes.sha256') -Encoding utf8
 
 $preRunMetadata = [ordered]@{
     test_name = '23127179_Stress_20260817'
@@ -168,6 +180,7 @@ function Add-ProcessSample {
         [datetime]$Timestamp,
         [pscustomobject]$Stage
     )
+    $processId = $Process.Id
     try {
         $Process.Refresh()
         $cpuSeconds = $Process.TotalProcessorTime.TotalSeconds
@@ -186,7 +199,8 @@ function Add-ProcessSample {
             stress_level = $Stage.Level
             target_vus = $Stage.TargetVUs
             role = $Role
-            pid = $Process.Id
+            pid = $processId
+            process_available = $true
             cpu_percent_total_machine = if ($null -eq $cpuPercent) { '' } else { [math]::Round($cpuPercent, 3) }
             working_set_mb = [math]::Round($Process.WorkingSet64 / 1MB, 3)
             private_memory_mb = [math]::Round($Process.PrivateMemorySize64 / 1MB, 3)
@@ -194,6 +208,19 @@ function Add-ProcessSample {
         })
     }
     catch [System.InvalidOperationException] {
+        $processSamples.Add([pscustomobject]@{
+            timestamp_utc = $Timestamp.ToString('o')
+            stress_phase = $Stage.Phase
+            stress_level = $Stage.Level
+            target_vus = $Stage.TargetVUs
+            role = $Role
+            pid = $processId
+            process_available = $false
+            cpu_percent_total_machine = ''
+            working_set_mb = ''
+            private_memory_mb = ''
+            thread_count = ''
+        })
         return
     }
 }
@@ -254,8 +281,15 @@ $k6Process.WaitForExit()
 $k6Process.Refresh()
 $endedAt = (Get-Date).ToUniversalTime()
 $exitCode = $k6Process.ExitCode
-$processSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'process-resources.csv') -NoTypeInformation -Encoding utf8
-$systemSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'system-resources.csv') -NoTypeInformation -Encoding utf8
+$backendAvailableAtEnd = try {
+    $backendProcess.Refresh()
+    -not $backendProcess.HasExited
+}
+catch {
+    $false
+}
+$processSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'process-resource.csv') -NoTypeInformation -Encoding utf8
+$systemSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'system-resource.csv') -NoTypeInformation -Encoding utf8
 
 $finalMetadata = [ordered]@{
     test_name = '23127179_Stress_20260817'
@@ -270,6 +304,7 @@ $finalMetadata = [ordered]@{
     k6_exit_code = $exitCode
     threshold_exit = ($exitCode -eq 99)
     backend_pid = $backendPid
+    backend_process_available_at_end = $backendAvailableAtEnd
     k6_pid = $k6Process.Id
     logical_processors_used_for_process_cpu_normalization = $logicalProcessors
     backend_restarted_before_run = $BackendRestartedBeforeRun
@@ -289,4 +324,26 @@ $finalMetadata = [ordered]@{
 }
 $finalMetadata | ConvertTo-Json -Depth 5 |
     Set-Content -LiteralPath (Join-Path $runDirectory 'metadata.json') -Encoding utf8
+
+$completionReport = @"
+# Official Stress Execution Completion Record
+
+- Run ID: ``$RunId``
+- Started UTC: ``$($startedAt.ToString('o'))``
+- Ended UTC: ``$($endedAt.ToString('o'))``
+- Elapsed seconds: ``$([math]::Round(($endedAt - $startedAt).TotalSeconds, 3))``
+- k6 exit code: ``$exitCode``
+- Threshold exit: ``$($exitCode -eq 99)``
+- Raw NDJSON exists: ``$(Test-Path -LiteralPath $rawPath)``
+- Summary JSON exists: ``$(Test-Path -LiteralPath $summaryPath)``
+- Stress Markdown report exists: ``$(Test-Path -LiteralPath $markdownPath)``
+- Process-resource samples: ``$($processSamples.Count)``
+- System-resource samples: ``$($systemSamples.Count)``
+- Screenshot verification: pending same-run GUI capture and manifest review
+- Result interpretation: not performed by this execution record
+
+A nonzero k6 exit code or failed correctness threshold is preserved as Stress evidence.
+It does not by itself authorize an automatic rerun.
+"@
+$completionReport | Set-Content -LiteralPath (Join-Path $runDirectory 'completion-report.md') -Encoding utf8
 $finalMetadata | ConvertTo-Json -Depth 5
