@@ -122,6 +122,8 @@ Across twenty-four audited interactions, AI was strongest when constrained by re
 
 ---
 
+**Task 2 human-review interaction (not a new AI-generated artifact):** The student explicitly approved the metric corrections for synthetic baseline, bounded Stress range, Spike warm-up maximum, Soak observed floor, memory interpretation, and semantic correctness. The student approved the future regression-guard scope under comparable hardware/dataset/harness/profile and required binary FEASIBLE/HALLUCINATED optimization classifications. The exact current-chat review prompt is not reproduced here; no prompt text is fabricated. This human decision does not change the existing 25-artifact audit ledger or its 24 VALID / 1 INCOMPLETE counts.
+
 ## References
 
 - Kharbach, M. (2026). *AI Use Policy Templates for Higher Education.* CC BY-NC-SA 4.0.

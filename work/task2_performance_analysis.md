@@ -55,18 +55,33 @@ Cross-scenario findings:
 
 ## 7. AI-Proposed Performance Thresholds
 
-These are Task 2 regression guards proposed from the measured evidence. They are not business SLOs and do not replace the final Task 1 endurance threshold.
+These are **HUMAN-APPROVED future regression guards** for comparable hardware, dataset, harness, and scenario profiles. They are not business SLOs, production-capacity claims, or replacements for the final Task 1 endurance threshold.
 
 | Metric | Proposed guard | Evidence basis and reasoning | Confidence | Human review status |
 |---|---|---|---|---|
-| `http_req_failed` | `rate == 0` | All four valid raw runs had zero failed HTTP requests. A correctness regression should fail fast. | High | Pending human acceptance |
-| `checks` and `workflow_success` | `rate == 1` | All 9-step workflows passed semantic checks and workflow-success checks in every valid run. | High | Pending human acceptance |
-| Global HTTP p95/p99 | p95 ≤ 25 ms and p99 ≤ 50 ms for the same harness/profile | Valid-run global tails were approximately p95 14.26–19.43 ms and p99 18.70–41.36 ms; margins are regression guards, not user-facing promises. | Medium | Pending human acceptance |
-| 12-VU sustained throughput | ≥ 7.983 req/s and ≥ 0.829 clean workflows/s for the reviewed 12-minute protocol | Reuses the measured Task 1 floor as a future regression check without redefining it as capacity or SLO. | Medium | Pending human acceptance; Task 1 fact remains FINAL |
-| Soak early-to-late degradation | request-rate loss ≤ 5% and clean-workflow-rate loss ≤ 5% under the same protocol | Observed losses were approximately 0.47% and 0.98%; 5% is an explicit proposed guard, not an assignment requirement. | Low/Medium | Pending human review |
-| Backend memory ceiling | No numeric guard proposed | Memory direction is mixed and the valid evidence does not justify a limit or leak diagnosis. | High | Do not convert into a threshold without new evidence |
+| `http_req_failed` | `rate == 0` | All four valid raw runs had zero failed HTTP requests. | High | HUMAN-APPROVED |
+| `checks` and `workflow_success` | `rate == 1` | All 9-step workflows passed semantic and workflow-success checks. | High | HUMAN-APPROVED |
+| Global HTTP p95/p99 | p95 ≤ 25 ms and p99 ≤ 50 ms for the same harness/profile | Valid-run tails were approximately p95 14.26–19.43 ms and p99 18.70–41.36 ms. | Medium | HUMAN-APPROVED |
+| 12-VU sustained throughput | ≥ 7.983 req/s and ≥ 0.829 clean workflows/s for the reviewed 12-minute protocol | Uses the final Task 1 empirical floor as a comparable-run guard, not capacity or SLO. | Medium | HUMAN-APPROVED; Task 1 fact remains FINAL |
+| Soak early-to-late degradation | request-rate loss ≤ 5% and clean-workflow-rate loss ≤ 5% under the same protocol | Observed losses were approximately 0.47% and 0.98%; 5% is a future guard. | Medium | HUMAN-APPROVED |
+| Backend memory ceiling | No numeric guard approved | Memory direction is mixed and does not justify a limit or leak diagnosis. | High | HUMAN-APPROVED: no numeric memory threshold |
 
 ## 8. Human Verification and Corrections
+
+The following decisions are explicitly **HUMAN-REVIEWED and HUMAN-APPROVED**:
+
+| Decision | Human-approved wording |
+|---|---|
+| Load interpretation | 4 VUs is a synthetic baseline, not production demand. |
+| Stress interpretation | 24 VUs is not maximum capacity; no breaking point was observed within the tested range. |
+| Spike maximum | The approximately 578.87 ms maximum is a warm-up/cold-start Register observation, not peak-load latency. |
+| Soak throughput | 7.983 req/s is the observed sustained throughput floor for the reviewed Soak protocol, not maximum stable RPS. |
+| Soak memory | Memory evidence does not prove a leak. |
+| Functional correctness | Correctness is supported by semantic checks, `workflow_success`, and expected request counts, not HTTP 200 alone. |
+
+These decisions are the human review outcome; the detailed comparison table below records the underlying evidence and correction rationale.
+
+The legacy `CORRECTED` and `CONFIRMED` labels in the comparison table are retained only to show the original AI-review draft; the authoritative decisions are the HUMAN-APPROVED decisions above.
 
 | AI interpretation | Raw evidence | Human verdict | Correction if needed | Reason |
 |---|---|---|---|---|
@@ -79,25 +94,25 @@ These are Task 2 regression guards proposed from the measured evidence. They are
 
 ## 9. AI Optimization Proposals
 
-1. Add non-unique lookup indexes for `users(email)` and, if order-history traffic is later included, `orders(user_id, id)`. The source uses email lookups for Login and user-filtered ordered order queries, while the schema defines no corresponding explicit indexes beyond primary keys.
-2. Evaluate SQLite WAL mode plus a bounded busy timeout for a write-concurrent workload. The workflow performs registration, profile update, and checkout writes; WAL may reduce reader/writer contention, but the valid runs showed no failures or saturation requiring it.
-3. Benchmark a controlled database-connection strategy (single serialized connection versus a bounded connection pool) under a larger, isolated load. The backend currently creates one `sqlite3.Database` object; changing this could improve concurrency or add locking complexity.
-4. Treat an arbitrary backend memory ceiling or “leak fix” as a proposed optimization only to reject: the valid evidence does not establish a memory leak or a supported numeric ceiling.
+1. Evaluate an additional `users(email)` lookup index only if needed. The current `users` schema has no `UNIQUE` constraint or explicit index on `email`, and Login executes `SELECT * FROM users WHERE email = ?`; measured benefit has not yet been demonstrated.
+2. Evaluate SQLite WAL mode plus a bounded busy timeout for the write-concurrent workflow. The workflow performs registration, profile update, and checkout writes; the valid runs showed no lock contention, so benchmark before implementation.
+3. Benchmark a controlled database-connection strategy (single `sqlite3.Database` versus a bounded pool). The current architecture makes the experiment technically possible, but current evidence does not prove connection handling is a bottleneck or establish a performance gain.
+4. Treat an arbitrary backend memory ceiling or “leak fix” as a rejected optimization: the valid evidence does not establish a memory leak, ceiling, or causal defect.
 
 ## 10. Feasibility / Hallucination Review
 
 | Proposal | Classification | Reason |
 |---|---|---|
-| Index `users(email)` and future `orders(user_id, id)` | PLAUSIBLE BUT NEEDS MORE EVIDENCE | Query patterns and schema support the change, but the tested dataset is small and no index-impact benchmark was run. |
-| SQLite WAL + bounded busy timeout | PLAUSIBLE BUT NEEDS MORE EVIDENCE | It is technically applicable to SQLite write/read contention, but the valid runs did not expose such a failure or bottleneck. |
-| Bounded connection strategy / pool benchmark | PLAUSIBLE BUT NEEDS MORE EVIDENCE | The single-database architecture is verified, but no measurement proves connection contention is limiting throughput. |
-| Arbitrary memory limit or leak fix | HALLUCINATED / UNSUPPORTED | Mixed memory evidence cannot justify a leak diagnosis, numeric limit, or claimed benefit. |
+| Additional `users(email)` index | FEASIBLE | The schema has no implicit `UNIQUE` index and Login queries by email; benefit is not yet demonstrated, so benchmark before implementation. |
+| SQLite WAL + bounded busy timeout | FEASIBLE | Technically applicable to the current SQLite architecture and write-heavy workflow; valid runs did not establish lock contention, so benchmark before implementation. |
+| Bounded connection strategy / pool benchmark | FEASIBLE | The current single `sqlite3.Database` architecture makes the experiment possible; no bottleneck or performance gain is established. |
+| Arbitrary memory limit or leak fix | HALLUCINATED | Mixed memory evidence cannot justify a leak diagnosis, numeric limit, or claimed benefit. |
 
 No optimization is implemented in Task 2, and no GitHub Issue is created. The Task 1 issue boundary remains unchanged: no genuine SUT bug or performance issue was established in the valid official runs.
 
 ## 11. Human Review Required
 
-- Accept, revise, or reject the proposed regression-guard values and their scope.
-- Confirm whether index/WAL/connection-strategy proposals should be retained as future experiments.
-- Supply any required human wording for the AI Audit interaction; the exact current-chat prompt is not fabricated in the audit file.
-- Review the working-tree cleanup and decide whether the broader README submission TODOs are addressed in a later submission pass.
+**Task 2 status: AWAITING FINAL HUMAN ACCEPTANCE.**
+
+- Confirm final wording and assignment submission readiness.
+- The metric corrections, regression guards, and binary optimization classifications above are already human-approved for this draft.
