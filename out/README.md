@@ -21,7 +21,7 @@ This README is the submission index and self-assessment summary for HW05.
 | Load testing | 20 | TODO | TODO |
 | Stress testing | 20 | TODO | TODO |
 | Spike testing | 20 | TODO | TODO |
-| AI analysis and misinterpretation hunt | 10 | AWAITING HUMAN REVIEW | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
+| AI analysis and misinterpretation hunt | 10 | COMPLETE / HUMAN-REVIEWED | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
 | Continuous performance-testing proposal | 10 | TODO | TODO |
 | Agent Skill | 10 | TODO | TODO |
 | **Total** | **100** | **TODO** | — |
@@ -41,7 +41,7 @@ This README is the submission index and self-assessment summary for HW05.
 
 ## Task 2 — AI Analysis and Misinterpretation Hunt
 
-Initial AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses the four official valid runs. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 remains AWAITING FINAL HUMAN ACCEPTANCE. No optimization was implemented and no GitHub Issue was created.
+Final AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses the four official valid runs. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 is COMPLETE / HUMAN-REVIEWED. No optimization was implemented and no GitHub Issue was created.
 
 ## Submission Video Links
 

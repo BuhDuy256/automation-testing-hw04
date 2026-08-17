@@ -18,7 +18,7 @@ Raw NDJSON, summary JSON, resource CSV files, and screenshots are common executi
 
 ## Lifecycle Milestone State
 
-**Task 1 / REQ1 = COMPLETE.** The final endurance threshold is HUMAN-REVIEWED / FINAL. Task 2 remains AWAITING FINAL HUMAN ACCEPTANCE. Task 3 remains NOT STARTED.
+**Task 1 / REQ1 = COMPLETE.** The final endurance threshold is HUMAN-REVIEWED / FINAL. Task 2 is COMPLETE / HUMAN-REVIEWED. Task 3 remains NOT STARTED.
 
 | Milestone | Status | Official invocation / note |
 |---|---|---|
@@ -26,7 +26,7 @@ Raw NDJSON, summary JSON, resource CSV files, and screenshots are common executi
 | Stress | COMPLETE | `20260817t115158688` |
 | Spike | COMPLETE | `20260817t134816776`; technical validity VALID |
 | Soak / Endurance | COMPLETE — measured official invocation | `20260818t000551547`; technical validity VALID; measured-data completeness COMPLETE; screenshot not required for Soak |
-| HW05 Task 2 | AWAITING FINAL HUMAN ACCEPTANCE | Initial analysis, approved corrections, guards, and binary optimization classifications are recorded in `work/task2_performance_analysis.md` |
+| HW05 Task 2 | COMPLETE / HUMAN-REVIEWED | Final analysis, approved corrections, guards, and binary optimization classifications are recorded in `work/task2_performance_analysis.md` |
 | HW05 Task 3 | NOT STARTED | Continuous-performance-testing proposal remains a later milestone |
 
 ## Frozen Soak Threshold Facts
