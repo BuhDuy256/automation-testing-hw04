@@ -2,12 +2,14 @@
 
 ## 1. Decision provenance
 
-This document uses three evidence labels so that requirements, facts, and proposals are not mixed:
+This document uses six evidence labels so that requirements, facts, and proposals are not mixed:
 
 - **[Assignment requirement]** comes from `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md`.
 - **[Observed runtime fact]** comes from `work/workflow1_runtime_contract.md` and the finalized CSV design.
 - **[Calibration measurement]** comes from the controlled runs documented in `work/load_test_calibration.md`.
 - **[AI-proposed parameter]** is an initial test-design hypothesis that requires human review and later empirical calibration.
+- **[Synthetic user-behavior assumption]** is a deliberate model used because real user analytics do not exist.
+- **[Human-reviewed design decision]** is a value explicitly accepted or simplified after reviewing the calibration evidence and its limits.
 
 Calibration now provides a local hardware baseline and measurements at 1, 2, 4, and 8 VUs. No production traffic analytics, business latency SLO, error budget, or throughput requirement exists. Calibrated values below are provisional regression guards for this machine, not established service-level objectives.
 
@@ -21,13 +23,13 @@ Calibration now provides a local hardware baseline and measurements at 1, 2, 4, 
 
 There is exactly one Checkout per iteration. The two Checkout calls in runtime verification were diagnostic probes and are not part of this test plan.
 
-**[AI-proposed parameter]** The objective is to evaluate whether the local EShop backend remains correct and responsive while a small, gradually introduced group of concurrent customers repeatedly completes onboarding and a first order under a steady, normal-use load.
+**[Human-reviewed design decision]** The objective is to evaluate whether the local EShop backend remains correct and responsive while a small, gradually introduced group of concurrent customers repeatedly completes onboarding and a first order under a steady, synthetic normal-load profile.
 
 This Load test should establish an initial baseline for response latency, workflow success, throughput, and local resource use. It must not search for the maximum capacity, deliberately exhaust resources, or introduce an abrupt surge; those goals belong to later Stress and Spike designs.
 
 ## 3. Workload model
 
-**[AI-proposed parameter]** Use one k6 scenario named `load` with the `ramping-vus` executor.
+**[Human-reviewed design decision]** Use one k6 scenario named `load` with the `ramping-vus` executor.
 
 This is a closed workload model: a bounded population of VUs completes the full workflow repeatedly, and the achieved iteration rate and RPS are measured results. This fits an interactive customer journey because each VU waits for the current request and think-time before continuing.
 
@@ -42,12 +44,12 @@ k6 executor reference: <https://grafana.com/docs/k6/latest/using-k6/scenarios/ex
 | Phase | k6 setting | Purpose and rationale |
 |---|---|---|
 | Initial load | `startVUs: 1` | **[Calibration measurement]** One VU completed both repeated baselines with 100% correctness. Starting there avoids a simultaneous registration burst and exposes setup failures before concurrency rises. |
-| Ramp-up | `48s`, target `4` VUs | **[Calibration-derived proposal]** Confirmed 4-VU iteration p95 was 15.816 seconds. Introducing the three additional VUs across three p95 workflow windows gives `3 x 15.816 = 47.448` seconds, rounded to 48 seconds. |
-| Steady load | `4m`, target `4` VUs | **[Calibration-derived proposal]** Confirmed 4-VU throughput was 2.541 RPS, or 0.282 workflows/s. A four-minute plateau estimates about 68 workflows and 610 requests while remaining well below the separate 10-15 minute endurance test. |
-| Ramp-down | `64s`, target `0` VUs | **[Calibration-derived proposal]** Four confirmed p95 workflow windows are `4 x 15.816 = 63.264` seconds, rounded to 64 seconds. This removes concurrency progressively instead of creating a hard stop. |
-| Iteration grace | `gracefulRampDown: 25s` and `gracefulStop: 25s` | **[Calibration-derived proposal]** Confirmed 4-VU iteration p99/max were 15.894/15.896 seconds. Twenty-five seconds is more than 1.5 times measured p99 and exceeds the 18-second synthetic maximum think-time. |
+| Ramp-up | `1m`, target `4` VUs | **[Human-reviewed design decision]** One minute is plainly gradual for a four-VU target and avoids spike behavior. Calibration supports the target but does not justify false precision such as deriving 48 seconds from workflow p95. |
+| Steady load | `4m`, target `4` VUs | **[Human-reviewed design decision]** Confirmed 4-VU throughput was 2.541 RPS, or 0.282 workflows/s. Four minutes is chosen as a reasonable repeated-sample window for this homework and should yield about 68 workflows and 610 requests. The estimate is planning context, not a statistical-confidence claim. |
+| Ramp-down | `1m`, target `0` VUs | **[Human-reviewed design decision]** One minute removes load gradually without implying that ramp-down must equal a multiple of workflow duration. Graceful settings protect active iterations. |
+| Iteration grace | `gracefulRampDown: 25s` and `gracefulStop: 25s` | **[Human-reviewed design decision]** Confirmed 4-VU iteration p99/max were 15.894/15.896 seconds. Twenty-five seconds is more than 1.5 times measured p99 and exceeds the 18-second synthetic maximum think-time. |
 
-Nominal stage duration is **5 minutes 52 seconds**: 48 seconds ramp-up + 4 minutes steady + 64 seconds ramp-down. Actual wall-clock time may extend by up to 25 seconds when an iteration needs graceful completion.
+Nominal stage duration is **6 minutes**: 1 minute ramp-up + 4 minutes steady + 1 minute ramp-down. Actual wall-clock time may extend by up to 25 seconds when an iteration needs graceful completion.
 
 Why four VUs is the lowest defensible normal-load target:
 
@@ -56,7 +58,7 @@ Why four VUs is the lowest defensible normal-load target:
 - Eight VUs still succeeded, but overall p99 rose to 122.377 ms and Register p95 rose to 123.832 ms. Four VUs stays below that early tail-latency change.
 - One VU has no concurrency, and two VUs gives only minimum overlap. Four VUs is the first confirmed level with multiple overlapping stateful workflows and a larger 32-workflow confirmation sample.
 
-At confirmed 4-VU throughput, the four-minute plateau should produce approximately `2.541 / 9 x 240 = 67.76` complete workflows and about 610 requests. This is a sample-count estimate, not a throughput requirement or promised result.
+At confirmed 4-VU throughput, the four-minute plateau should produce approximately `2.541 / 9 x 240 = 67.76` complete workflows and about 610 requests. This only shows that the window should contain repeated samples; 68 is not a required sample count, statistical threshold, throughput requirement, or promised result.
 
 Four VUs remains a synthetic normal-load choice because no production traffic model exists. Calibration makes it defensible for this hardware but cannot turn it into a claim about real customer demand.
 
@@ -117,7 +119,8 @@ The exact nine-step workflow has no post-Checkout order-read endpoint. Therefore
 
 ### k6 metrics
 
-- `http_req_duration`: overall and p50, p90, p95, and p99, plus per-step values using endpoint/step tags.
+- `http_req_duration`: overall p50, p90, p95, and p99.
+- Per-endpoint latency: every request must carry a stable `step` tag, and the report must retain p50, p90, p95, and p99 for each of the nine steps. Overall latency can hide degradation in slower write endpoints when faster reads dominate the distribution. Do not add endpoint-specific pass/fail thresholds for the first official Load run; collect the percentiles for diagnosis and later review.
 - `http_req_failed`: transport and HTTP failure rate.
 - `checks`: correctness-check pass rate.
 - Custom `workflow_success`: complete nine-step business workflow success rate.
@@ -135,18 +138,18 @@ Observe the backend process and whole-machine CPU utilization, memory working se
 
 ## 9. Initial stop/pass/fail expectations
 
-These values are **[Calibration-derived proposals]** from `work/load_test_calibration.md`. They remain provisional for human review and are not business SLOs.
+These values are **[Human-reviewed design decisions]** informed by `work/load_test_calibration.md`. The latency margins remain provisional regression guards and are not business SLOs.
 
 | Metric | Initial hypothesis | Reason for the first baseline |
 |---|---:|---|
 | `http_req_failed` | `rate == 0` | All 1,062 measured requests succeeded, and this normal workflow has no expected negative response. HTTP/transport failure is separate from semantic failure. |
 | `checks` | `rate == 1` | All 4,130 calibration checks passed. Any failed response-shape, identity, correlation, or address check is a known correctness failure. |
 | Custom `workflow_success` | `rate == 1` | All 118 measured workflows succeeded. A workflow is false if any of its nine required steps or correlations fails. |
-| `http_req_duration` | `p(95) < 60ms` | Confirmed 4-VU p95 was 46.818 ms. A 25% degradation allowance gives 58.523 ms, rounded upward to 60 ms. |
-| `http_req_duration` | `p(99) < 85ms` | Confirmed 4-VU p99 was 54.115 ms; 85 ms gives about 57% margin while remaining below the 122.377 ms observed at 8 VUs. |
-| `iteration_duration` | `p(95) < 19s` | Confirmed 4-VU iteration p95 was 15.816 seconds; a 20% allowance gives 18.979 seconds, rounded to 19 seconds. This metric includes synthetic think-time. |
+| `http_req_duration` | `p(95) < 60ms` | **Provisional calibration-derived regression guard.** Confirmed 4-VU p95 was 46.818 ms; the explicit 25% tolerance selected for this assignment gives 58.523 ms, rounded to 60 ms. This is not an EShop requirement or SLO. |
+| `http_req_duration` | `p(99) < 85ms` | **Intentionally provisional.** Confirmed 4-VU p99 was 54.115 ms and 8-VU p99 was 122.377 ms, but 85 ms is not an empirical breakpoint. Its approximately 57% margin is a human choice and must be reconsidered after the official Load run. |
+| `iteration_duration` | `p(95) < 19s` | **Provisional calibration-derived regression guard.** Confirmed 4-VU p95 was 15.816 seconds; the explicit 20% tolerance selected for this assignment gives 18.979 seconds. This journey metric is dominated by synthetic think-time and must not be interpreted as API latency. |
 
-Do not set a throughput pass threshold yet. The closed VU model, think-time, and unknown baseline make achieved RPS an observation to calibrate after the first valid run.
+Do not set a throughput pass threshold. The closed VU model and synthetic think-time produce an observed RPS, but there is no business throughput requirement to enforce.
 
 For the first evidence run, threshold failures should set a failed k6 exit result but should not automatically abort the test; completing the run preserves the data needed for human review. Manually stop only for an invalid test setup, repeated identity collision caused by a reused `K6_RUN_ID`, loss of monitoring/evidence, backend crash, or machine instability that risks corrupting the run. A slow or threshold-failing SUT is a result to capture, not by itself a reason to discard the run.
 
@@ -177,6 +180,7 @@ The later execution phase should preserve at least:
 - The exact command, k6 version, base URL, scenario name, unique `K6_RUN_ID`, start time, end time, and threshold exit status.
 - Raw k6 time-series output, preferably newline-delimited JSON, as the k6 equivalent of the assignment's raw JMeter `.jtl` evidence.
 - A machine-readable end-of-test summary containing thresholds, counts, rates, and percentile values.
+- Per-endpoint p50, p90, p95, and p99 derived from stable `step` tags, even though the first official Load run has no endpoint-specific thresholds.
 - Complete console output, including threshold results and interrupted-iteration warnings.
 - One exported k6 HTML report for the Load scenario, placed in its own report folder for submission organization.
 - A screenshot or recording frame showing k6 and the backend resource monitor together during the steady stage.
@@ -188,12 +192,14 @@ The final output and report naming will be fixed during implementation and evide
 
 ## 12. Human-review decisions before implementation
 
-Human review is required for these remaining assumptions:
+The human review approved four VUs, `ramping-vus`, the five synthetic think-time ranges, the four-minute plateau, the 25-second graceful settings, strict correctness thresholds, and observing RPS without a threshold. It simplified both ramps to one minute because calibration did not justify 48/64-second precision.
 
-1. Accept four VUs as a synthetic normal-load target for this hardware; it is calibrated but not based on production demand.
-2. Accept the 25% p95, approximately 57% p99, and 20% iteration-duration tolerances as provisional regression margins rather than business SLOs.
-3. Accept four minutes as enough to estimate about 68 per-step samples while remaining distinct from the 10-15 minute endurance test.
-4. Accept or revise the five think-time ranges; calibration validated their implementation, but no user analytics support their realism.
+Remaining assumptions and follow-up items:
+
+1. Four VUs is calibrated for this machine but still represents synthetic normal load rather than production demand.
+2. The 25% p95, approximately 57% p99, and 20% iteration-duration tolerances remain provisional human choices, not business SLOs. Reconsider p99 after the official Load run.
+3. The five think-time ranges remain synthetic behavior assumptions even though their use is approved.
+4. Four minutes is a reasonable repeated-sample window, not a statistically proven minimum.
 5. Decide the exact unique `K6_RUN_ID` generation procedure; reuse must be prevented when the backend retains registered users.
 6. Confirm that request-body validation plus the previously verified runtime contract is sufficient shipping-address evidence without adding an extra order-read step to the finalized workflow.
 7. Confirm the exact k6 raw-output and HTML-report commands that satisfy the instructor's k6-equivalent evidence expectation.

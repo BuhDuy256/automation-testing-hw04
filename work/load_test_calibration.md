@@ -6,13 +6,14 @@ This was a controlled calibration activity for the finalized Workflow 1. It was 
 
 After measurements and the read-only database verification were captured, the calibration-started SUT processes were stopped and the tracked runtime SQLite file was restored to repository `HEAD`. The repository therefore retains no SUT change from calibration.
 
-The report keeps five evidence classes separate:
+The report keeps six evidence classes separate:
 
 - **Assignment requirement:** mandated by the HW05 specification.
 - **Repository/runtime fact:** established by the SUT source, finalized workflow contract, or CSV design.
 - **Hardware fact:** observed from the local Windows machine with read-only system queries.
 - **Empirical calibration measurement:** produced by the calibration runs in `work/calibration-results/`.
 - **Synthetic user-behavior assumption:** a deliberate model used because real usage analytics do not exist.
+- **Human-reviewed design decision:** a value accepted or simplified by the student after reviewing the evidence and its limitations.
 
 ## 2. Assignment requirements
 
@@ -180,6 +181,8 @@ The two 4-VU runs were repeatable: RPS was 2.629 and 2.541, all correctness meas
 
 Small endpoint sample counts make individual p95 values noisy. Overall distributions and the longer 4-VU confirmation run are the stronger basis for provisional thresholds.
 
+The official Load script must retain a stable `step` tag for every request and report per-endpoint p50, p90, p95, and p99. Overall latency can hide degradation in slower write endpoints because the faster read endpoints contribute more low-latency samples. No endpoint-specific pass/fail threshold is set for the first official Load run; endpoint percentiles will be retained for diagnosis and later threshold review.
+
 ## 10. Synthetic user-behavior assumptions
 
 No user analytics exist for this educational SUT. The following delays remain synthetic rather than empirically observed customer behavior:
@@ -196,20 +199,20 @@ The logical decision points remain appropriate. Calibration measured an average 
 
 ## 11. Parameter re-evaluation
 
-All revised performance thresholds remain provisional baselines for this hardware and SUT state, not business SLOs.
+The latency and iteration thresholds below remain provisional regression guards for this hardware and SUT state, not business SLOs. The zero-failure and 100%-correctness thresholds are functional expectations for this positive workflow, not latency tolerances.
 
 | Parameter | Current proposal | Evidence collected | Revised proposal | Reasoning |
 |---|---:|---|---:|---|
 | Start load | 1 VU | The 1-VU smoke and repeated baselines were correct; one VU avoids a simultaneous initial registration burst. | **1 VU** | Retain the smallest valid start. |
 | Target VUs | 5 VUs | 4 VUs repeated at 2.541-2.629 RPS with 100% correctness and low resources; 8 VUs remained correct but overall p99 rose to 122.377 ms and Register p95 to 123.832 ms. | **4 VUs** | Lowest confirmed modest level with repeatable multi-user overlap and clear headroom below the observed 8-VU tail change. No production-user claim is made. |
-| Ramp-up | 60 s | Confirmed 4-VU iteration p95 was 15.816 s. Moving from 1 to 4 introduces three VUs; three p95 workflow windows are 47.448 s. | **48 s from 1 to 4 VUs** | Introduces approximately one additional VU per measured p95 workflow window without spike behavior. |
-| Steady duration | 3 min | Confirmed 4-VU RPS was 2.541, or 0.282 workflows/s. A 4-minute plateau estimates about 68 workflows and 610 requests. | **4 min at 4 VUs** | Provides roughly 68 samples for every workflow step, more defensible than the approximately 51 samples estimated for 3 minutes, while remaining far below the 10-15 minute endurance duration. |
-| Ramp-down | 60 s | Confirmed iteration p95 was 15.816 s. Four p95 workflow windows are 63.264 s. | **64 s from 4 to 0 VUs** | Removes load progressively across about one p95 workflow window per VU, with graceful completion still enabled. |
+| Ramp-up | 60 s | Calibration supports the 4-VU target but does not establish a system property requiring ramp duration to equal a multiple of workflow p95. | **60 s from 1 to 4 VUs** | **Human-reviewed design decision.** A one-minute ramp is plainly gradual, avoids spike behavior, and avoids unsupported precision such as 48 seconds. |
+| Steady duration | 3 min | Confirmed 4-VU RPS was 2.541, or 0.282 workflows/s. A 4-minute plateau estimates about 68 workflows and 610 requests. | **4 min at 4 VUs** | **Human-reviewed design decision.** Chosen as a reasonable repeated-sample window for this homework, not because 68 provides a proven statistical confidence level. It remains separate from the 10-15 minute endurance test. |
+| Ramp-down | 60 s | Calibration supports graceful completion but does not establish a reason to multiply workflow p95 by the number of VUs. | **60 s from 4 to 0 VUs** | **Human-reviewed design decision.** A simple one-minute ramp-down removes load gradually; the 25-second graceful settings protect active iterations. |
 | Graceful ramp-down/stop | 30 s | Confirmed 4-VU iteration p99/max were 15.894/15.896 s; synthetic think-time can theoretically reach 18 s. | **25 s** | More than 1.5 times measured p99 and above the synthetic maximum think-time, leaving additional allowance for API slowdown. |
 | Think-time | Five ranges totaling 9-18 s | Implementation produced the expected distribution and decision points are logical, but no user analytics exist. | **Keep the five ranges unchanged** | This remains explicitly synthetic; calibration validates mechanics only. |
-| Overall HTTP p95 | `< 500 ms` | Confirmed 4-VU p95 was 46.818 ms. A 25% degradation allowance gives 58.523 ms. | **`p(95) < 60 ms`** | Rounded above measured value plus 25%; provisional regression guard for this machine, not an SLO. |
-| Overall HTTP p99 | `< 1000 ms` | Confirmed 4-VU p99 was 54.115 ms; 8-VU p99 was 122.377 ms. | **`p(99) < 85 ms`** | Approximately 57% above the confirmed target result, but still below the observed 8-VU tail change. Extra margin reflects p99 sample sensitivity. |
-| Iteration-duration p95 | `< 20 s` | Confirmed 4-VU p95 was 15.816 s. Adding 20% gives 18.979 s. | **`p(95) < 19 s`** | Directly combines measured synthetic think-time, API time, and client overhead with a stated 20% tolerance. |
+| Overall HTTP p95 | `< 500 ms` | Confirmed 4-VU p95 was 46.818 ms. A 25% degradation allowance gives 58.523 ms. | **`p(95) < 60 ms`** | **60 ms is a provisional regression guard derived from the calibrated baseline plus an explicit 25% tolerance selected for this assignment. It is not an EShop performance requirement or SLO.** |
+| Overall HTTP p99 | `< 1000 ms` | Confirmed 4-VU p99 was 54.115 ms; 8-VU p99 was 122.377 ms. There is no measured breakpoint at 85 ms. | **`p(99) < 85 ms`** | Intentionally provisional: it lies below the observed 8-VU tail change but its approximately 57% margin is a human design choice. Reconsider it after the official Load run. |
+| Iteration-duration p95 | `< 20 s` | Confirmed 4-VU p95 was 15.816 s. Adding 20% gives 18.979 s; theoretical synthetic think-time can reach 18 s. | **`p(95) < 19 s`** | Provisional guard for the complete journey envelope. The 20% margin is a human choice, and this metric is dominated by think-time rather than API latency. |
 | HTTP failure | `< 1%` | Zero HTTP/transport failures in 1,062 measured requests. The workflow has no expected negative responses. | **`rate == 0`** | At this modest normal load, any HTTP failure is unexpected and should fail the run. |
 | Semantic checks | `> 99%` | All 4,130 semantic checks passed; known behavior requires exact correlations and shipping address, not tolerant partial success. | **`rate == 1`** | Any known semantic failure means at least one response or request correlation is wrong. |
 | Complete workflow | `> 99%` | All 118 measured workflows succeeded; an iteration is meaningful only if all nine steps complete correctly. | **`rate == 1`** | One incomplete onboarding/order journey is a functional failure under the proposed normal load. |
@@ -217,16 +220,17 @@ All revised performance thresholds remain provisional baselines for this hardwar
 
 The revised nominal profile is:
 
-`1 VU -> ramp to 4 VUs over 48 s -> hold 4 VUs for 4 min -> ramp to 0 over 64 s`
+`1 VU -> ramp to 4 VUs over 1 min -> hold 4 VUs for 4 min -> ramp to 0 over 1 min`
 
-Nominal stage time is 352 seconds, or 5 minutes 52 seconds, with up to 25 seconds for graceful completion.
+Nominal stage time is 6 minutes, with up to 25 seconds for graceful completion.
 
 ## 12. Remaining AI/human assumptions
 
-- Four VUs is a calibrated synthetic normal-load target, not a statement about production traffic.
-- The 25% p95, approximately 57% p99, and 20% iteration tolerances are explicit test-design choices; the measurements identify the baseline but do not define business acceptability.
-- Think-time ranges remain synthetic user-behavior assumptions.
-- Four minutes is selected to estimate about 68 per-step samples; the assignment gives no required Load plateau duration or statistical confidence target.
+- Four VUs is human-approved from calibration as a synthetic normal-load target, not a statement about production traffic.
+- The one-minute ramp-up and one-minute ramp-down are human-reviewed simplicity choices. Calibration supports gradual loading but does not empirically determine exact ramp durations.
+- The 25% p95, approximately 57% p99, and 20% iteration tolerances are explicit test-design choices; the measurements identify the baseline but do not define business acceptability. The p99 guard must be reconsidered after the official Load run.
+- Think-time ranges remain accepted synthetic user-behavior assumptions rather than observed customer behavior.
+- Four minutes is a human-approved reasonable repeated-sample window; the estimate of about 68 workflows is planning context, not a statistical requirement.
 - Process CPU sampling is one-second and normalized across logical processors; official evidence should also show Task Manager for whole-machine context.
 - Persistent users, orders, and in-memory carts accumulated across calibration runs. The official run must document its initial SUT state and unique run ID.
 - The first cold Register outlier shows that warm/cold state affects maxima. Thresholds use percentiles over the full run, while maximum latency remains an observed diagnostic.
