@@ -1,15 +1,5 @@
 # HW05 AI Critique
 
-> **Status:** TODO - write the final 200-300 word critique after reviewing the AI outputs and raw results.
+Across HW05, AI meaningfully accelerated performance-test design and automation: it proposed executor models, calibrated Load/Stress/Spike parameters from real measurements, generated k6 scripts with consistent correlation and semantic checks across four scenarios, and later built a two-tier CI regression pipeline reusing that same workflow instead of duplicating it. Where AI fell short was in interpreting its own results. It described the 4-VU Load run as representative of normal production demand, when no production traffic model existed and the only defensible claim was a synthetic baseline. It labeled 24 VUs as Stress's "maximum capacity," when the reviewed range simply stopped there while throughput was still rising and no breaking point had been observed. It reported a 578.87 ms Spike latency as a peak-load failure, when raw evidence placed that maximum on a single warm-up Register call, not the 32-VU peak phase. It treated 7.983 req/s as a maximum stable RPS rather than the sustained floor actually measured, and it read a mixed backend memory trend without the caution a missing causal diagnosis deserved. Later, when the CI pipeline moved to a GitHub-hosted runner, AI's first draft reused the Task 2 latency/throughput numbers as if the hardware were unchanged — a cross-machine comparison the human reviewer rejected until the guards were split into hardware-independent, provisional, and informational tiers.
 
-Write one paragraph of 200-300 words answering all three questions below:
-
-1. What did the AI get wrong, misread, or leave incomplete?
-2. Why did the AI fail to catch the issue?
-3. What principle did you learn about collaborating with AI during this assignment?
-
-The critique must refer to concrete HW05 evidence, distinguish AI output from the student's correction, and avoid unsupported claims.
-
-**Final critique:**
-
-TODO
+None of these errors were random; each substituted a stronger, more convenient claim for the narrower one the evidence supported. Catching them required tracing every number back to its raw source rather than trusting the AI's phrasing. The principle this reinforced: AI is a fast, disciplined executor of a reviewed plan, but every interpretive claim it makes about what the numbers mean needs independent verification against the raw evidence, and against the hardware that evidence was measured on, before it is trusted.

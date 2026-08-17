@@ -1,6 +1,6 @@
 # HW05 Submission README
 
-> **Status:** TODO - complete this file after the performance runs and final review.
+> **Status:** All three graded tasks are COMPLETE / HUMAN-REVIEWED (see Milestone state below). Four self-assessed grade cells and the resulting total/ZIP filename are marked HUMAN INPUT REQUIRED because they require the student's own quality judgment, not a derivable fact — see the Self-Assessment table.
 
 This README is the submission index and self-assessment summary for HW05.
 
@@ -10,23 +10,23 @@ This README is the submission index and self-assessment summary for HW05.
 
 | Field | Value |
 |---|---|
-| Student | TODO |
+| Student | Nguyen Bao Duy |
 | Student ID | 23127179 |
 | Class | 23KTPM2 |
-| Public GitHub repository | TODO - add the public repository URL |
-| Submission filename | TODO - use `23127179_HW05_AI_Performance_<grade>.zip` |
+| Public GitHub repository | https://github.com/BuhDuy256/automation-testing-hw04/tree/hw05-performance |
+| Submission filename | `23127179_HW05_AI_Performance_<HUMAN INPUT REQUIRED>.zip` — the 3-digit grade depends on the Load/Stress/Spike/Agent Skill self-assessed grades below, which are not filled in yet. |
 
 ## Self-Assessment
 
 | Criterion | Maximum | Self-assessed grade | Evidence link |
 |---|---:|---:|---|
-| Load testing | 20 | TODO | TODO |
-| Stress testing | 20 | TODO | TODO |
-| Spike testing | 20 | TODO | TODO |
+| Load testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Load_20260817.js`](23127179_Load_20260817.js), evidence: [`23127179_Load_20260817_evidence/20260817t045341487/`](23127179_Load_20260817_evidence/20260817t045341487/) |
+| Stress testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Stress_20260817.js`](23127179_Stress_20260817.js), evidence: [`23127179_Stress_20260817_evidence/20260817t115158688/`](23127179_Stress_20260817_evidence/20260817t115158688/) |
+| Spike testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Spike_20260817.js`](23127179_Spike_20260817.js), evidence: [`23127179_Spike_20260817_evidence/20260817t134816776/`](23127179_Spike_20260817_evidence/20260817t134816776/) |
 | AI analysis and misinterpretation hunt | 10 | COMPLETE / HUMAN-REVIEWED | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
 | Continuous performance-testing proposal | 10 | COMPLETE / HUMAN-REVIEWED | [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) |
-| Agent Skill | 10 | TODO | TODO |
-| **Total** | **100** | **TODO** | — |
+| Agent Skill | 10 | **HUMAN INPUT REQUIRED** | [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/), demo video below |
+| **Total** | **100** | **HUMAN INPUT REQUIRED** (sum once the four grades above are filled in) | — |
 
 ## Test Summary
 
@@ -62,16 +62,20 @@ The pipeline runs the same frozen 9-step E2E workflow used by Task 1/2 at two co
 
 ## Submission Contents
 
-- Main report in Markdown and PDF: TODO - add paths.
-- Three named test plans: TODO - add paths.
-- Three raw `.jtl` logs and three HTML report folders: TODO - add paths.
-- CSV workflow data: TODO - add path.
-- Resource-monitor and hardware evidence: TODO - add paths.
-- Task 2 Performance Result Analysis: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md).
-- AI Critique in Markdown and PDF: TODO - add paths.
-- AI Audit Report in Markdown and PDF: TODO - add paths.
-- Task 3 Continuous Performance Testing: [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) (final); detailed working documentation in [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md); implementation in [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
-- Performance Testing Lifecycle Skill and its demonstration evidence: [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/) and **Performance Testing Agent Skill Demo** above.
-- Git commit log: [`git-commit-log.txt`](git-commit-log.txt).
+- **Main report**: this file, [`README.md`](README.md) (Markdown only — no PDF export, per course policy).
+- **Three named test plans** (k6, per HW05's "JMeter (default) or k6 (bonus)" allowance): [`23127179_Load_20260817.js`](23127179_Load_20260817.js), [`23127179_Stress_20260817.js`](23127179_Stress_20260817.js), [`23127179_Spike_20260817.js`](23127179_Spike_20260817.js).
+- **Raw results and three distinct report/listener equivalents** (k6 has no `.jtl` format; each scenario's raw NDJSON plus its designated distinct report):
+  - Load: [`23127179_Load_20260817_evidence/20260817t045341487/raw-results.ndjson`](23127179_Load_20260817_evidence/20260817t045341487/raw-results.ndjson) + native k6 Web Dashboard HTML export ([`html-report/`](23127179_Load_20260817_evidence/20260817t045341487/html-report/)).
+  - Stress: [`23127179_Stress_20260817_evidence/20260817t115158688/raw-results.ndjson`](23127179_Stress_20260817_evidence/20260817t115158688/raw-results.ndjson) + custom Markdown Stress Stage Summary ([`stress-stage-summary.md`](23127179_Stress_20260817_evidence/20260817t115158688/stress-stage-summary.md)).
+  - Spike: [`23127179_Spike_20260817_evidence/20260817t134816776/raw-results.ndjson`](23127179_Spike_20260817_evidence/20260817t134816776/raw-results.ndjson) + native k6 CSV metrics output ([`spike-metrics.csv`](23127179_Spike_20260817_evidence/20260817t134816776/spike-metrics.csv)).
+  - Soak/Endurance: [`23127179_Soak_20260817_evidence/20260818t000551547/raw-results.ndjson`](23127179_Soak_20260817_evidence/20260818t000551547/raw-results.ndjson) + factual window summary ([`soak-window-summary.md`](23127179_Soak_20260817_evidence/20260818t000551547/soak-window-summary.md)).
+- **CSV workflow data**: [`user_workflow_data.csv`](user_workflow_data.csv).
+- **Resource-monitor and hardware evidence**: per-scenario `process-resource(s).csv` / `system-resource(s).csv` and `hardware_observation.json` inside each evidence folder above; hardware screenshot: [`23127179_Load_20260817_evidence/20260817t045341487/screenshots/hardware-dxdiag.png`](23127179_Load_20260817_evidence/20260817t045341487/screenshots/hardware-dxdiag.png).
+- **Task 2 Performance Result Analysis**: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md).
+- **Task 3 Continuous Performance Testing**: [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) (final); detailed working documentation in [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md); implementation in [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
+- **AI Critique**: [`ai-critique.md`](ai-critique.md) (Markdown only — no PDF export, per course policy).
+- **AI Audit Report**: [`[AI-02] - FIT@HCMUS - AI Audit Report_En.docx.md`](%5BAI-02%5D%20-%20FIT%40HCMUS%20-%20AI%20Audit%20Report_En.docx.md) (Markdown only — no PDF export, per course policy).
+- **Performance Testing Lifecycle Skill** and its demonstration evidence: [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/) and **Performance Testing Agent Skill Demo** above.
+- **Git commit log**: [`git-commit-log.txt`](git-commit-log.txt).
 
-Final submission files belong in `out/`; intermediate drafts and exploratory artifacts belong in [`work/`](../work/).
+Final submission files belong in `out/`; intermediate drafts and exploratory artifacts belong in [`work/`](../work/). `eshop-sut/backend/database.sqlite` is runtime state and is not part of the submission.
