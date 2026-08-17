@@ -34,14 +34,15 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 These are directly measured facts from official invocation `20260818t000551547`, frozen here for
 later Task 2 use. They are not yet labelled production capacity, an SLO, or maximum stable RPS.
 
-- Minimum observed steady-window request rate: **7.983333 req/s**.
-- Minimum observed steady-window clean-workflow rate: **0.829167 workflows/s**.
+- **HUMAN-REVIEWED / FINAL — Observed sustained throughput floor:** **7.983 req/s** at 12 sustained VUs for 12 minutes.
+- **HUMAN-REVIEWED supporting fact:** minimum clean workflow rate **0.829 workflows/s**.
 - Early-to-late request-rate change: **~-0.47%**.
 - Early-to-late workflow-rate change: **~-0.98%**.
 - Zero correctness failures (0 HTTP failures, 0 failed checks, 0 failed workflows) across all
   three steady windows.
 - Backend memory factual status: `mixed_or_requires_human_review` (not a leak/defect diagnosis).
 
-Safe factual wording for later use: "At the reviewed 12-VU sustained load, the test observed at
-least 7.983333 req/s and 0.829167 clean workflows/s across the measured steady windows with zero
-correctness failures."
+Safe final Task 1 wording: "At the reviewed 12-VU sustained load, the test observed a sustained
+throughput floor of 7.983 req/s and a minimum clean workflow rate of 0.829 workflows/s for 12
+minutes with zero correctness failures." This is not maximum stable RPS, production capacity,
+or an SLO; Task 2 remains separate.

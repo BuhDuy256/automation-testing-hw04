@@ -1,9 +1,7 @@
 # Official Soak Execution Completion Record
 
 - Run ID: `20260818t000551547`
-- Status: **OFFICIAL VALID SOAK RESULT** — the only valid official Soak invocation.
-- Historical invalid invocation `20260817t225458219` exists separately; see
-  "Historical invalid invocation" below. The two must never be presented as two successful runs.
+- Status: **OFFICIAL VALID SOAK RESULT.**
 
 ## Technical validity
 
@@ -36,8 +34,13 @@
 - Minimum observed steady-window clean-workflow rate: **0.829167 workflows/s**.
 - Early-to-late change: request rate **-0.0375 req/s (-0.468%)**; workflow rate **-0.008333
   workflows/s (-0.98%)**.
-- These are measured facts only — not a stable-throughput, maximum-stable-RPS, SLO, or capacity
-  claim (Task 2 will interpret them).
+
+### HUMAN-REVIEWED / FINAL — Task 1 Endurance Threshold
+
+**Observed sustained throughput floor:** Under the tested hardware and reviewed 12-VU workload,
+EShop sustained at least 7.983 requests/s and 0.829 clean workflows/s for 12 minutes while
+maintaining zero HTTP failures and 100% workflow correctness. This is a measured floor, not a
+maximum-stable-RPS, production-capacity, or SLO claim (Task 2 will interpret it further).
 
 ## Resource and recovery evidence
 
@@ -72,12 +75,8 @@ No rerun occurred, and none is planned, for Run ID `20260818t000551547`. Poor pe
 evidence and does not authorize an automatic rerun. Stable-throughput, capacity, SLO,
 memory-leak, defect, and optimization claims are not made in this report.
 
-## Historical invalid invocation
+## Historical/debug runs
 
-`20260817t225458219` produced real k6 traffic and genuine raw results but is classified
-**TECHNICALLY INVALID / SUBMISSION INCOMPLETE** because the reviewed runner died around 51
-seconds from a `runtime-state.json` sharing/contention defect (since fixed and regression-tested).
-It remains preserved at `out/23127179_Soak_20260817_evidence/20260817t225458219/` as
-harness-failure and audit history. It must not be presented as an official successful Soak
-result, must not contribute final Soak threshold claims, and must not be mixed with this
-invocation's evidence.
+Historical/debug runs are not part of the submitted performance result. (`20260817t225458219` is
+preserved on disk as harness-failure/audit history only; see
+`out/23127179_Soak_20260817_evidence/SUBMISSION-EXCLUSIONS.md`.)
