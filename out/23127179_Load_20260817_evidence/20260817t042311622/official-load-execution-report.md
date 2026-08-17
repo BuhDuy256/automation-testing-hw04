@@ -21,6 +21,13 @@ Hardware: Dell Inspiron 15 3530; Intel Core i7-1355U; 10 physical cores and 12 l
 
 The exact command is preserved in `command.txt`.
 
+## Submission evidence status
+
+- **Technical Load execution: VALID.** The run completed normally, all 91 nine-step workflows succeeded, and all reviewed thresholds passed.
+- **Submission evidence for Load: INCOMPLETE.** No same-run GUI screenshot was captured showing the active k6 test together with backend process resource usage in Task Manager or an equivalent monitor.
+
+This classification does not invalidate or change any performance result from run `20260817t042311622`. Its raw and derived evidence remains preserved unchanged for traceability. An after-the-fact screenshot must not be presented as evidence from this invocation.
+
 ## Workload
 
 - Scenario: `load`

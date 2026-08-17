@@ -1,7 +1,10 @@
 param(
     [Parameter(Mandatory = $true)]
     [ValidatePattern('^[a-z0-9]{8,20}$')]
-    [string]$RunId
+    [string]$RunId,
+
+    [Parameter(Mandatory = $true)]
+    [bool]$BackendRestartedBeforeRun
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,12 +14,20 @@ $sourceScript = Join-Path $repoRoot 'out\23127179_Load_20260817.js'
 $sourceCsv = Join-Path $repoRoot 'out\user_workflow_data.csv'
 $evidenceRoot = Join-Path $repoRoot 'out\23127179_Load_20260817_evidence'
 $runDirectory = Join-Path $evidenceRoot $RunId
+$approvedScriptHash = '9B8E3B9DAC02B010AFC76D1C349450A707FEF391BB1E2874422FE951094C6704'
+$approvedCsvHash = '1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1'
 
-if (Test-Path -LiteralPath $runDirectory) {
-    throw "Official evidence directory already exists: $runDirectory"
-}
 if (-not (Test-Path -LiteralPath $k6Path)) {
     throw "k6 binary not found: $k6Path"
+}
+if (-not $BackendRestartedBeforeRun) {
+    throw 'This prepared evidence rerun requires an explicitly documented backend restart and database reseed'
+}
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $sourceScript).Hash -ne $approvedScriptHash) {
+    throw 'Official Load script hash differs from the approved script'
+}
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $sourceCsv).Hash -ne $approvedCsvHash) {
+    throw 'Packaged CSV hash differs from the approved CSV'
 }
 
 $listener = netstat -ano -p tcp | Select-String -Pattern '^\s*TCP\s+\S+:3000\s+\S+\s+LISTENING\s+(\d+)\s*$' | Select-Object -First 1
@@ -31,7 +42,20 @@ if ($apiResponse.StatusCode -ne 200) {
 }
 
 New-Item -ItemType Directory -Force -Path $evidenceRoot | Out-Null
-New-Item -ItemType Directory -Path $runDirectory | Out-Null
+if (Test-Path -LiteralPath $runDirectory) {
+    $runtimeMarkers = @('raw-results.ndjson', 'summary.json', 'metadata.json') |
+        ForEach-Object { Join-Path $runDirectory $_ } |
+        Where-Object { Test-Path -LiteralPath $_ }
+    if ($runtimeMarkers.Count -gt 0) {
+        throw "Evidence directory already contains execution artifacts: $runDirectory"
+    }
+} else {
+    New-Item -ItemType Directory -Path $runDirectory | Out-Null
+}
+$preparedMarker = Join-Path $runDirectory 'PREPARED-NOT-EXECUTED.md'
+if (Test-Path -LiteralPath $preparedMarker) {
+    Move-Item -LiteralPath $preparedMarker -Destination (Join-Path $runDirectory 'pre-run-preparation-record.md')
+}
 
 $evidenceScript = Join-Path $runDirectory '23127179_Load_20260817.js'
 $evidenceCsv = Join-Path $runDirectory 'user_workflow_data.csv'
@@ -39,11 +63,15 @@ Copy-Item -LiteralPath $sourceScript -Destination $evidenceScript
 Copy-Item -LiteralPath $sourceCsv -Destination $evidenceCsv
 Copy-Item -LiteralPath (Join-Path $repoRoot 'work\calibration-results\hardware_observation.json') -Destination (Join-Path $runDirectory 'hardware_observation.json')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'official_load_visual_capture_instructions.md') -Destination (Join-Path $runDirectory 'visual_capture_instructions.md')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'official_load_second_run_gui_handoff.md') -Destination (Join-Path $runDirectory 'gui-capture-handoff.md')
 
 $rawPath = Join-Path $runDirectory 'raw-results.ndjson'
 $summaryPath = Join-Path $runDirectory 'summary.json'
 $stdoutPath = Join-Path $runDirectory 'stdout.txt'
 $stderrPath = Join-Path $runDirectory 'stderr.txt'
+$htmlDirectory = Join-Path $runDirectory 'html-report'
+$htmlPath = Join-Path $htmlDirectory 'index.html'
+New-Item -ItemType Directory -Force -Path $htmlDirectory | Out-Null
 $baseUrl = 'http://localhost:3000'
 $arguments = @(
     'run',
@@ -57,7 +85,13 @@ $arguments = @(
 $quotedArguments = $arguments | ForEach-Object {
     if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
 }
-$exactCommand = '"' + $k6Path + '" ' + ($quotedArguments -join ' ')
+$dashboardEnvironment = @(
+    '$env:K6_WEB_DASHBOARD="true"',
+    '$env:K6_WEB_DASHBOARD_OPEN="false"',
+    '$env:K6_WEB_DASHBOARD_PERIOD="1s"',
+    '$env:K6_WEB_DASHBOARD_EXPORT="' + $htmlPath + '"'
+) -join '; '
+$exactCommand = $dashboardEnvironment + '; & "' + $k6Path + '" ' + ($quotedArguments -join ' ')
 $exactCommand | Set-Content -LiteralPath (Join-Path $runDirectory 'command.txt') -Encoding utf8
 
 $startedAt = (Get-Date).ToUniversalTime()
@@ -77,24 +111,31 @@ $preRunMetadata = [ordered]@{
     started_at_utc = $startedAt.ToString('o')
     backend_pid = $backendPid
     backend_process_started_at_local = $backendProcess.StartTime.ToString('o')
-    backend_restarted_before_run = $true
-    database_reseeded_before_run = $true
+    backend_restarted_before_run = $BackendRestartedBeforeRun
+    database_reseeded_before_run = $BackendRestartedBeforeRun
     initial_database_state = @{ users = 2; orders = 0; categories = 3; products = 5; matching_run_id_users = 0 }
     script_sha256 = $scriptHash
     csv_sha256 = $csvHash
     raw_output_format = 'k6 newline-delimited JSON'
-    html_report_status = 'Not generated; no compatible repository mechanism was established before this run.'
+    html_report_status = 'Planned via the official built-in k6 Web Dashboard export to html-report/index.html.'
     visual_evidence_status = 'Not captured automatically; see visual_capture_instructions.md.'
 }
 $preRunMetadata | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $runDirectory 'metadata-pre-run.json') -Encoding utf8
 
+$env:K6_WEB_DASHBOARD = 'true'
+$env:K6_WEB_DASHBOARD_OPEN = 'false'
+$env:K6_WEB_DASHBOARD_PERIOD = '1s'
+$env:K6_WEB_DASHBOARD_EXPORT = $htmlPath
+Write-Output "OFFICIAL K6_RUN_ID=$RunId"
+Write-Output "OFFICIAL COMMAND=$exactCommand"
+Write-Output "HTML REPORT=$htmlPath"
 $k6Process = Start-Process -FilePath $k6Path -ArgumentList $arguments -WorkingDirectory $runDirectory -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -WindowStyle Hidden -PassThru
 $null = $k6Process.Handle
 $logicalProcessors = [Environment]::ProcessorCount
 $processSamples = [System.Collections.Generic.List[object]]::new()
 $systemSamples = [System.Collections.Generic.List[object]]::new()
 $previousCpu = @{}
-$lastProgress = -30
+$lastProgress = -10
 
 function Get-RunPhase {
     param([double]$ElapsedSeconds)
@@ -173,8 +214,14 @@ while (-not $k6Process.HasExited) {
         })
     }
 
-    if ($elapsedSeconds -ge ($lastProgress + 30)) {
+    if ($elapsedSeconds -ge ($lastProgress + 10)) {
+        $liveLine = Get-Content -LiteralPath $stdoutPath -Tail 20 -ErrorAction SilentlyContinue |
+            Where-Object { $_ -match '^running \(|^load\s' } |
+            Select-Object -Last 1
         Write-Output ("PROGRESS elapsed={0:N0}s phase={1}" -f $elapsedSeconds, $phase)
+        if ($liveLine) {
+            Write-Output "K6 LIVE $liveLine"
+        }
         $lastProgress = $elapsedSeconds
     }
     Start-Sleep -Seconds 1
@@ -184,6 +231,7 @@ $k6Process.WaitForExit()
 $k6Process.Refresh()
 $endedAt = (Get-Date).ToUniversalTime()
 $exitCode = $k6Process.ExitCode
+Remove-Item Env:K6_WEB_DASHBOARD,Env:K6_WEB_DASHBOARD_OPEN,Env:K6_WEB_DASHBOARD_PERIOD,Env:K6_WEB_DASHBOARD_EXPORT -ErrorAction SilentlyContinue
 $processSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'process-resources.csv') -NoTypeInformation -Encoding utf8
 $systemSamples | Export-Csv -LiteralPath (Join-Path $runDirectory 'system-resources.csv') -NoTypeInformation -Encoding utf8
 
@@ -202,8 +250,8 @@ $finalMetadata = [ordered]@{
     backend_pid = $backendPid
     k6_pid = $k6Process.Id
     logical_processors_used_for_process_cpu_normalization = $logicalProcessors
-    backend_restarted_before_run = $true
-    database_reseeded_before_run = $true
+    backend_restarted_before_run = $BackendRestartedBeforeRun
+    database_reseeded_before_run = $BackendRestartedBeforeRun
     script_sha256 = $scriptHash
     csv_sha256 = $csvHash
     raw_output_exists = (Test-Path -LiteralPath $rawPath)
@@ -211,7 +259,9 @@ $finalMetadata = [ordered]@{
     summary_exists = (Test-Path -LiteralPath $summaryPath)
     process_resource_samples = $processSamples.Count
     system_resource_samples = $systemSamples.Count
-    html_report_status = 'Not generated; no compatible repository mechanism was established before this run.'
+    html_report_status = if (Test-Path -LiteralPath $htmlPath) { 'Generated by the official built-in k6 Web Dashboard export.' } else { 'Expected Web Dashboard HTML report is missing.' }
+    html_report_exists = (Test-Path -LiteralPath $htmlPath)
+    html_report_bytes = if (Test-Path -LiteralPath $htmlPath) { (Get-Item -LiteralPath $htmlPath).Length } else { 0 }
     visual_evidence_status = 'Not captured automatically; see visual_capture_instructions.md.'
 }
 $finalMetadata | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $runDirectory 'metadata.json') -Encoding utf8
