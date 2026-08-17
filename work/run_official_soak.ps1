@@ -22,6 +22,8 @@ $verifierScript = Join-Path $PSScriptRoot 'verify_soak_results.js'
 $databaseCaptureScript = Join-Path $PSScriptRoot 'capture_soak_database_state.js'
 $captureScript = Join-Path $PSScriptRoot 'capture_official_soak_frames.ps1'
 $resourcePane = Join-Path $PSScriptRoot 'soak_resource_monitor_pane.ps1'
+$runtimeStateIo = Join-Path $PSScriptRoot 'soak_runtime_state_io.ps1'
+$runtimeStateRegression = Join-Path $PSScriptRoot 'validate_soak_runtime_state_contention.ps1'
 $executionHandoff = Join-Path $PSScriptRoot 'official_soak_execution_handoff.md'
 $invocationHandoff = Join-Path $PSScriptRoot 'official_soak_gui_handoff.md'
 $databasePath = Join-Path $repoRoot 'eshop-sut\backend\database.sqlite'
@@ -34,9 +36,11 @@ $approvedHashes = [ordered]@{
     'user_workflow_data.csv' = '1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1'
     'verify_soak_results.js' = 'F0584DB90448086B73A827C2EFF78C0D231A22BD9A14C728F4C014306EC6B37B'
     'capture_soak_database_state.js' = '4FFE9D654B1218E0211D97CE7CA8F396E1392F6C85ED5FA9D32CB23ADF94720E'
-    'capture_official_soak_frames.ps1' = '4F96F134E5CD970DC2DF099E8C3A51D201D42C9459A512499517D302FFFC6326'
+    'capture_official_soak_frames.ps1' = '1FF4A2B0A085029272EA5AFC1BE4B9A46FA445D60D468C1145D4D026C98A40D8'
     'soak_resource_monitor_pane.ps1' = 'D3FBF5CBFF02015F43E05FFC812EDDC83C1273982FED00C1BC6E41C565E8AC2A'
-    'official_soak_execution_handoff.md' = 'C4CBBBF8513C060C08A96F4D1122B023B591CAE4580C3DE31D11B3012A3D0AE5'
+    'soak_runtime_state_io.ps1' = '2B7F55B7A6B7751539C0A580142105B612DCF0077AB3B3574F8F6346FA8B7793'
+    'validate_soak_runtime_state_contention.ps1' = '7F28E160E9ADBE11C763F89C315EB35CE39E36F3908313F86E054E58BDCEA1BE'
+    'official_soak_execution_handoff.md' = '9E6ACD2F82AB9E439C5FDA671EC3B3B920444077CAC5A9934DA30BBA5304EF72'
 }
 $sourcePaths = [ordered]@{
     '23127179_Soak_20260817.js' = $sourceScript
@@ -45,6 +49,8 @@ $sourcePaths = [ordered]@{
     'capture_soak_database_state.js' = $databaseCaptureScript
     'capture_official_soak_frames.ps1' = $captureScript
     'soak_resource_monitor_pane.ps1' = $resourcePane
+    'soak_runtime_state_io.ps1' = $runtimeStateIo
+    'validate_soak_runtime_state_contention.ps1' = $runtimeStateRegression
     'official_soak_execution_handoff.md' = $executionHandoff
     'official_soak_gui_handoff.md' = $invocationHandoff
 }
@@ -80,6 +86,7 @@ foreach ($name in $approvedHashes.Keys) {
         throw "Reviewed artifact hash mismatch: $name"
     }
 }
+. $runtimeStateIo
 
 $existingRunIdDirectories = Get-ChildItem -LiteralPath (Join-Path $repoRoot 'out') -Directory -Recurse -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -eq $RunId }
@@ -344,7 +351,7 @@ function Add-ProcessSample {
 
 function Write-RuntimeState {
     param([datetime]$Timestamp, [pscustomobject]$Context, [Nullable[int]]$ActualVUs, [bool]$TrafficActive)
-    [ordered]@{
+    $runtimeStateJson = [ordered]@{
         run_id = $RunId
         runner_preflight_start_utc = $runnerPreflightStart.ToString('o')
         actual_k6_scenario_start_utc = if ($null -eq $actualScenarioStart) { $null } else { $actualScenarioStart.ToString('o') }
@@ -359,7 +366,8 @@ function Write-RuntimeState {
         backend_pid = $backendProcessId
         k6_pid = $k6Process.Id
         traffic_active = $TrafficActive
-    } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $runtimeStatePath -Encoding utf8
+    } | ConvertTo-Json -Depth 5
+    Publish-SoakRuntimeState -Path $runtimeStatePath -Json $runtimeStateJson
 }
 
 while ($true) {

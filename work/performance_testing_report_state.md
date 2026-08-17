@@ -16,7 +16,7 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 
 | Milestone | Evidence strategy | Status | Note |
 |---|---|---|---|
-| Soak / Endurance | Raw k6 NDJSON, summary JSON, resource CSV files, and factual Markdown window summary | PREPARED / NOT EXECUTED | Invocation `20260817t225458219` is reserved for additional Task 1 endurance evidence. It is not a fourth designated report and is not part of the Load/Stress/Spike report-type uniqueness rule. |
+| Soak / Endurance | Raw k6 NDJSON, summary JSON, resource CSV files, and factual Markdown window summary | INVALID / INCOMPLETE; NEW RUN PREPARED | First real invocation `20260817t225458219` is preserved as technically INVALID and submission-INCOMPLETE. Replacement invocation `20260818t000551547` is prepared but not executed. Soak remains outside the three-report uniqueness rule. |
 
 ## Lifecycle Milestone State
 
@@ -25,6 +25,6 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 | Load | COMPLETE | `20260817t045341487` |
 | Stress | COMPLETE | `20260817t115158688` |
 | Spike | COMPLETE | `20260817t134816776`; technical validity VALID; submission completeness COMPLETE for the Spike Task 1 milestone |
-| Soak / Endurance | PREPARED / NOT EXECUTED | Human-reviewed implementation is frozen; invocation `20260817t225458219` and its GUI/execution handoff are prepared; official traffic remains blocked |
+| Soak / Endurance | HARNESS FIXED / NEW RUN PREPARED / NOT EXECUTED | `20260817t225458219` is retired after real invalid traffic; atomic runtime-state publishing is regression-tested; `20260818t000551547` is reserved for the next separately authorized execution |
 | HW05 Task 2 | NOT COMPLETE | No interpretation or misinterpretation analysis performed by this milestone |
 | HW05 Task 3 | NOT COMPLETE | Continuous-performance-testing proposal remains a later milestone |

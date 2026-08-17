@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)][ValidatePattern('^[a-z0-9]{8,20}$')][string]$RunId,
     [Parameter(Mandatory = $true)][string]$RunDirectory,
     [Parameter(Mandatory = $true)][int]$BackendPid,
-    [bool]$IncludeRecoveryCapture = $true
+    [bool]$IncludeRecoveryCapture = $false
 )
 
 # Real same-run desktop capture for a future authorized official Soak invocation.
@@ -72,7 +72,7 @@ function Capture-Frame {
     $capturedAt = (Get-Date).ToUniversalTime()
     $state = Read-RuntimeState
     $fileName = if ($null -eq $TargetElapsedSeconds) {
-        "04_post_load_recovery_plus0060s.png"
+        "02_post_load_recovery_plus0060s.png"
     } else {
         '{0}_{1}_elapsed{2:D4}s.png' -f $Name, $Window, $TargetElapsedSeconds
     }
@@ -105,9 +105,7 @@ function Capture-Frame {
 
 $scenarioStart = Wait-ForScenarioStart
 $targets = @(
-    [pscustomobject]@{ Sequence = '01'; Elapsed = 90; Window = 'early_steady' },
-    [pscustomobject]@{ Sequence = '02'; Elapsed = 420; Window = 'middle_steady' },
-    [pscustomobject]@{ Sequence = '03'; Elapsed = 720; Window = 'late_steady' }
+    [pscustomobject]@{ Sequence = '01'; Elapsed = 420; Window = 'middle_steady' }
 )
 $records = [System.Collections.Generic.List[object]]::new()
 foreach ($target in $targets) {

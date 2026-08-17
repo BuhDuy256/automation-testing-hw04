@@ -80,9 +80,10 @@ Start the resource pane against the same directory and PID:
   -BackendPid <verified-port-3000-pid>
 ```
 
-Planned active screenshots are near 90, 420, and 720 seconds from actual scenario start. An
-optional resource-only screenshot occurs about 60 seconds after confirmed traffic end. Never
-reconstruct a missed frame.
+The single planned active screenshot is near 420 seconds from actual scenario start during
+`middle_steady`. Do not schedule separate 90-second or 720-second frames. A resource-only
+screenshot about 60 seconds after confirmed traffic end is optional and is not required when
+it would add GUI risk. Never reconstruct a missed frame.
 
 ## Official Runner
 

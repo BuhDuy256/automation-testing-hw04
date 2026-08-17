@@ -1,6 +1,6 @@
 param(
     [string]$RunnerPath = (Join-Path $PSScriptRoot 'run_official_soak.ps1'),
-    [string]$RunId = '20260817t225458219'
+    [string]$RunId = '20260818t000551547'
 )
 
 # Preflight-only regression validation for the Soak reservation marker guard.

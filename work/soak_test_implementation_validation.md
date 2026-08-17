@@ -2,10 +2,12 @@
 
 ## Status
 
-**IMPLEMENTED AND VALIDATED OFFLINE — NOT EXECUTED**
+**HARNESS FIXED AND NEW INVOCATION PREPARED OFFLINE — NO NEW TRAFFIC**
 
-No EShop request, official Soak traffic, backend restart, reseed, official screenshot, or
-official evidence package was produced during this validation.
+The first real Soak invocation `20260817t225458219` completed its k6 workload but is closed as
+**TECHNICALLY INVALID / SUBMISSION INCOMPLETE** because the runner failed during warm-up.
+No new EShop request, performance traffic, backend restart, reseed, or official screenshot was
+produced during this harness-fix validation.
 
 ## Final Frozen Soak Profile
 
@@ -203,12 +205,52 @@ resources every two seconds. It continues after k6 exits for 120 seconds. Recove
 the actual confirmed k6 exit timestamp, not scheduled second 810, and sends no recovery
 traffic.
 
+## Runtime-State Contention Regression
+
+**Observed runtime fact:** During invocation `20260817t225458219`, the runner's direct
+`Set-Content` write to `runtime-state.json` collided with the resource pane/capture readers at
+about 51 seconds. With `$ErrorActionPreference = 'Stop'`, the Windows sharing violation
+terminated the runner while k6 continued independently. This is a harness defect, not an EShop
+defect. The historical evidence and full classification remain in
+`work/official_soak_invalid_execution_20260817t225458219.md`.
+
+**Human-reviewed fix:** `work/soak_runtime_state_io.ps1` now validates the complete JSON, writes
+it to a uniquely named temporary file in the same directory, closes that file, and publishes it
+with `System.IO.File.Replace` (or `File.Move` for the first state). IOException and access-denied
+sharing failures receive at most 20 attempts with a 25 ms delay. Temporary/backup files are
+cleaned in `finally`. Readers were not weakened or removed.
+
+`work/validate_soak_runtime_state_contention.ps1` ran for 15 seconds in Windows PowerShell 5.1
+with one writer, three concurrent readers, and an additional transient lock producer:
+
+| Measurement | Result |
+|---|---:|
+| Successful atomic publishes | 226 |
+| Writer failures | 0 |
+| Valid JSON documents read | 2,673 |
+| Invalid/partial documents read | 0 |
+| Deliberate transient locks | 221 |
+| Malformed JSON rejected without changing published state | PASS |
+| EShop requests / k6 processes | 0 / 0 |
+
+Result: **PASS**. This regression exercises real Windows file contention without network or
+performance traffic.
+
+Replacement invocation `20260818t000551547` is reserved in a new preparation-only directory.
+The consumed invalid Run ID `20260817t225458219` is permanently retired.
+
 ## Screenshot Preparation
 
-`work/capture_official_soak_frames.ps1` waits for the actual k6 scenario-start marker and
-captures real full-desktop frames near 90, 420, and 720 seconds. An optional fourth frame is
-captured 60 seconds after confirmed traffic end. It writes `capture-log.json` and
-`screenshot-manifest.md` from real captured files only.
+`work/capture_official_soak_frames.ps1` waits for the actual k6 scenario-start marker and now
+captures exactly one active full-desktop frame near 420 seconds in `middle_steady`. Separate
+90-second and 720-second active frames were removed by human review. A resource-only recovery
+frame at +60 seconds is optional and disabled by default so it cannot add unnecessary GUI risk.
+The helper writes `capture-log.json` and `screenshot-manifest.md` from real captured files only.
+
+Invalid-run frame 01 remains historical evidence only. Frames 02 and 03 contain unrelated
+private third-party information and no performance evidence; they are preserved but marked
+**EXCLUDE FROM SUBMISSION — PRIVATE / NO EVIDENTIARY VALUE** and must never appear in a future
+official manifest.
 
 `work/soak_resource_monitor_pane.ps1` displays Run ID, window, elapsed time, target VUs,
 genuine actual VUs when available, traffic state, backend/k6 PIDs, and process memory.
@@ -250,6 +292,7 @@ raw-byte SHA-256 values for the exact copied files and raw NDJSON that were actu
 | Factual verifier self-test | PASS |
 | PowerShell parser on runner/capture/resource pane | PASS |
 | PowerShell 5.1 reservation-marker regression (`work/validate_soak_preflight_marker.ps1`) | PASS; 14/14 checks, no traffic |
+| PowerShell 5.1 runtime-state contention regression | PASS; 226 publishes, 2,673 valid reads, 221 transient locks, zero failures/invalid reads |
 | Static workflow count | PASS; 9 HTTP calls and one Checkout |
 | CSV header | PASS; exact six-column schema |
 | Think-time ranges | PASS; all five exact ranges |
@@ -307,11 +350,11 @@ unchanged and byte-identical.
 
 ## Remaining Execution-Preparation Limitations
 
-Before official Soak traffic, a separate preparation must:
+Before new official Soak traffic, execution must:
 
-1. reserve and verify a new unique `K6_RUN_ID`;
+1. use only the newly reserved Run ID and never reuse `20260817t225458219`;
 2. perform and document the accepted restart/reseed and health/PID checks;
-3. arrange the visible runner, resource pane, Task Manager, and clock;
+3. arrange the visible runner, resource pane, Task Manager, and clock for the single 420-second frame;
 4. start the screenshot helper and confirm GUI readiness;
 5. verify the committed implementation hashes and branch; and
 6. receive explicit authorization for official traffic.

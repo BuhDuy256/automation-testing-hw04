@@ -1,35 +1,58 @@
-# Official Soak Invocation Reservation
+# Official Soak Invocation Record
 
-Status: **PREPARED - NOT EXECUTED**
+Status: **EXECUTED - TECHNICALLY INVALID**
 
-- Machine status token: `PREPARED-NOT-EXECUTED`
+This directory is no longer a preparation-only reservation. The first official Soak
+performance invocation ran here on 2026-08-17 and is classified technically invalid.
+
 - Reserved `K6_RUN_ID`: `20260817t225458219`
 - Evidence directory: `out/23127179_Soak_20260817_evidence/20260817t225458219/`
-- Official performance traffic sent: **No**
-- Backend restarted/reseeded during preparation: **No**
-- Backend restarted/reseeded during the aborted preflight attempt: **Yes**
-- Measured result artifacts created: **None**
+- Official performance traffic sent: **Yes**
+- Backend restarted/reseeded immediately before traffic: **Yes** (backend PID `7668`)
+- k6 PID: `31100`; k6 exited normally at `2026-08-17T16:53:15Z`
+- Actual k6 scenario start: `2026-08-17T16:39:40.897Z` (epoch `1786984780897`)
+- Runner process died: `2026-08-17T16:40:32Z`, about 51 seconds into the run
 - Invocation handoff: `work/official_soak_gui_handoff.md`
-- Invocation handoff SHA-256: `07C6B7D9FB0D3728DF6F9BB14AFCE5A06B49D4711A7271C0933322FA7D8B55AD`
-- Prepared runner SHA-256: `CF74B3F977E99A03861A0874606D5110BB201EFD66FBCDE63928242E61B1F2A3`
+- Invalidity report: `work/official_soak_invalid_execution_20260817t225458219.md`
 
-This marker reserves the collision-safe directory. It is not execution evidence and must not
-be interpreted as a completed or attempted Soak run. The official runner may populate this
-directory only after separate execution authorization and all pre-traffic gates pass.
+## Why this invocation is invalid
 
-The line above beginning `Machine status token` is the machine-critical value the runner
-compares. It is ASCII-only on purpose: Windows PowerShell 5.1 parses a UTF-8-without-BOM
-`.ps1` using the ANSI code page, so a Unicode em dash inside a runner string literal is
-corrupted at parse time and can never match this file. Human-readable prose may use richer
-punctuation; the machine token must not.
+The reviewed runner writes `runtime-state.json` every two seconds with no contention
+handling, while the reviewed resource pane reads the same file every second and the
+screenshot helper reads it as well. A file-sharing violation therefore terminated the
+runner during `warmup_entry`:
 
-## Preflight attempt history
+```text
+Set-Content: The process cannot access the file '...runtime-state.json'
+because it is being used by another process.
+```
 
-- On 2026-08-17 a prepared preflight attempt aborted **before any k6 performance traffic**.
-- Cause: the reservation guard compared against a Unicode em dash (see
-  `work/official_soak_blocker_20260817t225458219.md`).
-- No `raw-results.ndjson`, `summary.json`, resource CSV, metadata, screenshot, or database
-  state file was produced. Database counts remained at the seeded `users=2`, `orders=0`.
-- The blocker was fixed, revalidated, and the invocation hashes were re-frozen.
-- Because no performance traffic was ever sent, `20260817t225458219` remains unused and the
-  next execution is the **first** official Soak performance invocation, not a rerun.
+k6 was launched as an independent process and was unaffected. It completed the full frozen
+schedule and exited normally, so the raw stream and k6 summary are genuine and complete.
+Everything owned by the runner's sampling loop was lost: both resource CSV files,
+`metadata.json`, confirmed traffic end, the 120-second recovery observation and its
+screenshot, the runner-produced database after-state, the factual verifier output,
+`soak-window-summary.md`, and `completion-report.md`.
+
+This was a test-harness defect. It was **not** an EShop defect and **not** a consequence of
+poor performance: correctness was perfect, with zero HTTP failures, 23,800/23,800 checks,
+and 680/680 successful workflows.
+
+## Important cautions for anyone reading this directory
+
+- `runtime-state.json` is frozen at elapsed 48.1 seconds. It does **not** describe end-of-run
+  state.
+- Screenshots 02 and 03 are genuine same-run captures at the correct 420 s and 720 s anchors,
+  but they were taken after the runner died, so the runner and resource panes visible inside
+  them are frozen at `ELAPSED=48.1` and do not describe the moment of capture.
+- `database-state-after-manual.json` was captured by hand with the reviewed read-only helper
+  after the runner died. It is deliberately not named `database-state-after.json` because the
+  runner did not produce it.
+- No missing artifact was fabricated, no frame was reconstructed, and no replacement run was
+  launched.
+
+## Run ID status
+
+`20260817t225458219` is now **consumed by real performance traffic** and must not be reused.
+Any future Soak execution requires a new reserved Run ID and a human-reviewed fix to the
+runner's `runtime-state.json` write path.
