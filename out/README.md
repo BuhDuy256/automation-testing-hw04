@@ -21,7 +21,7 @@ This README is the submission index and self-assessment summary for HW05.
 | Load testing | 20 | TODO | TODO |
 | Stress testing | 20 | TODO | TODO |
 | Spike testing | 20 | TODO | TODO |
-| AI analysis and misinterpretation hunt | 10 | TODO | TODO |
+| AI analysis and misinterpretation hunt | 10 | AWAITING HUMAN REVIEW | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
 | Continuous performance-testing proposal | 10 | TODO | TODO |
 | Agent Skill | 10 | TODO | TODO |
 | **Total** | **100** | **TODO** | — |
@@ -38,6 +38,10 @@ This README is the submission index and self-assessment summary for HW05.
 | Endurance threshold | **HUMAN-REVIEWED / FINAL — Observed sustained throughput floor:** **7.983 req/s** at 12 sustained VUs for 12 minutes; supporting minimum clean workflow rate **0.829 workflows/s**, with zero HTTP failures and 100% workflow correctness. This is not maximum stable RPS, production capacity, or an SLO. See `out/23127179_Soak_20260817_evidence/20260818t000551547/completion-report.md` and `soak-window-summary.md`. |
 | Bugs or performance issues | None found in the valid official performance runs; no GitHub Issue was filed. |
 | Demo video | Student-provided links are recorded in **Submission Video Links** below; duration, narration, and visible-content compliance remain human submission checks. |
+
+## Task 2 — AI Analysis and Misinterpretation Hunt
+
+Initial AI analysis and human-style verification are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses only the four valid official runs and excludes historical invalid Soak `20260817t225458219` from performance conclusions. The draft proposes regression guards for zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, and the already-final 12-VU endurance floor; these are regression guards, not business SLOs or production-capacity claims. Human review is still required for guard acceptance and optimization proposals. No optimization was implemented and no GitHub Issue was created.
 
 ## Submission Video Links
 
