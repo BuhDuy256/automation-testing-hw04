@@ -41,7 +41,7 @@ This README is the submission index and self-assessment summary for HW05.
 
 ## Task 2 — AI Analysis and Misinterpretation Hunt
 
-Initial AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses only the four valid official runs and excludes historical invalid Soak `20260817t225458219` from performance conclusions. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 remains AWAITING FINAL HUMAN ACCEPTANCE. No optimization was implemented and no GitHub Issue was created.
+Initial AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses the four official valid runs. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 remains AWAITING FINAL HUMAN ACCEPTANCE. No optimization was implemented and no GitHub Issue was created.
 
 ## Submission Video Links
 

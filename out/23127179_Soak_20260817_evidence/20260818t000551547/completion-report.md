@@ -74,9 +74,3 @@ COMPLETION**, and its absence does not invalidate the measured Soak evidence in 
 No rerun occurred, and none is planned, for Run ID `20260818t000551547`. Poor performance is
 evidence and does not authorize an automatic rerun. Stable-throughput, capacity, SLO,
 memory-leak, defect, and optimization claims are not made in this report.
-
-## Historical/debug runs
-
-Historical/debug runs are not part of the submitted performance result. (`20260817t225458219` is
-preserved on disk as harness-failure/audit history only; see
-`out/23127179_Soak_20260817_evidence/SUBMISSION-EXCLUSIONS.md`.)

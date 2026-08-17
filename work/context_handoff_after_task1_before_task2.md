@@ -41,10 +41,6 @@ Use only these valid official runs for primary analysis:
 | Spike | `20260817t134816776` |
 | Soak / Endurance | `20260818t000551547` |
 
-Historical invalid Soak `20260817t225458219` is preserved for debug/audit history only.
-It is **INVALID / INCOMPLETE**, must never be treated as an official result, and must
-not be mixed into Task 2 metrics or conclusions.
-
 ## Final Task 1 facts
 
 ### Frozen workflow
@@ -195,12 +191,8 @@ screenshot. The valid Soak screenshot was therefore **NOT REQUIRED / EXCLUDED** 
 the genuine capture showed private unrelated browser content. It is not a Task 1
 blocker and must not be reused as evidence.
 
-The invalid Soak directory
-`out/23127179_Soak_20260817_evidence/20260817t225458219/` remains preserved as
-historical debug/audit evidence. Its private/unrelated frames are excluded from
-submission-facing manifests and results. The invalid raw NDJSON is preserved but is
-not a primary result. Stress, Spike, valid Soak, and invalid Soak raw streams remain
-under `out/` under the established large-file policy.
+Stress, Spike, and valid Soak raw streams remain under `out/` under the established
+large-file policy.
 
 `eshop-sut/backend/database.sqlite` is runtime state and is not a Task 1 result; it
 must not be staged or committed.

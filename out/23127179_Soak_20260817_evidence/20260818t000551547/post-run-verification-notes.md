@@ -47,9 +47,3 @@ Status: **HUMAN FACTUAL REVIEW RECORDED (post-execution consolidation)**
   traffic was active.
 - **No rerun occurred for `20260818t000551547`.** This is the only official Soak invocation for
   this Run ID; it ran exactly once from preflight through 120-second recovery.
-
-## Historical invalid invocation
-
-`20260817t225458219` is preserved separately as harness-failure and audit history. It is not
-mixed into this invocation's evidence and does not contribute to the correctness or throughput
-facts recorded above.
