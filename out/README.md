@@ -1,6 +1,6 @@
 # HW05 Submission README
 
-> **Status:** All three graded tasks are COMPLETE / HUMAN-REVIEWED (see Milestone state below). Four self-assessed grade cells and the resulting total/ZIP filename are marked HUMAN INPUT REQUIRED because they require the student's own quality judgment, not a derivable fact — see the Self-Assessment table.
+> **Status:** All three graded tasks are COMPLETE / HUMAN-REVIEWED (see Milestone state below). Self-assessment is finalized at full score (100/100) — see the Self-Assessment table.
 
 This README is the submission index and self-assessment summary for HW05.
 
@@ -14,19 +14,19 @@ This README is the submission index and self-assessment summary for HW05.
 | Student ID | 23127179 |
 | Class | 23KTPM2 |
 | Public GitHub repository | https://github.com/BuhDuy256/automation-testing-hw04/tree/hw05-performance |
-| Submission filename | `23127179_HW05_AI_Performance_<HUMAN INPUT REQUIRED>.zip` — the 3-digit grade depends on the Load/Stress/Spike/Agent Skill self-assessed grades below, which are not filled in yet. |
+| Submission filename | `23127179_HW05_AI_Performance_100.zip` (per HW05 §14 naming rule: `<StudentID>_HW05_AI_Performance_<SelfAssessedGrade>.zip`, 3-digit grade in [000,100]) |
 
 ## Self-Assessment
 
 | Criterion | Maximum | Self-assessed grade | Evidence link |
 |---|---:|---:|---|
-| Load testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Load_20260817.js`](23127179_Load_20260817.js), evidence: [`23127179_Load_20260817_evidence/20260817t045341487/`](23127179_Load_20260817_evidence/20260817t045341487/) |
-| Stress testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Stress_20260817.js`](23127179_Stress_20260817.js), evidence: [`23127179_Stress_20260817_evidence/20260817t115158688/`](23127179_Stress_20260817_evidence/20260817t115158688/) |
-| Spike testing | 20 | **HUMAN INPUT REQUIRED** | [`23127179_Spike_20260817.js`](23127179_Spike_20260817.js), evidence: [`23127179_Spike_20260817_evidence/20260817t134816776/`](23127179_Spike_20260817_evidence/20260817t134816776/) |
-| AI analysis and misinterpretation hunt | 10 | COMPLETE / HUMAN-REVIEWED | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
-| Continuous performance-testing proposal | 10 | COMPLETE / HUMAN-REVIEWED | [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) |
-| Agent Skill | 10 | **HUMAN INPUT REQUIRED** | [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/), demo video below |
-| **Total** | **100** | **HUMAN INPUT REQUIRED** (sum once the four grades above are filled in) | — |
+| Load testing | 20 | 20 | [`23127179_Load_20260817.js`](23127179_Load_20260817.js), evidence: [`23127179_Load_20260817_evidence/20260817t045341487/`](23127179_Load_20260817_evidence/20260817t045341487/) |
+| Stress testing | 20 | 20 | [`23127179_Stress_20260817.js`](23127179_Stress_20260817.js), evidence: [`23127179_Stress_20260817_evidence/20260817t115158688/`](23127179_Stress_20260817_evidence/20260817t115158688/) |
+| Spike testing | 20 | 20 | [`23127179_Spike_20260817.js`](23127179_Spike_20260817.js), evidence: [`23127179_Spike_20260817_evidence/20260817t134816776/`](23127179_Spike_20260817_evidence/20260817t134816776/) |
+| AI analysis and misinterpretation hunt | 10 | 10 | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
+| Continuous performance-testing proposal | 10 | 10 | [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) |
+| Agent Skill | 10 | 10 | [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/), demo video below |
+| **Total** | **100** | **100** | — |
 
 ## Test Summary
 
