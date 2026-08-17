@@ -1,0 +1,12 @@
+﻿{
+    "query_mode":  "SQLite read-only post-run verification",
+    "run_id":  "20260817t042311622",
+    "run_users":  91,
+    "distinct_run_emails":  91,
+    "duplicate_email_groups":  0,
+    "run_orders":  91,
+    "distinct_order_users":  91,
+    "missing_shipping_addresses":  0,
+    "total_users_after_run":  93,
+    "total_orders_after_run":  91
+}

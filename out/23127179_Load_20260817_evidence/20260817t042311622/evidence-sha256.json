@@ -1,0 +1,102 @@
+﻿[
+    {
+        "file":  "23127179_Load_20260817.js",
+        "bytes":  11954,
+        "sha256":  "9B8E3B9DAC02B010AFC76D1C349450A707FEF391BB1E2874422FE951094C6704"
+    },
+    {
+        "file":  "command.txt",
+        "bytes":  572,
+        "sha256":  "297D05FA275F8E6D9EBDEA0D746E3E93762C1CADA326A8CEABC8995E319C070C"
+    },
+    {
+        "file":  "database-post-run-verification.json",
+        "bytes":  367,
+        "sha256":  "23B6FBE2175917377BF7B39728C7D225718A30C8F81C3EC5565656141050DF0D"
+    },
+    {
+        "file":  "hardware_observation.json",
+        "bytes":  787,
+        "sha256":  "DEA231FDD017B9AF55422ECAC90B47034F0BFE6CF16B328C500A5AC4654EBBF3"
+    },
+    {
+        "file":  "metadata.json",
+        "bytes":  1861,
+        "sha256":  "4399B0A07CFCE9ABE940A1165F22CAA5CB1BA1E22CF7E99E96FB750A0A66012E"
+    },
+    {
+        "file":  "metadata-pre-run.json",
+        "bytes":  1968,
+        "sha256":  "0AC1A17589987AF8B459DAD48690D0154D51DF3B83E70B552ED4140ABA6C0712"
+    },
+    {
+        "file":  "official-load-execution-report.md",
+        "bytes":  6316,
+        "sha256":  "EB24A5E42E5D7099C9EDC3508D7A625FE2EE64A5EAB112E5772CED2862B0E87F"
+    },
+    {
+        "file":  "per-endpoint-latency.csv",
+        "bytes":  655,
+        "sha256":  "A21D80DBFBDB69EA23390A2F390E1B97B801CA7394331F98B76986061F13A4C7"
+    },
+    {
+        "file":  "per-endpoint-latency.json",
+        "bytes":  1960,
+        "sha256":  "3CBFE797F6BA1E665CD06D1907A4F141908B6DA8061F3D6561A0B9B93C3EEB98"
+    },
+    {
+        "file":  "post-run-validation.json",
+        "bytes":  966,
+        "sha256":  "C1E2AD12209E5E0DA4B6A76FE80F848131FDD60E97F2802C6E478739EF1C1F75"
+    },
+    {
+        "file":  "process-resources.csv",
+        "bytes":  32119,
+        "sha256":  "843B436B59188FCDA11CDB62C03EC77A6642C88F3B3C921CF86972787A6BDDEA"
+    },
+    {
+        "file":  "raw-results.ndjson",
+        "bytes":  3623096,
+        "sha256":  "44BE8C289999EE3FC913881393EFF1C18067B72EB16756F88F774023C0C201F5"
+    },
+    {
+        "file":  "resource-summary.json",
+        "bytes":  2825,
+        "sha256":  "A22594B5D2E52C30D8A4F960BC3F1208297B06307FA60D817D0234C8A515F0B5"
+    },
+    {
+        "file":  "stderr.txt",
+        "bytes":  0,
+        "sha256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "file":  "stdout.txt",
+        "bytes":  45279,
+        "sha256":  "12F72B4DAA2F8FADD981F206798386AFD5B34640678B08BF95F34AE848C35154"
+    },
+    {
+        "file":  "summary.json",
+        "bytes":  17721,
+        "sha256":  "43C0E9FA810E978819BA45897C65C4CBCFFF1F91067547E510E083C7F33FD18D"
+    },
+    {
+        "file":  "system-resources.csv",
+        "bytes":  15506,
+        "sha256":  "DD4CA4E9CEFEE6C787508E2B49FE3B17B840CCE1E5BA9BC62BB3172961EBDE21"
+    },
+    {
+        "file":  "threshold-evaluation.json",
+        "bytes":  1046,
+        "sha256":  "CE3DC8A0E83B478C63A197715EF826E31E7B4E7D9291F0DBE13856221D3DBE8D"
+    },
+    {
+        "file":  "user_workflow_data.csv",
+        "bytes":  338,
+        "sha256":  "1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1"
+    },
+    {
+        "file":  "visual_capture_instructions.md",
+        "bytes":  792,
+        "sha256":  "D9B409AA5D44114F1D1A2ACCB6AAA7F3EF20A0A4EDA687FE5EFB507E150EC03E"
+    }
+]

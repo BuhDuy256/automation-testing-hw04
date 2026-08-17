@@ -1,0 +1,83 @@
+﻿[
+    {
+        "step":  "register",
+        "sample_count":  91,
+        "p50_ms":  11.595,
+        "p90_ms":  44.487,
+        "p95_ms":  53.153,
+        "p99_ms":  62.397,
+        "max_ms":  113.569
+    },
+    {
+        "step":  "login",
+        "sample_count":  91,
+        "p50_ms":  4.447,
+        "p90_ms":  8.209,
+        "p95_ms":  10.485,
+        "p99_ms":  30.149,
+        "max_ms":  32.918
+    },
+    {
+        "step":  "read_profile",
+        "sample_count":  91,
+        "p50_ms":  3.788,
+        "p90_ms":  7.391,
+        "p95_ms":  8.685,
+        "p99_ms":  11.378,
+        "max_ms":  13.965
+    },
+    {
+        "step":  "update_profile",
+        "sample_count":  91,
+        "p50_ms":  14.853,
+        "p90_ms":  50.671,
+        "p95_ms":  58.996,
+        "p99_ms":  457.626,
+        "max_ms":  3731.668
+    },
+    {
+        "step":  "read_categories",
+        "sample_count":  91,
+        "p50_ms":  2.100,
+        "p90_ms":  4.158,
+        "p95_ms":  5.503,
+        "p99_ms":  99.289,
+        "max_ms":  464.526
+    },
+    {
+        "step":  "read_products",
+        "sample_count":  91,
+        "p50_ms":  1.653,
+        "p90_ms":  4.251,
+        "p95_ms":  5.430,
+        "p99_ms":  11.366,
+        "max_ms":  50.215
+    },
+    {
+        "step":  "read_product_detail",
+        "sample_count":  91,
+        "p50_ms":  2.424,
+        "p90_ms":  4.337,
+        "p95_ms":  5.042,
+        "p99_ms":  1740.829,
+        "max_ms":  2164.618
+    },
+    {
+        "step":  "add_to_cart",
+        "sample_count":  91,
+        "p50_ms":  3.469,
+        "p90_ms":  6.068,
+        "p95_ms":  6.727,
+        "p99_ms":  7.454,
+        "max_ms":  7.706
+    },
+    {
+        "step":  "checkout",
+        "sample_count":  91,
+        "p50_ms":  14.155,
+        "p90_ms":  31.847,
+        "p95_ms":  57.431,
+        "p99_ms":  368.489,
+        "max_ms":  3015.912
+    }
+]
