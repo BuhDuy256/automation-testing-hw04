@@ -1,0 +1,1929 @@
+{
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": []
+  },
+  "options": {
+    "summaryTimeUnit": "",
+    "noColor": true,
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "p(50)",
+      "p(90)",
+      "p(95)",
+      "p(99)",
+      "max"
+    ]
+  },
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 1.6358
+  },
+  "metrics": {
+    "stress_anchor_8_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_maximum_24_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 16,
+        "min": 16,
+        "p(50)": 16,
+        "p(90)": 16,
+        "p(95)": 16,
+        "p(99)": 16,
+        "max": 16
+      }
+    },
+    "stress_level_20_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_12_requests_add_to_cart": {
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_anchor_8_requests_checkout": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 10.9,
+        "p(95)": 10.95,
+        "p(99)": 10.99,
+        "max": 11,
+        "avg": 10.5,
+        "min": 10,
+        "p(50)": 10.5
+      }
+    },
+    "stress_recovery_4_latency_update_profile_ms": {
+      "values": {
+        "p(90)": 14,
+        "p(95)": 14,
+        "p(99)": 14,
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_maximum_24_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      }
+    },
+    "stress_baseline_4_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_12_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 14,
+        "p(95)": 14,
+        "p(99)": 14,
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14
+      }
+    },
+    "stress_anchor_8_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "validation_baseline_4_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 10.5,
+        "min": 10,
+        "p(50)": 10.5,
+        "p(90)": 10.9,
+        "p(95)": 10.95,
+        "p(99)": 10.99,
+        "max": 11
+      }
+    },
+    "stress_level_16_requests_login": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_20_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "stress_level_16_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_latency_update_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10,
+        "p(99)": 10,
+        "max": 10,
+        "avg": 10,
+        "min": 10
+      }
+    },
+    "stress_level_12_requests_read_product_detail": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_latency_read_product_detail_ms": {
+      "contains": "time",
+      "values": {
+        "avg": 11,
+        "min": 11,
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11,
+        "p(99)": 11,
+        "max": 11
+      },
+      "type": "trend"
+    },
+    "stress_level_20_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_recovery_4_workflow_success": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "passes": 2,
+        "fails": 0,
+        "rate": 1
+      }
+    },
+    "stress_level_16_latency_update_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 11,
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11,
+        "p(99)": 11,
+        "max": 11,
+        "avg": 11
+      }
+    },
+    "stress_anchor_8_requests_update_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_anchor_8_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 6,
+        "p(95)": 6,
+        "p(99)": 6,
+        "max": 6,
+        "avg": 6,
+        "min": 6,
+        "p(50)": 6
+      }
+    },
+    "stress_baseline_4_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 12,
+        "p(99)": 12,
+        "max": 12,
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12,
+        "p(90)": 12
+      }
+    },
+    "stress_level_20_latency_checkout_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 17,
+        "min": 17,
+        "p(50)": 17,
+        "p(90)": 17,
+        "p(95)": 17,
+        "p(99)": 17,
+        "max": 17
+      }
+    },
+    "stress_level_20_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_iteration_duration_ms": {
+      "contains": "time",
+      "values": {
+        "max": 13002,
+        "avg": 13002,
+        "min": 13002,
+        "p(50)": 13002,
+        "p(90)": 13002,
+        "p(95)": 13002,
+        "p(99)": 13002
+      },
+      "type": "trend"
+    },
+    "stress_baseline_4_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 9,
+        "p(95)": 9,
+        "p(99)": 9,
+        "max": 9,
+        "avg": 9,
+        "min": 9,
+        "p(50)": 9
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "rate": 0,
+        "count": 0
+      }
+    },
+    "stress_baseline_4_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 8,
+        "min": 8,
+        "p(50)": 8,
+        "p(90)": 8,
+        "p(95)": 8,
+        "p(99)": 8,
+        "max": 8
+      }
+    },
+    "stress_recovery_4_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 17,
+        "min": 17,
+        "p(50)": 17,
+        "p(90)": 17,
+        "p(95)": 17,
+        "p(99)": 17,
+        "max": 17
+      }
+    },
+    "stress_baseline_4_requests_read_product_detail": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_baseline_4_latency_read_products_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10,
+        "p(99)": 10,
+        "max": 10,
+        "avg": 10,
+        "min": 10
+      }
+    },
+    "stress_anchor_8_iteration_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 13001,
+        "avg": 13001,
+        "min": 13001,
+        "p(50)": 13001,
+        "p(90)": 13001,
+        "p(95)": 13001,
+        "p(99)": 13001
+      }
+    },
+    "stress_recovery_4_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13,
+        "p(99)": 13,
+        "max": 13,
+        "avg": 13,
+        "min": 13
+      }
+    },
+    "stress_baseline_4_requests_login": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_16_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "stress_recovery_4_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 15,
+        "p(95)": 15,
+        "p(99)": 15,
+        "max": 15,
+        "avg": 15,
+        "min": 15,
+        "p(50)": 15
+      }
+    },
+    "stress_maximum_24_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_level_16_requests_checkout": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 11,
+        "min": 11,
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11,
+        "p(99)": 11,
+        "max": 11
+      }
+    },
+    "stress_anchor_8_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 11003.790194400293,
+        "count": 18
+      }
+    },
+    "stress_recovery_4_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_recovery_4_requests_checkout": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_16_latency_read_products_ms": {
+      "values": {
+        "avg": 13,
+        "min": 13,
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13,
+        "p(99)": 13,
+        "max": 13
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_maximum_24_requests_read_product_detail": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_16_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 14,
+        "p(99)": 14,
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14,
+        "p(90)": 14
+      }
+    },
+    "stress_baseline_4_latency_checkout_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13,
+        "p(99)": 13,
+        "max": 13,
+        "avg": 13,
+        "min": 13
+      }
+    },
+    "stress_baseline_4_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 7,
+        "avg": 7,
+        "min": 7,
+        "p(50)": 7,
+        "p(90)": 7,
+        "p(95)": 7,
+        "p(99)": 7
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 0,
+        "rate": 0
+      }
+    },
+    "stress_baseline_4_requests_update_profile": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_recovery_4_requests_login": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_20_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 15,
+        "p(99)": 15,
+        "max": 15,
+        "avg": 15,
+        "min": 15,
+        "p(50)": 15,
+        "p(90)": 15
+      }
+    },
+    "stress_anchor_8_requests_read_profile": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_level_16_latency_login_ms": {
+      "contains": "time",
+      "values": {
+        "p(90)": 9,
+        "p(95)": 9,
+        "p(99)": 9,
+        "max": 9,
+        "avg": 9,
+        "min": 9,
+        "p(50)": 9
+      },
+      "type": "trend"
+    },
+    "stress_level_16_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_latency_login_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 8,
+        "p(99)": 8,
+        "max": 8,
+        "avg": 8,
+        "min": 8,
+        "p(50)": 8,
+        "p(90)": 8
+      }
+    },
+    "stress_level_20_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 16,
+        "p(90)": 16,
+        "p(95)": 16,
+        "p(99)": 16,
+        "max": 16,
+        "avg": 16,
+        "min": 16
+      }
+    },
+    "stress_recovery_4_requests_read_product_detail": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_12_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 7,
+        "p(95)": 7,
+        "p(99)": 7,
+        "max": 7,
+        "avg": 7,
+        "min": 7,
+        "p(50)": 7
+      }
+    },
+    "stress_level_16_requests_read_products": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_maximum_24_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_maximum_24_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 14,
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14,
+        "p(90)": 14,
+        "p(95)": 14
+      }
+    },
+    "stress_anchor_8_workflows_completed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_workflow_success": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_20_requests_checkout": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "validation_tagged_trend_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 10.95,
+        "p(99)": 10.99,
+        "max": 11,
+        "avg": 10.5,
+        "min": 10,
+        "p(50)": 10.5,
+        "p(90)": 10.9
+      }
+    },
+    "stress_level_20_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 11,
+        "max": 11,
+        "avg": 11,
+        "min": 11,
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11
+      }
+    },
+    "stress_level_16_latency_checkout_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 16,
+        "p(99)": 16,
+        "max": 16,
+        "avg": 16,
+        "min": 16,
+        "p(50)": 16,
+        "p(90)": 16
+      }
+    },
+    "stress_maximum_24_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_12_latency_read_products_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 12,
+        "p(90)": 12,
+        "p(95)": 12,
+        "p(99)": 12,
+        "max": 12,
+        "avg": 12,
+        "min": 12
+      }
+    },
+    "stress_baseline_4_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_latency_read_profile_ms": {
+      "values": {
+        "avg": 9,
+        "min": 9,
+        "p(50)": 9,
+        "p(90)": 9,
+        "p(95)": 9,
+        "p(99)": 9,
+        "max": 9
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_level_20_latency_read_products_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 14,
+        "p(95)": 14,
+        "p(99)": 14,
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14
+      }
+    },
+    "stress_anchor_8_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_anchor_8_latency_update_profile_ms": {
+      "contains": "time",
+      "values": {
+        "avg": 9,
+        "min": 9,
+        "p(50)": 9,
+        "p(90)": 9,
+        "p(95)": 9,
+        "p(99)": 9,
+        "max": 9
+      },
+      "type": "trend"
+    },
+    "stress_level_12_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      }
+    },
+    "stress_level_16_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12,
+        "p(90)": 12,
+        "p(95)": 12,
+        "p(99)": 12,
+        "max": 12
+      }
+    },
+    "stress_level_12_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "validation_baseline_4_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_latency_checkout_ms": {
+      "contains": "time",
+      "values": {
+        "min": 19,
+        "p(50)": 19,
+        "p(90)": 19,
+        "p(95)": 19,
+        "p(99)": 19,
+        "max": 19,
+        "avg": 19
+      },
+      "type": "trend"
+    },
+    "stress_level_12_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 13,
+        "max": 13,
+        "avg": 13,
+        "min": 13,
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13
+      }
+    },
+    "stress_maximum_24_http_failure_rate": {
+      "values": {
+        "fails": 2,
+        "rate": 0,
+        "passes": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "stress_recovery_4_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      }
+    },
+    "stress_maximum_24_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 0,
+        "rate": 1,
+        "passes": 2
+      }
+    },
+    "stress_anchor_8_workflow_success": {
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "stress_baseline_4_latency_update_profile_ms": {
+      "contains": "time",
+      "values": {
+        "p(90)": 8,
+        "p(95)": 8,
+        "p(99)": 8,
+        "max": 8,
+        "avg": 8,
+        "min": 8,
+        "p(50)": 8
+      },
+      "type": "trend"
+    },
+    "stress_recovery_4_requests_update_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_16_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_maximum_24_latency_checkout_ms": {
+      "contains": "time",
+      "values": {
+        "p(99)": 18,
+        "max": 18,
+        "avg": 18,
+        "min": 18,
+        "p(50)": 18,
+        "p(90)": 18,
+        "p(95)": 18
+      },
+      "type": "trend"
+    },
+    "stress_maximum_24_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_baseline_4_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_requests_login": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_maximum_24_latency_update_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 13,
+        "avg": 13,
+        "min": 13,
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13,
+        "p(99)": 13
+      }
+    },
+    "stress_level_12_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "stress_level_20_iteration_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 13004,
+        "min": 13004,
+        "p(50)": 13004,
+        "p(90)": 13004,
+        "p(95)": 13004,
+        "p(99)": 13004,
+        "max": 13004
+      }
+    },
+    "stress_anchor_8_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "stress_anchor_8_latency_read_products_ms": {
+      "values": {
+        "p(90)": 11,
+        "p(95)": 11,
+        "p(99)": 11,
+        "max": 11,
+        "avg": 11,
+        "min": 11,
+        "p(50)": 11
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_level_16_requests_update_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_http_failure_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 2
+      }
+    },
+    "stress_level_16_workflow_success": {
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "validation_scenario_start_time_available": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_16_workflows_completed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_maximum_24_requests_login": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_16_iteration_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 13003,
+        "avg": 13003,
+        "min": 13003,
+        "p(50)": 13003,
+        "p(90)": 13003,
+        "p(95)": 13003,
+        "p(99)": 13003
+      }
+    },
+    "stress_maximum_24_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_latency_login_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 7,
+        "p(50)": 7,
+        "p(90)": 7,
+        "p(95)": 7,
+        "p(99)": 7,
+        "max": 7,
+        "avg": 7
+      }
+    },
+    "stress_level_16_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 8,
+        "p(99)": 8,
+        "max": 8,
+        "avg": 8,
+        "min": 8,
+        "p(50)": 8,
+        "p(90)": 8
+      }
+    },
+    "stress_level_20_latency_login_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 10,
+        "avg": 10,
+        "min": 10,
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10,
+        "p(99)": 10
+      }
+    },
+    "stress_level_12_latency_checkout_ms": {
+      "values": {
+        "avg": 15,
+        "min": 15,
+        "p(50)": 15,
+        "p(90)": 15,
+        "p(95)": 15,
+        "p(99)": 15,
+        "max": 15
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_baseline_4_requests_checkout": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_level_12_workflow_success": {
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      },
+      "type": "rate"
+    },
+    "stress_level_20_latency_update_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 12,
+        "max": 12,
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12,
+        "p(90)": 12,
+        "p(95)": 12
+      }
+    },
+    "stress_maximum_24_latency_read_products_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 15,
+        "p(99)": 15,
+        "max": 15,
+        "avg": 15,
+        "min": 15,
+        "p(50)": 15,
+        "p(90)": 15
+      }
+    },
+    "stress_baseline_4_latency_login_ms": {
+      "contains": "time",
+      "values": {
+        "p(99)": 6,
+        "max": 6,
+        "avg": 6,
+        "min": 6,
+        "p(50)": 6,
+        "p(90)": 6,
+        "p(95)": 6
+      },
+      "type": "trend"
+    },
+    "stress_baseline_4_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_12_http_duration_ms": {
+      "values": {
+        "avg": 12.5,
+        "min": 12,
+        "p(50)": 12.5,
+        "p(90)": 12.9,
+        "p(95)": 12.95,
+        "p(99)": 12.99,
+        "max": 13
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_maximum_24_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 17,
+        "min": 17,
+        "p(50)": 17,
+        "p(90)": 17,
+        "p(95)": 17,
+        "p(99)": 17,
+        "max": 17
+      }
+    },
+    "stress_maximum_24_workflow_success": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      }
+    },
+    "stress_level_16_requests_read_product_detail": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_recovery_4_iteration_duration_ms": {
+      "values": {
+        "avg": 13006,
+        "min": 13006,
+        "p(50)": 13006,
+        "p(90)": 13006,
+        "p(95)": 13006,
+        "p(99)": 13006,
+        "max": 13006
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_level_12_workflows_completed": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_level_20_latency_read_categories_ms": {
+      "contains": "time",
+      "values": {
+        "p(99)": 13,
+        "max": 13,
+        "avg": 13,
+        "min": 13,
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13
+      },
+      "type": "trend"
+    },
+    "stress_level_20_requests_login": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_maximum_24_requests_update_profile": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_maximum_24_iteration_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 13005,
+        "p(95)": 13005,
+        "p(99)": 13005,
+        "max": 13005,
+        "avg": 13005,
+        "min": 13005,
+        "p(50)": 13005
+      }
+    },
+    "stress_level_16_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 14,
+        "avg": 13.5,
+        "min": 13,
+        "p(50)": 13.5,
+        "p(90)": 13.9,
+        "p(95)": 13.95,
+        "p(99)": 13.99
+      }
+    },
+    "stress_baseline_4_iteration_duration_ms": {
+      "contains": "time",
+      "values": {
+        "avg": 13000,
+        "min": 13000,
+        "p(50)": 13000,
+        "p(90)": 13000,
+        "p(95)": 13000,
+        "p(99)": 13000,
+        "max": 13000
+      },
+      "type": "trend"
+    },
+    "stress_anchor_8_latency_read_categories_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 10,
+        "min": 10,
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10,
+        "p(99)": 10,
+        "max": 10
+      }
+    },
+    "stress_level_16_checks": {
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "stress_level_12_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 5,
+        "p(95)": 5,
+        "p(99)": 5,
+        "max": 5,
+        "avg": 5,
+        "min": 5,
+        "p(50)": 5
+      }
+    },
+    "stress_maximum_24_workflows_completed": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "validation_baseline_4_checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 0,
+        "rate": 1,
+        "passes": 2
+      },
+      "thresholds": {
+        "rate==1": {
+          "ok": true
+        }
+      }
+    },
+    "stress_anchor_8_latency_read_product_detail_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 12,
+        "p(95)": 12,
+        "p(99)": 12,
+        "max": 12,
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12
+      }
+    },
+    "stress_level_12_requests_checkout": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_12_requests_login": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_recovery_4_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 16.95,
+        "p(99)": 16.99,
+        "max": 17,
+        "avg": 16.5,
+        "min": 16,
+        "p(50)": 16.5,
+        "p(90)": 16.9
+      }
+    },
+    "stress_level_12_requests_read_products": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 18,
+        "p(95)": 18,
+        "p(99)": 18,
+        "max": 18,
+        "avg": 18,
+        "min": 18,
+        "p(50)": 18
+      }
+    },
+    "stress_level_12_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_workflow_success": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "passes": 2,
+        "fails": 0,
+        "rate": 1
+      }
+    },
+    "stress_level_20_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 9,
+        "p(95)": 9,
+        "p(99)": 9,
+        "max": 9,
+        "avg": 9,
+        "min": 9,
+        "p(50)": 9
+      }
+    },
+    "stress_recovery_4_latency_read_products_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 16,
+        "min": 16,
+        "p(50)": 16,
+        "p(90)": 16,
+        "p(95)": 16,
+        "p(99)": 16,
+        "max": 16
+      }
+    },
+    "stress_recovery_4_workflows_completed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_requests_update_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_requests_read_product_detail": {
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      },
+      "type": "counter"
+    },
+    "stress_anchor_8_requests_read_product_detail": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_workflows_completed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_maximum_24_requests_checkout": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_maximum_24_latency_login_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 11,
+        "max": 11,
+        "avg": 11,
+        "min": 11,
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11
+      }
+    },
+    "stress_recovery_4_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_latency_checkout_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 14,
+        "avg": 14,
+        "min": 14,
+        "p(50)": 14,
+        "p(90)": 14,
+        "p(95)": 14,
+        "p(99)": 14
+      }
+    },
+    "stress_recovery_4_requests_read_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_requests_add_to_cart": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_anchor_8_latency_add_to_cart_ms": {
+      "values": {
+        "max": 13,
+        "avg": 13,
+        "min": 13,
+        "p(50)": 13,
+        "p(90)": 13,
+        "p(95)": 13,
+        "p(99)": 13
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "stress_maximum_24_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 12,
+        "p(95)": 12,
+        "p(99)": 12,
+        "max": 12,
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12
+      }
+    },
+    "stress_anchor_8_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 11,
+        "p(50)": 11.5,
+        "p(90)": 11.9,
+        "p(95)": 11.95,
+        "p(99)": 11.99,
+        "max": 12,
+        "avg": 11.5
+      }
+    },
+    "stress_level_16_requests_read_categories": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_level_20_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 15,
+        "avg": 14.5,
+        "min": 14,
+        "p(50)": 14.5,
+        "p(90)": 14.9,
+        "p(95)": 14.95,
+        "p(99)": 14.99
+      }
+    },
+    "stress_level_12_requests_update_profile": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_recovery_4_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(50)": 11,
+        "p(90)": 11,
+        "p(95)": 11,
+        "p(99)": 11,
+        "max": 11,
+        "avg": 11,
+        "min": 11
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1.1039,
+        "avg": 0.8179000000000001,
+        "min": 0.5319,
+        "p(50)": 0.8179000000000001,
+        "p(90)": 1.0467,
+        "p(95)": 1.0753,
+        "p(99)": 1.0981800000000002
+      }
+    },
+    "stress_anchor_8_requests_read_categories": {
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter"
+    },
+    "stress_recovery_4_latency_login_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 12,
+        "avg": 12,
+        "min": 12,
+        "p(50)": 12,
+        "p(90)": 12,
+        "p(95)": 12,
+        "p(99)": 12
+      }
+    },
+    "stress_maximum_24_latency_register_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 10,
+        "min": 10,
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10,
+        "p(99)": 10,
+        "max": 10
+      }
+    },
+    "stress_level_16_latency_add_to_cart_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 15,
+        "p(99)": 15,
+        "max": 15,
+        "avg": 15,
+        "min": 15,
+        "p(50)": 15,
+        "p(90)": 15
+      }
+    },
+    "stress_level_16_latency_read_profile_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 10,
+        "max": 10,
+        "avg": 10,
+        "min": 10,
+        "p(50)": 10,
+        "p(90)": 10,
+        "p(95)": 10
+      }
+    },
+    "stress_level_20_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      }
+    },
+    "stress_baseline_4_requests_register": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 1222.643354933366,
+        "count": 2
+      }
+    },
+    "stress_baseline_4_workflows_completed": {
+      "values": {
+        "count": 2,
+        "rate": 1222.643354933366
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_16_http_requests": {
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "stress_level_20_http_requests": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 18,
+        "rate": 11003.790194400293
+      }
+    },
+    "stress_maximum_24_http_duration_ms": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 15.99,
+        "max": 16,
+        "avg": 15.5,
+        "min": 15,
+        "p(50)": 15.5,
+        "p(90)": 15.9,
+        "p(95)": 15.95
+      }
+    }
+  }
+}
