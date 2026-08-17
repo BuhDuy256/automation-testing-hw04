@@ -32,7 +32,7 @@ while ($true) {
     }
     $k6Pid = if ($state -and $state.k6_pid) { [int]$state.k6_pid } else { -1 }
     $output = @(
-        'OFFICIAL SOAK — RESOURCE PANE'
+        'OFFICIAL SOAK - RESOURCE PANE'
         "RUN_ID=$RunId"
         "WINDOW=$(if ($state) { $state.soak_window } else { 'waiting' })"
         "ELAPSED=$(if ($state) { $state.elapsed_seconds } else { 'n/a' })"

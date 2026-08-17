@@ -249,6 +249,7 @@ raw-byte SHA-256 values for the exact copied files and raw NDJSON that were actu
 | Node syntax checks | PASS |
 | Factual verifier self-test | PASS |
 | PowerShell parser on runner/capture/resource pane | PASS |
+| PowerShell 5.1 reservation-marker regression (`work/validate_soak_preflight_marker.ps1`) | PASS; 14/14 checks, no traffic |
 | Static workflow count | PASS; 9 HTTP calls and one Checkout |
 | CSV header | PASS; exact six-column schema |
 | Think-time ranges | PASS; all five exact ranges |
@@ -264,6 +265,45 @@ raw-byte SHA-256 values for the exact copied files and raw NDJSON that were actu
 The Stress raw NDJSON and Spike raw NDJSON must remain local, untracked, and byte-identical to
 their recorded hashes. `eshop-sut/backend/database.sqlite` remains a runtime-modified tracked
 file and must stay unstaged. No validation fixture output belongs in the commit.
+
+## Regression: Windows PowerShell 5.1 Source-Encoding Safety for Machine-Critical Markers
+
+Found on 2026-08-17 during the first prepared Soak preflight, which aborted **before any k6
+performance traffic**. Full history: `work/official_soak_blocker_20260817t225458219.md`.
+
+The previous reservation guard was Unicode-dependent and therefore unsafe. It compared the
+marker file against a literal containing U+2014. Because `work/run_official_soak.ps1` is
+UTF-8 without a BOM, Windows PowerShell 5.1 parsed that literal using the ANSI code page and
+turned the em dash into U+00E2, U+20AC, U+201D. `PREPARATION.md` decoded correctly to a single
+U+2014, so the guard could never match and threw on every invocation before k6 started.
+
+Rule now recorded for reuse:
+
+- machine-critical tokens compared, parsed, matched, or validated by PowerShell must be
+  ASCII-only;
+- em dashes, smart quotes, and non-breaking spaces must never appear in such tokens; and
+- human-readable Markdown prose stays separate from the machine guard.
+
+Current state:
+
+| Item | Status |
+|---|---|
+| Previous Unicode-dependent marker | Unsafe; removed |
+| New machine marker `PREPARED-NOT-EXECUTED` | ASCII-safe; matches the existing Load/Stress `PREPARED-NOT-EXECUTED.md` convention |
+| `run_official_soak.ps1`, `capture_official_soak_frames.ps1`, `soak_resource_monitor_pane.ps1` | Byte-wise pure ASCII |
+| Preflight validation on a valid prepared marker | PASS |
+| Invalid marker (missing token) | Still rejected |
+| Marker for a different Run ID | Still rejected |
+| Test proven to detect the original Unicode defect | PASS |
+| Runner internal `$approvedHashes` gate replayed | PASS on all seven pinned artifacts |
+| EShop traffic sent during validation | None; `users=2`, `orders=0` unchanged from seed |
+| k6 processes started during validation | None |
+
+The pane header em dash was also corrected to an ASCII hyphen. That string is display-only and
+was not the blocker, but the corrupted glyph rendered into official Soak screenshots, so it was
+fixed for evidence legibility. The reviewed Soak workload, profile, thresholds, think-times,
+scenario-start handshake, sampling interval, recovery duration, and screenshot schedule are all
+unchanged and byte-identical.
 
 ## Remaining Execution-Preparation Limitations
 

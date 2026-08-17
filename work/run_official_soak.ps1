@@ -35,7 +35,7 @@ $approvedHashes = [ordered]@{
     'verify_soak_results.js' = 'F0584DB90448086B73A827C2EFF78C0D231A22BD9A14C728F4C014306EC6B37B'
     'capture_soak_database_state.js' = '4FFE9D654B1218E0211D97CE7CA8F396E1392F6C85ED5FA9D32CB23ADF94720E'
     'capture_official_soak_frames.ps1' = '4F96F134E5CD970DC2DF099E8C3A51D201D42C9459A512499517D302FFFC6326'
-    'soak_resource_monitor_pane.ps1' = 'CAB043D1E0AF0C3441ACAA78879D1427AB38CB164B56E3A637EC8D2329D19666'
+    'soak_resource_monitor_pane.ps1' = 'D3FBF5CBFF02015F43E05FFC812EDDC83C1273982FED00C1BC6E41C565E8AC2A'
     'official_soak_execution_handoff.md' = 'C4CBBBF8513C060C08A96F4D1122B023B591CAE4580C3DE31D11B3012A3D0AE5'
 }
 $sourcePaths = [ordered]@{
@@ -100,7 +100,13 @@ if (Test-Path -LiteralPath $runDirectory) {
         throw "Reserved Soak directory is missing PREPARATION.md: $runDirectory"
     }
     $preparationText = [IO.File]::ReadAllText($preparationMarker)
-    if ($preparationText -notmatch 'PREPARED — NOT EXECUTED' -or $preparationText -notmatch [regex]::Escape($RunId)) {
+    # Machine-critical tokens must stay ASCII-only. Windows PowerShell 5.1 parses a
+    # UTF-8-without-BOM .ps1 using the ANSI code page, so Unicode punctuation such as an
+    # em dash, smart quote, or non-breaking space is corrupted inside string literals and
+    # can never match a correctly decoded file. Keep human-readable prose separate from
+    # this guard; never compare against non-ASCII punctuation.
+    $preparationToken = 'PREPARED-NOT-EXECUTED'
+    if ($preparationText -notmatch [regex]::Escape($preparationToken) -or $preparationText -notmatch [regex]::Escape($RunId)) {
         throw "Reserved Soak directory marker is invalid for Run ID $RunId"
     }
 }

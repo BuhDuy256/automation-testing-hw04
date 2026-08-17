@@ -1,10 +1,27 @@
 # Official Soak GUI and Execution Handoff
 
-Status: **PREPARED — NOT EXECUTED**
+Status: **PREPARED — NOT EXECUTED** (harness blocker fixed and revalidated)
 
 This invocation-specific handoff is for Claude Desktop or the student operating the real
 Windows desktop. It authorizes preparation only; official traffic still requires a separate
 execution instruction.
+
+## Blocker Resolution Notice
+
+A prepared preflight attempt on 2026-08-17 **stopped before any k6 performance traffic** because
+of a preflight harness defect, not a SUT problem. The reservation guard compared the marker file
+against a Unicode em dash, and Windows PowerShell 5.1 parses this UTF-8-without-BOM runner using
+the ANSI code page, corrupting that literal so it could never match.
+
+- Fixed: the machine guard now compares the ASCII-only token `PREPARED-NOT-EXECUTED`.
+- Revalidated: `work/validate_soak_preflight_marker.ps1` passes 14/14 checks under PowerShell 5.1.
+- Full history: `work/official_soak_blocker_20260817t225458219.md`.
+- All hashes below were re-frozen after the fix; earlier values are stale and must not be used.
+
+No `raw-results.ndjson`, `summary.json`, resource CSV, metadata, screenshot, or database-state
+file was produced, and a read-only capture confirmed the database stayed at the seeded `users=2`
+and `orders=0`. **Run ID `20260817t225458219` was never consumed by performance traffic, so the
+next execution is the FIRST official Soak performance invocation, not a rerun.**
 
 ## Reserved Invocation
 
@@ -18,21 +35,61 @@ execution instruction.
 
 ## Frozen Artifact Hashes
 
-These are raw-file SHA-256 values for the prepared invocation:
+These are raw-file SHA-256 values for the prepared invocation, re-frozen on 2026-08-17 after
+the preflight harness fix:
 
-| Artifact | SHA-256 |
-|---|---|
-| `out/23127179_Soak_20260817.js` | `BA409623775BB524059996AC62A80515E5A4E0FB3E295CC2895B1EEA78FB98DD` |
-| `out/user_workflow_data.csv` | `1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1` |
-| `work/run_official_soak.ps1` | `D69FC48DF2FEA66C99129CA37D696281BD62D85D4033E2B1719E84D8AE19D8DE` |
-| `work/verify_soak_results.js` | `F0584DB90448086B73A827C2EFF78C0D231A22BD9A14C728F4C014306EC6B37B` |
-| `work/capture_soak_database_state.js` | `4FFE9D654B1218E0211D97CE7CA8F396E1392F6C85ED5FA9D32CB23ADF94720E` |
-| `work/capture_official_soak_frames.ps1` | `4F96F134E5CD970DC2DF099E8C3A51D201D42C9459A512499517D302FFFC6326` |
-| `work/soak_resource_monitor_pane.ps1` | `CAB043D1E0AF0C3441ACAA78879D1427AB38CB164B56E3A637EC8D2329D19666` |
-| `work/official_soak_execution_handoff.md` | `C4CBBBF8513C060C08A96F4D1122B023B591CAE4580C3DE31D11B3012A3D0AE5` |
+| Artifact | SHA-256 | Changed by the fix |
+|---|---|---|
+| `out/23127179_Soak_20260817.js` | `BA409623775BB524059996AC62A80515E5A4E0FB3E295CC2895B1EEA78FB98DD` | No |
+| `out/user_workflow_data.csv` | `1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1` | No |
+| `work/run_official_soak.ps1` | `CF74B3F977E99A03861A0874606D5110BB201EFD66FBCDE63928242E61B1F2A3` | **Yes** |
+| `work/verify_soak_results.js` | `F0584DB90448086B73A827C2EFF78C0D231A22BD9A14C728F4C014306EC6B37B` | No |
+| `work/capture_soak_database_state.js` | `4FFE9D654B1218E0211D97CE7CA8F396E1392F6C85ED5FA9D32CB23ADF94720E` | No |
+| `work/capture_official_soak_frames.ps1` | `4F96F134E5CD970DC2DF099E8C3A51D201D42C9459A512499517D302FFFC6326` | No |
+| `work/soak_resource_monitor_pane.ps1` | `D3FBF5CBFF02015F43E05FFC812EDDC83C1273982FED00C1BC6E41C565E8AC2A` | **Yes** |
+| `work/official_soak_execution_handoff.md` | `C4CBBBF8513C060C08A96F4D1122B023B591CAE4580C3DE31D11B3012A3D0AE5` | No |
+| `work/validate_soak_preflight_marker.ps1` | `205BC1870C67581A518D1F0D816B12E7BE788FC78F7AFA1A74BB7BB7AAA6C5BF` | **New** |
+
+The reviewed Soak workload is provably untouched: the k6 script, CSV, factual verifier,
+read-only database helper, and screenshot helper all keep their original hashes.
 
 Stop if any value differs before official execution. The finalized hash of this handoff is
 recorded outside this file in the invocation's `PREPARATION.md` to avoid a self-hash cycle.
+
+These raw values correspond to the LF working-copy bytes. This repository is checked out with
+`core.autocrlf` enabled, so a fresh clone can materialize CRLF line endings and change every
+raw text hash without any content change. The runner's own `$approvedHashes` gate is immune
+because it compares newline-normalized canonical SHA-256. If a raw value differs, first confirm
+whether the file's line endings changed before treating it as a real content mismatch.
+
+## PowerShell 5.1 Compatibility Rule
+
+This repository's `.ps1` files are UTF-8 **without a BOM**, and the only shell available on the
+execution machine is Windows PowerShell 5.1, which parses such files using the ANSI code page.
+Any Unicode punctuation inside a string literal is therefore corrupted at parse time.
+
+- Machine-critical tokens that are compared, parsed, matched, or validated must be ASCII-only.
+- Never use an em dash, smart quote, or non-breaking space in such a token.
+- Human-readable Markdown prose may keep richer punctuation; it must not be the guard.
+- All three Soak PowerShell helpers are now byte-wise pure ASCII, so source encoding can no
+  longer change their parsed meaning.
+
+The reservation marker's machine token is now:
+
+```text
+PREPARED-NOT-EXECUTED
+```
+
+`PREPARATION.md` declares it on an explicit `Machine status token:` line, matching the existing
+`PREPARED-NOT-EXECUTED.md` convention already used by the Load and Stress runners. The guard
+still requires both this token and the exact reserved Run ID, and it still rejects an incorrect
+marker; it was not weakened. Verify with:
+
+```powershell
+& powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\work\validate_soak_preflight_marker.ps1
+```
+
+That validation is preflight-only. It sends no EShop request and starts no k6 process.
 
 ## Frozen Profile and Timeline
 
@@ -160,7 +217,14 @@ Run only after separate traffic authorization and all preceding gates pass:
   -GuiCaptureReady $true
 ```
 
-The booleans are factual declarations, not bypasses. There is no automatic rerun.
+The command is unchanged by the harness fix. The booleans are factual declarations, not
+bypasses. There is no automatic rerun.
+
+Because the aborted preflight sent no performance traffic, running this command is the **first**
+official Soak performance invocation for `20260817t225458219`. Do not describe it as a rerun,
+a retry, or a replacement run. If a future invocation does send traffic and then fails, that
+situation is different: preserve the evidence, document the reason, stop, and wait for human
+review rather than launching a cleaner second test.
 
 ## Post-Run Factual Verification
 
@@ -216,7 +280,10 @@ real authentication failure; setup-caused collisions/retries invalidate executio
 Leave every item unchecked until it is factually verified immediately before traffic:
 
 - [ ] Reserved Run ID is still unique and the directory contains preparation files only.
-- [ ] Approved Soak script, CSV, runner, verifier, capture, monitor, and handoff hashes match.
+- [ ] Approved Soak script, CSV, runner, verifier, capture, monitor, and handoff hashes match
+  the **re-frozen** table above, not the pre-fix values.
+- [ ] `work/validate_soak_preflight_marker.ps1` passes 14/14 under Windows PowerShell 5.1.
+- [ ] Reservation marker guard accepts the prepared directory and still rejects a bad marker.
 - [ ] Branch and reviewed implementation commit are correct.
 - [ ] Lifecycle Skill still routes `scenario_type=soak`; report registry still treats Soak as
   additional endurance evidence rather than a fourth designated report.
