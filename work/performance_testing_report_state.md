@@ -20,6 +20,10 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 
 ## Lifecycle Milestone State
 
+**Task 1 / REQ1 = COMPLETE** — Load, Stress, Spike, and Soak/Endurance evidence are
+verified against the authoritative HW05 requirements. The final endurance threshold is
+**HUMAN-REVIEWED / FINAL**. Task 2 and Task 3 remain separate and unstarted.
+
 | Milestone | Status | Official invocation / note |
 |---|---|---|
 | Load | COMPLETE | `20260817t045341487` |
