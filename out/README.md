@@ -43,6 +43,8 @@ This README is the submission index and self-assessment summary for HW05.
 
 Final AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses the four official valid runs. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 is COMPLETE / HUMAN-REVIEWED. No optimization was implemented and no GitHub Issue was created.
 
+Final submission artifact: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md). The detailed working/review source remains [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). Task 2 is COMPLETE / HUMAN-REVIEWED. Task 3 is NOT STARTED.
+
 ## Submission Video Links
 
 - **Performance Testing Execution Video:** https://youtu.be/86qyG0n4Mbs?si=2YBhaUXCnj0kp457
@@ -57,6 +59,7 @@ Final AI analysis and human-approved corrections are recorded in [`work/task2_pe
 - Three raw `.jtl` logs and three HTML report folders: TODO - add paths.
 - CSV workflow data: TODO - add path.
 - Resource-monitor and hardware evidence: TODO - add paths.
+- Task 2 Performance Result Analysis: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md).
 - AI Critique in Markdown and PDF: TODO - add paths.
 - AI Audit Report in Markdown and PDF: TODO - add paths.
 - Continuous performance-testing proposal and flowchart: TODO - add paths.
