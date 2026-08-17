@@ -30,13 +30,13 @@ This README is the submission index and self-assessment summary for HW05.
 
 | Item | Final content to record |
 |---|---|
-| End-to-end workflow | TODO - describe the single workflow shared by Load, Stress, and Spike |
-| Auth-heavy endpoint group | TODO |
-| Read-heavy endpoint group | TODO |
-| Transactional endpoint group | TODO |
+| End-to-end workflow | `Register -> Login -> Read Profile -> Update Profile -> Read Categories -> Read Products -> Read Product Detail -> Add Product to Cart -> Checkout` (exactly 9 HTTP requests per successful workflow and exactly one Checkout). |
+| Auth-heavy endpoint group | Login, Read Profile, Update Profile (authentication/session and authenticated account operations). |
+| Read-heavy endpoint group | Read Categories, Read Products, Read Product Detail (product listing/search and product detail reads). |
+| Transactional endpoint group | Add Product to Cart, Checkout (cart mutation and order creation). |
 | Scenarios executed | Load `20260817t045341487` (COMPLETE), Stress `20260817t115158688` (COMPLETE), Spike `20260817t134816776` (COMPLETE), Soak/Endurance `20260818t000551547` (COMPLETE) — 12 VUs sustained for 12 minutes, zero HTTP failures, 100% checks, 100% workflow success. See `out/23127179_Soak_20260817_evidence/20260818t000551547/completion-report.md`. |
 | Endurance threshold | **HUMAN-REVIEWED / FINAL — Observed sustained throughput floor:** **7.983 req/s** at 12 sustained VUs for 12 minutes; supporting minimum clean workflow rate **0.829 workflows/s**, with zero HTTP failures and 100% workflow correctness. This is not maximum stable RPS, production capacity, or an SLO. See `out/23127179_Soak_20260817_evidence/20260818t000551547/completion-report.md` and `soak-window-summary.md`. |
-| Bugs or performance issues | TODO - state the count and link GitHub Issues, or state none found |
+| Bugs or performance issues | None found in the valid official performance runs; no GitHub Issue was filed. |
 | Demo video | Student-provided links are recorded in **Submission Video Links** below; duration, narration, and visible-content compliance remain human submission checks. |
 
 ## Submission Video Links
