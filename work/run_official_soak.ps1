@@ -23,6 +23,7 @@ $databaseCaptureScript = Join-Path $PSScriptRoot 'capture_soak_database_state.js
 $captureScript = Join-Path $PSScriptRoot 'capture_official_soak_frames.ps1'
 $resourcePane = Join-Path $PSScriptRoot 'soak_resource_monitor_pane.ps1'
 $executionHandoff = Join-Path $PSScriptRoot 'official_soak_execution_handoff.md'
+$invocationHandoff = Join-Path $PSScriptRoot 'official_soak_gui_handoff.md'
 $databasePath = Join-Path $repoRoot 'eshop-sut\backend\database.sqlite'
 $evidenceRoot = Join-Path $repoRoot 'out\23127179_Soak_20260817_evidence'
 $runDirectory = Join-Path $evidenceRoot $RunId
@@ -45,6 +46,7 @@ $sourcePaths = [ordered]@{
     'capture_official_soak_frames.ps1' = $captureScript
     'soak_resource_monitor_pane.ps1' = $resourcePane
     'official_soak_execution_handoff.md' = $executionHandoff
+    'official_soak_gui_handoff.md' = $invocationHandoff
 }
 
 function Get-CanonicalTextSha256 {
@@ -79,11 +81,28 @@ foreach ($name in $approvedHashes.Keys) {
     }
 }
 
-$existingRunId = Get-ChildItem -LiteralPath (Join-Path $repoRoot 'out') -Directory -Recurse -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -eq $RunId } |
+$existingRunIdDirectories = Get-ChildItem -LiteralPath (Join-Path $repoRoot 'out') -Directory -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -eq $RunId }
+$unexpectedCollision = $existingRunIdDirectories |
+    Where-Object { [IO.Path]::GetFullPath($_.FullName) -ne [IO.Path]::GetFullPath($runDirectory) } |
     Select-Object -First 1
-if ($existingRunId) {
-    throw "K6_RUN_ID already exists in the evidence tree: $RunId"
+if ($unexpectedCollision) {
+    throw "K6_RUN_ID already exists outside the reserved Soak directory: $RunId"
+}
+if (Test-Path -LiteralPath $runDirectory) {
+    $preparationMarker = Join-Path $runDirectory 'PREPARATION.md'
+    $existingFiles = Get-ChildItem -LiteralPath $runDirectory -File -Recurse
+    $unexpectedFiles = $existingFiles | Where-Object { $_.FullName -ne $preparationMarker }
+    if ($unexpectedFiles) {
+        throw "Reserved Soak directory contains files other than PREPARATION.md: $runDirectory"
+    }
+    if (-not (Test-Path -LiteralPath $preparationMarker)) {
+        throw "Reserved Soak directory is missing PREPARATION.md: $runDirectory"
+    }
+    $preparationText = [IO.File]::ReadAllText($preparationMarker)
+    if ($preparationText -notmatch 'PREPARED — NOT EXECUTED' -or $preparationText -notmatch [regex]::Escape($RunId)) {
+        throw "Reserved Soak directory marker is invalid for Run ID $RunId"
+    }
 }
 
 $listener = netstat -ano -p tcp |
@@ -101,11 +120,14 @@ if ($apiResponse.StatusCode -ne 200) {
 }
 
 New-Item -ItemType Directory -Force -Path $evidenceRoot | Out-Null
-New-Item -ItemType Directory -Path $runDirectory | Out-Null
+if (-not (Test-Path -LiteralPath $runDirectory)) {
+    New-Item -ItemType Directory -Path $runDirectory | Out-Null
+}
 New-Item -ItemType Directory -Path (Join-Path $runDirectory 'screenshots') | Out-Null
 
 foreach ($name in $sourcePaths.Keys) {
-    Copy-Item -LiteralPath $sourcePaths[$name] -Destination (Join-Path $runDirectory $name)
+    $destinationName = if ($name -eq 'official_soak_gui_handoff.md') { 'gui-capture-handoff.md' } else { $name }
+    Copy-Item -LiteralPath $sourcePaths[$name] -Destination (Join-Path $runDirectory $destinationName)
 }
 $hardwarePath = Join-Path $repoRoot 'work\calibration-results\hardware_observation.json'
 if (Test-Path -LiteralPath $hardwarePath) {
@@ -171,8 +193,9 @@ $preRunMetadata = [ordered]@{
 $preRunMetadata | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $metadataPreRunPath -Encoding utf8
 
 $sourcePaths.GetEnumerator() | ForEach-Object {
-    $evidencePath = Join-Path $runDirectory $_.Key
-    "$((Get-FileHash -Algorithm SHA256 -LiteralPath $evidencePath).Hash)  $($_.Key)"
+    $evidenceName = if ($_.Key -eq 'official_soak_gui_handoff.md') { 'gui-capture-handoff.md' } else { $_.Key }
+    $evidencePath = Join-Path $runDirectory $evidenceName
+    "$((Get-FileHash -Algorithm SHA256 -LiteralPath $evidencePath).Hash)  $evidenceName"
 } |
     Set-Content -LiteralPath (Join-Path $runDirectory 'hashes.sha256') -Encoding utf8
 
