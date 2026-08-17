@@ -68,7 +68,7 @@ Product to Cart -> Checkout), just at different VU counts/durations:
 |---|---|---|
 | `push` to `main` / `hw05-performance` | `regression` | Catch regressions as soon as they land. |
 | `pull_request` to `main` / `hw05-performance` | `regression` | Catch regressions before merge; ~70s k6 run keeps PR feedback fast. |
-| `workflow_dispatch` | both (mutually exclusive by `if:`) | Let a human force either profile on demand, e.g. before a release. |
+| `workflow_dispatch` | both `regression` and `endurance` run | Let a human force either profile on demand, e.g. before a release; a manual dispatch is cheap enough (one-off) that running both is acceptable. |
 | `schedule` (weekly, `0 18 * * 0`) | `endurance` only | Amortizes the expensive 12-VU/12-minute protocol instead of paying for it on every commit. |
 
 **Cost/false-alarm trade-offs (per the assignment's explicit ask):**
@@ -244,8 +244,11 @@ node out/ci/evaluate_endurance.js out/raw-results.ndjson endurance-result.json
 Overall: **PASS**
 ```
 
-Read as: the code under test on this commit behaves the same as the HUMAN-REVIEWED Task 1/2
-baseline on this harness — no action needed.
+Read as: no configured regression guard was violated under this CI regression profile. This is
+not a claim that the commit "behaves the same as" the HUMAN-REVIEWED Task 1/2 baseline — the
+3-VU/~70s CI profile differs from the reviewed 4-24 VU baseline runs in VU count, duration, and
+think-time, so the two are not directly comparable experiments. PASS only means this specific
+short profile, on this commit, did not cross any of the guard thresholds.
 
 **FAIL** (synthetic fixture, not a real SUT run — see Local Validation):
 

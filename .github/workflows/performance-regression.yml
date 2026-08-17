@@ -166,7 +166,7 @@ jobs:
           K6_RUN_ID="$run_id" k6 run \
             --summary-export=ci-artifacts/endurance/summary.json \
             --out json=ci-artifacts/endurance/raw-results.ndjson \
-            out/23127179_Soak_20260817.js
+            23127179_Soak_20260817.js
         working-directory: out
 
       - name: Evaluate endurance guards
