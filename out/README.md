@@ -4,6 +4,8 @@
 
 This README is the submission index and self-assessment summary for HW05.
 
+**Milestone state:** Task 1 = **COMPLETE**. Task 2 = **COMPLETE / HUMAN-REVIEWED**. Task 3 = **COMPLETE / HUMAN-REVIEWED**.
+
 ## Student and Submission Information
 
 | Field | Value |
@@ -22,7 +24,7 @@ This README is the submission index and self-assessment summary for HW05.
 | Stress testing | 20 | TODO | TODO |
 | Spike testing | 20 | TODO | TODO |
 | AI analysis and misinterpretation hunt | 10 | COMPLETE / HUMAN-REVIEWED | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
-| Continuous performance-testing proposal | 10 | AWAITING HUMAN REVIEW | [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md) |
+| Continuous performance-testing proposal | 10 | COMPLETE / HUMAN-REVIEWED | [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) |
 | Agent Skill | 10 | TODO | TODO |
 | **Total** | **100** | **TODO** | — |
 
@@ -47,9 +49,9 @@ Final submission artifact: [`Task2_Performance_Result_Analysis.md`](Task2_Perfor
 
 ## Task 3 — Continuous Performance Testing
 
-Full design, trade-off discussion, and human-review checklist: [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md). Pipeline implementation: [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
+Final submission artifact: [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md). Detailed working documentation and the full two-round human-review history remain in [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md). Pipeline implementation: [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
 
-The pipeline runs the same frozen 9-step E2E workflow used by Task 1/2 at two cost tiers on GitHub-hosted `ubuntu-latest`: a short 3-VU/~70s **regression** job on every push/PR, and the full, unmodified 12-VU/12-minute official Soak script as a separate **endurance** job on manual dispatch or a weekly schedule. Because the Task 2 numeric guards were established on the student's local Dell hardware, not `ubuntu-latest`, guards are split by hardware-dependence: `http_req_failed==0`/`checks==1`/`workflow_success==1` and the endurance job's early-to-late degradation `<=5%` are hardware-independent and fully gate CI; HTTP p95 `<=25ms`/p99 `<=50ms` are kept as gated but explicitly PROVISIONAL (not re-baselined on this runner); the absolute endurance floor (sustained throughput `>=7.983 req/s`, clean workflow rate `>=0.829 workflows/s`) is reported for visibility only and does not gate CI here — see "Hardware Scope" in the design document. Either job fails CI with a metric/observed/guard/PASS-FAIL table when a gated guard is violated. These are regression guards for a comparable harness/profile, not business SLOs or production-capacity claims. Task 3 is **AWAITING HUMAN REVIEW**.
+The pipeline runs the same frozen 9-step E2E workflow used by Task 1/2 at two cost tiers on GitHub-hosted `ubuntu-latest`: a short 3-VU/~70s **regression** job on every push/PR, and the full, unmodified 12-VU/12-minute official Soak script as a separate **endurance** job on manual dispatch or a weekly schedule. Because the Task 2 numeric guards were established on the student's local Dell hardware, not `ubuntu-latest`, guards are split by hardware-dependence: `http_req_failed==0`/`checks==1`/`workflow_success==1` and the endurance job's early-to-late degradation `<=5%` are hardware-independent and fully gate CI; HTTP p95 `<=25ms`/p99 `<=50ms` are kept as gated but explicitly PROVISIONAL (not re-baselined on this runner); the absolute endurance floor (sustained throughput `>=7.983 req/s`, clean workflow rate `>=0.829 workflows/s`) is reported for visibility only and does not gate CI here — see "Hardware Scope" in the design document. Either job fails CI with a metric/observed/guard/PASS-FAIL table when a gated guard is violated. These are regression guards for a comparable harness/profile, not business SLOs or production-capacity claims. Task 3 is **COMPLETE / HUMAN-REVIEWED**.
 
 ## Submission Video Links
 
@@ -68,7 +70,7 @@ The pipeline runs the same frozen 9-step E2E workflow used by Task 1/2 at two co
 - Task 2 Performance Result Analysis: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md).
 - AI Critique in Markdown and PDF: TODO - add paths.
 - AI Audit Report in Markdown and PDF: TODO - add paths.
-- Continuous performance-testing proposal and flowchart: [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md); implementation in [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
+- Task 3 Continuous Performance Testing: [`Task3_Continuous_Performance_Testing.md`](Task3_Continuous_Performance_Testing.md) (final); detailed working documentation in [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md); implementation in [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
 - Performance Testing Lifecycle Skill and its demonstration evidence: [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/) and **Performance Testing Agent Skill Demo** above.
 - Git commit log: [`git-commit-log.txt`](git-commit-log.txt).
 

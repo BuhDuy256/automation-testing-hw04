@@ -1,6 +1,6 @@
 # HW05 Task 3 — Continuous Performance Testing
 
-Status: **AWAITING HUMAN REVIEW**
+Status: **COMPLETE / HUMAN-REVIEWED**. Final submission artifact: [`out/Task3_Continuous_Performance_Testing.md`](../out/Task3_Continuous_Performance_Testing.md).
 
 ## Requirement
 
