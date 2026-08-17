@@ -1,0 +1,495 @@
+{
+    "root_group": {
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "register status is 200": {
+                    "path": "::register status is 200",
+                    "id": "d5889f6a6d886d20b161f9ced3de4112",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "register status is 200"
+                },
+                "register message is correct": {
+                    "name": "register message is correct",
+                    "path": "::register message is correct",
+                    "id": "f0a20dde49955900ff94876930dbf300",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "register user id is positive": {
+                    "name": "register user id is positive",
+                    "path": "::register user id is positive",
+                    "id": "39d617ef4131adecbe7dc2e93c585bc3",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "login status is 200": {
+                    "name": "login status is 200",
+                    "path": "::login status is 200",
+                    "id": "baba87e761865dc93085ee0c1fe25f4c",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "login token is present": {
+                    "name": "login token is present",
+                    "path": "::login token is present",
+                    "id": "d280004a97cfb2c161c909808c81ac7d",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "login email matches registration": {
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "login email matches registration",
+                    "path": "::login email matches registration",
+                    "id": "043574efe044a214a4ebc549bbc209ac"
+                },
+                "login user id matches registration": {
+                    "name": "login user id matches registration",
+                    "path": "::login user id matches registration",
+                    "id": "72bb21a8967c53a2d18a5f50b40351b0",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "profile status is 200": {
+                    "name": "profile status is 200",
+                    "path": "::profile status is 200",
+                    "id": "b1635ccaac1af7596c92e3adfecf4584",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "profile email matches registration": {
+                    "name": "profile email matches registration",
+                    "path": "::profile email matches registration",
+                    "id": "56920454345a0ebb9df98f2eab8b3a8c",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "profile user id matches registration": {
+                    "name": "profile user id matches registration",
+                    "path": "::profile user id matches registration",
+                    "id": "ce03a4459a1b72afca95d0e9f59de44e",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "profile payload has CSV name": {
+                    "name": "profile payload has CSV name",
+                    "path": "::profile payload has CSV name",
+                    "id": "810a21ecf006b26bb53594929455ad0c",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "profile payload has CSV phone": {
+                    "path": "::profile payload has CSV phone",
+                    "id": "9f60ef874f863fc1ed09aeab6fa878d9",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "profile payload has CSV phone"
+                },
+                "profile payload has CSV shipping address": {
+                    "fails": 0,
+                    "name": "profile payload has CSV shipping address",
+                    "path": "::profile payload has CSV shipping address",
+                    "id": "ffc2dfea2204a1a3879244f7dd0c2e70",
+                    "passes": 32
+                },
+                "profile update status is 200": {
+                    "path": "::profile update status is 200",
+                    "id": "52176d4a84437fe38f9c06bffe33d06c",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "profile update status is 200"
+                },
+                "profile update message is correct": {
+                    "id": "fbb3a5032dc150b7a2be48ceceb5d359",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "profile update message is correct",
+                    "path": "::profile update message is correct"
+                },
+                "categories status is 200": {
+                    "name": "categories status is 200",
+                    "path": "::categories status is 200",
+                    "id": "7034f738e6bce620f97b0b4c6d99f7ab",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "categories array is non-empty": {
+                    "name": "categories array is non-empty",
+                    "path": "::categories array is non-empty",
+                    "id": "ebe857c055cd1c556b5ce53ebb8a7539",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "selected category id is positive": {
+                    "path": "::selected category id is positive",
+                    "id": "2927849eb9df806a9a53ca17fe81008f",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "selected category id is positive"
+                },
+                "products status is 200": {
+                    "fails": 0,
+                    "name": "products status is 200",
+                    "path": "::products status is 200",
+                    "id": "95ed137041ec13c2177bed57482441e5",
+                    "passes": 32
+                },
+                "products array is non-empty": {
+                    "path": "::products array is non-empty",
+                    "id": "0fe7ca3e52f0823c3bb40b279489a624",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "products array is non-empty"
+                },
+                "matching product exists": {
+                    "path": "::matching product exists",
+                    "id": "e745dd79cdee08379e3973185dd22e19",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "matching product exists"
+                },
+                "product detail status is 200": {
+                    "name": "product detail status is 200",
+                    "path": "::product detail status is 200",
+                    "id": "89a9e8e0cd4b5479117834c0c9885314",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "product detail id matches selection": {
+                    "fails": 0,
+                    "name": "product detail id matches selection",
+                    "path": "::product detail id matches selection",
+                    "id": "48dd7b749835b3420ca3b9e204f75892",
+                    "passes": 32
+                },
+                "product detail category matches selection": {
+                    "name": "product detail category matches selection",
+                    "path": "::product detail category matches selection",
+                    "id": "775e465c25354f4c7504ea062fbed84f",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "product detail name is non-empty": {
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "product detail name is non-empty",
+                    "path": "::product detail name is non-empty",
+                    "id": "30a8ca32be45bbef09abd610e2f9dbf9"
+                },
+                "product detail price is positive numeric": {
+                    "name": "product detail price is positive numeric",
+                    "path": "::product detail price is positive numeric",
+                    "id": "c31f8c49b50519fa7f1780e73b7b46be",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "cart payload preserves product detail": {
+                    "name": "cart payload preserves product detail",
+                    "path": "::cart payload preserves product detail",
+                    "id": "28b66c9d1cfe93c6730a300128150c41",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "cart payload quantity is CSV quantity": {
+                    "name": "cart payload quantity is CSV quantity",
+                    "path": "::cart payload quantity is CSV quantity",
+                    "id": "aeb1a00efa91984df22e3db4f302ae67",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "add to cart status is 200": {
+                    "fails": 0,
+                    "name": "add to cart status is 200",
+                    "path": "::add to cart status is 200",
+                    "id": "ab0492705f2f331a10996d1ef9f49439",
+                    "passes": 32
+                },
+                "add to cart message is correct": {
+                    "name": "add to cart message is correct",
+                    "path": "::add to cart message is correct",
+                    "id": "10242ca5319942bf928f326352a0bcb8",
+                    "passes": 32,
+                    "fails": 0
+                },
+                "checkout payload has exact CSV shipping address": {
+                    "fails": 0,
+                    "name": "checkout payload has exact CSV shipping address",
+                    "path": "::checkout payload has exact CSV shipping address",
+                    "id": "a60486b0333e10fa8b1cc21698e18a8c",
+                    "passes": 32
+                },
+                "checkout total is correlated and positive": {
+                    "id": "4fe9158713bd0a60f20ae03f105ab56d",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "checkout total is correlated and positive",
+                    "path": "::checkout total is correlated and positive"
+                },
+                "checkout status is 200": {
+                    "path": "::checkout status is 200",
+                    "id": "e11fc0853d49e6c834ec395977941040",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "checkout status is 200"
+                },
+                "checkout message is correct": {
+                    "id": "6b0972f475ee1533645ac7b31f0d8fa6",
+                    "passes": 32,
+                    "fails": 0,
+                    "name": "checkout message is correct",
+                    "path": "::checkout message is correct"
+                },
+                "checkout order id is positive": {
+                    "name": "checkout order id is positive",
+                    "path": "::checkout order id is positive",
+                    "id": "0e3f23208ecacc056a053882d484ed9d",
+                    "passes": 32,
+                    "fails": 0
+                }
+            },
+        "name": ""
+    },
+    "metrics": {
+        "iteration_duration": {
+            "avg": 13791.4820625,
+            "min": 12045.3996,
+            "med": 13747.4177,
+            "p(90)": 15128.01482,
+            "p(95)": 15815.724404999999,
+            "p(99)": 15894.226550000001,
+            "max": 15895.7967
+        },
+        "completed_workflows": {
+            "count": 32,
+            "rate": 0.2823294256264579
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "max": 0
+        },
+        "latency_read_product_detail_ms": {
+            "avg": 3.5726187499999993,
+            "min": 0.7753,
+            "med": 3.6048,
+            "p(90)": 4.86714,
+            "p(95)": 5.146405,
+            "p(99)": 5.473835,
+            "max": 5.5797
+        },
+        "http_req_duration": {
+            "avg": 11.486296874999999,
+            "min": 0.6486,
+            "med": 5.9388000000000005,
+            "p(90)": 23.246830000000003,
+            "p(95)": 46.817519999999966,
+            "p(99)": 54.115024999999996,
+            "max": 67.9126
+        },
+        "data_sent": {
+            "count": 72148,
+            "rate": 636.5469812530526
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 11.486296874999999,
+            "min": 0.6486,
+            "med": 5.9388000000000005,
+            "p(90)": 23.246830000000003,
+            "p(95)": 46.817519999999966,
+            "p(99)": 54.115024999999996,
+            "max": 67.9126
+        },
+        "vus_max": {
+            "value": 4,
+            "min": 4,
+            "max": 4
+        },
+        "latency_read_profile_ms": {
+            "min": 2.2014,
+            "med": 5.8279499999999995,
+            "p(90)": 7.617420000000001,
+            "p(95)": 9.349594999999999,
+            "p(99)": 36.55147900000004,
+            "max": 48.077,
+            "avg": 6.775578125
+        },
+        "http_req_sending": {
+            "p(99)": 0.5610469999999996,
+            "max": 0.7005,
+            "avg": 0.021162847222222225,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "workflow_success": {
+            "passes": 32,
+            "fails": 0,
+            "value": 1
+        },
+        "workflow_http_requests": {
+            "count": 288,
+            "rate": 2.540964830638121
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 288,
+            "value": 0
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 4
+        },
+        "data_received": {
+            "count": 142620,
+            "rate": 1258.3069588389196
+        },
+        "latency_checkout_ms": {
+            "min": 9.7682,
+            "med": 20.27705,
+            "p(90)": 42.275160000000035,
+            "p(95)": 50.23517,
+            "p(99)": 54.05980900000001,
+            "max": 54.7871,
+            "avg": 23.505615625000004
+        },
+        "iterations": {
+            "count": 32,
+            "rate": 0.2823294256264579
+        },
+        "latency_read_categories_ms": {
+            "med": 3.6702500000000002,
+            "p(90)": 4.9393199999999995,
+            "p(95)": 5.579434999999999,
+            "p(99)": 6.30473,
+            "max": 6.3844,
+            "avg": 3.590896875,
+            "min": 1.1195
+        },
+        "http_req_blocked": {
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 19.1127,
+            "max": 19.1127,
+            "avg": 0.27180104166666663
+        },
+        "latency_add_to_cart_ms": {
+            "p(99)": 9.762027000000003,
+            "max": 10.6636,
+            "avg": 4.887190625000001,
+            "min": 0.8283,
+            "med": 4.98155,
+            "p(90)": 6.68642,
+            "p(95)": 7.4012649999999995
+        },
+        "latency_update_profile_ms": {
+            "avg": 26.69816562500001,
+            "min": 4.1232,
+            "med": 20.2917,
+            "p(90)": 52.47175,
+            "p(95)": 54.90614,
+            "p(99)": 64.21839200000001,
+            "max": 67.9126
+        },
+        "http_reqs": {
+            "count": 288,
+            "rate": 2.540964830638121
+        },
+        "http_req_receiving": {
+            "p(99)": 6.277620999999999,
+            "max": 6.7763,
+            "avg": 1.2722756944444442,
+            "min": 0,
+            "med": 0.79585,
+            "p(90)": 3.3608800000000008,
+            "p(95)": 4.783674999999995
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 1120,
+            "value": 1
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 1.3475,
+            "max": 1.3475,
+            "avg": 0.018715277777777775
+        },
+        "workflow_think_time_ms": {
+            "avg": 13675.487040837217,
+            "min": 11879.88621011297,
+            "med": 13659.072499232907,
+            "p(90)": 14989.58185258249,
+            "p(95)": 15705.05990286862,
+            "p(99)": 15801.56660602497,
+            "max": 15818.318340204418
+        },
+        "latency_register_ms": {
+            "p(99)": 52.493978000000006,
+            "max": 52.5951,
+            "avg": 24.323649999999997,
+            "min": 5.9519,
+            "med": 18.716900000000003,
+            "p(90)": 50.676100000000005,
+            "p(95)": 51.423880000000004
+        },
+        "workflow_wall_time_ms": {
+            "avg": 13791.46875,
+            "min": 12045,
+            "med": 13747,
+            "p(90)": 15128.1,
+            "p(95)": 15816.2,
+            "p(99)": 15894.45,
+            "max": 15896
+        },
+        "http_req_waiting": {
+            "p(99)": 52.662934,
+            "max": 67.4873,
+            "avg": 10.192858333333332,
+            "min": 0.436,
+            "med": 4.48035,
+            "p(90)": 22.568310000000004,
+            "p(95)": 45.397024999999985
+        },
+        "latency_login_ms": {
+            "max": 16.0722,
+            "avg": 7.012834375,
+            "min": 0.9802,
+            "med": 7.63425,
+            "p(90)": 8.70763,
+            "p(95)": 9.770184999999998,
+            "p(99)": 14.338060000000006
+        },
+        "workflow_api_time_ms": {
+            "p(99)": 175.90044500000002,
+            "max": 177.2801,
+            "avg": 103.37667187500003,
+            "min": 59.267199999999995,
+            "med": 88.1132,
+            "p(90)": 161.45980000000003,
+            "p(95)": 172.32635
+        },
+        "latency_read_products_ms": {
+            "max": 6.0488,
+            "avg": 3.0101218750000007,
+            "min": 0.6486,
+            "med": 3.2350000000000003,
+            "p(90)": 4.48233,
+            "p(95)": 4.615024999999999,
+            "p(99)": 5.647722000000002
+        }
+    }
+}

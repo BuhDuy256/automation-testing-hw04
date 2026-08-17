@@ -1,0 +1,29 @@
+{
+  "observed_at_local": "2026-08-17",
+  "manufacturer": "Dell Inc.",
+  "model": "Inspiron 15 3530",
+  "cpu": {
+    "model": "13th Gen Intel(R) Core(TM) i7-1355U",
+    "physical_cores": 10,
+    "logical_processors": 12,
+    "reported_max_clock_mhz": 1700
+  },
+  "memory": {
+    "total_physical_bytes": 16857645056,
+    "total_physical_gib": 15.7
+  },
+  "operating_system": {
+    "caption": "Microsoft Windows 11 Home Single Language",
+    "version": "10.0.26200",
+    "build": "26200",
+    "architecture": "64-bit"
+  },
+  "storage": {
+    "model": "NVMe P0221 NVMe Phison 512GB",
+    "media_type": "SSD",
+    "bus_type": "NVMe",
+    "size_bytes": 512110190592,
+    "health_status": "Healthy"
+  },
+  "execution_placement": "k6 and the complete local EShop SUT ran on this same machine"
+}

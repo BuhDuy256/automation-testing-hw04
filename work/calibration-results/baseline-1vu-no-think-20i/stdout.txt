@@ -1,0 +1,100 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: C:\Users\Duy\Desktop\automation-testing-hw04\work\k6_workflow_calibration.js
+        output: json (C:\Users\Duy\Desktop\automation-testing-hw04\work\calibration-results\baseline-1vu-no-think-20i\raw.json)
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * calibration: 20 iterations for each of 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  45% ] 1 VUs  00m01.0s/10m0s  09/20 iters, 20 per VU
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 700     378.94604/s
+    checks_succeeded...: 100.00% 700 out of 700
+    checks_failed......: 0.00%   0 out of 700
+
+    ✓ register status is 200
+    ✓ register message is correct
+    ✓ register user id is positive
+    ✓ login status is 200
+    ✓ login token is present
+    ✓ login email matches registration
+    ✓ login user id matches registration
+    ✓ profile status is 200
+    ✓ profile email matches registration
+    ✓ profile user id matches registration
+    ✓ profile payload has CSV name
+    ✓ profile payload has CSV phone
+    ✓ profile payload has CSV shipping address
+    ✓ profile update status is 200
+    ✓ profile update message is correct
+    ✓ categories status is 200
+    ✓ categories array is non-empty
+    ✓ selected category id is positive
+    ✓ products status is 200
+    ✓ products array is non-empty
+    ✓ matching product exists
+    ✓ product detail status is 200
+    ✓ product detail id matches selection
+    ✓ product detail category matches selection
+    ✓ product detail name is non-empty
+    ✓ product detail price is positive numeric
+    ✓ cart payload preserves product detail
+    ✓ cart payload quantity is CSV quantity
+    ✓ add to cart status is 200
+    ✓ add to cart message is correct
+    ✓ checkout payload has exact CSV shipping address
+    ✓ checkout total is correlated and positive
+    ✓ checkout status is 200
+    ✓ checkout message is correct
+    ✓ checkout order id is positive
+
+    CUSTOM
+    completed_workflows..............: 20      10.82703/s
+    latency_add_to_cart_ms...........: avg=5.9ms   min=2.62ms  med=5.64ms  p(90)=7.69ms   p(95)=9.52ms   p(99)=9.92ms   max=10.02ms 
+    latency_checkout_ms..............: avg=19.58ms min=13.68ms med=18.88ms p(90)=23.17ms  p(95)=25.4ms   p(99)=27.94ms  max=28.58ms 
+    latency_login_ms.................: avg=7.75ms  min=3.35ms  med=7.62ms  p(90)=9.58ms   p(95)=10.06ms  p(99)=13.29ms  max=14.1ms  
+    latency_read_categories_ms.......: avg=3.53ms  min=544.4µs med=3.43ms  p(90)=4.65ms   p(95)=5.02ms   p(99)=5.31ms   max=5.38ms  
+    latency_read_product_detail_ms...: avg=3.33ms  min=509.2µs med=3.67ms  p(90)=4.68ms   p(95)=4.8ms    p(99)=5.06ms   max=5.13ms  
+    latency_read_products_ms.........: avg=3.44ms  min=704.6µs med=3.51ms  p(90)=4.53ms   p(95)=4.62ms   p(99)=5.19ms   max=5.33ms  
+    latency_read_profile_ms..........: avg=6.42ms  min=560µs   med=6.89ms  p(90)=8.34ms   p(95)=8.48ms   p(99)=8.66ms   max=8.7ms   
+    latency_register_ms..............: avg=16.75ms min=9.47ms  med=17.04ms p(90)=20.59ms  p(95)=21.05ms  p(99)=23.64ms  max=24.29ms 
+    latency_update_profile_ms........: avg=19.55ms min=12.85ms med=19.85ms p(90)=22.44ms  p(95)=23.27ms  p(99)=23.9ms   max=24.06ms 
+    workflow_api_time_ms.............: avg=86.3ms  min=63.09ms med=86.21ms p(90)=99.61ms  p(95)=105.39ms p(99)=107.65ms max=108.21ms
+    workflow_http_requests...........: 180     97.443267/s
+    workflow_success.................: 100.00% 20 out of 20
+    workflow_think_time_ms...........: avg=0s      min=0s      med=0s      p(90)=0s       p(95)=0s       p(99)=0s       max=0s      
+    workflow_wall_time_ms............: avg=92.2ms  min=66ms    med=91.5ms  p(90)=109ms    p(95)=109.2ms  p(99)=112.24ms max=113ms   
+
+    HTTP
+    http_req_duration................: avg=9.58ms  min=509.2µs med=6.96ms  p(90)=20.15ms  p(95)=21.39ms  p(99)=24.49ms  max=28.58ms 
+      { expected_response:true }.....: avg=9.58ms  min=509.2µs med=6.96ms  p(90)=20.15ms  p(95)=21.39ms  p(99)=24.49ms  max=28.58ms 
+    http_req_failed..................: 0.00%   0 out of 180
+    http_reqs........................: 180     97.443267/s
+
+    EXECUTION
+    iteration_duration...............: avg=92.3ms  min=66.01ms med=92.22ms p(90)=108.65ms p(95)=110.03ms p(99)=112.28ms max=112.84ms
+    iterations.......................: 20      10.82703/s
+    vus..............................: 1       min=1        max=1
+    vus_max..........................: 1       min=1        max=1
+
+    NETWORK
+    data_received....................: 89 kB   48 kB/s
+    data_sent........................: 45 kB   24 kB/s
+
+
+
+
+running (00m01.8s), 0/1 VUs, 20 complete and 0 interrupted iterations
+calibration ✓ [ 100% ] 1 VUs  00m01.8s/10m0s  20/20 iters, 20 per VU

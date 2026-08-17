@@ -1,0 +1,8 @@
+{
+  "access_mode": "read-only",
+  "calibration_users": 119,
+  "calibration_orders": 119,
+  "orders_with_missing_shipping_address": 0,
+  "distinct_ordering_users": 119,
+  "interpretation": "Every calibration identity created exactly one order, and every order stored a non-empty shipping address."
+}
