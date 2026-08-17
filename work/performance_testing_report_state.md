@@ -16,7 +16,7 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 
 | Milestone | Evidence strategy | Status | Note |
 |---|---|---|---|
-| Soak / Endurance | Raw k6 NDJSON, summary JSON, resource CSV files, and factual Markdown window summary | INVALID / INCOMPLETE; NEW RUN PREPARED | First real invocation `20260817t225458219` is preserved as technically INVALID and submission-INCOMPLETE. Replacement invocation `20260818t000551547` is prepared but not executed. Soak remains outside the three-report uniqueness rule. |
+| Soak / Endurance | Raw k6 NDJSON, summary JSON, resource CSV files, and factual Markdown window summary | COMPLETE — measured official invocation | Official Soak Run ID `20260818t000551547`: technical validity VALID, k6 exit code 0, zero HTTP/check/workflow failures, 120-second recovery completed. Historical invalid Soak `20260817t225458219`: PRESERVED / NOT OFFICIAL RESULT (harness-failure and audit history only; must never be mixed into or presented alongside the official result). Soak remains outside the three-report uniqueness rule; screenshot evidence for Soak is OPTIONAL / NOT REQUIRED FOR SOAK COMPLETION per HW05 Section 6 Task 1 (the mandatory same-run screenshot bullet names Load/Stress/Spike, not the separate endurance/soak bullet). |
 
 ## Lifecycle Milestone State
 
@@ -25,6 +25,23 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 | Load | COMPLETE | `20260817t045341487` |
 | Stress | COMPLETE | `20260817t115158688` |
 | Spike | COMPLETE | `20260817t134816776`; technical validity VALID; submission completeness COMPLETE for the Spike Task 1 milestone |
-| Soak / Endurance | HARNESS FIXED / NEW RUN PREPARED / NOT EXECUTED | `20260817t225458219` is retired after real invalid traffic; atomic runtime-state publishing is regression-tested; `20260818t000551547` is reserved for the next separately authorized execution |
+| Soak / Endurance | COMPLETE — measured official invocation | Official Soak Run ID: `20260818t000551547`; technical validity VALID; measured-data completeness COMPLETE; screenshot excluded (private content, not required for Soak). Historical invalid Soak: `20260817t225458219`, PRESERVED / NOT OFFICIAL RESULT. |
 | HW05 Task 2 | NOT COMPLETE | No interpretation or misinterpretation analysis performed by this milestone |
 | HW05 Task 3 | NOT COMPLETE | Continuous-performance-testing proposal remains a later milestone |
+
+## Frozen Soak Threshold Facts (measured only — Task 2 will interpret)
+
+These are directly measured facts from official invocation `20260818t000551547`, frozen here for
+later Task 2 use. They are not yet labelled production capacity, an SLO, or maximum stable RPS.
+
+- Minimum observed steady-window request rate: **7.983333 req/s**.
+- Minimum observed steady-window clean-workflow rate: **0.829167 workflows/s**.
+- Early-to-late request-rate change: **~-0.47%**.
+- Early-to-late workflow-rate change: **~-0.98%**.
+- Zero correctness failures (0 HTTP failures, 0 failed checks, 0 failed workflows) across all
+  three steady windows.
+- Backend memory factual status: `mixed_or_requires_human_review` (not a leak/defect diagnosis).
+
+Safe factual wording for later use: "At the reviewed 12-VU sustained load, the test observed at
+least 7.983333 req/s and 0.829167 clean workflows/s across the measured steady windows with zero
+correctness failures."

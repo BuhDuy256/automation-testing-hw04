@@ -34,8 +34,8 @@ This README is the submission index and self-assessment summary for HW05.
 | Auth-heavy endpoint group | TODO |
 | Read-heavy endpoint group | TODO |
 | Transactional endpoint group | TODO |
-| Scenarios executed | TODO - record Load, Stress, Spike, and Endurance/Soak status |
-| Endurance threshold | TODO - include concrete stable RPS and/or memory ceiling |
+| Scenarios executed | Load `20260817t045341487` (COMPLETE), Stress `20260817t115158688` (COMPLETE), Spike `20260817t134816776` (COMPLETE), Soak/Endurance — **official valid Soak Run ID `20260818t000551547`** (COMPLETE; technical validity VALID, k6 exit code 0, 120-second recovery completed). A historical invocation, Run ID `20260817t225458219`, is preserved separately as harness-failure/audit history only and is **not** an official successful Soak result — see `out/23127179_Soak_20260817_evidence/20260818t000551547/completion-report.md`. |
+| Endurance threshold | Directly measured facts only (Task 2 will interpret them as a threshold/capacity claim): minimum observed steady-window request rate **7.983333 req/s**, minimum observed steady-window clean-workflow rate **0.829167 workflows/s**, zero HTTP/check/workflow failures across all three steady windows, early-to-late change ~-0.47% req/s / ~-0.98% workflows/s. Backend memory direction is factually `mixed_or_requires_human_review`, not diagnosed as a leak. See `out/23127179_Soak_20260817_evidence/20260818t000551547/soak-window-summary.md`. |
 | Bugs or performance issues | TODO - state the count and link GitHub Issues, or state none found |
 | Demo video | Student-provided links are recorded in **Submission Video Links** below; duration, narration, and visible-content compliance remain human submission checks. |
 
