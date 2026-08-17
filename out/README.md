@@ -22,7 +22,7 @@ This README is the submission index and self-assessment summary for HW05.
 | Stress testing | 20 | TODO | TODO |
 | Spike testing | 20 | TODO | TODO |
 | AI analysis and misinterpretation hunt | 10 | COMPLETE / HUMAN-REVIEWED | [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md) |
-| Continuous performance-testing proposal | 10 | TODO | TODO |
+| Continuous performance-testing proposal | 10 | AWAITING HUMAN REVIEW | [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md) |
 | Agent Skill | 10 | TODO | TODO |
 | **Total** | **100** | **TODO** | — |
 
@@ -43,7 +43,13 @@ This README is the submission index and self-assessment summary for HW05.
 
 Final AI analysis and human-approved corrections are recorded in [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). It uses the four official valid runs. The approved regression guards cover zero HTTP failures, 100% checks/workflow success, bounded p95/p99 latency, the 12-VU endurance floor, and ≤5% Soak degradation; these are regression guards, not business SLOs or production-capacity claims. Optimization classifications are binary FEASIBLE/HALLUCINATED, with benchmarking required before implementation. Task 2 is COMPLETE / HUMAN-REVIEWED. No optimization was implemented and no GitHub Issue was created.
 
-Final submission artifact: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md). The detailed working/review source remains [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). Task 2 is COMPLETE / HUMAN-REVIEWED. Task 3 is NOT STARTED.
+Final submission artifact: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md). The detailed working/review source remains [`work/task2_performance_analysis.md`](../work/task2_performance_analysis.md). Task 2 is COMPLETE / HUMAN-REVIEWED.
+
+## Task 3 — Continuous Performance Testing
+
+Full design, trade-off discussion, and human-review checklist: [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md). Pipeline implementation: [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
+
+The pipeline runs the same frozen 9-step E2E workflow used by Task 1/2 at two cost tiers: a short 3-VU/~70s **regression** job on every push/PR (`http_req_failed==0`, `checks==1`, `workflow_success==1`, HTTP p95 `<=25ms`, p99 `<=50ms`), and the full, unmodified 12-VU/12-minute official Soak script as a separate **endurance** job on manual dispatch or a weekly schedule (sustained throughput `>=7.983 req/s`, clean workflow rate `>=0.829 workflows/s`, early-to-late degradation `<=5%` — the same HUMAN-APPROVED Task 2 regression guards). Either job fails CI with a metric/observed/guard/PASS-FAIL table when a guard is violated. These are regression guards for a comparable harness/profile, not business SLOs or production-capacity claims. Task 3 is **AWAITING HUMAN REVIEW**.
 
 ## Submission Video Links
 
@@ -62,7 +68,7 @@ Final submission artifact: [`Task2_Performance_Result_Analysis.md`](Task2_Perfor
 - Task 2 Performance Result Analysis: [`Task2_Performance_Result_Analysis.md`](Task2_Performance_Result_Analysis.md).
 - AI Critique in Markdown and PDF: TODO - add paths.
 - AI Audit Report in Markdown and PDF: TODO - add paths.
-- Continuous performance-testing proposal and flowchart: TODO - add paths.
+- Continuous performance-testing proposal and flowchart: [`work/task3_continuous_performance_pipeline.md`](../work/task3_continuous_performance_pipeline.md); implementation in [`.github/workflows/performance-regression.yml`](../.github/workflows/performance-regression.yml) and [`out/ci/`](ci/).
 - Performance Testing Lifecycle Skill and its demonstration evidence: [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/) and **Performance Testing Agent Skill Demo** above.
 - Git commit log: [`git-commit-log.txt`](git-commit-log.txt).
 

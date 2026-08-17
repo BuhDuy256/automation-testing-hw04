@@ -1,0 +1,196 @@
+name: Performance Regression
+
+# HW05 Task 3 — continuous performance regression pipeline for the EShop backend.
+#
+# Two independent jobs, split by cost:
+#   - regression: short, deterministic 3-VU/~70s profile on every push/PR. Enforces the
+#     HUMAN-APPROVED correctness + latency regression guards (see
+#     work/task3_continuous_performance_pipeline.md).
+#   - endurance: the full, unmodified 12-VU/12-minute official Soak protocol
+#     (out/23127179_Soak_20260817.js). Enforces the throughput/clean-workflow-rate/
+#     degradation guards that require that full profile. Runs only on manual dispatch or a
+#     weekly schedule — never on every commit — because it is far more expensive.
+#
+# Neither job is a business SLO gate: both guard against measurable regressions relative to
+# the HUMAN-REVIEWED Task 1/2 baseline, on this repository's own hardware/dataset/harness.
+
+on:
+  push:
+    branches: [main, hw05-performance]
+  pull_request:
+    branches: [main, hw05-performance]
+  workflow_dispatch: {}
+  schedule:
+    # Weekly endurance run. Cron always triggers every job in the workflow file, so each job
+    # below re-checks github.event_name and skips itself when it does not apply.
+    - cron: '0 18 * * 0'
+
+jobs:
+  regression:
+    name: Short regression profile (correctness + latency)
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: eshop-sut/backend
+
+      - name: Start backend
+        run: |
+          nohup node server.js > "$RUNNER_TEMP/backend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/backend.pid"
+        working-directory: eshop-sut/backend
+
+      - name: Wait for backend health
+        run: |
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/api/products | grep -q '^200$'; then
+              echo "Backend healthy after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Backend did not become healthy in time" >&2
+          cat "$RUNNER_TEMP/backend.log" >&2
+          exit 1
+
+      - name: Set up k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: 'v2.1.0'
+
+      - name: Run k6 regression profile
+        id: k6
+        env:
+          BASE_URL: http://localhost:3000
+          WORKFLOW_CSV_PATH: ../user_workflow_data.csv
+        run: |
+          mkdir -p ci-artifacts/regression
+          run_id="gha$(date -u +%Y%m%d%H%M%S)"
+          echo "K6_RUN_ID=$run_id" >> "$GITHUB_ENV"
+          K6_RUN_ID="$run_id" k6 run \
+            --summary-export=ci-artifacts/regression/summary.json \
+            out/ci/regression_workflow.js \
+            | tee ci-artifacts/regression/k6-stdout.log
+
+      - name: Evaluate regression guards
+        run: |
+          node out/ci/evaluate_regression.js \
+            ci-artifacts/regression/summary.json \
+            ci-artifacts/regression/regression-result.json
+
+      - name: Stop backend
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/backend.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/backend.pid")" 2>/dev/null || true
+          fi
+
+      - name: Upload regression artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-regression-${{ github.run_id }}
+          path: |
+            ci-artifacts/regression/summary.json
+            ci-artifacts/regression/regression-result.json
+            ci-artifacts/regression/regression-result.md
+            ci-artifacts/regression/k6-stdout.log
+          retention-days: 14
+          if-no-files-found: warn
+
+  endurance:
+    name: Full 12-VU/12-minute endurance profile
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: eshop-sut/backend
+
+      - name: Start backend
+        run: |
+          nohup node server.js > "$RUNNER_TEMP/backend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/backend.pid"
+        working-directory: eshop-sut/backend
+
+      - name: Wait for backend health
+        run: |
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/api/products | grep -q '^200$'; then
+              echo "Backend healthy after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Backend did not become healthy in time" >&2
+          cat "$RUNNER_TEMP/backend.log" >&2
+          exit 1
+
+      - name: Set up k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: 'v2.1.0'
+
+      - name: Run the official Soak protocol (unmodified)
+        env:
+          BASE_URL: http://localhost:3000
+        run: |
+          mkdir -p ci-artifacts/endurance
+          run_id="ghaend$(date -u +%Y%m%d%H%M%S)"
+          echo "K6_RUN_ID=$run_id" >> "$GITHUB_ENV"
+          K6_RUN_ID="$run_id" k6 run \
+            --summary-export=ci-artifacts/endurance/summary.json \
+            --out json=ci-artifacts/endurance/raw-results.ndjson \
+            out/23127179_Soak_20260817.js
+        working-directory: out
+
+      - name: Evaluate endurance guards
+        run: |
+          node out/ci/evaluate_endurance.js \
+            out/ci-artifacts/endurance/raw-results.ndjson \
+            out/ci-artifacts/endurance/endurance-result.json
+
+      - name: Stop backend
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/backend.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/backend.pid")" 2>/dev/null || true
+          fi
+
+      - name: Upload endurance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-endurance-${{ github.run_id }}
+          path: |
+            out/ci-artifacts/endurance/summary.json
+            out/ci-artifacts/endurance/endurance-result.json
+            out/ci-artifacts/endurance/endurance-result.md
+            out/ci-artifacts/endurance/raw-results.ndjson
+          retention-days: 5
+          if-no-files-found: warn
