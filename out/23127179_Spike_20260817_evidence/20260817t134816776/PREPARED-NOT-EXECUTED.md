@@ -1,6 +1,8 @@
 # Official Spike Invocation Reservation
 
-Status: **PREPARED — NOT EXECUTED**
+Status: **RESERVATION CONSUMED — EXECUTED 2026-08-17**
+
+This file recorded the pre-execution reservation. The reservation was consumed by the single official Spike invocation on 2026-08-17 (k6 scenario start `2026-08-17T14:20:09Z`, exit code 0). See `completion-report.md`, `post-run-verification-notes.md`, and `screenshot-manifest.md`. The statements below describe the state at reservation time and are kept unchanged for that record.
 
 - Reserved `K6_RUN_ID`: `20260817t134816776`
 - Scenario: `23127179_Spike_20260817`

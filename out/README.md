@@ -37,7 +37,14 @@ This README is the submission index and self-assessment summary for HW05.
 | Scenarios executed | TODO - record Load, Stress, Spike, and Endurance/Soak status |
 | Endurance threshold | TODO - include concrete stable RPS and/or memory ceiling |
 | Bugs or performance issues | TODO - state the count and link GitHub Issues, or state none found |
-| Demo video | TODO - add the unlisted YouTube URL |
+| Demo video | Student-provided links are recorded in **Submission Video Links** below; duration, narration, and visible-content compliance remain human submission checks. |
+
+## Submission Video Links
+
+- **Performance Testing Execution Video:** https://youtu.be/86qyG0n4Mbs?si=2YBhaUXCnj0kp457
+  - Requirement mapping: HW05 Task 1 unlisted performance-testing demo video evidence. The assignment requires at least six minutes total, the test tool and resource monitor in the same frame, and the student's Vietnamese narration; this index records the student-provided URL without inferring those properties from it.
+- **Performance Testing Agent Skill Demo:** https://youtu.be/CXb7EEgjFBs?si=WkQDOfhaKJfTDuuU
+  - Requirement mapping: HW05 Section 7 demonstration-video evidence for the submitted reusable Performance Testing Lifecycle Skill. This index records the student-provided URL without inferring its contents or duration.
 
 ## Submission Contents
 
@@ -49,6 +56,7 @@ This README is the submission index and self-assessment summary for HW05.
 - AI Critique in Markdown and PDF: TODO - add paths.
 - AI Audit Report in Markdown and PDF: TODO - add paths.
 - Continuous performance-testing proposal and flowchart: TODO - add paths.
+- Performance Testing Lifecycle Skill and its demonstration evidence: [`.codex/skills/performance-testing-lifecycle/`](../.codex/skills/performance-testing-lifecycle/) and **Performance Testing Agent Skill Demo** above.
 - Git commit log: [`git-commit-log.txt`](git-commit-log.txt).
 
 Final submission files belong in `out/`; intermediate drafts and exploratory artifacts belong in [`work/`](../work/).
