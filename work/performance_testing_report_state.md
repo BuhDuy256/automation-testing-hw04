@@ -12,6 +12,12 @@ Raw NDJSON, summary JSON, stdout/stderr, resource CSV files, and screenshots are
 
 Stress and Spike were assigned only after explicit human review. Spike's native CSV is a k6 metric stream and is distinct from the external process/system resource CSV files. Spike could not be marked `USED` until official Spike traffic produced the invocation-specific file; that gate was satisfied on 2026-08-17 by run `20260817t134816776`, whose `spike-metrics.csv` was verified after execution rather than on the strength of the command having been issued.
 
+## Additional Endurance Evidence Milestone
+
+| Milestone | Evidence strategy | Status | Note |
+|---|---|---|---|
+| Soak / Endurance | Raw k6 NDJSON, summary JSON, resource CSV files, and factual Markdown window summary | IMPLEMENTED / NOT EXECUTED | Additional Task 1 endurance evidence. It is not a fourth designated report and is not part of the Load/Stress/Spike report-type uniqueness rule. |
+
 ## Lifecycle Milestone State
 
 | Milestone | Status | Official invocation / note |
@@ -19,6 +25,6 @@ Stress and Spike were assigned only after explicit human review. Spike's native 
 | Load | COMPLETE | `20260817t045341487` |
 | Stress | COMPLETE | `20260817t115158688` |
 | Spike | COMPLETE | `20260817t134816776`; technical validity VALID; submission completeness COMPLETE for the Spike Task 1 milestone |
-| Soak / Endurance | NOT COMPLETE | Not started by this milestone |
+| Soak / Endurance | IMPLEMENTED / NOT EXECUTED | Human-reviewed design, Skill extension, test script, evidence runner, and factual verifier prepared; official traffic remains blocked |
 | HW05 Task 2 | NOT COMPLETE | No interpretation or misinterpretation analysis performed by this milestone |
 | HW05 Task 3 | NOT COMPLETE | Continuous-performance-testing proposal remains a later milestone |
