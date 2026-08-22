@@ -20,14 +20,16 @@
 
 This report follows the FIT@HCMUS AI Audit Report template. It requires one row per AI-generated artifact, the verbatim prompt, verbatim AI output, a VALID/INVALID/INCOMPLETE verdict, reasoning supported by a course or technical reference, and the student's correction.
 
-At this checkpoint, the repository contains no captured ACT-AI-01 interaction records:
+At this checkpoint, ACT-GEN-01 is complete for FR-04 with 47 AI-generated candidates in the canonical test-case registry, but ACT-REV-01 has not started:
 
 ```text
-work/registry/ai-interactions.json
-interactions: []
+work/registry/test-cases.json
+AI candidates: 47
+work/registry/human-reviews.json
+human reviews: 0
 ```
 
-Therefore, no verbatim prompt/output pair is reproduced or reconstructed here. The HW06 API-selection analysis and scoped specification extracts exist, but they are not a substitute for captured AI interaction evidence. Test generation has not started.
+Therefore, no audit row is added or reconstructed here. The official report is artifact-level: one row per AI-generated test case, populated only after the student supplies the human verdict, reasoning, and student fix. The report is updated only after an explicit request such as “Ghi AI Audit Report”.
 
 ## 3. Audit Table — one row per artifact
 
@@ -35,7 +37,7 @@ No auditable AI-generated artifact is currently recorded. The row below is inten
 
 | (1) Prompt + Tool | (2) AI Output | (3) Verdict | (4) Reasoning (ISTQB) | (5) Student Fix |
 |---|---|---|---|---|
-| No captured artifact. Tool/prompt/time are unavailable in the canonical audit registry. | No captured verbatim output. | — | A VALID/INVALID/INCOMPLETE verdict cannot be assigned without the artifact and its source evidence. | Capture the exact prompt and output with ACT-AI-01 before using the artifact as HW06 evidence. |
+| No reviewed AI-generated artifact is ready for report entry. | Pending explicit human audit request and artifact-level source context. | — | ACT-REV-01 has not supplied a verdict or reasoning. | Complete human review first; then explicitly request the AI Audit Report update. |
 
 ## 4. Summary of AI Accuracy
 
@@ -46,7 +48,7 @@ No auditable AI-generated artifact is currently recorded. The row below is inten
 | **INVALID (wrong; rejected)** | 0 | 0% |
 | **INCOMPLETE (acceptable after edits)** | 0 | 0% |
 
-These counts describe the captured audit registry at this checkpoint. They do not claim that no AI assistance occurred outside the registry; they indicate that no interaction is currently auditable under the repository's evidence rules.
+These counts describe reviewed artifact rows in this report. They do not claim that no AI-generated candidates exist; the 47 FR-04 candidates remain pending ACT-REV-01.
 
 ## 5. Conclusion — When should AI be used (or not)?
 
@@ -54,7 +56,7 @@ AI is useful for decomposing an authoritative API specification into candidate p
 
 ## 6. Mandatory Disclosure
 
-> API-selection analysis and scoped API-specification documentation were initially generated with assistance from Codex; I reviewed and modified the documents against the official HW06 requirement, the official EShop API specification, and the EShop README. Test cases have not yet been generated. The detailed AI Audit Report is attached as Appendix A. I confirm I did not use AI to generate any artifact listed in the prohibited category.
+> API-selection analysis, scoped API-specification documentation, and FR-04 test candidates were generated with assistance from Codex; I reviewed and modified the documents against the official HW06 requirement, the official EShop API specification, and the EShop README. The detailed AI Audit Report remains pending human review and an explicit report-writing request. I confirm I did not use AI to generate any artifact listed in the prohibited category.
 
 ### Signature
 
@@ -79,4 +81,4 @@ AI is useful for decomposing an authoritative API specification into candidate p
 
 ## Completion note
 
-Before final submission, each AI-generated test case, script, report section, or other AI-assisted artifact must be added as an auditable row with its verbatim prompt/output, verdict, technical reasoning, and student correction. Capture future interactions through ACT-AI-01 and regenerate the audit ledger with `npm run hw06:derive`.
+Before final submission, each reviewed AI-generated test case, script, report section, or other AI-assisted artifact must be added as an artifact-level row with its prompt/context and tool, original AI output, human verdict, reasoning, and student correction. Update this report only after an explicit human request; do not create automatic interaction logs or a derived interaction ledger.

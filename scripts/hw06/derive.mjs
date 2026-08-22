@@ -1,6 +1,4 @@
-import fs from 'node:fs';
 import {
-  absoluteFromRepo,
   fileExists,
   markdownCell,
   readJson,
@@ -9,7 +7,6 @@ import {
 } from './common.mjs';
 
 const project = readJson('work/registry/project.json');
-const interactions = readJson('work/registry/ai-interactions.json').interactions;
 const cases = readJson('work/registry/test-cases.json').cases;
 const reviews = readJson('work/registry/human-reviews.json').reviews;
 const runs = readJson('work/registry/runs.json').runs;
@@ -62,7 +59,6 @@ writeJson('work/generated/test-summary.json', {
   apis: apiRows,
   totals,
   bugCount: bugs.filter((bug) => bug.status !== 'candidate').length,
-  aiInteractionCount: interactions.length,
 });
 
 const summaryLines = [
@@ -90,50 +86,15 @@ const traceabilityLines = [
   '',
   '> Generated from canonical registries. Empty cells mean missing traceability, not absence of a requirement.',
   '',
-  '| Case | API | Origin | Requirement refs | AI interaction | Human verdict | Run results | Bugs |',
+  '| Case | API | Origin | Requirement refs | AI source context | Human verdict | Run results | Bugs |',
   '|---|---|---|---|---|---|---|---|',
   ...cases.map((testCase) => {
     const review = reviewByCase.get(testCase.id);
-    return `| ${markdownCell(testCase.id)} | ${markdownCell(testCase.apiId)} | ${markdownCell(testCase.origin)} | ${markdownCell((testCase.requirementRefs ?? []).join(', '))} | ${markdownCell(testCase.generationInteractionId ?? '—')} | ${markdownCell(review?.verdict ?? (testCase.origin === 'HUMAN' ? 'HUMAN-AUTHORED' : 'MISSING'))} | ${markdownCell((resultsByCase.get(testCase.id) ?? []).join(', '))} | ${markdownCell((bugsByCase.get(testCase.id) ?? []).join(', '))} |`;
+    return `| ${markdownCell(testCase.id)} | ${markdownCell(testCase.apiId)} | ${markdownCell(testCase.origin)} | ${markdownCell((testCase.requirementRefs ?? []).join(', '))} | ${markdownCell(testCase.generationContext ?? '')} | ${markdownCell(review?.verdict ?? (testCase.origin === 'HUMAN' ? 'HUMAN-AUTHORED' : 'MISSING'))} | ${markdownCell((resultsByCase.get(testCase.id) ?? []).join(', '))} | ${markdownCell((bugsByCase.get(testCase.id) ?? []).join(', '))} |`;
   }),
   '',
 ];
 writeText('work/generated/traceability.md', `${traceabilityLines.join('\n')}\n`);
-
-const auditLines = [
-  '# HW06 AI Interaction Ledger (Derived)',
-  '',
-  '> This working report is generated from captured prompt/output files. Human review fields remain human-owned.',
-  '',
-];
-for (const interaction of interactions) {
-  const prompt = fileExists(interaction.promptPath) ? fs.readFileSync(absoluteFromRepo(interaction.promptPath), 'utf8') : '[MISSING PROMPT FILE]';
-  const output = fileExists(interaction.outputPath) ? fs.readFileSync(absoluteFromRepo(interaction.outputPath), 'utf8') : '[MISSING OUTPUT FILE]';
-  auditLines.push(
-    `## ${interaction.id} — ${interaction.task}`,
-    '',
-    `- Tool: ${interaction.tool}`,
-    `- Date/time: ${interaction.occurredAtUtc ?? interaction.capturedAtUtc}`,
-    `- Timestamp basis: ${interaction.timestampBasis}`,
-    `- Human verdict: ${interaction.humanReview?.verdict ?? 'PENDING HUMAN REVIEW'}`,
-    `- Review reasoning: ${interaction.humanReview?.reasoning ?? 'PENDING HUMAN REVIEW'}`,
-    `- Student fix: ${interaction.humanReview?.studentFix ?? 'PENDING HUMAN REVIEW'}`,
-    '',
-    '### Verbatim prompt',
-    '',
-    '```text',
-    prompt.replaceAll('```', '``\u200b`'),
-    '```',
-    '',
-    '### Verbatim AI output',
-    '',
-    '```text',
-    output.replaceAll('```', '``\u200b`'),
-    '```',
-    '',
-  );
-}
-writeText('work/generated/ai-audit-ledger.md', `${auditLines.join('\n')}\n`);
 
 const bugLines = [
   '# HW06 Bug Report (Derived)',

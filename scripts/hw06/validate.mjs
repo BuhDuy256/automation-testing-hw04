@@ -42,7 +42,6 @@ function load(relativePath, arrayKey) {
 }
 
 const project = load('work/registry/project.json');
-const interactionRegistry = load('work/registry/ai-interactions.json', 'interactions');
 const caseRegistry = load('work/registry/test-cases.json', 'cases');
 const reviewRegistry = load('work/registry/human-reviews.json', 'reviews');
 const runRegistry = load('work/registry/runs.json', 'runs');
@@ -101,30 +100,6 @@ if (selectedApis.length === 0) {
 }
 for (const duplicate of duplicateValues(selectedApis.map((api) => api.id))) error(`Duplicate API id: ${duplicate}`);
 
-const interactions = interactionRegistry.interactions ?? [];
-const interactionIds = new Set(interactions.map((item) => item.id));
-const interactionKinds = new Set(['SPEC_ANALYSIS', 'TEST_GENERATION', 'TEST_REVIEW_ASSISTANCE', 'TEST_IMPLEMENTATION', 'BUG_ANALYSIS', 'REPORT_DRAFTING', 'GENERATOR_DESIGN', 'OTHER_SUBMISSION_WORK']);
-for (const duplicate of duplicateValues(interactions.map((item) => item.id))) error(`Duplicate AI interaction id: ${duplicate}`);
-for (const interaction of interactions) {
-  if (!nonEmpty(interaction.tool) || !nonEmpty(interaction.task)) error(`AI interaction ${interaction.id} is missing tool or task`);
-  if (!interactionKinds.has(interaction.kind)) error(`AI interaction ${interaction.id} has invalid or missing kind`);
-  if (!isIso(interaction.capturedAtUtc)) error(`AI interaction ${interaction.id} has invalid capturedAtUtc`);
-  for (const field of ['promptPath', 'outputPath']) {
-    if (requireExisting(interaction[field], `AI interaction ${interaction.id}.${field}`)) {
-      const expectedHash = field === 'promptPath' ? interaction.promptSha256 : interaction.outputSha256;
-      if (nonEmpty(expectedHash) && sha256File(interaction[field]) !== expectedHash) {
-        error(`AI interaction ${interaction.id} ${field} hash changed after capture`);
-      }
-    }
-  }
-  if (submissionMode && !interaction.humanReview) error(`AI interaction ${interaction.id} lacks attributable human review`);
-  if (interaction.humanReview) {
-    if (!['VALID', 'INVALID', 'INCOMPLETE'].includes(interaction.humanReview.verdict)) error(`AI interaction ${interaction.id} has invalid review verdict`);
-    if (!nonEmpty(interaction.humanReview.reasoning) || !nonEmpty(interaction.humanReview.studentFix)) error(`AI interaction ${interaction.id} review lacks reasoning or student fix`);
-    if (!isIso(interaction.humanReview.reviewedAt)) error(`AI interaction ${interaction.id} has invalid review time`);
-  }
-}
-
 const cases = caseRegistry.cases ?? [];
 const caseIds = new Set(cases.map((testCase) => testCase.id));
 const apiIds = new Set(selectedApis.map((api) => api.id));
@@ -137,7 +112,6 @@ for (const testCase of cases) {
   if (!Array.isArray(testCase.requirementRefs) || testCase.requirementRefs.length === 0) error(`Test case ${testCase.id} has no requirementRefs`);
   if (!Array.isArray(testCase.coverage) || testCase.coverage.length === 0) error(`Test case ${testCase.id} has no coverage classification`);
   for (const coverage of testCase.coverage ?? []) if (!coverageValues.has(coverage)) error(`Test case ${testCase.id} has unknown coverage ${coverage}`);
-  if (testCase.origin === 'AI' && !interactionIds.has(testCase.generationInteractionId)) error(`AI test case ${testCase.id} lacks a valid generationInteractionId`);
   if (testCase.origin === 'HUMAN' && !nonEmpty(testCase.humanExtensionRationale)) error(`Human test case ${testCase.id} lacks humanExtensionRationale`);
 }
 

@@ -125,7 +125,7 @@ npm run hw06:derive
 npm run hw06:git-log
 ```
 
-Relevant existing scripts include `scripts/hw06/validate.mjs`, `derive.mjs`, `ai-audit.mjs`, `run-newman.mjs`, `capture-screenshot.mjs`, `capture-ci-run.mjs`, `publish-bug.mjs`, and `export-git-log.ps1`.
+Relevant existing scripts include `scripts/hw06/validate.mjs`, `derive.mjs`, `run-newman.mjs`, `capture-screenshot.mjs`, `capture-ci-run.mjs`, `publish-bug.mjs`, and `export-git-log.ps1`.
 
 **DO NOT redesign the automation harness.** Edit canonical registries and use the established derivation/validation mechanisms.
 
@@ -150,8 +150,10 @@ Never fabricate Newman execution, HTTP request/response data, bugs, screenshots,
 - `out/README.md` was updated from “no API selection” to the confirmed selection and next gate.
 - `npm run hw06:validate` passed.
 - `npm run hw06:derive` completed.
-- ACT-GEN-01 completed for FR-04 with 47 AI-generated candidates and 10 guided AI interactions.
-- ACT-AI-01 captured and hash-verified `AI-FR04-G01-DIMENSIONS` through `AI-FR04-G10-CONSOLIDATION`.
+- ACT-GEN-01 completed for FR-04 with 47 AI-generated candidates.
+- The AI Audit operating model was corrected: `out/ai-audit-report.md` is authoritative, rows are artifact-level, and report updates are explicitly human-triggered.
+- Obsolete interaction-level logging files, registry, script, and derived ledger were removed.
+- Each candidate retains concise artifact-level generation context and tool information; no interaction IDs remain.
 - No human verdicts were assigned; `work/registry/human-reviews.json` remains unchanged.
 - `npm run hw06:validate` passed with 0 errors and 0 warnings after generation.
 - `HANDOFF.md` was updated as the single continuation entry point.
@@ -159,6 +161,8 @@ Never fabricate Newman execution, HTTP request/response data, bugs, screenshots,
 ## 13. Next action
 
 The next substantive action is `ACT-REV-01`: human audit of the 47 FR-04 AI-generated candidates.
+
+The AI Audit Report itself is not complete. It must be written or updated only after an explicit human request such as “Ghi AI Audit Report”, using one row per reviewed AI-generated artifact and the five official template fields.
 
 The next session should:
 

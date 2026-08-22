@@ -88,7 +88,9 @@ Test accounts:
 - External publication actions such as creating a GitHub Issue require an explicit student confirmation immediately before execution.
 - Treat `work/registry/*.json` as canonical bookkeeping; do not maintain duplicate counts by hand.
 - Keep AI candidates in `test-cases.json` and student judgments in `human-reviews.json`; never auto-assign a review verdict.
-- Capture every auditable AI interaction using ACT-AI-01; deterministic status checks and command output are not separate interactions.
+- The official AI Audit Report structure is `out/ai-audit-report.md`; it uses one row per AI-generated artifact with Prompt + Tool, AI Output, Verdict, Reasoning, and Student Fix.
+- AI Audit Report updates are human-triggered only by an explicit request such as “Ghi AI Audit Report”; ordinary AI reasoning, commands, derivation, and validation are not automatically persisted as audit rows.
+- Human verdicts and student fixes must never be fabricated; use `work/registry/human-reviews.json` as the canonical review state.
 - Run `npm run hw06:validate` before each meaningful commit and `npm run hw06:derive` after registry changes.
 - Use `node scripts/hw06/run-newman.mjs ...` for official local executions so raw JSON, HTML, console output, hashes, command arguments, and timestamps are captured together.
 - Generated files under `work/generated/` are derived views, not sources of truth.
