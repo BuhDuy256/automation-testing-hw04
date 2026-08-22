@@ -9,7 +9,41 @@
   "branch": "hw06-api-testing",
   "requirementPath": "docs/hw06-req/2026.HW06.API Testing_En.md",
   "apiSpecificationPath": "eshop-sut/api_specification.md",
-  "selectedApis": [],
+  "selectedApis": [
+    {
+      "id": "HW06-A-FR04-PUT-USERS-ME",
+      "pool": "A",
+      "featureId": "FR-04",
+      "name": "Personal profile management",
+      "method": "PUT",
+      "path": "/api/users/me",
+      "selectionConfirmedBy": "Human (explicit confirmation in chat)",
+      "selectionConfirmedAt": "2026-08-22T04:07:19.4080604Z",
+      "selectionRationale": "Assignment compliance and low implementation friction."
+    },
+    {
+      "id": "HW06-B-FR08-POST-CHECKOUT",
+      "pool": "B",
+      "featureId": "FR-08",
+      "name": "Checkout",
+      "method": "POST",
+      "path": "/api/checkout",
+      "selectionConfirmedBy": "Human (explicit confirmation in chat)",
+      "selectionConfirmedAt": "2026-08-22T04:07:19.4080604Z",
+      "selectionRationale": "Assignment compliance and low implementation friction."
+    },
+    {
+      "id": "HW06-C-FR15-POST-PRODUCTS",
+      "pool": "C",
+      "featureId": "FR-15",
+      "name": "Product management (CRUD)",
+      "method": "POST",
+      "path": "/api/products",
+      "selectionConfirmedBy": "Human (explicit confirmation in chat)",
+      "selectionConfirmedAt": "2026-08-22T04:07:19.4080604Z",
+      "selectionRationale": "Assignment compliance and low implementation friction."
+    }
+  ],
   "postman": {
     "collectionPath": null,
     "environmentPath": null,
