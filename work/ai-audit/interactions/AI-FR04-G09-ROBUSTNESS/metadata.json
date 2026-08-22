@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G09-ROBUSTNESS",
+  "tool": "Codex",
+  "task": "Generate FR-04 robustness candidates",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:28.261Z",
+  "capturedAtUtc": "2026-08-22T04:44:28.261Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G09-ROBUSTNESS/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G09-ROBUSTNESS/output.md",
+  "promptSha256": "f198a3cf2a35b1e1324f8e1d10f24610256b931eceaa1fb3abea97d6acd1c94a",
+  "outputSha256": "b355120e3ef6a6184db757b9fddc3a904b517815c1310f20d7908f7f663c8239",
+  "humanReview": null
+}

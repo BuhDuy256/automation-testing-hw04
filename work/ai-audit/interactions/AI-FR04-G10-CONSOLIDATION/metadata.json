@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G10-CONSOLIDATION",
+  "tool": "Codex",
+  "task": "Consolidate meaningful FR-04 candidate coverage",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:28.407Z",
+  "capturedAtUtc": "2026-08-22T04:44:28.407Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G10-CONSOLIDATION/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G10-CONSOLIDATION/output.md",
+  "promptSha256": "101064bd0bd9d8081b6870fe1cc0c8201088150d0a158c47670cadf9d2ab60ed",
+  "outputSha256": "083e2153984fb62d604ee9fdd9eca5672f3bb64cc74b2f3a9531d01b83d7538f",
+  "humanReview": null
+}

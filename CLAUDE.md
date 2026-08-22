@@ -31,9 +31,14 @@
 
 ## Selected HW06 APIs
 
-No HW06 API selection has been made yet. Do not choose or implement API-specific tests until
-the student confirms one API from each Pool A, Pool B, and Pool C, and the API specification
-has been analysed for those selections.
+The HW06 API selection is FINAL — HUMAN CONFIRMED:
+
+- Pool A — FR-04 Personal profile management — `PUT /api/users/me`
+- Pool B — FR-08 Checkout — `POST /api/checkout`
+- Pool C — FR-15 Product management — `POST /api/products`
+
+The working interpretation is one selected API = one HTTP method + path operation. Supporting
+requests such as login, setup, GET verification, or cleanup do not count as additional selected APIs.
 
 ## Repository Workflow
 

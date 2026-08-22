@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G06-STATE",
+  "tool": "Codex",
+  "task": "Generate FR-04 persistence and repeated-state candidates",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:27.720Z",
+  "capturedAtUtc": "2026-08-22T04:44:27.720Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G06-STATE/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G06-STATE/output.md",
+  "promptSha256": "1013152ef7fc93aa1eab617fe10510bb883a20793e2de9df52b07854d10ec2ba",
+  "outputSha256": "f0e1a0f0fc7618d30aa5bc530e2f25cf75c14e3ef11c0b8e90f1189ed35d514b",
+  "humanReview": null
+}

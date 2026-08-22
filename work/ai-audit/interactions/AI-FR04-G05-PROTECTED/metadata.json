@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G05-PROTECTED",
+  "tool": "Codex",
+  "task": "Generate FR-04 protected email and role candidates",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:27.558Z",
+  "capturedAtUtc": "2026-08-22T04:44:27.558Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G05-PROTECTED/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G05-PROTECTED/output.md",
+  "promptSha256": "aa6bc985bac83bf686912aa9dc3ec445db912319c73b870d5494e48523afff3e",
+  "outputSha256": "ee3ab6e66df7a9a58bd9d373dd7ae4fa637540cec9e93d946d74e51484299489",
+  "humanReview": null
+}

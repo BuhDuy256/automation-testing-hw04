@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G01-DIMENSIONS",
+  "tool": "Codex",
+  "task": "Generate FR-04 test dimensions and domain partitions",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:26.934Z",
+  "capturedAtUtc": "2026-08-22T04:44:26.934Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G01-DIMENSIONS/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G01-DIMENSIONS/output.md",
+  "promptSha256": "fbca4791d6c40264c9ca58b9ebd1d52c23406a9f5e1ff3c14364fb078bbed7ce",
+  "outputSha256": "315739ab45a83b2b751a67355fb58c35456050accbc777b4adec7d9ac0aaaf6e",
+  "humanReview": null
+}

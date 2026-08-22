@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G02-AUTH",
+  "tool": "Codex",
+  "task": "Generate FR-04 authentication and JWT candidates",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:27.103Z",
+  "capturedAtUtc": "2026-08-22T04:44:27.103Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G02-AUTH/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G02-AUTH/output.md",
+  "promptSha256": "d6a0a2467f60b561d721877d9ba2b0237503489938a6ac3acddf277c370d5180",
+  "outputSha256": "aa0a18df29e4beb58beb69f9fa63de4d0746ec8a8431e0d25d8e1875c8016c79",
+  "humanReview": null
+}

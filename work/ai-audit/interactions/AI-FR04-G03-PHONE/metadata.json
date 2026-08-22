@@ -1,0 +1,14 @@
+{
+  "id": "AI-FR04-G03-PHONE",
+  "tool": "Codex",
+  "task": "Generate FR-04 phone boundary candidates",
+  "kind": "TEST_GENERATION",
+  "occurredAtUtc": "2026-08-22T04:44:27.258Z",
+  "capturedAtUtc": "2026-08-22T04:44:27.258Z",
+  "timestampBasis": "capture time recorded immediately after interaction",
+  "promptPath": "work/ai-audit/interactions/AI-FR04-G03-PHONE/prompt.md",
+  "outputPath": "work/ai-audit/interactions/AI-FR04-G03-PHONE/output.md",
+  "promptSha256": "e525fe1ee2e33146af09022fbfe9ed11ba74572474e0be1c7cbddc5aff48aa99",
+  "outputSha256": "c33d08d0f8f11a09b91d329474c9bebbcc737f3064dbf62d2e5f848a639368b0",
+  "humanReview": null
+}
