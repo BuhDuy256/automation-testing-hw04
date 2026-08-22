@@ -293,3 +293,65 @@ npm run hw06:validate: PASS (0 errors, 0 warnings)
 No SUT start, Newman run, execution evidence, bug confirmation, GitHub Issue, screenshot, CI run, or Newman report was created. The next checkpoint remains before ACT-RUN-01 until the corrected implementation is committed and separately approved for execution.
 
 The authorized AI Audit Report update is complete in `out/ai-audit-report.md`. It preserves the original 47 artifact rows and summary, then adds one separate addendum for this correction interaction. No earlier missing prompt/output was reconstructed; the exact prompt time was not separately captured.
+
+## 17. Latest checkpoint — FR-04 real execution
+
+FR-04 execution was performed against a freshly started and reseeded local SUT. The initial sandbox attempt failed before Newman could spawn (`spawnSync ... node.exe EPERM`) and produced no report; it is not registered as a real run. The official harness was then executed with the approved local process capability.
+
+SUT readiness:
+
+- `bash ./run.sh stop` cleared stale dead PID entries before startup.
+- `bash ./run.sh start` started the backend on `localhost:3000` and both frontends on `5173`/`5174`.
+- Direct checks returned `backend=200 web=200 admin=200`.
+- Backend startup reseeded the SQLite database before the official run.
+
+Official commands:
+
+```text
+node scripts/hw06/run-newman.mjs --collection work/postman/fr04/FR04-profile.postman_collection.json --environment work/postman/fr04/FR04-profile.postman_environment.json --data work/postman/fr04/FR04-cases.postman_data.json --label fr04-input --hostname localhost:3000
+node scripts/hw06/run-newman.mjs --collection work/postman/fr04/FR04-profile-stateful.postman_collection.json --environment work/postman/fr04/FR04-profile.postman_environment.json --label fr04-stateful --hostname localhost:3000
+```
+
+Real run IDs:
+
+- `RUN-20260822062948963-fr04-input` — 41 data-driven cases, exit code 1.
+- `RUN-20260822063250172-fr04-stateful` — `FR04-AI-031`, `FR04-AI-046`, and `FR04-H-005`, exit code 0.
+
+The harness runtime reports prove `X-Student-Id: 23127179` on every captured request: 263/263 for the input run and 20/20 for the stateful run. All reported hostnames were `localhost:3000`.
+
+Execution accounting:
+
+```text
+Usable cases expected: 44
+Executed: 44
+Passed: 34
+Failed: 10
+Blocked execution: 0
+Manual/UI follow-up overlay: FR04-AI-024 SEC-04 display escaping remains pending; its API portion passed.
+```
+
+Failure triage:
+
+| Case IDs | Category | Finding |
+|---|---|---|
+| `FR04-AI-013`, `FR04-AI-014`, `FR04-AI-015`, `FR04-AI-016`, `FR04-AI-017`, `FR04-H-004` | `BUG-CANDIDATE` | Correctly stimulated invalid phone values were observed as persisted values instead of the captured baseline. Candidate: `BUG-CANDIDATE-FR04-PHONE-FORMAT`. |
+| `FR04-AI-026` | `BUG-CANDIDATE` | Correctly stimulated `role=admin` changed the persisted role from `user` to `admin`; cleanup also exposed that the protected field could not be restored through the documented PUT. Candidate: `BUG-CANDIDATE-FR04-ROLE-TAMPERING`. |
+| `FR04-H-001`, `FR04-H-002` | `HARNESS` | The collection mapper sent the default valid string phone instead of the reviewed numeric/null stimuli. No SUT bug is claimed. |
+| `FR04-H-007` | `SPEC-GAP` | Empty-body behavior and mutation semantics are undocumented; the observed null fields are retained as evidence but not classified as a product bug. |
+
+Canonical case mappings are stored in `work/registry/runs.json`; candidate records are stored in `work/registry/bugs.json`. No human-confirmed bug, GitHub Issue, screenshot, CI run, or AI Audit Report update was created.
+
+Current status:
+
+```text
+FR-04
+
+AI GENERATE        COMPLETE
+HUMAN REVIEW       COMPLETE
+HUMAN EXTEND       COMPLETE
+POSTMAN BUILD      COMPLETE
+EXECUTE            COMPLETE
+BUG REVIEW         NEXT — two candidate records await human review
+```
+
+The next session must review the ten failures and the two candidate records before any confirmation or publication. Do not begin FR-15, FR-08, GitHub Issue publication, or CI/CD work from this checkpoint.

@@ -1,0 +1,87 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Stateful Cases
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 638B, 21ms]
+  √  Stateful flow login A returns a token
+
+└ Capture exact stateful baseline A
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 5ms]
+  √  Stateful baseline A is captured exactly
+
+□ FR04-AI-031 - V2 to V3 sequence
+└ FR04-AI-031 PUT V2
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 14ms]
+  √  FR04-AI-031 V2 request is observable
+
+└ FR04-AI-031 PUT V3
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-031 V3 request is observable
+
+└ FR04-AI-031 GET V3, restore, and verify cleanup
+  GET http://localhost:3000/api/users/me [200 OK, 487B, 8ms]
+  √  FR04-AI-031 final persisted profile is V3
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 12ms]
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 4ms]
+  √  FR04-AI-031 cleanup equals exact baseline
+
+□ FR04-AI-046 - repeated identical update
+└ FR04-AI-046 PUT identical update #1
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 18ms]
+  √  FR04-AI-046 first identical update is observable
+
+└ FR04-AI-046 PUT identical update #2
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-046 second identical update is observable
+
+└ FR04-AI-046 GET stable state, restore, and verify cleanup
+  GET http://localhost:3000/api/users/me [200 OK, 487B, 11ms]
+  √  FR04-AI-046 final state equals repeated submitted update
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 21ms]
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 6ms]
+  √  FR04-AI-046 cleanup equals exact baseline
+
+□ FR04-H-005 - cross-user profile isolation
+└ FR04-H-005 register user B
+  POST http://localhost:3000/api/register [200 OK, 316B, 14ms]
+  √  FR04-H-005 user B registration is observable
+
+└ FR04-H-005 login user B and capture exact baseline
+  POST http://localhost:3000/api/login [200 OK, 674B, 4ms]
+  √  FR04-H-005 user B token captured
+  GET http://localhost:3000/api/users/me [200 OK, 491B, 6ms]
+
+└ FR04-H-005 update user A
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 12ms]
+  √  FR04-H-005 update A is observable
+
+└ FR04-H-005 verify A and B, restore A, verify cleanup
+  GET http://localhost:3000/api/users/me [200 OK, 495B, 5ms]
+  √  FR04-H-005 A reflects intended mutation
+  GET http://localhost:3000/api/users/me [200 OK, 491B, 4ms]
+  √  FR04-H-005 B remains exact baseline including nulls and protected fields
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 3ms]
+  √  FR04-H-005 cleanup restores exact A baseline
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              20 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              12 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │              13 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              16 │               0 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 1193ms                                  │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 2.91kB (approx)                        │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 9ms [min: 3ms, max: 21ms, s.d.: 5ms] │
+└─────────────────────────────────────────────────────────────┘

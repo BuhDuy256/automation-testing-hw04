@@ -1,4 +1,37 @@
 {
   "schemaVersion": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "BUG-CANDIDATE-FR04-PHONE-FORMAT",
+      "status": "candidate",
+      "title": "PUT /api/users/me persists phone values outside the documented format",
+      "caseIds": ["FR04-AI-013", "FR04-AI-014", "FR04-AI-015", "FR04-AI-016", "FR04-AI-017", "FR04-H-004"],
+      "runIds": ["RUN-20260822062948963-fr04-input"],
+      "expected": "A phone must begin with 0 and contain 10-11 digits; an invalid phone must not become the user's valid persisted phone value. Exact status and error schema are unspecified.",
+      "actual": "The invalid values 012345678, 012345678901, 1123456789, 012345678A, +84123456789, and the empty string were observed as persisted phone values instead of remaining at the captured baseline.",
+      "reproduction": "Authenticate as test@eshop.com, capture the profile baseline, PUT /api/users/me with one listed invalid phone and otherwise valid editable fields, then GET /api/users/me. Newman raw report records the assertion failures and repeated reproduction in the data-driven run.",
+      "evidencePaths": [
+        "work/runs/RUN-20260822062948963-fr04-input/newman-report.json",
+        "work/runs/RUN-20260822062948963-fr04-input/newman-report.html",
+        "work/runs/RUN-20260822062948963-fr04-input/stdout.log"
+      ],
+      "note": "Candidate only. Requires human review before confirmation or publication. FR04-H-001 and FR04-H-002 are excluded from this candidate because their intended numeric/null stimuli were not mapped by the harness."
+    },
+    {
+      "id": "BUG-CANDIDATE-FR04-ROLE-TAMPERING",
+      "status": "candidate",
+      "title": "PUT /api/users/me accepts a client-supplied role change",
+      "caseIds": ["FR04-AI-026"],
+      "runIds": ["RUN-20260822062948963-fr04-input"],
+      "expected": "The persisted role must remain unchanged under SEC-06 when the client submits role=admin.",
+      "actual": "The authenticated user role changed from user to admin. The protected-field assertion and exact cleanup assertion both failed.",
+      "reproduction": "Authenticate as test@eshop.com, capture the baseline role user, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. Newman raw report records the observed role admin and cleanup failure.",
+      "evidencePaths": [
+        "work/runs/RUN-20260822062948963-fr04-input/newman-report.json",
+        "work/runs/RUN-20260822062948963-fr04-input/newman-report.html",
+        "work/runs/RUN-20260822062948963-fr04-input/stdout.log"
+      ],
+      "note": "Candidate only. Requires human review before confirmation or publication. The failed API-level cleanup is retained as evidence of the observed mutation; the database is reseeded on the next intentional SUT restart."
+    }
+  ]
 }
