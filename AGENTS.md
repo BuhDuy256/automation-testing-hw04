@@ -1,14 +1,14 @@
-# HW05 Performance Testing on EShop
+# HW06 API Testing on EShop
 
 ## Project Context
 
-- **Course:** Software Testing - HW05 Performance Testing (AI-first)
+- **Course:** Software Testing - HW06 API Testing (AI-first)
 - **Student:** Nguyen Bao Duy - 23127179 - 23KTPM2
-- **Active branch:** `hw05-performance`
-- **HW04 baseline:** frozen at tag `hw04-complete`; do not modify files under `references/hw04/`
+- **Active branch:** `hw06-api-testing`
+- **Historical references:** `references/hw04/` and `references/hw05/` are frozen; do not modify them.
 - **SUT:** EShop, a Vietnamese e-commerce demo application
-- **HW05 requirement:** `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md`
-- **Allowed tools:** Apache JMeter (default) or k6, an AI tool, and a resource monitor
+- **HW06 requirement:** `docs/hw06-req/2026.HW06.API Testing_En.md`
+- **Primary tools:** Postman + Newman (default), an AI tool, and GitHub Actions for CI/CD.
 
 ## Chat Language and Explanation Style
 
@@ -22,65 +22,38 @@
 
 | File | Purpose |
 |---|---|
-| `docs/hw05-req/2026.HW05.Performance Testing_En_2.0_HTThanh.md` | Full HW05 assignment specification |
+| `docs/hw06-req/2026.HW06.API Testing_En.md` | Full HW06 assignment specification |
 | `eshop-sut/README.md` | SUT feature specifications |
 | `eshop-sut/api_specification.md` | Backend API endpoints and validation rules |
 | `eshop-sut/setup_guide.md` | How to run the SUT |
-| `references/hw04/` | Completed HW04 automation, reports, and requirements for reference only |
+| `references/hw04/`, `references/hw05/` | Completed homework material for reference only |
 | `references/hw2/` | Local HW02 material used only when needed for historical context |
 
-## Selected HW05 Performance Workflow
+## Selected HW06 APIs
 
-This is the current authoritative HW05 workflow unless explicitly changed later.
-
-**Workflow name:** New Customer Onboarding and First Order
-
-`Register -> Login -> Read Profile -> Update Profile -> Read Categories -> Read Products -> Read Product Detail -> Add Product to Cart -> Checkout`
-
-Verified runtime constraints:
-
-1. Every test user needs a unique email because registration requires email uniqueness.
-2. Register creates persistent user data for the current SUT run.
-3. Checkout creates persistent order data for the current SUT run.
-4. Register does not return the email or password; preserve the original inputs for Login.
-5. Login returns the JWT at `$.token`; reuse it for authenticated Profile, Cart, and Checkout requests.
-6. `PUT /api/users/me` persists `shipping_address`, but Checkout does not read it automatically.
-7. Preserve or reread `shipping_address` and include it explicitly in the Checkout request.
-8. Checkout accepts an omitted `shipping_address` and creates an order with `shipping_address = null`; HTTP 200 alone is not a sufficient correctness assertion.
-9. Keep Category and Product selection logically correlated through `category_id`.
-10. Use Product Detail fields `$.id`, `$.name`, and `$.price` as the authoritative runtime values for Add to Cart.
-11. Give each virtual user an isolated account to prevent cart and order state interference.
-12. Restarting the backend reseeds the database and removes runtime-created users and orders.
-
-Authoritative verification artifacts:
-
-- `work/workflow_api_mapping.md`
-- `work/workflow_candidates.md`
-- `work/workflow3_runtime_contract.md`
-- `work/workflow1_runtime_contract.md`
+No HW06 API selection has been made yet. Do not choose or implement API-specific tests until
+the student confirms one API from each Pool A, Pool B, and Pool C, and the API specification
+has been analysed for those selections.
 
 ## Repository Workflow
 
-- `references/hw04/` is frozen reference material. Do not add HW05 work there.
-- `work/` contains intermediate plans, drafts, raw experiments, exploratory logs, and temporary evidence.
-- `out/` contains only finalized files intended for the HW05 submission ZIP.
+- `references/hw04/` and `references/hw05/` are frozen reference material. Do not add HW06 work there.
+- `work/` contains intermediate plans, AI outputs, human audits, experiments, and execution preparation.
+- `out/` contains only finalized files intended for the HW06 submission ZIP.
 - `eshop-sut/` is the shared system under test and remains at the repository root.
-- Keep required HW05 evidence (`.jtl`, HTML reports, screenshots, hardware reports, and test plans) in `out/` once finalized; do not ignore it.
+- Keep required HW06 evidence (Postman collections, Newman reports, screenshots, CI evidence, test cases, and final reports) in `out/` once finalized; do not ignore it.
 
-## HW05 Required Outputs
+## HW06 Required Outputs
 
 The root `out/` directory should contain, as applicable:
 
-- Three test plans named `23127179_{Load|Stress|Spike}_YYYYMMDD`.
-- CSV-driven workflow data.
-- Three raw `.jtl` logs and three HTML report folders.
-- Resource-monitor captures and hardware specifications.
-- Endurance/soak-test results with concrete threshold numbers.
-- AI Audit Report and 200-300 word AI Critique.
-- Continuous performance-testing proposal with flowchart and trade-offs.
-- Bug reports with screenshots, demo video link, README summary, and Git commit log.
-
-All three scenarios must exercise one end-to-end workflow covering auth-heavy, read-heavy, and transactional endpoint groups. Review AI-generated plans before execution and record corrections and metric misinterpretations using the raw logs.
+- One selected API from each of Pool A, Pool B, and Pool C, with at least 35 AI-generated cases per API.
+- Human audit results (`VALID`, `INVALID`, or `INCOMPLETE`) and at least five human-added cases per API.
+- Postman collection/environment/data files and Newman HTML execution reports.
+- Evidence that every request includes `X-Student-Id: 23127179`.
+- Genuine bug reports with GitHub Issue screenshots when bugs are found.
+- CI/CD configuration plus real all-pass and intentional-one-failure run evidence.
+- Excel test cases and summary, AI Audit Report, 200-300 word AI Critique, generator design/diagram/pseudocode, final report, README, and Git commit log.
 
 ## Running the SUT
 
@@ -100,5 +73,5 @@ Test accounts:
 ## Commit Discipline
 
 - Keep HW04 unchanged and use `references/hw04/` only as a reference.
-- Create a separate commit for each meaningful HW05 step, such as each test plan, execution evidence, AI analysis, and continuous-testing proposal.
-- Update `out/git_commit_log.txt` from the final HW05 branch history before submission.
+- Create a separate commit for each meaningful HW06 step, such as generation, audit, extension, execution, CI/CD, and final curation.
+- Update `out/git-commit-log.txt` from the final HW06 branch history before submission.
