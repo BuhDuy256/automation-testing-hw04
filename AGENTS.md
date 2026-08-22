@@ -78,9 +78,12 @@ Test accounts:
 
 ## HW06 Automation Harness
 
+- Before performing a recurring HW06 operation, route through the matching entry in
+  `docs/hw06-standard-actions.md`; follow its trigger, preconditions, procedure, validation, and fallback instead of improvising.
+- External publication actions such as creating a GitHub Issue require an explicit student confirmation immediately before execution.
 - Treat `work/registry/*.json` as canonical bookkeeping; do not maintain duplicate counts by hand.
 - Keep AI candidates in `test-cases.json` and student judgments in `human-reviews.json`; never auto-assign a review verdict.
-- Capture every meaningful AI interaction immediately with `node scripts/hw06/ai-audit.mjs capture ...`; the command stores verbatim prompt/output files, hashes, tool, and time.
+- Capture every auditable AI interaction using ACT-AI-01; deterministic status checks and command output are not separate interactions.
 - Run `npm run hw06:validate` before each meaningful commit and `npm run hw06:derive` after registry changes.
 - Use `node scripts/hw06/run-newman.mjs ...` for official local executions so raw JSON, HTML, console output, hashes, command arguments, and timestamps are captured together.
 - Generated files under `work/generated/` are derived views, not sources of truth.

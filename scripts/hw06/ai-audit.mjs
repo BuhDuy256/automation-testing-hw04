@@ -23,8 +23,22 @@ function requireText(name) {
 function capture() {
   const tool = requireText('tool');
   const task = requireText('task');
+  const kind = requireText('kind').toUpperCase();
+  const allowedKinds = new Set([
+    'SPEC_ANALYSIS',
+    'TEST_GENERATION',
+    'TEST_REVIEW_ASSISTANCE',
+    'TEST_IMPLEMENTATION',
+    'BUG_ANALYSIS',
+    'REPORT_DRAFTING',
+    'GENERATOR_DESIGN',
+    'OTHER_SUBMISSION_WORK',
+  ]);
+  if (!allowedKinds.has(kind)) throw new Error(`Unknown interaction kind: ${kind}`);
   const promptSource = requireFileArgument(args, 'prompt-file');
   const outputSource = requireFileArgument(args, 'output-file');
+  if (!fs.readFileSync(promptSource, 'utf8').trim()) throw new Error('Prompt file is empty');
+  if (!fs.readFileSync(outputSource, 'utf8').trim()) throw new Error('Output file is empty');
   const capturedAt = new Date();
   const id = args.id ? requireText('id') : uniqueId('AI', capturedAt);
   if (!/^AI-[A-Za-z0-9_-]+$/.test(id)) throw new Error('Interaction id must match ^AI-[A-Za-z0-9_-]+$');
@@ -48,6 +62,7 @@ function capture() {
     id,
     tool,
     task,
+    kind,
     occurredAtUtc,
     capturedAtUtc: capturedAt.toISOString(),
     timestampBasis,
@@ -61,6 +76,18 @@ function capture() {
   writeJson(registryPath, registry);
   writeJson(`work/ai-audit/interactions/${id}/metadata.json`, interaction);
   process.stdout.write(`Captured ${id}. Human review is still required.\n`);
+}
+
+function verify() {
+  const id = requireText('id');
+  const registry = readJson(registryPath);
+  const interaction = registry.interactions.find((item) => item.id === id);
+  if (!interaction) throw new Error(`Unknown interaction: ${id}`);
+  if (!fs.statSync(absoluteFromRepo(interaction.promptPath)).isFile()) throw new Error(`Missing prompt: ${interaction.promptPath}`);
+  if (!fs.statSync(absoluteFromRepo(interaction.outputPath)).isFile()) throw new Error(`Missing output: ${interaction.outputPath}`);
+  if (sha256File(interaction.promptPath) !== interaction.promptSha256) throw new Error('Prompt hash mismatch');
+  if (sha256File(interaction.outputPath) !== interaction.outputSha256) throw new Error('Output hash mismatch');
+  process.stdout.write(`Verified ${id}: prompt/output exist and hashes match.\n`);
 }
 
 function review() {
@@ -90,7 +117,8 @@ function review() {
 try {
   if (action === 'capture') capture();
   else if (action === 'review') review();
-  else throw new Error('Usage: ai-audit.mjs <capture|review> [options]');
+  else if (action === 'verify') verify();
+  else throw new Error('Usage: ai-audit.mjs <capture|review|verify> [options]');
 } catch (caught) {
   process.stderr.write(`ERROR: ${caught.message}\n`);
   process.exitCode = 1;

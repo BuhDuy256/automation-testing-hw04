@@ -51,6 +51,9 @@ const ciRegistry = load('work/registry/ci-runs.json', 'runs');
 const featureRegistry = load('work/registry/postman-features.json', 'features');
 const evidenceRegistry = load('work/registry/evidence.json', 'items');
 const submission = load('work/registry/submission.json');
+requireExisting('docs/hw06-standard-actions.md', 'standard action catalog');
+requireExisting('work/templates/verified-api-spec.md', 'verified API-spec template');
+requireExisting('work/templates/ai-generation-prompt.md', 'AI generation prompt template');
 
 try {
   const issueFormPath = '.github/ISSUE_TEMPLATE/hw06-api-bug.yml';
@@ -100,9 +103,11 @@ for (const duplicate of duplicateValues(selectedApis.map((api) => api.id))) erro
 
 const interactions = interactionRegistry.interactions ?? [];
 const interactionIds = new Set(interactions.map((item) => item.id));
+const interactionKinds = new Set(['SPEC_ANALYSIS', 'TEST_GENERATION', 'TEST_REVIEW_ASSISTANCE', 'TEST_IMPLEMENTATION', 'BUG_ANALYSIS', 'REPORT_DRAFTING', 'GENERATOR_DESIGN', 'OTHER_SUBMISSION_WORK']);
 for (const duplicate of duplicateValues(interactions.map((item) => item.id))) error(`Duplicate AI interaction id: ${duplicate}`);
 for (const interaction of interactions) {
   if (!nonEmpty(interaction.tool) || !nonEmpty(interaction.task)) error(`AI interaction ${interaction.id} is missing tool or task`);
+  if (!interactionKinds.has(interaction.kind)) error(`AI interaction ${interaction.id} has invalid or missing kind`);
   if (!isIso(interaction.capturedAtUtc)) error(`AI interaction ${interaction.id} has invalid capturedAtUtc`);
   for (const field of ['promptPath', 'outputPath']) {
     if (requireExisting(interaction[field], `AI interaction ${interaction.id}.${field}`)) {
@@ -186,6 +191,8 @@ for (const item of evidenceItems) {
   if (!nonEmpty(item.type) || !nonEmpty(item.description)) error(`Evidence ${item.id} lacks type or description`);
   requireExisting(item.path, `Evidence ${item.id}`);
   if (!isIso(item.capturedAt)) error(`Evidence ${item.id} has invalid capturedAt`);
+  if (nonEmpty(item.sha256) && requireExisting(item.path, `Evidence ${item.id}`) && sha256File(item.path) !== item.sha256) error(`Evidence ${item.id} hash changed after capture`);
+  if (item.path?.toLowerCase().endsWith('.png') && (!Number.isInteger(item.image?.width) || !Number.isInteger(item.image?.height))) error(`Screenshot evidence ${item.id} lacks validated dimensions`);
   if (item.humanAttestation !== true) warn(`Evidence ${item.id} has no explicit human attestation`);
 }
 
@@ -195,7 +202,7 @@ for (const bug of bugRegistry.bugs ?? []) {
   for (const caseId of bug.caseIds ?? []) if (!caseIds.has(caseId)) error(`Bug ${bug.id} references unknown case ${caseId}`);
   for (const evidencePath of bug.evidencePaths ?? []) requireExisting(evidencePath, `Bug ${bug.id} evidence`);
   if (bug.status !== 'candidate' && (!nonEmpty(bug.expected) || !nonEmpty(bug.actual) || !nonEmpty(bug.confirmedBy))) error(`Bug ${bug.id} lacks human confirmation details`);
-  if (bug.status === 'published' && (!/^https:\/\/github\.com\//.test(bug.githubIssueUrl ?? '') || !(bug.screenshotPaths ?? []).length)) error(`Published bug ${bug.id} lacks GitHub Issue URL or screenshot`);
+  if (bug.status === 'published' && (!/^https:\/\/github\.com\//.test(bug.githubIssueUrl ?? '') || !Number.isInteger(bug.githubIssueNumber) || !(bug.screenshotPaths ?? []).length)) error(`Published bug ${bug.id} lacks verified GitHub Issue number/URL or screenshot`);
 }
 
 for (const feature of featureRegistry.features ?? []) {
@@ -208,6 +215,7 @@ for (const run of ciRuns) {
   if (!['all-pass', 'intentional-single-failure'].includes(run.purpose)) error(`CI run ${run.id} has invalid purpose`);
   if (!/^[0-9a-f]{7,40}$/i.test(run.commitSha ?? '') || !/^https:\/\/github\.com\//.test(run.url ?? '')) error(`CI run ${run.id} lacks a valid commit SHA or GitHub URL`);
   for (const evidencePath of run.evidencePaths ?? []) requireExisting(evidencePath, `CI run ${run.id} evidence`);
+  if (!nonEmpty(run.newmanReportPath) || !nonEmpty(run.screenshotEvidenceId)) error(`CI run ${run.id} lacks Newman artifact or screenshot evidence ID`);
   if (run.purpose === 'all-pass' && run.failedTests !== 0) error(`CI all-pass run ${run.id} must have zero failed tests`);
   if (run.purpose === 'intentional-single-failure' && run.failedTests !== 1) error(`CI intentional failure run ${run.id} must have exactly one failed test`);
 }

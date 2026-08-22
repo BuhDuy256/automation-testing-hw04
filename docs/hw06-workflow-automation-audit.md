@@ -1,5 +1,9 @@
 # HW06 Workflow Automation Audit
 
+> Direction clarification: this document inventories friction and supporting data mechanics. The
+> authoritative behavior for recurring agent operations is now the compact standard-action catalog
+> in `docs/hw06-standard-actions.md`.
+
 ## Scope and authority
 
 This audit uses the official HW06 requirement as the assignment authority, the repository

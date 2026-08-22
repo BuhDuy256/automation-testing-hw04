@@ -12,6 +12,7 @@
   "devDependencies": {
     "newman": "^6.2.1",
     "newman-reporter-htmlextra": "^1.23.1",
+    "playwright-core": "^1.62.1",
     "yaml": "^2.8.1"
   }
 }
