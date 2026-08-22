@@ -1,4 +1,381 @@
 {
   "schemaVersion": 1,
-  "reviews": []
+  "reviews": [
+    {
+      "caseId": "FR04-AI-001",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Accepted as an ordinary authenticated update of the documented editable fields.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-002",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Duplicate/overlap with FR04-AI-019 and FR04-AI-043; Unicode support was also stated too strongly.",
+      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-019 and FR04-AI-043."
+    },
+    {
+      "caseId": "FR04-AI-003",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Compound boundary map duplicates individual FR04-AI-011 through FR04-AI-014.",
+      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-011 through FR04-AI-014."
+    },
+    {
+      "caseId": "FR04-AI-004",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Make deterministic: update only phone to 0123456789, then GET /api/users/me and observe whether omitted name and shipping_address remain unchanged; omission semantics remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-005",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful missing-JWT authentication partition under SEC-02.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-006",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful wrong-authentication-scheme partition under SEC-02.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-007",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful empty-Bearer-token authentication partition under SEC-02.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-008",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful invalid-signature JWT partition under SEC-02.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-009",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful expired-JWT authentication partition under SEC-02.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-010",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "With a valid user JWT, update the profile and GET /api/users/me; verify the returned authenticated user's editable fields match the submitted update. Do not claim cross-user isolation without a second-user comparison."
+    },
+    {
+      "caseId": "FR04-AI-011",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Covers the documented 10-digit leading-zero valid phone boundary.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-012",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Covers the documented 11-digit leading-zero valid phone boundary.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-013",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use phone=012345678. It violates the documented 10/11-digit rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-014",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use phone=012345678901. It violates the documented 10/11-digit rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-015",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use phone=1123456789. It violates the documented leading-zero rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-016",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use phone=012345678A. It violates the documented digit-format rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-017",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use phone=+84123456789. It does not satisfy the documented phone format and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-018",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful ordinary ASCII text/domain partition.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-019",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful Vietnamese Unicode text/domain partition.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-020",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Useful exploratory empty-name robustness partition without inventing a mandatory rejection.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-021",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Useful exploratory null shipping-address robustness partition without inventing a mandatory rejection.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-022",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Submit numeric name with otherwise valid shipping_address and phone. Name type handling is unspecified; observe behavior without inventing a mandatory HTTP status. Do not also submit an array shipping_address."
+    },
+    {
+      "caseId": "FR04-AI-023",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Submit a name consisting of 256 characters with otherwise valid fields. No name length limit is documented; observe behavior without requiring rejection. Keep exploratory."
+    },
+    {
+      "caseId": "FR04-AI-024",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Valid SEC-04 display-boundary exploration without assuming API rejection.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-025",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Capture baseline email; PUT a different email with otherwise valid editable fields; GET; verify persisted email still equals baseline. Exact handling/status of the protected property remains SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-026",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Capture baseline role; PUT role=\"admin\" with otherwise valid editable fields; GET; verify persisted role still equals baseline. Do not classify implementation behavior as a confirmed bug before execution."
+    },
+    {
+      "caseId": "FR04-AI-027",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Capture baseline email and role; PUT both changed protected fields plus valid editable fields; GET; verify both protected fields remain baseline. Exact PUT status/body remains SPEC GAP."
+    },
+    {
+      "caseId": "FR04-AI-028",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Combines wrong-type email and role even though both are protected fields; compound input adds little diagnostic value.",
+      "correction": "Rejected from the reviewed executable suite; covered by the separate protected-field cases."
+    },
+    {
+      "caseId": "FR04-AI-029",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Verifies PUT followed by GET persistence of all editable fields.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-030",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Capture baseline name and shipping_address; PUT only phone=0123456789; GET; observe whether both remain baseline. Omission semantics are SPEC GAP, not an official preservation assertion."
+    },
+    {
+      "caseId": "FR04-AI-031",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Verifies the repeated V2-to-V3 state transition and final persistence.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-032",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "This is cleanup/test-isolation procedure, not an independent product test case.",
+      "correction": "Move the baseline-restoration behavior to supporting cleanup/teardown procedure; do not count it as a test case."
+    },
+    {
+      "caseId": "FR04-AI-033",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningfully tests unauthenticated mutation and authenticated read-back without execution claims.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-034",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Substantially duplicates FR04-AI-024 SEC-04 display-boundary test.",
+      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-024."
+    },
+    {
+      "caseId": "FR04-AI-035",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use concrete harmless payload name=O'Connor \"Test\". Observe unintended mutation, server failure, or corrupted persistence; a safe black-box result does not prove parameterized queries."
+    },
+    {
+      "caseId": "FR04-AI-036",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Use inert SQL-like text Robert'); SELECT 1; --. Observe unintended mutation, server failure, or corrupted persistence; do not claim a normal response proves parameterized queries."
+    },
+    {
+      "caseId": "FR04-AI-037",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Substantially duplicates FR04-AI-026 role-tampering invariant test.",
+      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-026."
+    },
+    {
+      "caseId": "FR04-AI-038",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "correction": "Send a JSON object containing documented name, shipping_address, and phone, then GET and verify those fields. Do not assert an undocumented exact PUT response schema."
+    },
+    {
+      "caseId": "FR04-AI-039",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful empty-object request-shape exploration with unspecified requiredness preserved.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-040",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful array-versus-object request-shape robustness exploration.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-041",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful additional-property exploration where the specification is silent.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-042",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Meaningful malformed-JSON parser robustness exploration.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-043",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Combination of existing valid-phone and Unicode partitions without a distinct new risk.",
+      "correction": "Rejected from the reviewed executable suite; covered by the existing valid-phone and Unicode cases."
+    },
+    {
+      "caseId": "FR04-AI-044",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Combination of existing 11-digit boundary and empty-text partitions without sufficient new value.",
+      "correction": "Rejected from the reviewed executable suite; covered by the existing 11-digit and empty-text cases."
+    },
+    {
+      "caseId": "FR04-AI-045",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Combines two invalid dimensions and creates masking; duplicates existing single-fault tests.",
+      "correction": "Rejected from the reviewed executable suite; covered by existing single-fault phone and type cases."
+    },
+    {
+      "caseId": "FR04-AI-046",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Verifies repeated identical update behavior and final-state stability.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR04-AI-047",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-22T05:09:28.2202945Z",
+      "reasoning": "Duplicate JSON keys have unstable parser semantics and no useful official oracle for this scoped API; low-value compared with meaningful required coverage.",
+      "correction": "Rejected from the reviewed executable suite; no replacement AI artifact is fabricated."
+    }
+  ]
 }

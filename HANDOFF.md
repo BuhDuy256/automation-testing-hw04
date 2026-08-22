@@ -2,7 +2,7 @@
 
 ## 1. Current objective
 
-The HW06 automation setup is complete and frozen. Actual homework execution is now underway: the human has confirmed the API selection, the canonical registry is synchronized, scoped API-spec extracts are prepared, and ACT-GEN-01 is complete for FR-04. No Postman implementation, Newman execution, bug publication, human review, or CI execution has started.
+The HW06 automation setup is complete and frozen. Actual homework execution is now underway: API selection, scoped specification, FR-04 AI generation, and FR-04 human review are complete. No Postman implementation, Newman execution, bug publication, or CI execution has started.
 
 ## 2. Human-confirmed API selection
 
@@ -154,13 +154,15 @@ Never fabricate Newman execution, HTTP request/response data, bugs, screenshots,
 - The AI Audit operating model was corrected: `out/ai-audit-report.md` is authoritative, rows are artifact-level, and report updates are explicitly human-triggered.
 - Obsolete interaction-level logging files, registry, script, and derived ledger were removed.
 - Each candidate retains concise artifact-level generation context and tool information; no interaction IDs remain.
-- No human verdicts were assigned; `work/registry/human-reviews.json` remains unchanged.
+- ACT-REV-01 completed for all 47 FR-04 AI-generated candidates; verdicts and corrections are stored in `work/registry/human-reviews.json`.
+- Human review result: 21 VALID, 16 INCOMPLETE corrected, 10 INVALID rejected, 37 usable AI-origin cases.
+- The original 47 AI artifacts in `work/registry/test-cases.json` remain unchanged and preserved for the later AI Audit Report.
 - `npm run hw06:validate` passed with 0 errors and 0 warnings after generation.
 - `HANDOFF.md` was updated as the single continuation entry point.
 
 ## 13. Next action
 
-The next substantive action is `ACT-REV-01`: human audit of the 47 FR-04 AI-generated candidates.
+The next substantive action is `ACT-EXT-01`: Human Extension for FR-04.
 
 The AI Audit Report itself is not complete. It must be written or updated only after an explicit human request such as “Ghi AI Audit Report”, using one row per reviewed AI-generated artifact and the five official template fields.
 
@@ -168,11 +170,24 @@ The next session should:
 
 1. read `./HANDOFF.md`;
 2. read `work/selection/HW06-A-FR04-PUT-USERS-ME-verified-spec.md`;
-3. inspect the ACT-REV-01 standard;
-4. have the student review each FR-04 candidate as `VALID`, `INVALID`, or `INCOMPLETE`;
-5. record human reasoning and corrections in `work/registry/human-reviews.json`.
+3. inspect the ACT-EXT-01 standard;
+4. add at least five student-authored FR-04 cases that AI missed;
+5. record why AI missed each case in `work/registry/test-cases.json`.
 
-Do not start `ACT-EXT-01`, `ACT-PM-01`, or Postman execution before human review is complete.
+Do not start `ACT-PM-01`, Postman execution, bug confirmation, GitHub Issues, or CI/CD before Human Extension is complete.
+
+Human review summary:
+
+```text
+AI originally generated: 47
+VALID as-is: 21
+INCOMPLETE corrected: 16
+INVALID/rejected: 10
+Reviewed usable AI-origin suite: 37
+```
+
+The AI Audit Report has NOT been written or updated. It requires explicit human instruction:
+`Ghi AI Audit Report`.
 
 Recommended generation order, not a new selection decision:
 
