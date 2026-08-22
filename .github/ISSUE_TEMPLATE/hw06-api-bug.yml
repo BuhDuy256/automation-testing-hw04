@@ -1,0 +1,75 @@
+name: HW06 API Bug Report
+description: Publish a human-confirmed HW06 API bug with traceable execution evidence.
+title: "[HW06 API BUG] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Publish only after the student has confirmed this is a genuine product bug.
+        Local paths are not public evidence; attach the required screenshot below.
+  - type: input
+    id: bug-id
+    attributes:
+      label: Canonical bug ID
+      placeholder: BUG-A-001
+    validations:
+      required: true
+  - type: input
+    id: test-cases
+    attributes:
+      label: Triggering test-case IDs
+      placeholder: A-017, A-021
+    validations:
+      required: true
+  - type: input
+    id: endpoint
+    attributes:
+      label: API endpoint
+      placeholder: POST /api/example
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Use the reviewed steps from the canonical bug record.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Tested commit SHA
+    validations:
+      required: true
+  - type: input
+    id: newman-run
+    attributes:
+      label: Newman run ID
+    validations:
+      required: true
+  - type: upload
+    id: screenshot
+    attributes:
+      label: Screenshot evidence
+      description: Attach the screenshot required by the assignment.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Human confirmation
+      options:
+        - label: I reproduced this behavior and confirm it is a genuine product bug, not a test defect.
+          required: true

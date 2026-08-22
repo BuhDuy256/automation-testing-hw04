@@ -28,3 +28,6 @@ Thumbs.db
 
 # Trash
 trash/
+
+# HW06 deterministic derived views (regenerate with npm run hw06:derive)
+work/generated/

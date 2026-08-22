@@ -75,3 +75,13 @@ Test accounts:
 - Keep HW04 unchanged and use `references/hw04/` only as a reference.
 - Create a separate commit for each meaningful HW06 step, such as generation, audit, extension, execution, CI/CD, and final curation.
 - Update `out/git-commit-log.txt` from the final HW06 branch history before submission.
+
+## HW06 Automation Harness
+
+- Treat `work/registry/*.json` as canonical bookkeeping; do not maintain duplicate counts by hand.
+- Keep AI candidates in `test-cases.json` and student judgments in `human-reviews.json`; never auto-assign a review verdict.
+- Capture every meaningful AI interaction immediately with `node scripts/hw06/ai-audit.mjs capture ...`; the command stores verbatim prompt/output files, hashes, tool, and time.
+- Run `npm run hw06:validate` before each meaningful commit and `npm run hw06:derive` after registry changes.
+- Use `node scripts/hw06/run-newman.mjs ...` for official local executions so raw JSON, HTML, console output, hashes, command arguments, and timestamps are captured together.
+- Generated files under `work/generated/` are derived views, not sources of truth.
+- Run strict validation and `scripts/hw06/build-submission.ps1` only during final curation; missing real evidence must fail the build.

@@ -1,0 +1,17 @@
+{
+  "name": "eshop-hw06-api-testing",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Evidence-first automation harness for HW06 API Testing",
+  "scripts": {
+    "hw06:validate": "node scripts/hw06/validate.mjs",
+    "hw06:validate:submission": "node scripts/hw06/validate.mjs --submission",
+    "hw06:derive": "node scripts/hw06/derive.mjs",
+    "hw06:git-log": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hw06/export-git-log.ps1"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1",
+    "yaml": "^2.8.1"
+  }
+}

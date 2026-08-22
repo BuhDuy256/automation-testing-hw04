@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "assignment": "HW06-AI",
+  "student": {
+    "id": "23127179",
+    "name": "Nguyen Bao Duy",
+    "class": "23KTPM2"
+  },
+  "branch": "hw06-api-testing",
+  "requirementPath": "docs/hw06-req/2026.HW06.API Testing_En.md",
+  "apiSpecificationPath": "eshop-sut/api_specification.md",
+  "selectedApis": [],
+  "postman": {
+    "collectionPath": null,
+    "environmentPath": null,
+    "dataFiles": []
+  }
+}
