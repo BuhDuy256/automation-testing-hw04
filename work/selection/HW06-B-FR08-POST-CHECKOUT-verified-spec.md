@@ -21,23 +21,24 @@
 
 | Condition | Status | Schema/fields | Source reference |
 |---|---:|---|---|
-| Successful checkout | 200 OK | `{ "message": "Checkout successful", "orderId": number }` | API specification §4.3 |
+| Successful checkout | Not documented | Not documented | API specification §4.3 defines the endpoint and request body only |
+| Current implementation observation | Runtime-dependent | May return `{ "message": "Checkout successful", "orderId": number }` | Implementation observation `backend/server.js`; not an official contract |
 | Authentication failure | Not explicitly stated in API specification | Error schema/status is unspecified in the API specification | Implementation observation only; do not treat as official contract |
 
 ## Domain partitions and boundaries
 
 | Input | Valid partitions | Invalid partitions | Boundaries | Source reference |
 |---|---|---|---|---|
-| total_amount | Server-derived cart total | Client-forged, zero, negative, wrong type, null, omitted, mismatched total | Zero and mismatch with cart-derived total | README FR-08; request example API specification §4.3 |
-| shipping_address | Normal/Unicode address | Empty, wrong type or unsafe display input | Empty and long values; exact maximum unknown | API specification §4.3; README FR-08/SEC-04 |
-| cart state | Authenticated user with intended cart | Empty cart, stale cart, repeated checkout | Empty/non-empty and post-success clearing | README FR-07/FR-08; implementation state is runtime-observed |
+| total_amount | Client value is ignored; persisted total is calculated from cart | No official status expectation is defined for zero, negative, wrong type, null or omitted client values | Correct, lower, higher, zero and negative client values must not control the final total | README FR-08; request example API specification §4.3 |
+| shipping_address | String value as shown in the example | No official invalid partition is defined | Empty, null, wrong type, very long and HTML-like values are exploratory/robustness partitions | API specification §4.3; README FR-08/SEC-04 |
+| cart state | Authenticated user with intended cart | Empty cart, stale cart and repeated checkout are exploratory unless runtime evidence establishes a rule | Empty/non-empty and post-success clearing | README FR-07/FR-08; implementation state is runtime-observed |
 | Authorization | Valid user token | Missing, malformed, expired, invalid signature | Token validity boundary | README SEC-02; API specification §4 |
 
 ## State and setup
 
 - Preconditions: registered user, successful login, and a known cart/product setup when verifying the documented cart-derived total.
-- Allowed transitions: authenticated cart state → successful order creation; successful checkout should clear the cart.
-- Forbidden transitions: unauthenticated checkout; accepting a total that differs from the cart-derived amount.
+- State transitions: authenticated cart state → checkout → order creation; successful checkout → cart cleared.
+- Authorization/business invariants: unauthenticated checkout is forbidden; the client value must not control the persisted total.
 - Persistent side effects: order creation with pending status is documented/inferred from the API and implementation; cart clearing is required by FR-08.
 - Reset/setup needs: isolate the user cart, capture created order IDs, verify cart and order history, and reset/restart as needed because implementation cart state is process memory and orders persist in SQLite.
 
@@ -68,6 +69,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification
+- Verified by: Pending human verification after corrections
 - Verified at: Pending
-- Verification notes: Confirm the distinction between official FR-08 rules and runtime bug hypotheses before ACT-GEN-01.
+- Verification notes: Response status/schema are undocumented; total tests must assert server-derived final total rather than assume every malformed client value must return 400; empty-cart and validation outcomes remain exploratory.

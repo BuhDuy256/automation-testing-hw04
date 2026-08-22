@@ -122,7 +122,7 @@ Never fabricate Newman execution, HTTP request/response data, bugs, screenshots,
 ## 11. Completed in this session
 
 - ACT-SEL-01 completed: the three human-confirmed APIs were persisted in `work/registry/project.json` with real confirmation metadata.
-- ACT-SPEC-01 extract creation completed for all three selected operations, but human verification is still pending; therefore the extracts remain `UNVERIFIED`.
+- ACT-SPEC-01 extract creation completed for all three selected operations. Human review identified corrections; those corrections are now applied, but final verification is still pending, so the extracts remain `UNVERIFIED`.
 - The former API-selection proposal status was updated to reflect final human confirmation.
 - `out/README.md` was updated from “no API selection” to the confirmed selection and next gate.
 - `npm run hw06:validate` passed.

@@ -16,8 +16,8 @@
 | Authorization | Header | Bearer admin JWT | Yes | Product data-changing APIs require valid JWT and admin role | README FR-12; API specification §3.3 and §6 |
 | name | JSON body | String | Yes | Required, maximum 255 characters | README FR-15 |
 | price | JSON body | Positive number | Yes | Must be greater than zero | README FR-15 |
-| description | JSON body | String | Not explicitly stated | Product description | API specification §3.3 |
-| imageUrl | JSON body | String/URL | Not explicitly stated | Product image URL field | API specification §3.3 |
+| description | JSON body | String suggested by example | Not explicitly stated | Product description; validation limits are unspecified | API specification §3.3; wrong type, null, HTML-like and very large values are exploratory |
+| imageUrl | JSON body | String suggested by example | Not explicitly stated | Product image field; URL validation is unspecified | API specification §3.3; malformed, null, HTML-like and very large values are exploratory |
 | category_id | JSON body | Existing category ID | Yes | Must select an existing category | README FR-15; API specification §3.3 |
 
 ## Response contract
@@ -31,10 +31,10 @@
 
 | Input | Valid partitions | Invalid partitions | Boundaries | Source reference |
 |---|---|---|---|---|
-| name | Non-empty text up to 255 characters | Empty, null, wrong type, overlong, unsafe text | 0/1/255/256 characters | README FR-15; SEC-04 |
+| name | Non-empty text up to 255 characters | Empty and overlong are official invalid partitions; null/wrong type/unsafe text are exploratory unless runtime behavior is verified | 0/1/255/256 characters | README FR-15; SEC-04 |
 | price | Positive numeric value | Zero, negative, null, wrong type | 0 and smallest positive value | README FR-15 |
-| description | Normal/Unicode text | Wrong type or unsafe text | Empty/long values; exact limit unknown | API specification §3.3; SEC-04 |
-| imageUrl | Normal URL/text | Wrong type or malformed URL | Empty/long values; exact URL rule unknown | API specification §3.3 |
+| description | Normal/Unicode text | No official invalid partition is defined | Empty, wrong type, HTML-like and very long values are exploratory/robustness partitions | API specification §3.3; SEC-04 |
+| imageUrl | String value as suggested by example | No official URL-validation partition is defined | Empty, malformed, wrong type, HTML-like and very long values are exploratory/robustness partitions | API specification §3.3 |
 | category_id | Existing category | Missing, null, wrong type, nonexistent ID | Existing versus nonexistent category | README FR-15 |
 | Authorization | Valid admin token | Missing, malformed, user-role, invalid signature | Role and token boundary | README FR-12; SEC-02/SEC-03 |
 
@@ -44,7 +44,7 @@
 - Allowed transitions: no product → created product; successful create can be read back with supporting GET.
 - Forbidden transitions: unauthenticated/non-admin create; invalid data creating a persistent record.
 - Persistent side effects: new product row; database pollution unless deleted or database reset.
-- Reset/setup needs: capture created IDs and delete them after each case/suite, or reset the seeded SQLite database. Verify unrelated products remain unchanged.
+- Reset/setup needs: capture created IDs and delete them after each case/suite, or reset the seeded SQLite database. An additional consistency check may verify that existing products remain intact; the explicit “other products remain unchanged” requirement applies to product update, not directly to this create operation.
 
 ## Applicable security requirements
 
@@ -73,6 +73,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification
+- Verified by: Pending human verification after corrections
 - Verified at: Pending
-- Verification notes: Confirm the admin authorization source and response contract before ACT-GEN-01.
+- Verification notes: Description/imageUrl validation limits and URL validity are exploratory; the create response remains implementation-only; the unrelated-product check is supplemental for POST.

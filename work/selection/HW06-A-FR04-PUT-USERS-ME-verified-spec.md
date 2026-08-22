@@ -24,7 +24,8 @@
 
 | Condition | Status | Schema/fields | Source reference |
 |---|---:|---|---|
-| Successful update | Not explicitly stated in API specification | `{ "message": "Profile updated" }` | API specification §2.2; implementation observation `backend/server.js` |
+| Successful update | Not documented | Not documented | API specification §2.2 ends after the request body |
+| Current implementation observation | Runtime-dependent | May return `{ "message": "Profile updated" }` | Implementation observation `backend/server.js`; not an official contract |
 | Authentication failure | Not explicitly stated in API specification | Error schema/status is unspecified in the API specification | Implementation observation only; do not treat as official contract |
 
 ## Domain partitions and boundaries
@@ -32,15 +33,15 @@
 | Input | Valid partitions | Invalid partitions | Boundaries | Source reference |
 |---|---|---|---|---|
 | phone | Starts with `0`, 10 or 11 digits | Wrong prefix, non-digits, empty, wrong length, wrong type | 9/10/11/12 digits | README FR-04 |
-| name | Ordinary and Unicode text | Empty, wrong type, overlong or unsafe display input | No API limit documented | README FR-04/SEC-04; exact limit unknown |
-| shipping_address | Ordinary and Unicode text | Empty, wrong type or unsafe display input | No API limit documented | README FR-04/SEC-04; exact limit unknown |
+| name | Ordinary and Unicode text | No official invalid partition is defined | No API limit documented | API specification §2.2; README FR-04; empty, wrong type, very long and HTML-like values are exploratory/robustness partitions |
+| shipping_address | Ordinary and Unicode text | No official invalid partition is defined | No API limit documented | API specification §2.2; README FR-04; empty, wrong type, very long and HTML-like values are exploratory/robustness partitions |
 | Authorization | Valid user token | Missing, malformed, expired, invalid signature | Token validity boundary | README SEC-02; API specification §2 |
 
 ## State and setup
 
 - Preconditions: known registered user and successful login.
-- Allowed transitions: authenticated user profile values change; email and role remain unchanged.
-- Forbidden transitions: unauthenticated update; changing another user’s profile; changing `role` or `email`.
+- State transitions: baseline profile → update → persisted profile; profile V1 → update → profile V2 → update → profile V3.
+- Authorization/forbidden operations: unauthenticated update; changing another user’s profile; changing `role` or `email`.
 - Persistent side effects: profile fields are persisted for the authenticated user.
 - Reset/setup needs: capture baseline profile, run cases, then restore baseline; use GET `/api/users/me` as supporting verification.
 
@@ -71,6 +72,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification
+- Verified by: Pending human verification after corrections
 - Verified at: Pending
-- Verification notes: Confirm every extracted rule against the official sources before ACT-GEN-01.
+- Verification notes: Response shape is implementation-only; name/address exploratory inputs must not receive undocumented mandatory rejection expectations; authorization checks are separate from state transitions.
