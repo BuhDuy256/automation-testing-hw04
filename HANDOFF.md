@@ -248,3 +248,48 @@ npm run hw06:validate — passed (0 errors, 0 warnings)
 ```
 
 The next permitted phase is ACT-RUN-01 after this implementation is committed and the SUT is intentionally prepared. Do not execute Newman in the current checkpoint.
+
+## 16. Latest checkpoint — corrected FR-04 Postman build
+
+The student identified harness defects before approving Newman. The FR-04 Postman implementation was corrected without changing API selection, scoped specification, the 47 AI artifacts, human verdicts, or the seven HUMAN extensions.
+
+Corrected working artifacts:
+
+- `work/postman/fr04/FR04-profile.postman_collection.json` — 41 input-partition cases driven by `FR04-cases.postman_data.json`.
+- `work/postman/fr04/FR04-profile-stateful.postman_collection.json` — dedicated real sequences for `FR04-AI-031`, `FR04-AI-046`, and `FR04-H-005`.
+- `work/postman/fr04/FR04-profile.postman_environment.json` — exact baseline and validly signed expired-token inputs.
+- `work/postman/fr04/FR04-cases.postman_data.json` — 41 unique data rows.
+- `work/postman/fr04/README.md` — execution separation and cleanup limitations.
+
+Correction results:
+
+- Mapper branches use explicit braces; `FR04-AI-021` null address, `FR04-H-003` array address, `FR04-AI-024` HTML-like values, and ordinary addresses remain distinct.
+- Baseline snapshots preserve JSON `null` values and restore using the captured value instead of `|| ''` normalization.
+- `FR04-AI-019` sends Vietnamese Unicode name/address and compares exact read-back values.
+- `FR04-AI-041` sends an actual `unexpected_property` while leaving documented fields valid.
+- `FR04-AI-031` performs real PUT V2 → PUT V3 → GET final V3 → restore → exact cleanup verification.
+- `FR04-AI-046` performs two real identical PUTs → GET stable state → restore → exact cleanup verification.
+- Negative-authentication cases verify that a valid-token read-back remains equal to the exact baseline; no undocumented status/schema is asserted.
+- `FR04-AI-009` uses a validly HMAC-signed JWT with `exp=1`; deterministic local preflight confirmed signature equality and expiration payload. The signing secret is not committed.
+- `FR04-H-005` creates user B only inside its dedicated flow, compares A's mutation and all five B baseline fields including `null`, then restores and verifies A.
+- `FR04-H-007` reads the profile after the empty-body request and checks all five baseline fields before cleanup.
+- Cleanup verifies persisted state after restoration. If a protected field cannot legally be restored through the documented PUT contract, the suite exposes that limitation instead of claiming cleanup success.
+- `FR04-AI-024` marks API read-back as insufficient for SEC-04 UI escaping and leaves the display-boundary check for separate manual/UI verification.
+
+Accounting and deterministic validation:
+
+```text
+47 original AI; 21 VALID; 16 INCOMPLETE; 10 INVALID
+37 usable AI-origin; 7 HUMAN; 44 represented; 44 unique
+41 data-driven rows + 3 dedicated stateful cases
+Canonical test-cases.json and human-reviews.json unchanged
+Collection/environment/data JSON parse: PASS
+Postman script syntax preflight: PASS (16 scripts)
+Valid expired-token signature/exp preflight: PASS
+npm run hw06:derive: PASS
+npm run hw06:validate: PASS (0 errors, 0 warnings)
+```
+
+No SUT start, Newman run, execution evidence, bug confirmation, GitHub Issue, screenshot, CI run, or Newman report was created. The next checkpoint remains before ACT-RUN-01 until the corrected implementation is committed and separately approved for execution.
+
+The authorized AI Audit Report update is complete in `out/ai-audit-report.md`. It preserves the original 47 artifact rows and summary, then adds one separate addendum for this correction interaction. No earlier missing prompt/output was reconstructed; the exact prompt time was not separately captured.

@@ -46,6 +46,7 @@
   ],
   "postman": {
     "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+    "supportingCollectionPaths": ["work/postman/fr04/FR04-profile-stateful.postman_collection.json"],
     "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
     "dataFiles": ["work/postman/fr04/FR04-cases.postman_data.json"]
   }

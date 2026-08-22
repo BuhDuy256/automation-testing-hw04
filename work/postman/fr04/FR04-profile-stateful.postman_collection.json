@@ -1,0 +1,92 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr04-profile-stateful-20260822-corrected",
+    "name": "HW06 FR-04 Personal Profile Management - Stateful Cases",
+    "description": "Dedicated, non-data-driven flows for FR04-AI-031, FR04-AI-046, and FR04-H-005. Run separately from the 41-row input-partition collection so setup and cross-user registration are not repeated per data iteration.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000" }, { "key": "studentId", "value": "23127179" }],
+  "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') || pm.collectionVariables.get('studentId') || '23127179' });"] } }],
+  "item": [
+    {
+      "name": "Setup / Authentication",
+      "item": [
+        {
+          "name": "Login user A",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"{{userEmail}}\",\"password\":\"{{userPassword}}\"}" }, "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Stateful flow login A returns a token', function () { pm.expect(pm.response.code).to.equal(200); pm.environment.set('token', pm.response.json().token); });"] } }]
+        },
+        {
+          "name": "Capture exact stateful baseline A",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Stateful baseline A is captured exactly', function () { pm.expect(pm.response.code).to.equal(200); var p = pm.response.json(); pm.environment.set('baselineProfile', JSON.stringify({ name:p.name, shipping_address:p.shipping_address, phone:p.phone, email:p.email, role:p.role })); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "FR04-AI-031 - V2 to V3 sequence",
+      "item": [
+        {
+          "name": "FR04-AI-031 PUT V2",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-AI-031 V2\",\"shipping_address\":\"Address FR04-AI-031 V2\",\"phone\":\"0123456789\"}" }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-AI-031 V2 request is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });"] } }]
+        },
+        {
+          "name": "FR04-AI-031 PUT V3",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-AI-031 V3\",\"shipping_address\":\"Address FR04-AI-031 V3\",\"phone\":\"01234567890\"}" }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-AI-031 V3 request is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });"] } }]
+        },
+        {
+          "name": "FR04-AI-031 GET V3, restore, and verify cleanup",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["var actual=pm.response.json(); var baseline=JSON.parse(pm.environment.get('baselineProfile')); pm.test('FR04-AI-031 final persisted profile is V3', function () { pm.expect(actual.name).to.equal('FR04-AI-031 V3'); pm.expect(actual.shipping_address).to.equal('Address FR04-AI-031 V3'); pm.expect(actual.phone).to.equal('01234567890'); }); pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'PUT',header:{'X-Student-Id':pm.environment.get('studentId'),'Content-Type':'application/json',Authorization:'Bearer '+pm.environment.get('token')},body:{mode:'raw',raw:JSON.stringify({name:baseline.name,shipping_address:baseline.shipping_address,phone:baseline.phone})}},function(error,response){pm.expect(error).to.equal(null);pm.expect(response.code).to.be.a('number');pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'GET',header:{'X-Student-Id':pm.environment.get('studentId'),Authorization:'Bearer '+pm.environment.get('token')}},function(e,r){pm.expect(e).to.equal(null);var p=r.json();pm.test('FR04-AI-031 cleanup equals exact baseline',function(){['name','shipping_address','phone','email','role'].forEach(function(k){pm.expect(p[k]).to.eql(baseline[k]);});});});});"] } }]
+        }
+      ]
+    },
+    {
+      "name": "FR04-AI-046 - repeated identical update",
+      "item": [
+        {
+          "name": "FR04-AI-046 PUT identical update #1",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-AI-046 Stable\",\"shipping_address\":\"Address FR04-AI-046\",\"phone\":\"0123456789\"}" }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-AI-046 first identical update is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });"] } }]
+        },
+        {
+          "name": "FR04-AI-046 PUT identical update #2",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-AI-046 Stable\",\"shipping_address\":\"Address FR04-AI-046\",\"phone\":\"0123456789\"}" }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-AI-046 second identical update is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });"] } }]
+        },
+        {
+          "name": "FR04-AI-046 GET stable state, restore, and verify cleanup",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["var actual=pm.response.json();var baseline=JSON.parse(pm.environment.get('baselineProfile'));pm.test('FR04-AI-046 final state equals repeated submitted update',function(){pm.expect(actual.name).to.equal('FR04-AI-046 Stable');pm.expect(actual.shipping_address).to.equal('Address FR04-AI-046');pm.expect(actual.phone).to.equal('0123456789');});pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'PUT',header:{'X-Student-Id':pm.environment.get('studentId'),'Content-Type':'application/json',Authorization:'Bearer '+pm.environment.get('token')},body:{mode:'raw',raw:JSON.stringify({name:baseline.name,shipping_address:baseline.shipping_address,phone:baseline.phone})}},function(error,response){pm.expect(error).to.equal(null);pm.expect(response.code).to.be.a('number');pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'GET',header:{'X-Student-Id':pm.environment.get('studentId'),Authorization:'Bearer '+pm.environment.get('token')}},function(e,r){pm.expect(e).to.equal(null);var p=r.json();pm.test('FR04-AI-046 cleanup equals exact baseline',function(){['name','shipping_address','phone','email','role'].forEach(function(k){pm.expect(p[k]).to.eql(baseline[k]);});});});});"] } }]
+        }
+      ]
+    },
+    {
+      "name": "FR04-H-005 - cross-user profile isolation",
+      "item": [
+        {
+          "name": "FR04-H-005 register user B",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-H-005 User B\",\"email\":\"{{crossUserEmail}}\",\"password\":\"CrossUser123!\"}" }, "url": { "raw": "{{baseUrl}}/api/register", "host": ["{{baseUrl}}"], "path": ["api", "register"] } },
+          "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["pm.environment.set('crossUserEmail','fr04-isolation-'+Date.now()+'@example.test');"] } }, { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-H-005 user B registration is observable',function(){pm.expect(pm.response.code).to.equal(200);});"] } }]
+        },
+        {
+          "name": "FR04-H-005 login user B and capture exact baseline",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"{{crossUserEmail}}\",\"password\":\"CrossUser123!\"}" }, "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["var tokenB=pm.response.json().token;pm.environment.set('tokenB',tokenB);pm.test('FR04-H-005 user B token captured',function(){pm.expect(pm.response.code).to.equal(200);});pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'GET',header:{'X-Student-Id':pm.environment.get('studentId'),Authorization:'Bearer '+tokenB}},function(e,r){pm.expect(e).to.equal(null);pm.expect(r.code).to.equal(200);var p=r.json();pm.environment.set('baselineBProfile',JSON.stringify({name:p.name,shipping_address:p.shipping_address,phone:p.phone,email:p.email,role:p.role}));});"] } }]
+        },
+        {
+          "name": "FR04-H-005 update user A",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"name\":\"FR04-H-005 User A Changed\",\"shipping_address\":\"Address FR04-H-005 A\",\"phone\":\"0123456789\"}" }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('FR04-H-005 update A is observable',function(){pm.expect(pm.response.code).to.be.a('number');});"] } }]
+        },
+        {
+          "name": "FR04-H-005 verify A and B, restore A, verify cleanup",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["var a=pm.response.json();var baselineA=JSON.parse(pm.environment.get('baselineProfile'));var baselineB=JSON.parse(pm.environment.get('baselineBProfile'));pm.test('FR04-H-005 A reflects intended mutation',function(){pm.expect(a.name).to.equal('FR04-H-005 User A Changed');pm.expect(a.shipping_address).to.equal('Address FR04-H-005 A');pm.expect(a.phone).to.equal('0123456789');});pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'GET',header:{'X-Student-Id':pm.environment.get('studentId'),Authorization:'Bearer '+pm.environment.get('tokenB')}},function(e,r){pm.expect(e).to.equal(null);pm.expect(r.code).to.equal(200);var b=r.json();pm.test('FR04-H-005 B remains exact baseline including nulls and protected fields',function(){['name','shipping_address','phone','email','role'].forEach(function(k){pm.expect(b[k]).to.eql(baselineB[k]);});});pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'PUT',header:{'X-Student-Id':pm.environment.get('studentId'),'Content-Type':'application/json',Authorization:'Bearer '+pm.environment.get('token')},body:{mode:'raw',raw:JSON.stringify({name:baselineA.name,shipping_address:baselineA.shipping_address,phone:baselineA.phone})}},function(re,rr){pm.expect(re).to.equal(null);pm.expect(rr.code).to.be.a('number');pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'GET',header:{'X-Student-Id':pm.environment.get('studentId'),Authorization:'Bearer '+pm.environment.get('token')}},function(ce,cr){pm.expect(ce).to.equal(null);var p=cr.json();pm.test('FR04-H-005 cleanup restores exact A baseline',function(){['name','shipping_address','phone','email','role'].forEach(function(k){pm.expect(p[k]).to.eql(baselineA[k]);});});});});});"] } }]
+        }
+      ]
+    }
+  ]
+}
