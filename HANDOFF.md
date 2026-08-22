@@ -161,14 +161,14 @@ Never fabricate Newman execution, HTTP request/response data, bugs, screenshots,
 - Total usable FR-04 cases are 44: 37 usable AI-origin cases plus 7 extension cases.
 - `npm run hw06:validate` passed with 0 errors and 0 warnings after generation.
 - `npm run hw06:derive` regenerated the factual summaries after review cleanup and extension recording.
-- `out/ai-audit-report.md` was not modified; no explicit AI Audit Report request was issued.
+- `out/ai-audit-report.md` was updated after the explicit request `Ghi AI Audit Report`; it now contains 47 artifact-level AI rows with 21 VALID, 16 INCOMPLETE, and 10 INVALID verdicts.
 - `HANDOFF.md` is the single continuation entry point.
 
 ## 13. Next action
 
 The next substantive action is `ACT-PM-01`: build the executable Postman suite for FR-04.
 
-The AI Audit Report itself is not complete. It must be written or updated only after an explicit human request such as “Ghi AI Audit Report”, using one row per reviewed AI-generated artifact and the five official template fields.
+The AI Audit Report is now updated from the confirmed review data. It uses one row per reviewed AI-generated artifact and the five official template fields. The exact standalone generation prompt was not separately captured, so each row identifies the preserved artifact-level generation context and Codex tool without reconstructing a prompt.
 
 The next session should:
 
@@ -192,8 +192,7 @@ Extension cases: 7
 Total usable FR-04 cases: 44
 ```
 
-The AI Audit Report has NOT been written or updated. It requires explicit human instruction:
-`Ghi AI Audit Report`.
+The AI Audit Report has been updated after the explicit human instruction `Ghi AI Audit Report`. No runtime result, bug confirmation, or unsupported citation is claimed in the report.
 
 Recommended generation order, not a new selection decision:
 
