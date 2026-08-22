@@ -1,6 +1,6 @@
 # HW06-A-FR04-PUT-USERS-ME Verified Specification Extract
 
-> Status: UNVERIFIED. This extract is a source-anchored navigation aid; the official specification remains authoritative. Human verification is required before test generation.
+> Status: VERIFIED — HUMAN CONFIRMED. This extract is a source-anchored navigation aid; the official specification remains authoritative.
 
 ## Identity
 
@@ -72,6 +72,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification after corrections
-- Verified at: Pending
-- Verification notes: Response shape is implementation-only; name/address exploratory inputs must not receive undocumented mandatory rejection expectations; authorization checks are separate from state transitions.
+- Verified by: Human reviewer
+- Verified at: 2026-08-22T04:24:19.5178372Z
+- Verification notes: Human confirmed the corrected extract. Response shape is implementation-only; name/address exploratory inputs must not receive undocumented mandatory rejection expectations; authorization checks are separate from state transitions.

@@ -1,6 +1,6 @@
 # HW06-B-FR08-POST-CHECKOUT Verified Specification Extract
 
-> Status: UNVERIFIED. This extract is a source-anchored navigation aid; the official specification remains authoritative. Human verification is required before test generation.
+> Status: VERIFIED — HUMAN CONFIRMED. This extract is a source-anchored navigation aid; the official specification remains authoritative.
 
 ## Identity
 
@@ -69,6 +69,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification after corrections
-- Verified at: Pending
-- Verification notes: Response status/schema are undocumented; total tests must assert server-derived final total rather than assume every malformed client value must return 400; empty-cart and validation outcomes remain exploratory.
+- Verified by: Human reviewer
+- Verified at: 2026-08-22T04:24:19.5178372Z
+- Verification notes: Human confirmed the corrected extract. Response status/schema are undocumented; total tests must assert server-derived final total rather than assume every malformed client value must return 400; empty-cart and validation outcomes remain exploratory.

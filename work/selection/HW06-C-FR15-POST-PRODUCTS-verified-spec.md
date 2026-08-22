@@ -1,6 +1,6 @@
 # HW06-C-FR15-POST-PRODUCTS Verified Specification Extract
 
-> Status: UNVERIFIED. This extract is a source-anchored navigation aid; the official specification remains authoritative. Human verification is required before test generation.
+> Status: VERIFIED — HUMAN CONFIRMED. This extract is a source-anchored navigation aid; the official specification remains authoritative.
 
 ## Identity
 
@@ -73,6 +73,6 @@
 
 ## Human verification
 
-- Verified by: Pending human verification after corrections
-- Verified at: Pending
-- Verification notes: Description/imageUrl validation limits and URL validity are exploratory; the create response remains implementation-only; the unrelated-product check is supplemental for POST.
+- Verified by: Human reviewer
+- Verified at: 2026-08-22T04:24:19.5178372Z
+- Verification notes: Human confirmed the corrected extract. Description/imageUrl validation limits and URL validity are exploratory; the create response remains implementation-only; the unrelated-product check is supplemental for POST.
