@@ -1,0 +1,44 @@
+﻿[
+    {
+        "metric":  "http_req_failed",
+        "threshold":  "rate == 0",
+        "actual":  0,
+        "unit":  "rate",
+        "result":  "PASS"
+    },
+    {
+        "metric":  "checks",
+        "threshold":  "rate == 1",
+        "actual":  1,
+        "unit":  "rate",
+        "result":  "PASS"
+    },
+    {
+        "metric":  "workflow_success",
+        "threshold":  "rate == 1",
+        "actual":  1,
+        "unit":  "rate",
+        "result":  "PASS"
+    },
+    {
+        "metric":  "http_req_duration p95",
+        "threshold":  "p(95) \u003c 60ms",
+        "actual":  25.961,
+        "unit":  "ms",
+        "result":  "PASS"
+    },
+    {
+        "metric":  "http_req_duration p99",
+        "threshold":  "p(99) \u003c 85ms",
+        "actual":  70.215,
+        "unit":  "ms",
+        "result":  "PASS"
+    },
+    {
+        "metric":  "iteration_duration p95",
+        "threshold":  "p(95) \u003c 19s",
+        "actual":  15.838,
+        "unit":  "s",
+        "result":  "PASS"
+    }
+]

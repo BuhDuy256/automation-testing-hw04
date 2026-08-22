@@ -1,7 +1,0 @@
-2026-08-17T12:25:28.9613672+07:00 scheduler started; waiting for metadata-pre-run.json
-2026-08-17T12:25:35.6398591+07:00 run started_at_utc=2026-08-17T05:25:34.7700296Z
-2026-08-17T12:26:16.5521728+07:00 captured load-ramp-up.png at elapsed=41.6s
-2026-08-17T12:28:06.7880937+07:00 captured load-steady-primary.png at elapsed=151.9s
-2026-08-17T12:29:31.6181191+07:00 captured load-steady-secondary.png at elapsed=236.8s
-2026-08-17T12:31:06.5364502+07:00 captured load-ramp-down.png at elapsed=331.6s
-2026-08-17T12:31:06.5484077+07:00 scheduler finished

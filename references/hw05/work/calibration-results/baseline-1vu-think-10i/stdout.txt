@@ -1,0 +1,532 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: C:\Users\Duy\Desktop\automation-testing-hw04\work\k6_workflow_calibration.js
+        output: json (C:\Users\Duy\Desktop\automation-testing-hw04\work\calibration-results\baseline-1vu-think-10i\raw.json)
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * calibration: 10 iterations for each of 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m01.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m02.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m03.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m04.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m05.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m06.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m07.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m08.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m09.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m10.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m11.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m12.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 1 VUs  00m13.0s/10m0s  00/10 iters, 10 per VU
+
+running (00m14.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m14.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m15.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m15.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m16.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m16.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m17.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m17.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m18.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m18.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m19.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m19.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m20.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m20.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m21.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m21.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m22.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m22.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m23.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m23.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m24.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m24.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m25.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m25.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m26.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m26.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m27.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m27.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m28.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+calibration   [  10% ] 1 VUs  00m28.0s/10m0s  01/10 iters, 10 per VU
+
+running (00m29.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m29.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m30.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m30.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m31.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m31.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m32.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m32.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m33.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m33.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m34.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m34.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m35.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m35.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m36.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m36.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m37.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m37.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m38.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m38.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m39.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m39.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m40.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m40.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m41.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m41.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m42.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m42.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m43.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m43.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m44.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+calibration   [  20% ] 1 VUs  00m44.0s/10m0s  02/10 iters, 10 per VU
+
+running (00m45.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m45.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m46.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m46.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m47.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m47.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m48.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m48.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m49.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m49.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m50.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m50.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m51.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m51.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m52.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m52.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m53.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m53.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m54.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m54.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m55.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m55.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m56.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m56.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m57.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m57.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m58.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m58.0s/10m0s  03/10 iters, 10 per VU
+
+running (00m59.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  00m59.0s/10m0s  03/10 iters, 10 per VU
+
+running (01m00.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+calibration   [  30% ] 1 VUs  01m00.0s/10m0s  03/10 iters, 10 per VU
+
+running (01m01.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m01.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m02.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m02.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m03.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m03.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m04.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m04.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m05.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m05.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m06.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m06.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m07.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m07.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m08.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m08.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m09.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m09.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m10.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m10.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m11.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m11.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m12.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m12.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m13.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m13.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m14.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m14.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m15.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+calibration   [  40% ] 1 VUs  01m15.0s/10m0s  04/10 iters, 10 per VU
+
+running (01m16.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m16.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m17.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m17.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m18.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m18.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m19.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m19.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m20.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m20.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m21.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m21.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m22.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m22.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m23.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m23.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m24.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m24.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m25.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m25.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m26.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m26.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m27.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m27.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m28.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+calibration   [  50% ] 1 VUs  01m28.0s/10m0s  05/10 iters, 10 per VU
+
+running (01m29.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m29.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m30.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m30.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m31.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m31.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m32.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m32.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m33.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m33.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m34.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m34.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m35.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m35.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m36.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m36.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m37.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m37.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m38.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m38.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m39.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m39.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m40.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m40.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m41.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m41.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m42.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+calibration   [  60% ] 1 VUs  01m42.0s/10m0s  06/10 iters, 10 per VU
+
+running (01m43.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m43.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m44.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m44.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m45.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m45.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m46.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m46.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m47.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m47.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m48.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m48.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m49.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m49.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m50.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m50.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m51.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m51.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m52.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m52.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m53.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m53.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m54.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m54.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m55.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+calibration   [  70% ] 1 VUs  01m55.0s/10m0s  07/10 iters, 10 per VU
+
+running (01m56.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  01m56.0s/10m0s  08/10 iters, 10 per VU
+
+running (01m57.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  01m57.0s/10m0s  08/10 iters, 10 per VU
+
+running (01m58.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  01m58.0s/10m0s  08/10 iters, 10 per VU
+
+running (01m59.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  01m59.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m00.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m00.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m01.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m01.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m02.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m02.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m03.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m03.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m04.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m04.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m05.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m05.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m06.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m06.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m07.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m07.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m08.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+calibration   [  80% ] 1 VUs  02m08.0s/10m0s  08/10 iters, 10 per VU
+
+running (02m09.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m09.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m10.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m10.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m11.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m11.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m12.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m12.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m13.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m13.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m14.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m14.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m15.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m15.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m16.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m16.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m17.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m17.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m18.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m18.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m19.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m19.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m20.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m20.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m21.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m21.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m22.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m22.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m23.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m23.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m24.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m24.0s/10m0s  09/10 iters, 10 per VU
+
+running (02m25.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+calibration   [  90% ] 1 VUs  02m25.0s/10m0s  09/10 iters, 10 per VU
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 350     2.410949/s
+    checks_succeeded...: 100.00% 350 out of 350
+    checks_failed......: 0.00%   0 out of 350
+
+    ✓ register status is 200
+    ✓ register message is correct
+    ✓ register user id is positive
+    ✓ login status is 200
+    ✓ login token is present
+    ✓ login email matches registration
+    ✓ login user id matches registration
+    ✓ profile status is 200
+    ✓ profile email matches registration
+    ✓ profile user id matches registration
+    ✓ profile payload has CSV name
+    ✓ profile payload has CSV phone
+    ✓ profile payload has CSV shipping address
+    ✓ profile update status is 200
+    ✓ profile update message is correct
+    ✓ categories status is 200
+    ✓ categories array is non-empty
+    ✓ selected category id is positive
+    ✓ products status is 200
+    ✓ products array is non-empty
+    ✓ matching product exists
+    ✓ product detail status is 200
+    ✓ product detail id matches selection
+    ✓ product detail category matches selection
+    ✓ product detail name is non-empty
+    ✓ product detail price is positive numeric
+    ✓ cart payload preserves product detail
+    ✓ cart payload quantity is CSV quantity
+    ✓ add to cart status is 200
+    ✓ add to cart message is correct
+    ✓ checkout payload has exact CSV shipping address
+    ✓ checkout total is correlated and positive
+    ✓ checkout status is 200
+    ✓ checkout message is correct
+    ✓ checkout order id is positive
+
+    CUSTOM
+    completed_workflows..............: 10      0.068884/s
+    latency_add_to_cart_ms...........: avg=5.56ms  min=3.8ms   med=5.71ms  p(90)=6.31ms   p(95)=6.32ms   p(99)=6.33ms   max=6.33ms  
+    latency_checkout_ms..............: avg=20.8ms  min=13.52ms med=19.99ms p(90)=23.69ms  p(95)=30.75ms  p(99)=36.4ms   max=37.81ms 
+    latency_login_ms.................: avg=6.63ms  min=3.49ms  med=7.22ms  p(90)=8.02ms   p(95)=8.08ms   p(99)=8.12ms   max=8.13ms  
+    latency_read_categories_ms.......: avg=2.78ms  min=1.06ms  med=2.91ms  p(90)=4.49ms   p(95)=4.52ms   p(99)=4.55ms   max=4.55ms  
+    latency_read_product_detail_ms...: avg=3.31ms  min=838.3µs med=3.6ms   p(90)=5.16ms   p(95)=5.34ms   p(99)=5.48ms   max=5.52ms  
+    latency_read_products_ms.........: avg=3.7ms   min=2.2ms   med=3.74ms  p(90)=4.55ms   p(95)=4.56ms   p(99)=4.57ms   max=4.57ms  
+    latency_read_profile_ms..........: avg=6.23ms  min=543.5µs med=6.79ms  p(90)=8.43ms   p(95)=9.37ms   p(99)=10.13ms  max=10.31ms 
+    latency_register_ms..............: avg=18.27ms min=6.58ms  med=16.42ms p(90)=23.2ms   p(95)=30.07ms  p(99)=35.57ms  max=36.94ms 
+    latency_update_profile_ms........: avg=20.68ms min=14.01ms med=20.41ms p(90)=23.95ms  p(95)=26.2ms   p(99)=28ms     max=28.45ms 
+    workflow_api_time_ms.............: avg=88ms    min=60.43ms med=84.97ms p(90)=106.92ms p(95)=107.37ms p(99)=107.72ms max=107.81ms
+    workflow_http_requests...........: 90      0.619958/s
+    workflow_success.................: 100.00% 10 out of 10
+    workflow_think_time_ms...........: avg=14.41s  min=12.25s  med=14.52s  p(90)=16.05s   p(95)=16.08s   p(99)=16.1s    max=16.11s  
+    workflow_wall_time_ms............: avg=14.51s  min=12.35s  med=14.62s  p(90)=16.14s   p(95)=16.17s   p(99)=16.19s   max=16.2s   
+
+    HTTP
+    http_req_duration................: avg=9.77ms  min=543.5µs med=6.07ms  p(90)=21.7ms   p(95)=22.66ms  p(99)=37.04ms  max=37.81ms 
+      { expected_response:true }.....: avg=9.77ms  min=543.5µs med=6.07ms  p(90)=21.7ms   p(95)=22.66ms  p(99)=37.04ms  max=37.81ms 
+    http_req_failed..................: 0.00%   0 out of 90
+    http_reqs........................: 90      0.619958/s
+
+    EXECUTION
+    iteration_duration...............: avg=14.51s  min=12.35s  med=14.62s  p(90)=16.14s   p(95)=16.17s   p(99)=16.19s   max=16.2s   
+    iterations.......................: 10      0.068884/s
+    vus..............................: 1       min=1        max=1
+    vus_max..........................: 1       min=1        max=1
+
+    NETWORK
+    data_received....................: 45 kB   307 B/s
+    data_sent........................: 23 kB   155 B/s
+
+
+
+
+running (02m25.2s), 0/1 VUs, 10 complete and 0 interrupted iterations
+calibration ✓ [ 100% ] 1 VUs  02m25.2s/10m0s  10/10 iters, 10 per VU

@@ -1,0 +1,3 @@
+﻿"timestamp_utc","role","pid","cpu_percent_total_machine","working_set_mb","private_memory_mb","thread_count"
+"2026-08-17T03:21:27.1382193Z","backend","15848","","45.129","53.254","14"
+"2026-08-17T03:21:27.1382193Z","k6","24628","","15.039","50.492","6"

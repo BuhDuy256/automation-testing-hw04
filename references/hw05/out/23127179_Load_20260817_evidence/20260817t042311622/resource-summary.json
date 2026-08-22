@@ -1,0 +1,50 @@
+﻿{
+    "process_metrics_note":  "CPU is normalized across 12 logical processors and is not directly comparable to Task Manager per-core percentages.",
+    "processes":  [
+                      {
+                          "role":  "backend",
+                          "samples":  178,
+                          "cpu_average_percent_total_machine":  0.098,
+                          "cpu_maximum_percent_total_machine":  0.378,
+                          "working_set_average_mb":  51.948,
+                          "working_set_maximum_mb":  55.035
+                      },
+                      {
+                          "role":  "k6",
+                          "samples":  178,
+                          "cpu_average_percent_total_machine":  0.128,
+                          "cpu_maximum_percent_total_machine":  0.564,
+                          "working_set_average_mb":  34.935,
+                          "working_set_maximum_mb":  35.914
+                      }
+                  ],
+    "whole_machine_metrics_note":  "Whole-machine values include unrelated local activity and are not attributed solely to the SUT.",
+    "whole_machine":  {
+                          "cpu_percent":  {
+                                              "maximum":  76.93,
+                                              "samples":  178,
+                                              "average":  24.694
+                                          },
+                          "committed_memory_percent":  {
+                                                           "maximum":  79.774,
+                                                           "samples":  178,
+                                                           "average":  77.076
+                                                       },
+                          "disk_bytes_per_second":  {
+                                                        "maximum":  301018284.061,
+                                                        "samples":  178,
+                                                        "average":  15189688.822
+                                                    },
+                          "network_bytes_per_second":  {
+                                                           "maximum":  3960673.535,
+                                                           "samples":  178,
+                                                           "average":  143391.192
+                                                       }
+                      },
+    "phase_sample_counts":  {
+                                "steady_4vu":  117,
+                                "ramp_down":  29,
+                                "graceful_completion":  4,
+                                "ramp_up":  28
+                            }
+}

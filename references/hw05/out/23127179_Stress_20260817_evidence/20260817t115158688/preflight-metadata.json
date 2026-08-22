@@ -1,0 +1,38 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "scenario_type": "stress",
+  "official_run_reserved": true,
+  "traffic_executed_during_preparation": false,
+  "backend_restarted_during_preparation": false,
+  "run_id": "20260817t115158688",
+  "prepared_at_utc": "2026-08-17T11:52:19.2703477Z",
+  "branch": "hw05-performance",
+  "reviewed_implementation_commit": "77a08b6550cc4a93c58dde9c7806d7b28131421f",
+  "evidence_directory": "out/23127179_Stress_20260817_evidence/20260817t115158688/",
+  "runner": "work/run_official_stress.ps1",
+  "runner_invocation": "& .\\work\\run_official_stress.ps1 -RunId '20260817t115158688' -BackendRestartedBeforeRun $true",
+  "base_url": "http://localhost:3000",
+  "designated_report_type": "Custom k6 end-of-test Markdown Stress Stage Summary",
+  "approved_hashes_sha256": {
+    "out/23127179_Stress_20260817.js": "822F0D7A37A620E37CB8DCA9F8C99CCD1C20118335E8A8FC118C81D35E65C198",
+    "out/stress_stage_report.js": "56542BED0A17AE8A87C31623D86248F52FAD833082F1FEFDD80ED9E0C2BFF865",
+    "out/user_workflow_data.csv": "1B975A6859AF027A78029ED4189C0CFCC0FC129726D05F95493313FB4688BED1"
+  },
+  "expected_runtime_outputs": [
+    "raw-results.ndjson",
+    "summary.json",
+    "stdout.log",
+    "stderr.log",
+    "stress-stage-summary.md",
+    "process-resource.csv",
+    "system-resource.csv",
+    "metadata-pre-run.json",
+    "metadata.json",
+    "command.txt",
+    "hashes.sha256",
+    "completion-report.md",
+    "screenshots/",
+    "screenshot-manifest.md"
+  ],
+  "note": "No runtime metric, resource sample, result, or screenshot is present in this preflight record."
+}

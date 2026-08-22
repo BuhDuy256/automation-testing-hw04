@@ -1,0 +1,18 @@
+﻿{
+    "run_name":  "baseline-1vu-no-think-20i",
+    "calibration_only":  true,
+    "k6_version":  "k6.exe v2.1.0 (commit/83a87a41e2, go1.26.4, windows/amd64)",
+    "run_id":  "20260817t032157199",
+    "vus":  1,
+    "iterations_per_vu":  20,
+    "planned_iterations":  20,
+    "think_time":  false,
+    "base_url":  "http://localhost:3000",
+    "started_at_utc":  "2026-08-17T03:21:57.2088982Z",
+    "ended_at_utc":  "2026-08-17T03:21:59.3604357Z",
+    "elapsed_seconds":  2.152,
+    "backend_pid":  15848,
+    "k6_pid":  11384,
+    "logical_processors_used_for_cpu_normalization":  12,
+    "k6_exit_code":  0
+}

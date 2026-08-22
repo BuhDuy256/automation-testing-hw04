@@ -2,6 +2,8 @@
 references/*
 !references/hw04/
 !references/hw04/**
+!references/hw05/
+!references/hw05/**
 references/hw04/automation/test-results/
 references/hw04/automation/playwright-report/
 references/hw04/automation/playwright/.cache/

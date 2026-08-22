@@ -1,0 +1,4 @@
+identity_seed,name,password,phone,shipping_address,quantity
+u001,Nguyen An,PerfTest123!,0912345678,"12 Nguyen Van Cu Street, District 5, Ho Chi Minh City",1
+u002,Tran Binh,PerfTest123!,09876543210,"25 Le Loi Street, District 1, Ho Chi Minh City",2
+u003,Le Chi,PerfTest123!,0901234567,"8 Nguyen Hue Street, District 1, Ho Chi Minh City",3

@@ -1,0 +1,20 @@
+{
+  "validated_at_local": "2026-08-17",
+  "k6_version": "k6.exe v2.1.0 (commit/83a87a41e2, go1.26.4, windows/amd64)",
+  "mechanism": "Built-in k6 Web Dashboard HTML export",
+  "environment": {
+    "K6_WEB_DASHBOARD": "true",
+    "K6_WEB_DASHBOARD_OPEN": "false",
+    "K6_WEB_DASHBOARD_PERIOD": "1s",
+    "K6_WEB_DASHBOARD_EXPORT": "native-dashboard-report.html"
+  },
+  "validation_script": "work/k6_native_html_validation.js",
+  "http_requests_generated": 0,
+  "completed_iterations": 1,
+  "duration_seconds": 4,
+  "exit_code": 0,
+  "html_report": "work/k6_native_html_validation/native-dashboard-report.html",
+  "html_report_bytes": 165252,
+  "third_party_dependency_installed": false,
+  "result": "PASS"
+}

@@ -1,0 +1,29 @@
+﻿{
+    "run_id_matches":  true,
+    "scheduled_profile_completed":  true,
+    "elapsed_seconds":  369.333,
+    "completed_iterations":  91,
+    "interrupted_iterations":  0,
+    "http_requests":  819,
+    "requests_per_successful_workflow":  9,
+    "request_count_consistent":  true,
+    "checks_passes":  3185,
+    "checks_fails":  0,
+    "workflow_passes":  91,
+    "workflow_fails":  0,
+    "all_nine_step_counts_equal_91":  true,
+    "duplicate_identity_errors":  0,
+    "correlation_failures":  0,
+    "raw_results_bytes":  3623096,
+    "summary_exists":  true,
+    "endpoint_summary_exists":  true,
+    "resource_phases":  [
+                            "graceful_completion",
+                            "ramp_down",
+                            "ramp_up",
+                            "steady_4vu"
+                        ],
+    "k6_exit_code":  0,
+    "all_reviewed_thresholds_pass":  true,
+    "raw_evidence_modified":  false
+}

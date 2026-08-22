@@ -1,0 +1,26 @@
+﻿{
+    "test_name":  "23127179_Soak_20260817",
+    "official_run":  true,
+    "run_id":  "20260818t000551547",
+    "commit_hash":  "d77e719e575e335984b263574afabba9d0725cec",
+    "k6_version":  "k6.exe v2.1.0 (commit/83a87a41e2, go1.26.4, windows/amd64)",
+    "base_url":  "http://localhost:3000",
+    "command":  "\u0026 \"C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\work\\calibration-tools\\k6-v2.1.0-windows-amd64\\k6.exe\" run --no-color -e BASE_URL=http://localhost:3000 -e K6_RUN_ID=20260818t000551547 --summary-export C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\out\\23127179_Soak_20260817_evidence\\20260818t000551547\\summary.json --out json=C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\out\\23127179_Soak_20260817_evidence\\20260818t000551547\\raw-results.ndjson C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\out\\23127179_Soak_20260817_evidence\\20260818t000551547\\23127179_Soak_20260817.js",
+    "runner_preflight_start_utc":  "2026-08-17T17:26:03.9427784Z",
+    "actual_k6_scenario_start_utc":  null,
+    "actual_k6_scenario_start_epoch_ms":  null,
+    "backend_pid":  28188,
+    "backend_process_started_at_local":  "2026-08-18T00:23:29.4866587+07:00",
+    "backend_restarted_before_run":  true,
+    "database_reseeded_before_run":  true,
+    "gui_capture_ready":  true,
+    "resource_sampling_seconds":  2,
+    "post_load_recovery_seconds":  120,
+    "raw_output_format":  "k6 newline-delimited JSON with step, soak_window, and target_vus tags",
+    "report_role":  "Additional Soak evidence milestone; not part of the three-report uniqueness requirement",
+    "actual_vu_sources":  [
+                              "k6 progress parsed by runner",
+                              "raw soak_actual_vus metric"
+                          ],
+    "scenario_start_anchor":  "Pending k6 SOAK_SCENARIO_START marker; runner preflight is not the anchor"
+}

@@ -1,0 +1,259 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: C:\Users\Duy\Desktop\automation-testing-hw04\work\k6_workflow_calibration.js
+        output: json (C:\Users\Duy\Desktop\automation-testing-hw04\work\calibration-results\explore-4vu-think-4i\raw.json)
+
+     scenarios: (100.00%) 1 scenario, 4 max VUs, 10m30s max duration (incl. graceful stop):
+              * calibration: 4 iterations for each of 4 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m01.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m02.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m02.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m03.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m03.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m04.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m04.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m05.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m05.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m06.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m06.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m07.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m07.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m08.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m08.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m09.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m09.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m10.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m10.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m11.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m11.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m12.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+calibration   [   0% ] 4 VUs  00m12.0s/10m0s  00/16 iters, 4 per VU
+
+running (00m13.0s), 4/4 VUs, 2 complete and 0 interrupted iterations
+calibration   [  12% ] 4 VUs  00m13.0s/10m0s  02/16 iters, 4 per VU
+
+running (00m14.0s), 4/4 VUs, 3 complete and 0 interrupted iterations
+calibration   [  19% ] 4 VUs  00m14.0s/10m0s  03/16 iters, 4 per VU
+
+running (00m15.0s), 4/4 VUs, 3 complete and 0 interrupted iterations
+calibration   [  19% ] 4 VUs  00m15.0s/10m0s  03/16 iters, 4 per VU
+
+running (00m16.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m16.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m17.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m17.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m18.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m18.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m19.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m19.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m20.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m20.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m21.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m21.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m22.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m22.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m23.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m23.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m24.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m24.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m25.0s), 4/4 VUs, 4 complete and 0 interrupted iterations
+calibration   [  25% ] 4 VUs  00m25.0s/10m0s  04/16 iters, 4 per VU
+
+running (00m26.0s), 4/4 VUs, 5 complete and 0 interrupted iterations
+calibration   [  31% ] 4 VUs  00m26.0s/10m0s  05/16 iters, 4 per VU
+
+running (00m27.0s), 4/4 VUs, 6 complete and 0 interrupted iterations
+calibration   [  38% ] 4 VUs  00m27.0s/10m0s  06/16 iters, 4 per VU
+
+running (00m28.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m28.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m29.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m29.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m30.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m30.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m31.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m31.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m32.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m32.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m33.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m33.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m34.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m34.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m35.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m35.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m36.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m36.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m37.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m37.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m38.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m38.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m39.0s), 4/4 VUs, 8 complete and 0 interrupted iterations
+calibration   [  50% ] 4 VUs  00m39.0s/10m0s  08/16 iters, 4 per VU
+
+running (00m40.0s), 4/4 VUs, 9 complete and 0 interrupted iterations
+calibration   [  56% ] 4 VUs  00m40.0s/10m0s  09/16 iters, 4 per VU
+
+running (00m41.0s), 4/4 VUs, 11 complete and 0 interrupted iterations
+calibration   [  69% ] 4 VUs  00m41.0s/10m0s  11/16 iters, 4 per VU
+
+running (00m42.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m42.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m43.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m43.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m44.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m44.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m45.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m45.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m46.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m46.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m47.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m47.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m48.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m48.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m49.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m49.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m50.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m50.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m51.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m51.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m52.0s), 4/4 VUs, 12 complete and 0 interrupted iterations
+calibration   [  75% ] 4 VUs  00m52.0s/10m0s  12/16 iters, 4 per VU
+
+running (00m53.0s), 3/4 VUs, 13 complete and 0 interrupted iterations
+calibration   [  81% ] 4 VUs  00m53.0s/10m0s  13/16 iters, 4 per VU
+
+running (00m54.0s), 2/4 VUs, 14 complete and 0 interrupted iterations
+calibration   [  88% ] 4 VUs  00m54.0s/10m0s  14/16 iters, 4 per VU
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 560     10.222728/s
+    checks_succeeded...: 100.00% 560 out of 560
+    checks_failed......: 0.00%   0 out of 560
+
+    ✓ register status is 200
+    ✓ register message is correct
+    ✓ register user id is positive
+    ✓ login status is 200
+    ✓ login token is present
+    ✓ login email matches registration
+    ✓ login user id matches registration
+    ✓ profile status is 200
+    ✓ profile email matches registration
+    ✓ profile user id matches registration
+    ✓ profile payload has CSV name
+    ✓ profile payload has CSV phone
+    ✓ profile payload has CSV shipping address
+    ✓ profile update status is 200
+    ✓ profile update message is correct
+    ✓ categories status is 200
+    ✓ categories array is non-empty
+    ✓ selected category id is positive
+    ✓ products status is 200
+    ✓ products array is non-empty
+    ✓ matching product exists
+    ✓ product detail status is 200
+    ✓ product detail id matches selection
+    ✓ product detail category matches selection
+    ✓ product detail name is non-empty
+    ✓ product detail price is positive numeric
+    ✓ cart payload preserves product detail
+    ✓ cart payload quantity is CSV quantity
+    ✓ add to cart status is 200
+    ✓ add to cart message is correct
+    ✓ checkout payload has exact CSV shipping address
+    ✓ checkout total is correlated and positive
+    ✓ checkout status is 200
+    ✓ checkout message is correct
+    ✓ checkout order id is positive
+
+    CUSTOM
+    completed_workflows..............: 16      0.292078/s
+    latency_add_to_cart_ms...........: avg=5.69ms   min=1.89ms  med=5.74ms   p(90)=7.43ms   p(95)=7.87ms   p(99)=8.79ms  max=9.02ms  
+    latency_checkout_ms..............: avg=29.14ms  min=17.25ms med=22.38ms  p(90)=44.03ms  p(95)=51.75ms  p(99)=67.54ms max=71.49ms 
+    latency_login_ms.................: avg=8.35ms   min=942.6µs med=7.26ms   p(90)=12.87ms  p(95)=17.14ms  p(99)=24.76ms max=26.67ms 
+    latency_read_categories_ms.......: avg=4.28ms   min=1.15ms  med=3.87ms   p(90)=5.93ms   p(95)=8.99ms   p(99)=13.92ms max=15.15ms 
+    latency_read_product_detail_ms...: avg=3.13ms   min=678.4µs med=3.28ms   p(90)=4.18ms   p(95)=4.53ms   p(99)=4.88ms  max=4.97ms  
+    latency_read_products_ms.........: avg=3.16ms   min=660.5µs med=3.17ms   p(90)=4.89ms   p(95)=5.21ms   p(99)=5.76ms  max=5.89ms  
+    latency_read_profile_ms..........: avg=8.55ms   min=1.63ms  med=6.14ms   p(90)=9.6ms    p(95)=19.36ms  p(99)=42.55ms max=48.34ms 
+    latency_register_ms..............: avg=29.02ms  min=10.71ms med=24.94ms  p(90)=48.42ms  p(95)=51.67ms  p(99)=51.71ms max=51.71ms 
+    latency_update_profile_ms........: avg=23.79ms  min=14.72ms med=19.46ms  p(90)=39.86ms  p(95)=43.55ms  p(99)=45ms    max=45.36ms 
+    workflow_api_time_ms.............: avg=115.16ms min=85.38ms med=109.12ms p(90)=132.46ms p(95)=154.21ms p(99)=200.5ms max=212.08ms
+    workflow_http_requests...........: 144     2.628701/s
+    workflow_success.................: 100.00% 16 out of 16
+    workflow_think_time_ms...........: avg=13.3s    min=11.86s  med=13.32s   p(90)=14.88s   p(95)=14.97s   p(99)=14.98s  max=14.98s  
+    workflow_wall_time_ms............: avg=13.43s   min=11.97s  med=13.46s   p(90)=15s      p(95)=15.09s   p(99)=15.14s  max=15.15s  
+
+    HTTP
+    http_req_duration................: avg=12.79ms  min=660.5µs med=6.55ms   p(90)=35.68ms  p(95)=42.94ms  p(99)=51.69ms max=71.49ms 
+      { expected_response:true }.....: avg=12.79ms  min=660.5µs med=6.55ms   p(90)=35.68ms  p(95)=42.94ms  p(99)=51.69ms max=71.49ms 
+    http_req_failed..................: 0.00%   0 out of 144
+    http_reqs........................: 144     2.628701/s
+
+    EXECUTION
+    iteration_duration...............: avg=13.43s   min=11.97s  med=13.46s   p(90)=15s      p(95)=15.09s   p(99)=15.14s  max=15.15s  
+    iterations.......................: 16      0.292078/s
+    vus..............................: 2       min=2        max=4
+    vus_max..........................: 4       min=4        max=4
+
+    NETWORK
+    data_received....................: 71 kB   1.3 kB/s
+    data_sent........................: 36 kB   658 B/s
+
+
+
+
+running (00m54.8s), 0/4 VUs, 16 complete and 0 interrupted iterations
+calibration ✓ [ 100% ] 4 VUs  00m54.8s/10m0s  16/16 iters, 4 per VU

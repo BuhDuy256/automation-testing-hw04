@@ -1,0 +1,9 @@
+PRE-RUN COMMAND PREVIEW — NOT EXECUTED
+
+Repository-root PowerShell invocation:
+& .\work\run_official_stress.ps1 -RunId '20260817t115158688' -BackendRestartedBeforeRun $true
+
+The runner will write the fully expanded k6 command to command.txt only when the
+official invocation starts. It supplies BASE_URL=http://localhost:3000,
+K6_RUN_ID=20260817t115158688, the invocation-specific Markdown report path,
+--summary-export, --out json=raw-results.ndjson, and stdout/stderr redirection.
