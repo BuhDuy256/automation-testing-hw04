@@ -15,7 +15,7 @@
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
       "reasoning": "Duplicate/overlap with FR04-AI-019 and FR04-AI-043; Unicode support was also stated too strongly.",
-      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-019 and FR04-AI-043."
+      "correction": "Rejected from the reviewed executable suite; covered by FR04-AI-019."
     },
     {
       "caseId": "FR04-AI-003",
@@ -30,7 +30,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The original candidate does not identify which single editable field is updated, so the request and observable state comparison are not deterministic.",
       "correction": "Make deterministic: update only phone to 0123456789, then GET /api/users/me and observe whether omitted name and shipping_address remain unchanged; omission semantics remain SPEC GAP."
     },
     {
@@ -78,7 +78,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The original candidate claims user isolation without performing a second-user comparison, so the assertion is broader than the evidence collected by the case.",
       "correction": "With a valid user JWT, update the profile and GET /api/users/me; verify the returned authenticated user's editable fields match the submitted update. Do not claim cross-user isolation without a second-user comparison."
     },
     {
@@ -102,7 +102,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The 9-digit value violates the documented 10/11-digit phone rule, but the original oracle does not clearly state the persistence invariant for the invalid value.",
       "correction": "Use phone=012345678. It violates the documented 10/11-digit rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
     },
     {
@@ -110,7 +110,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The 12-digit value violates the documented 10/11-digit phone rule, but the original oracle is too weak about persistence of an invalid value.",
       "correction": "Use phone=012345678901. It violates the documented 10/11-digit rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
     },
     {
@@ -118,7 +118,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The phone value violates the documented leading-zero rule, but the original oracle does not clearly express the persisted-state invariant.",
       "correction": "Use phone=1123456789. It violates the documented leading-zero rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
     },
     {
@@ -126,7 +126,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The phone contains a non-digit character and violates the documented format, but the original oracle is not sufficiently concrete for later execution.",
       "correction": "Use phone=012345678A. It violates the documented digit-format rule and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
     },
     {
@@ -134,7 +134,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The +84 representation does not satisfy the documented leading-zero format, but the original oracle is too vague about the invalid persisted state.",
       "correction": "Use phone=+84123456789. It does not satisfy the documented phone format and must not become the user's valid persisted phone value. Exact HTTP status and error schema remain SPEC GAP."
     },
     {
@@ -174,7 +174,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The candidate combines two wrong-type fields in one request, creating fault masking and preventing isolated diagnosis.",
       "correction": "Submit numeric name with otherwise valid shipping_address and phone. Name type handling is unspecified; observe behavior without inventing a mandatory HTTP status. Do not also submit an array shipping_address."
     },
     {
@@ -182,7 +182,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The phrase \"very long\" does not define a deterministic test input.",
       "correction": "Submit a name consisting of 256 characters with otherwise valid fields. No name length limit is documented; observe behavior without requiring rejection. Keep exploratory."
     },
     {
@@ -198,7 +198,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The original candidate states that email must remain unchanged but does not explicitly include persisted-state verification.",
       "correction": "Capture baseline email; PUT a different email with otherwise valid editable fields; GET; verify persisted email still equals baseline. Exact handling/status of the protected property remains SPEC GAP."
     },
     {
@@ -206,7 +206,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The original role-tampering candidate requires an explicit baseline and post-update persisted-role comparison.",
       "correction": "Capture baseline role; PUT role=\"admin\" with otherwise valid editable fields; GET; verify persisted role still equals baseline. Do not classify implementation behavior as a confirmed bug before execution."
     },
     {
@@ -214,7 +214,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The combined email/role tampering idea is meaningful, but the original case does not explicitly define verification of both persisted protected fields.",
       "correction": "Capture baseline email and role; PUT both changed protected fields plus valid editable fields; GET; verify both protected fields remain baseline. Exact PUT status/body remains SPEC GAP."
     },
     {
@@ -238,7 +238,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The candidate does not specify a concrete phone value or the exact baseline fields to compare after the partial update.",
       "correction": "Capture baseline name and shipping_address; PUT only phone=0123456789; GET; observe whether both remain baseline. Omission semantics are SPEC GAP, not an official preservation assertion."
     },
     {
@@ -278,7 +278,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The candidate does not provide a concrete quote/apostrophe payload or a sufficiently observable SEC-05 oracle.",
       "correction": "Use concrete harmless payload name=O'Connor \"Test\". Observe unintended mutation, server failure, or corrupted persistence; a safe black-box result does not prove parameterized queries."
     },
     {
@@ -286,7 +286,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The phrase \"SQL-like text\" is not executable without a concrete inert payload, and the observable black-box oracle must avoid claiming internal query parameterization.",
       "correction": "Use inert SQL-like text Robert'); SELECT 1; --. Observe unintended mutation, server failure, or corrupted persistence; do not claim a normal response proves parameterized queries."
     },
     {
@@ -302,7 +302,7 @@
       "verdict": "INCOMPLETE",
       "reviewedBy": "Human (explicit confirmation in chat)",
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
-      "reasoning": "The original candidate needs a deterministic input, oracle, scope, or verification step before executable use.",
+      "reasoning": "The candidate is labeled as schema validation even though the exact PUT response schema is undocumented; it needs to be reframed around documented request fields and persisted read-back.",
       "correction": "Send a JSON object containing documented name, shipping_address, and phone, then GET and verify those fields. Do not assert an undocumented exact PUT response schema."
     },
     {
