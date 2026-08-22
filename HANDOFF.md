@@ -209,3 +209,42 @@ This order minimizes early state friction; checkout should be handled after the 
 
 - Group-level API duplication among classmates has not been externally checked; no group allocation data was available in the repository.
 - CI workflow and real execution evidence are intentionally not created yet.
+
+## 15. Latest checkpoint — FR-04 Postman build
+
+The FR-04 executable Postman suite is now built and statically validated. This phase did not start the SUT, run Newman, confirm bugs, publish issues, update the AI Audit Report, or create execution evidence.
+
+Status:
+
+```text
+FR-04
+
+AI GENERATE       COMPLETE
+HUMAN REVIEW      COMPLETE
+HUMAN EXTEND      COMPLETE
+POSTMAN BUILD     COMPLETE
+EXECUTE           NOT STARTED
+BUG               NOT STARTED
+```
+
+Canonical working artifacts:
+
+- `work/postman/fr04/FR04-profile.postman_collection.json`
+- `work/postman/fr04/FR04-profile.postman_environment.json`
+- `work/postman/fr04/FR04-cases.postman_data.json`
+- `work/postman/fr04/README.md`
+
+The data file contains exactly 44 rows: 37 reviewed-usable AI cases and 7 HUMAN extension cases. The 10 AI cases with final `INVALID` verdicts are excluded. The collection uses setup/login, baseline capture, temporary second-user registration for `FR04-H-005`, data-driven execution of `PUT /api/users/me`, read-back helpers, and API-level baseline restoration. A collection pre-request script injects `X-Student-Id: 23127179` into every request, including supporting requests and asynchronous helper calls.
+
+The verified endpoint contract does not define exact PUT response statuses or schemas, so the collection avoids invented status/body assertions. Persisted email/role invariants, authenticated read-back, invalid-phone non-persistence, and cross-user isolation are asserted where the reviewed case defines them. The display-boundary limitation of SEC-04 remains documented as an observation boundary; the API suite does not claim that an API read-back proves UI escaping.
+
+Deterministic checks passed:
+
+```text
+44 canonical data rows; 47 original AI; 37 usable AI; 7 HUMAN; 10 INVALID excluded
+Postman JSON parsing passed for collection, environment, and data
+npm run hw06:derive — passed
+npm run hw06:validate — passed (0 errors, 0 warnings)
+```
+
+The next permitted phase is ACT-RUN-01 after this implementation is committed and the SUT is intentionally prepared. Do not execute Newman in the current checkpoint.

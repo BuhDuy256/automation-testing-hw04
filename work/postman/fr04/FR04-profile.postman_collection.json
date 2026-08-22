@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr04-profile-20260822",
+    "name": "HW06 FR-04 Personal Profile Management",
+    "description": "Executable preparation suite for PUT /api/users/me. Run with FR04-cases.postman_data.json only after the collection is committed and the SUT is intentionally started. No response status/body is asserted where the verified contract is silent.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "studentId", "value": "23127179" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({key: 'X-Student-Id', value: pm.environment.get('studentId') || pm.collectionVariables.get('studentId') || '23127179'});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup / Authentication",
+      "item": [
+        {
+          "name": "Login user A",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Login returns a token', function () { pm.expect(pm.response.code).to.be.oneOf([200]); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.environment.set('token', json.token); });"
+          ] } }]
+        },
+        {
+          "name": "Capture baseline user A",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Baseline profile captured', function () { pm.expect(pm.response.code).to.be.oneOf([200]); var p = pm.response.json(); ['name','shipping_address','phone','email','role'].forEach(function (k) { pm.expect(p).to.have.property(k); }); pm.environment.set('baselineName', p.name || ''); pm.environment.set('baselineAddress', p.shipping_address || ''); pm.environment.set('baselinePhone', p.phone || ''); pm.environment.set('baselineEmail', p.email || ''); pm.environment.set('baselineRole', p.role || ''); });"
+          ] } }]
+        },
+        {
+          "name": "Register temporary user B for FR04-H-005",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"FR04 Isolation User\",\n  \"email\": \"{{crossUserEmail}}\",\n  \"password\": \"CrossUser123!\"\n}" }, "url": { "raw": "{{baseUrl}}/api/register", "host": ["{{baseUrl}}"], "path": ["api", "register"] } },
+          "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["pm.environment.set('crossUserEmail', 'fr04-isolation-' + Date.now() + '@example.test');"] } }, { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Temporary isolation user registration is observable', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });"] } }]
+        },
+        {
+          "name": "Login user B",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{crossUserEmail}}\",\n  \"password\": \"CrossUser123!\"\n}" }, "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Login user B returns a token', function () { pm.expect(pm.response.code).to.be.oneOf([200]); pm.environment.set('tokenB', pm.response.json().token); });"] } }]
+        },
+        {
+          "name": "Capture baseline user B",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{tokenB}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Baseline profile B captured', function () { pm.expect(pm.response.code).to.be.oneOf([200]); var p = pm.response.json(); pm.environment.set('baselineBName', p.name || ''); pm.environment.set('baselineBAddress', p.shipping_address || ''); pm.environment.set('baselineBPhone', p.phone || ''); pm.environment.set('baselineBEmail', p.email || ''); pm.environment.set('baselineBRole', p.role || ''); });"] } }]
+        },
+        {
+          "name": "Restore active identity to user A",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('User A token restored', function () { pm.expect(pm.response.code).to.be.oneOf([200]); pm.environment.set('token', pm.response.json().token); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Test Cases - 44 reviewed usable cases",
+      "item": [
+        {
+          "name": "Execute {{caseId}} - PUT /api/users/me",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "var id = pm.iterationData.get('caseId'); pm.variables.set('fr04CaseId', id);",
+              "var base = {name: 'FR04 ' + id, shipping_address: 'Address ' + id, phone: '0123456789'};",
+              "var phone = {'FR04-AI-011':'0123456789','FR04-AI-012':'01234567890','FR04-AI-013':'012345678','FR04-AI-014':'012345678901','FR04-AI-015':'1123456789','FR04-AI-016':'012345678A','FR04-AI-017':'+84123456789','FR04-H-004':''};",
+              "if (phone[id] !== undefined) base.phone = phone[id];",
+              "if (id === 'FR04-AI-004' || id === 'FR04-AI-030') base = {phone: '0123456789'};",
+              "if (id === 'FR04-AI-020') base.name = '';",
+              "if (id === 'FR04-AI-021') base.shipping_address = null;",
+              "if (id === 'FR04-AI-022') base.name = 12345;",
+              "if (id === 'FR04-H-001') base.phone = 1234567890;",
+              "if (id === 'FR04-H-002') base.phone = null;",
+              "if (id === 'FR04-H-003') base.shipping_address = ['wrong', 'type'];",
+              "if (id === 'FR04-AI-023') base.name = Array(257).join('L');",
+              "if (id === 'FR04-AI-024') base.name = '<b>Lan</b>'; base.shipping_address = base.name;",
+              "if (id === 'FR04-AI-025') base.email = 'changed-' + id + '@example.test';",
+              "if (id === 'FR04-AI-026' || id === 'FR04-AI-037') base.role = 'admin';",
+              "if (id === 'FR04-AI-027') { base.email = 'changed-' + id + '@example.test'; base.role = 'admin'; }",
+              "if (id === 'FR04-AI-035') base.name = 'O\\'Connor \\\"Test\\\"';",
+              "if (id === 'FR04-AI-036') base.name = \"Robert'); SELECT 1; --\";",
+              "if (id === 'FR04-AI-039') base = {};",
+              "if (id === 'FR04-AI-040') { pm.request.body.update({mode:'raw', raw:'[]', options:{raw:{language:'json'}}}); } else if (id === 'FR04-AI-042' || id === 'FR04-H-007') { pm.request.body.update({mode:'raw', raw: id === 'FR04-H-007' ? '' : '{\\\"name\\\":', options:{raw:{language:'json'}}}); } else { pm.request.body.update({mode:'raw', raw: JSON.stringify(base), options:{raw:{language:'json'}}}); }",
+              "pm.request.headers.remove('Authorization'); var authMode = ['FR04-AI-005','FR04-AI-033'].includes(id) ? 'none' : 'bearer'; if (id === 'FR04-AI-006') authMode = 'basic'; if (id === 'FR04-AI-007') authMode = 'empty'; if (id === 'FR04-AI-008') authMode = 'invalid'; if (id === 'FR04-AI-009') authMode = 'expired'; if (authMode === 'bearer') pm.request.headers.add({key:'Authorization',value:'Bearer ' + pm.environment.get('token')}); if (authMode === 'basic') pm.request.headers.add({key:'Authorization',value:'Basic dGVzdDp0ZXN0'}); if (authMode === 'empty') pm.request.headers.add({key:'Authorization',value:'Bearer'}); if (authMode === 'invalid') pm.request.headers.add({key:'Authorization',value:'Bearer invalid.invalid.invalid'}); if (authMode === 'expired') pm.request.headers.add({key:'Authorization',value:'Bearer ' + (pm.environment.get('expiredToken') || 'expired-token-supplied-at-execution')}); pm.variables.set('fr04AuthMode', authMode);"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "var id = pm.variables.get('fr04CaseId'); var auth = pm.variables.get('fr04AuthMode'); pm.test(id + ' response is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "function get(token, cb) { pm.sendRequest({url: pm.environment.get('baseUrl') + '/api/users/me', method:'GET', header:{'X-Student-Id':pm.environment.get('studentId'), Authorization:'Bearer ' + token}}, function(err,res){ pm.expect(err, 'GET read-back error').to.equal(null); cb(res.json()); }); }",
+              "function restore(token, cb) { pm.sendRequest({url:pm.environment.get('baseUrl')+'/api/users/me',method:'PUT',header:{'X-Student-Id':pm.environment.get('studentId'),'Content-Type':'application/json',Authorization:'Bearer '+token},body:{mode:'raw',raw:JSON.stringify({name:pm.environment.get('baselineName'),shipping_address:pm.environment.get('baselineAddress'),phone:pm.environment.get('baselinePhone')})}}, function(err){ pm.expect(err, 'restore error').to.equal(null); if(cb) cb(); }); }",
+              "if (auth !== 'bearer') { if (id === 'FR04-AI-033') get(pm.environment.get('token'), function(p){ pm.test(id + ' leaves baseline after unauthenticated mutation', function(){ pm.expect(String(p.phone)).to.equal(pm.environment.get('baselinePhone')); }); }); } else if (id === 'FR04-H-005') { get(pm.environment.get('token'), function(a){ pm.test(id + ' updates user A', function(){ pm.expect(String(a.name)).to.include(id); }); get(pm.environment.get('tokenB'), function(b){ pm.test(id + ' isolates user B', function(){ pm.expect(String(b.name)).to.equal(pm.environment.get('baselineBName')); pm.expect(String(b.phone)).to.equal(pm.environment.get('baselineBPhone')); }); restore(pm.environment.get('token')); }); }); } else if (['FR04-AI-010','FR04-AI-018','FR04-AI-019','FR04-AI-025','FR04-AI-026','FR04-AI-027','FR04-AI-029','FR04-AI-031','FR04-AI-035','FR04-AI-036','FR04-AI-038','FR04-AI-046','FR04-H-006'].includes(id)) { get(pm.environment.get('token'), function(p){ pm.test(id + ' persisted read-back is available', function(){ pm.expect(p).to.have.property('name'); pm.expect(p).to.have.property('phone'); }); if (['FR04-AI-025','FR04-AI-026','FR04-AI-027','FR04-H-006'].includes(id)) { pm.test(id + ' preserves protected fields', function(){ pm.expect(String(p.email)).to.equal(pm.environment.get('baselineEmail')); pm.expect(String(p.role)).to.equal(pm.environment.get('baselineRole')); }); } restore(pm.environment.get('token')); }); } else if (['FR04-AI-013','FR04-AI-014','FR04-AI-015','FR04-AI-016','FR04-AI-017','FR04-H-001','FR04-H-002','FR04-H-004'].includes(id)) { get(pm.environment.get('token'), function(p){ pm.test(id + ' invalid phone is not persisted as the valid phone value', function(){ pm.expect(String(p.phone)).to.equal(pm.environment.get('baselinePhone')); }); restore(pm.environment.get('token')); }); } else { restore(pm.environment.get('token')); }"
+            ] } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Verification helpers / Cleanup",
+      "item": [
+        {
+          "name": "Final baseline verification",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Final user A profile is readable after cleanup', function () { pm.expect(pm.response.code).to.be.oneOf([200]); });"] } }]
+        }
+      ]
+    }
+  ]
+}
