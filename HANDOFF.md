@@ -355,3 +355,66 @@ BUG REVIEW         NEXT — two candidate records await human review
 ```
 
 The next session must review the ten failures and the two candidate records before any confirmation or publication. Do not begin FR-15, FR-08, GitHub Issue publication, or CI/CD work from this checkpoint.
+
+## 18. Latest checkpoint — FR-04 targeted bug review and correction
+
+The student human-reviewed the original FR-04 Newman evidence and authorized targeted correction/rerun only. The original runs remain preserved:
+
+- `RUN-20260822062948963-fr04-input`
+- `RUN-20260822063250172-fr04-stateful`
+
+The current phase corrected only the executable mapping/oracle for `FR04-H-001`, `FR04-H-002`, and `FR04-H-003`. Canonical test cases, human extension rationales, origins, and IDs were not changed. The official AI Audit Report was not updated.
+
+Corrected runtime stimulus was captured in `stdout.log`:
+
+- H-001 sent JSON number `1234567890`; the API returned 200 and persisted the value as string `"1234567890"`. This remains an exploratory wrong-type observation, not a confirmed bug.
+- H-002 sent JSON `null`; the API returned 200 and persisted `null`. This remains an exploratory wrong-type observation, not a confirmed bug.
+- H-003 sent `shipping_address: ["wrong", "type"]` with valid name and phone; the API returned 200 and the read-back represented the value as `"[object Object]"`. This remains an exploratory wrong-type observation, not a confirmed bug.
+
+Targeted corrected runs:
+
+| Run | Scope | Exit | Runtime header proof | Result |
+|---|---|---:|---:|---|
+| `RUN-20260823022303042-fr04-harness-corrected` | H-001/H-002/H-003 | 0 | 21/21 | 3 PASS exploratory observations |
+| `RUN-20260823022316955-fr04-phone-corrected` | AI-013/H-004 | 1 | 14/14 | both FAIL verified phone-contract violation |
+| `RUN-20260823022329715-fr04-role-corrected` | AI-026 | 1 | 7/7 | FAIL; clean baseline role=user became admin |
+| `RUN-20260823022342040-fr04-ai027-corrected` | AI-027 | 1 | 7/7 | FAIL; independent clean rerun, no contamination from AI-026 |
+| `RUN-20260823022618165-fr04-ai009-provenance` | AI-009 | 0 | 5/5 | PASS; validly signed expired JWT |
+
+Each targeted run uses the official `scripts/hw06/run-newman.mjs` harness and has separate JSON, HTML, stdout, stderr, and metadata evidence under `work/runs/<RUN-ID>/`. Each group was preceded by `bash ./run.sh stop` and `bash ./run.sh start`; backend startup reseeded the SQLite database. The role and AI-027 groups therefore both proved baseline `role=user` through authenticated GET before mutation.
+
+The local SUT source confirms the expired-token environment value uses the configured local signing key: verification fails with `TokenExpiredError`, not invalid-signature error, and its decoded `exp=1` is expired. The secret is not copied into any report or committed artifact.
+
+Canonical bookkeeping now includes the targeted run mappings in `work/registry/runs.json` and the new evidence paths/clean-state findings in `work/registry/bugs.json`. Both bug records remain `status=candidate` with notes `READY FOR HUMAN CONFIRMATION`; neither is `human-confirmed` or published. The role candidate groups `FR04-AI-026` and the independently reproduced `FR04-AI-027` under the existing single candidate.
+
+Corrected FR-04 accounting:
+
+```text
+PASS: 35
+FAIL — VERIFIED CONTRACT VIOLATION: 8
+  phone: AI-013, AI-014, AI-015, AI-016, AI-017, H-004
+  role: AI-026, AI-027
+HARNESS: 0 remaining after corrected targeted rerun
+SPEC-GAP / IMPLEMENTATION OBSERVATION: H-007
+MANUAL/UI FOLLOW-UP: AI-024 SEC-04 display escaping remains pending
+EVIDENCE LIMITATION: AI-009 resolved; validly signed expired JWT reproduced
+Total represented: 44
+```
+
+The original 44-case run is not rewritten; its historical AI-027 PASS and H-001/H-002/H-003 outcomes remain in the original run record. The corrected accounting above uses targeted evidence to replace contaminated or harness-invalid interpretations.
+
+Current status:
+
+```text
+FR-04
+
+AI GENERATE        COMPLETE
+HUMAN REVIEW       COMPLETE
+HUMAN EXTEND      COMPLETE
+POSTMAN BUILD      COMPLETE
+EXECUTE            COMPLETE
+BUG REVIEW         COMPLETE — targeted evidence prepared
+BUG CONFIRMATION   WAITING FOR HUMAN
+```
+
+Do not publish GitHub Issues, create CI evidence, start FR-08/FR-15, or update `out/ai-audit-report.md` until the student makes the next explicit decision.

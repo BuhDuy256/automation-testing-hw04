@@ -1,0 +1,94 @@
+{
+  "id": "RUN-20260823022618165-fr04-ai009-provenance",
+  "fixture": false,
+  "startedAtUtc": "2026-08-23T02:26:18.165Z",
+  "completedAtUtc": "2026-08-23T02:26:20.109Z",
+  "hostname": "localhost:3000",
+  "command": "C:\\dev_env\\nodejs\\node.exe",
+  "arguments": [
+    "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+    "run",
+    "work/postman/fr04/FR04-profile.postman_collection.json",
+    "--reporters",
+    "cli,json,htmlextra",
+    "--reporter-json-export",
+    "work/runs/RUN-20260823022618165-fr04-ai009-provenance/newman-report.json",
+    "--reporter-htmlextra-export",
+    "work/runs/RUN-20260823022618165-fr04-ai009-provenance/newman-report.html",
+    "--environment",
+    "work/postman/fr04/FR04-profile.postman_environment.json",
+    "--iteration-data",
+    "work/postman/fr04/FR04-target-ai009.postman_data.json"
+  ],
+  "exitCode": 0,
+  "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+  "collectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+  "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+  "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+  "dataPath": "work/postman/fr04/FR04-target-ai009.postman_data.json",
+  "dataSha256": "4cb2899511e3faa5494476f1a250371b86c913a55adba65b82d986358b4a5fa5",
+  "rawJsonPath": "work/runs/RUN-20260823022618165-fr04-ai009-provenance/newman-report.json",
+  "htmlReportPath": "work/runs/RUN-20260823022618165-fr04-ai009-provenance/newman-report.html",
+  "consoleLogPath": "work/runs/RUN-20260823022618165-fr04-ai009-provenance/stdout.log",
+  "stderrPath": "work/runs/RUN-20260823022618165-fr04-ai009-provenance/stderr.log",
+  "metadataPath": "work/runs/RUN-20260823022618165-fr04-ai009-provenance/metadata.json",
+  "reporters": [
+    "cli",
+    "json",
+    "htmlextra"
+  ],
+  "actualHostnames": [
+    "localhost:3000"
+  ],
+  "summaryStats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 4,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 9,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 4,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 4,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 4,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "executionCount": 5,
+  "studentHeaderRequests": 5,
+  "caseResults": [],
+  "resultImportStatus": "pending-human-checked-mapping"
+}

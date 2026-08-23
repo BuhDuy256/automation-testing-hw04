@@ -1,0 +1,106 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+Iteration 1/3
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 507ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 20ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 23ms]
+  √  FR04-H-001 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 482B, 6ms]
+  1. FR04-H-001 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 13ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-H-001 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 2/3
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 8ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 21ms]
+  √  FR04-H-002 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 474B, 5ms]
+  √  FR04-H-002 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 13ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  FR04-H-002 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 3/3
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 9ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 16ms]
+  √  FR04-H-003 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 15ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  FR04-H-003 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬───────────────────┬───────────────────┐
+│                         │          executed │            failed │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              iterations │                 3 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│                requests │                20 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│            test-scripts │                12 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│      prerequest-scripts │                15 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              assertions │                17 │                 1 │
+├─────────────────────────┴───────────────────┴───────────────────┤
+│ total run duration: 1881ms                                      │
+├─────────────────────────────────────────────────────────────────┤
+│ total data received: 3.35kB (approx)                            │
+├─────────────────────────────────────────────────────────────────┤
+│ average response time: 35ms [min: 4ms, max: 507ms, s.d.: 108ms] │
+└─────────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                    [39m
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 1.  AssertionError  FR04-H-001 invalid phone did not become the persisted phone value                         
+     iteration: 1    expected '1234567890' to deeply equal null                                                
+                     at assertion:1 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 

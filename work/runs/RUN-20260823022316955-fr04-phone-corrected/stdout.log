@@ -1,0 +1,97 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+Iteration 1/2
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 77ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 20ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-013 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -013","shipping_address":"Address FR04-AI-013","phone"
+  │ :"012345678"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 24ms]
+  √  FR04-AI-013 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 483B, 6ms]
+  1. FR04-AI-013 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 23ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 12ms]
+  √  FR04-AI-013 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 9ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 2/2
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 13ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 22ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-004 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 04","shipping_address":"Address FR04-H-004","phone":""
+  │ }'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 29ms]
+  √  FR04-H-004 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 472B, 10ms]
+  2. FR04-H-004 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 23ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 10ms]
+  √  FR04-H-004 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 9ms]
+  √  Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                2 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │               14 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                8 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │               10 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │               12 │                2 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 873ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 2.37kB (approx)                          │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 20ms [min: 6ms, max: 77ms, s.d.: 17ms] │
+└───────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                    [39m
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 1.  AssertionError  FR04-AI-013 invalid phone did not become the persisted phone value                        
+     iteration: 1    expected '012345678' to deeply equal null                                                 
+                     at assertion:1 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 2.  AssertionError  FR04-H-004 invalid phone did not become the persisted phone value                         
+     iteration: 2    expected '' to deeply equal null                                                          
+                     at assertion:1 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 

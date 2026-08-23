@@ -1,0 +1,65 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 86ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 19ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 30ms]
+  √  FR04-AI-026 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 12ms]
+  √  FR04-AI-026 persisted editable values match submitted values
+  1. FR04-AI-026 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 29ms]
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 11ms]
+  2. FR04-AI-026 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 453B, 12ms]
+  3. Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                 4 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 5 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                 7 │                3 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 569ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 1.2kB (approx)                            │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 28ms [min: 11ms, max: 86ms, s.d.: 24ms] │
+└────────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                    [39m
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 1.  AssertionError  FR04-AI-026 protected fields remain baseline                                              
+                     expected 'admin' to deeply equal 'user'                                                   
+                     at assertion:2 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 2.  AssertionError  FR04-AI-026 cleanup restores exact baseline profile                                       
+                     expected 'admin' to deeply equal 'user'                                                   
+                     at assertion:3 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m    [39m[90m                [39m[90m                                                                                           [39m
+ 3.  AssertionError  Final cleanup verifies exact baseline A                                                   
+                     expected 'admin' to deeply equal 'user'                                                   
+                     at assertion:0 in test-script                                                             
+                     inside "Verification helpers / Cleanup / Final exact baseline verification for user A"    

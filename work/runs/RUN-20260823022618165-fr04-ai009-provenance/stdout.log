@@ -1,0 +1,49 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 101ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 16ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-009 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -009","shipping_address":"Address FR04-AI-009","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [403 Forbidden, 295B, 9ms]
+  √  FR04-AI-009 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 11ms]
+  √  FR04-AI-009 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 11ms]
+  √  Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                 5 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                 4 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 5 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                 5 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 490ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 939B (approx)                             │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 29ms [min: 9ms, max: 101ms, s.d.: 35ms] │
+└────────────────────────────────────────────────────────────────┘
