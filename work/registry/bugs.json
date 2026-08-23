@@ -18,10 +18,14 @@
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/stdout.log"
       ],
+      "screenshotPaths": [
+        "work/evidence/screenshots/EVID-FR04-PHONE-FAILURE.png",
+        "work/evidence/screenshots/EVID-FR04-PHONE-REPORT.png"
+      ],
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23",
       "confirmationStatement": "Human confirmed the phone-format defect after reviewing the original failed partitions and clean targeted reproduction, including FR04-AI-013 and FR04-H-004.",
-      "note": "Human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Screenshot evidence and external publication are still pending; no GitHub Issue has been created."
+      "note": "Human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Attested screenshot evidence is linked; external publication is still pending and no GitHub Issue has been created."
     },
     {
       "id": "BUG-CANDIDATE-FR04-ROLE-TAMPERING",
@@ -43,10 +47,14 @@
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/newman-report.html",
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/stdout.log"
       ],
+      "screenshotPaths": [
+        "work/evidence/screenshots/EVID-FR04-ROLE-TAMPERING.png",
+        "work/evidence/screenshots/EVID-FR04-ROLE-REPORT.png"
+      ],
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23",
       "confirmationStatement": "Human confirmed the protected-field tampering defect after reviewing the clean FR04-AI-026 reproduction and independent clean FR04-AI-027 rerun.",
-      "note": "Human-confirmed genuine bug covering the single protected-field mutation defect exposed by role and combined email/role cases. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin, and independent AI-027 also changed email. API cleanup cannot restore protected fields. Screenshot evidence and external publication are still pending; no GitHub Issue has been created."
+      "note": "Human-confirmed genuine bug covering the single protected-field mutation defect exposed by role and combined email/role cases. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin, and independent AI-027 also changed email. API cleanup cannot restore protected fields. Attested screenshot evidence is linked; external publication is still pending and no GitHub Issue has been created."
     }
   ]
 }
