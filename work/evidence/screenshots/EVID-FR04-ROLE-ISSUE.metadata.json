@@ -1,0 +1,24 @@
+{
+  "id": "EVID-FR04-ROLE-ISSUE",
+  "type": "github-issue-page",
+  "description": "Published GitHub Issue page for the confirmed FR04 protected-role bug, showing repository, issue number, title, and evidence context.",
+  "path": "work/evidence/screenshots/EVID-FR04-ROLE-ISSUE.png",
+  "sha256": "fa08e3c4b0fe66eda2efc18db9d7494c6237ffa7b1d9e5414f26319c997fa119",
+  "capturedAt": "2026-08-23T03:43:27.975Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
+  "pageTitle": "[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin · Issue #14 · BuhDuy256/automation-testing-hw04",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 387081,
+    "width": 1600,
+    "height": 3879
+  },
+  "humanAttestation": false
+}

@@ -489,3 +489,29 @@ The student explicitly confirmed that the four Newman screenshots are genuine ex
 - `EVID-FR04-ROLE-TAMPERING`
 
 Together with the already-attested `EVID-FR04-POSTMAN-CONSOLE`, all screenshot evidence required for the current ACT-EVID-01 scope now has explicit human attestation. ACT-EVID-01 is **COMPLETE**. No API was rerun, no collection was changed, no GitHub Issue was published, and no AI Audit Report update was made.
+## 23. Latest checkpoint — FR-04 GitHub Issue publication complete
+
+The student explicitly authorized publication of exactly two FR-04 GitHub Issues after reviewing the corrected drafts. The publication helper performed the final registry/evidence checks, created both Issues, and verified their returned URLs and open-page content.
+
+Published Issues:
+
+- `BUG-CANDIDATE-FR04-PHONE-FORMAT` → Issue #13: https://github.com/BuhDuy256/automation-testing-hw04/issues/13
+- `BUG-CANDIDATE-FR04-ROLE-TAMPERING` → Issue #14: https://github.com/BuhDuy256/automation-testing-hw04/issues/14
+
+Public titles:
+
+- `[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format`
+- `[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin`
+
+Issue B is intentionally limited to the protected role mutation: baseline `role=user`, client payload `role=admin`, persisted result `role=admin`, primary case `FR04-AI-026`, and clean run `RUN-20260823022329715-fr04-role-corrected`. The internal `FR04-AI-027` email observation remains in canonical records but is not part of the public Issue finding.
+
+Real GitHub Issue-page screenshots were captured without rerunning the SUT:
+
+- `EVID-FR04-PHONE-ISSUE` → `work/evidence/screenshots/EVID-FR04-PHONE-ISSUE.png`
+- `EVID-FR04-ROLE-ISSUE` → `work/evidence/screenshots/EVID-FR04-ROLE-ISSUE.png`
+
+Both screenshots visibly show the public repository, Issue title/number, and embedded Newman evidence. Human attestation is intentionally pending for both; the student must inspect and attest them.
+
+The canonical bug registry now records both bugs as `published` with real Issue numbers/URLs and the publication commit SHA. The generated factual report is `work/generated/bug-report.md`; it contains only real published bug data and Issue URLs.
+
+Validation after publication passed with 0 errors and 2 expected warnings for the pending human attestation of the two new GitHub Issue-page screenshots. FR-04 publication is complete; the next gate is human inspection/attestation of `EVID-FR04-PHONE-ISSUE` and `EVID-FR04-ROLE-ISSUE`. FR-08, FR-15, CI/CD, and final submission curation remain not started.
