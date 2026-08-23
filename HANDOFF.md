@@ -1102,3 +1102,64 @@ FR-15                              NOT STARTED
 Next genuine human gate: `HG-FR08-EVID-03`, attestation of `EVID-CI-FR08-ALL-PASS` and
 `EVID-CI-FR08-SINGLE-FAILURE`. After that, FR-08 is complete apart from final curation, and FR-15 is
 the next major phase.
+
+## 37. Checkpoint — FR-08 closed through CI; FR-15 generated and at its review gate
+
+The student attested both FR-08 CI screenshots at `HG-FR08-EVID-03`, so every FR-08 evidence item now
+carries `humanAttestation=true` and both CI run records report completed attestation.
+
+FR-08 evidence state is complete:
+
+```text
+2 published GitHub Issues (#15, #16) with attested Issue-page screenshots
+3 attested run/report screenshots, 2 attested CI screenshots
+canonical local run RUN-20260823080014785-fr08-canonical-full-suite unchanged
+```
+
+FR-15 `POST /api/products` generation (`ACT-GEN-01`) is complete, the second reuse of the
+`hw06-api-test-generator` Skill:
+
+```text
+FR15-GEN-B1 contract-domain          26
+FR15-GEN-B2 authorization-security   12
+FR15-GEN-B3 state-transition          8
+FR15-GEN-B4 schema                    8
+FR15-GEN-B5 closure-deduplication     4
+total                                58 candidates FR15-AI-001..FR15-AI-058
+```
+
+Prompts are stored verbatim under `work/prompts/fr15/`, and every candidate carries its batch id,
+tool/model, prompt, real timestamp, source anchors, read-back and cleanup. Coverage ledger:
+`work/prompts/fr15/FR15-GEN-coverage-ledger.md`.
+
+Unlike FR-08, FR-15 has real documented validation rules (name required and at most 255 characters,
+price greater than zero, category must exist) and a documented admin-only role boundary, so
+documented invalid values assert the persisted invariant rather than only observing. SEC-03 is
+genuinely claimed here; it was explicitly not claimed for FR-08.
+
+Standards carried over from the FR-08 audit and applied during generation: deterministic tampering
+values, real diacritics in the Unicode case, SEC-04 scoped to API-side preservation with its UI
+evidence gap, and no response-shape-only cases.
+
+AI recommendation awaiting the student at `HG-FR15-REV-01`: 52 VALID, 4 INCOMPLETE
+(`FR15-AI-002`, `FR15-AI-046`, `FR15-AI-049`, `FR15-AI-056`), 2 INVALID (`FR15-AI-038`,
+`FR15-AI-045`). If accepted in full the usable AI-origin FR-15 suite is 56 cases. Proposal:
+`work/reviews/HG-FR15-REV-01-proposal.md`.
+
+Validation: `npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and 0 warnings.
+Commits `8f526f3`, `785f5de`, `85d92cb`, all pushed.
+
+Status:
+
+```text
+FR-04                              COMPLETE (subject to its earlier documented limitations)
+FR-08                              COMPLETE through published bugs and CI evidence
+FR-15 ACT-GEN-01                   COMPLETE
+FR-15 ACT-REV-01                   BLOCKED — awaiting the student response to HG-FR15-REV-01
+FR-15 ACT-EXT-01 and later         NOT STARTED
+AI Audit Report                    UNCHANGED (human-triggered only)
+Final submission curation          NOT STARTED
+```
+
+`work/registry/human-reviews.json` holds no FR-15 record and must not be written until the student
+answers `HG-FR15-REV-01` explicitly.
