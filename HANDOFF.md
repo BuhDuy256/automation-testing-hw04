@@ -1495,3 +1495,76 @@ FR-15 CI           NOT STARTED
 Next genuine human gate: `HG-FR15-BUG-03`. Obtain one explicit student decision authorizing creation
 of both GitHub Issues before running either `publish-bug.mjs publish` command. After publication,
 verify and persist the real Issue numbers/URLs; never infer or fabricate them.
+
+## 45. Checkpoint — FR-15 bugs published; Issue-page evidence awaiting attestation
+
+The student explicitly authorized publication of both human-confirmed FR-15 root bugs. `ACT-BUG-03`
+completed through `publish-bug.mjs publish --confirm`, and each returned Issue was read back from
+GitHub before its real number and URL were persisted:
+
+```text
+BUG-CANDIDATE-FR15-AUTHORIZATION  published  issue #17
+BUG-CANDIDATE-FR15-VALIDATION     published  issue #18
+```
+
+- `https://github.com/BuhDuy256/automation-testing-hw04/issues/17`
+- `https://github.com/BuhDuy256/automation-testing-hw04/issues/18`
+
+Both Issues are OPEN. Their titles, canonical bug IDs, linked case IDs, evidence commit
+`b5f18eff3c2a4cfbe71b1695395786fcd7b20737`, and rendered-image Markdown were verified against the
+live GitHub responses. The canonical registry records publication timestamps
+`2026-08-23T10:59:45.638Z` and `2026-08-23T10:59:56.376Z` respectively.
+
+`ACT-EVID-01` then captured two public Issue-page screenshots without changing the Issues or rerunning
+the SUT:
+
+```text
+EVID-FR15-AUTHORIZATION-ISSUE  1600x7668  humanAttestation=false
+EVID-FR15-VALIDATION-ISSUE     1600x7605  humanAttestation=false
+```
+
+AI visual inspection confirmed that both PNGs show the correct repository, Issue number, title,
+canonical bug ID, body content, and embedded Newman evidence. This AI check does not substitute for
+the student's visual attestation. The AI Audit Report remains unchanged because no explicit audit
+update was requested.
+
+Status:
+
+```text
+FR-15 ACT-BUG-03          COMPLETE — issues #17 and #18 published and verified
+FR-15 Issue-page evidence AWAITING student visual attestation
+FR-15 CI                  NOT STARTED
+```
+
+Next genuine human gate: `HG-FR15-EVID-02`. The student must visually inspect
+`EVID-FR15-AUTHORIZATION-ISSUE` and `EVID-FR15-VALIDATION-ISSUE` before attestation is recorded.
+
+## 46. Checkpoint — FR-15 Issue-page evidence attested; CI decision gate open
+
+The student explicitly attested both published Issue-page screenshots. `ACT-EVID-01` recorded:
+
+```text
+EVID-FR15-AUTHORIZATION-ISSUE  humanAttestation=true  attestedAt 2026-08-23T11:03:37.857Z
+EVID-FR15-VALIDATION-ISSUE     humanAttestation=true  attestedAt 2026-08-23T11:03:40.110Z
+```
+
+Both records are attributed to `Nguyen Bao Duy`; their PNG hashes and dimensions remain unchanged.
+FR-15 publication and its required Issue-page screenshot evidence are therefore complete.
+
+The next phase is optional FR-15-specific CI reuse. The assignment's all-pass and intentional-one-
+failure requirement already applies across the whole suite and is already satisfied by real FR-04
+and FR-08 GitHub Actions evidence. A separate FR-15 CI demonstration would add feature-specific
+coverage but is not required to satisfy that global requirement.
+
+If FR-15 CI is added, `ACT-CI-01` requires a genuine human decision naming the intentionally broken
+test. AI recommends reusing reviewed case `FR15-AI-001`, which is VALID and passed the canonical run:
+the all-pass run would execute its documented valid-admin create/read-back/cleanup oracle, and the
+failure run would add exactly one labelled CI-demo assertion controlled by a data flag. The product
+oracle would remain unchanged.
+
+Next genuine human gate: `HG-FR15-CI-01`. The student must choose either:
+
+```text
+BUILD FR-15 CI — use FR15-AI-001 and intentionally fail only the labelled CI-demo assertion
+SKIP FR-15 CI — rely on the already-complete assignment-wide FR-04/FR-08 CI evidence
+```

@@ -206,7 +206,7 @@
     },
     {
       "id": "BUG-CANDIDATE-FR15-AUTHORIZATION",
-      "status": "human-confirmed",
+      "status": "published",
       "title": "[HW06][FR-15][SEC-02/SEC-03] POST /api/products permits creation without a valid admin authorization context",
       "caseIds": [
         "FR15-AI-027",
@@ -247,11 +247,15 @@
       "note": "HUMAN-CONFIRMED genuine root defect. Five representative authorization cases reproduced cleanly in the targeted run with five failed persistence oracles, 40/40 student-header requests, and no harness/setup failure. The defect is unauthorized persistent state, not a particular HTTP response code. The affected partitions remain grouped under this single root defect. No GitHub Issue has been created; external publication requires separate explicit authorization.",
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23T10:40:24.2861323Z",
-      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-AUTHORIZATION as a genuine bug at HG-FR15-BUG-02: POST /api/products permits persistent product creation without a valid admin authorization context, contrary to FR-12, SEC-02, and SEC-03. The student required the existing affected-case mapping and 5/5 targeted reproduction to remain grouped under one root defect and prohibited invention of an HTTP-status requirement."
+      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-AUTHORIZATION as a genuine bug at HG-FR15-BUG-02: POST /api/products permits persistent product creation without a valid admin authorization context, contrary to FR-12, SEC-02, and SEC-03. The student required the existing affected-case mapping and 5/5 targeted reproduction to remain grouped under one root defect and prohibited invention of an HTTP-status requirement.",
+      "githubIssueNumber": 17,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "publishedAt": "2026-08-23T10:59:45.638Z",
+      "publishedCommitSha": "b5f18eff3c2a4cfbe71b1695395786fcd7b20737"
     },
     {
       "id": "BUG-CANDIDATE-FR15-VALIDATION",
-      "status": "human-confirmed",
+      "status": "published",
       "title": "[HW06][FR-15] POST /api/products persists products that violate documented name, price, and category rules",
       "caseIds": [
         "FR15-AI-003",
@@ -300,7 +304,11 @@
       "note": "HUMAN-CONFIRMED genuine root defect. Six representative validation cases reproduced cleanly in the targeted run with six failed persistence oracles, 52/52 student-header requests, and no harness/setup failure. The defect is invalid data reaching persistent product state; exact rejection status and error schema remain SPEC GAP. Name, price, and category partitions remain grouped under this root defect unless later evidence proves independent root causes. No GitHub Issue has been created; external publication requires separate explicit authorization.",
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23T10:40:24.2861323Z",
-      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-VALIDATION as a genuine bug at HG-FR15-BUG-02: POST /api/products persists products that violate the documented FR-15 name, price, and category constraints. The student required the existing affected-case mapping and 6/6 targeted reproduction to remain grouped under one root defect and preserved exact HTTP rejection status and error schema as SPEC GAP."
+      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-VALIDATION as a genuine bug at HG-FR15-BUG-02: POST /api/products persists products that violate the documented FR-15 name, price, and category constraints. The student required the existing affected-case mapping and 6/6 targeted reproduction to remain grouped under one root defect and preserved exact HTTP rejection status and error schema as SPEC GAP.",
+      "githubIssueNumber": 18,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "publishedAt": "2026-08-23T10:59:56.376Z",
+      "publishedCommitSha": "b5f18eff3c2a4cfbe71b1695395786fcd7b20737"
     }
   ]
 }

@@ -591,6 +591,58 @@
       "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The price=0 request, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence.",
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T10:54:37.758Z"
+    },
+    {
+      "id": "EVID-FR15-AUTHORIZATION-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #17 for BUG-CANDIDATE-FR15-AUTHORIZATION, showing the public title, canonical bug ID, linked FR-15 case IDs, targeted run reference, and embedded evidence images.",
+      "path": "work/evidence/screenshots/EVID-FR15-AUTHORIZATION-ISSUE.png",
+      "sha256": "75e84499245a4c5aa7b642b2ae83a974175332843bb131a69d327ac519240826",
+      "capturedAt": "2026-08-23T11:01:24.827Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "pageTitle": "[HW06][FR-15][SEC-02/SEC-03] POST /api/products permits creation without a valid admin authorization context · Issue #17 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 775857,
+        "width": 1600,
+        "height": 7668
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:03:37.857Z"
+    },
+    {
+      "id": "EVID-FR15-VALIDATION-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #18 for BUG-CANDIDATE-FR15-VALIDATION, showing the public title, canonical bug ID, linked FR-15 case IDs, targeted run reference, and embedded evidence images.",
+      "path": "work/evidence/screenshots/EVID-FR15-VALIDATION-ISSUE.png",
+      "sha256": "a793857d9a25816e115e6a8111796450a4fd5a3c4834022806eeeee66acb3140",
+      "capturedAt": "2026-08-23T11:01:45.977Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "pageTitle": "[HW06][FR-15] POST /api/products persists products that violate documented name, price, and category rules · Issue #18 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 768396,
+        "width": 1600,
+        "height": 7605
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:03:40.110Z"
     }
   ]
 }
