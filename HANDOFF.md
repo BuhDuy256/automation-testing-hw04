@@ -962,3 +962,46 @@ FR-15                              NOT STARTED
 
 Next genuine human gate: `HG-FR08-EVID-01`, the student's visual inspection and attestation of the
 three screenshots. Only after that may external publication be requested separately.
+
+## 34. Checkpoint — FR-08 evidence attested, Issue bodies prepared, publication gate open
+
+The student inspected and attested all three FR-08 evidence images at `HG-FR08-EVID-01`:
+
+```text
+EVID-FR08-RUN-SUMMARY        humanAttestation=true  attestedAt 2026-08-23T08:27:28.961Z
+EVID-FR08-CLIENT-TOTAL       humanAttestation=true  attestedAt 2026-08-23T08:27:29.555Z
+EVID-FR08-CART-NOT-CLEARED   humanAttestation=true  attestedAt 2026-08-23T08:27:30.165Z
+```
+
+Attestation is recorded under the existing identity `Nguyen Bao Duy`. `npm run hw06:validate` is now
+clean at 0 errors and 0 warnings; the three attestation warnings are gone.
+
+`scripts/hw06/publish-bug.mjs` now carries publication details for both confirmed FR-08 bugs, and
+`preview` produced the exact bodies:
+
+```text
+work/generated/issues/BUG-CANDIDATE-FR08-CLIENT-TOTAL.md
+work/generated/issues/BUG-CANDIDATE-FR08-CART-NOT-CLEARED.md
+```
+
+Both bodies embed the attested screenshots by committed blob reference at evidence commit
+`bc4ede9c961f11ec0f20c9dd9ff6699c5c0485fe`, which is pushed; all three image URLs were verified to
+return HTTP 200 on GitHub. `gh auth status` shows the account `BuhDuy256` authenticated.
+
+Neither Issue has been created. `out/ai-audit-report.md` remains untouched. The canonical run
+`RUN-20260823080014785-fr08-canonical-full-suite` is unchanged and was not rerun.
+
+Status:
+
+```text
+FR-08 ACT-EVID-01                  COMPLETE — three attested screenshots
+FR-08 ACT-BUG-03                   PREPARED — awaiting the student's explicit publication approval
+FR-08 CI                           NOT STARTED
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              NOT STARTED
+```
+
+Next genuine human gate: `HG-FR08-BUG-03`, one explicit decision authorizing creation of the two
+GitHub Issues. Publication must use `publish-bug.mjs publish --confirm <BUG-ID>` so the returned
+number and URL are verified against GitHub and persisted; a URL must never be recorded after a
+failed create.
