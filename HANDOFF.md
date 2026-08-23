@@ -1360,3 +1360,60 @@ FR-15 human review without an explicit student response, and do not start `ACT-E
 `npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and 0 warnings,
 `git diff --check` clean. `eshop-sut/backend/database.sqlite` remains an uncommitted runtime-only
 modification.
+
+## 42. Checkpoint — FR-15 reviewed, extended, implemented, and executed; bug confirmation gate open
+
+The student approved the FR-15 review with final overrides. Canonical `ACT-REV-01` accounting is 59
+original AI candidates: 49 VALID, 5 INCOMPLETE with approved corrections, and 5 INVALID. The 54
+reviewed-usable AI-origin cases were extended by exactly five student-selected HUMAN cases:
+
+```text
+FR15-H-001  Client-supplied product id must not overwrite or alias an existing product
+FR15-H-002  Validly signed unexpired non-admin token without a role claim must not authorize creation
+FR15-H-003  A deleted temporary category must not remain valid for product creation
+FR15-H-004  Authorized creation must recover after a refused non-admin attempt with the same name
+FR15-H-005  A product name explicitly set to null must not persist as a valid product
+```
+
+Final executable design accounting is 59 cases: 54 reviewed-usable AI-origin plus 5 HUMAN. Original
+AI candidates remain unchanged. The FR-15 Postman collection, environment, data, build source, and
+targeted reproduction data are complete. The implementation was committed before its first official
+execution.
+
+Real Newman evidence:
+
+```text
+RUN-20260823102155874-fr15-canonical-full-suite       59 cases, exit 1
+RUN-20260823102829114-fr15-auth-reproduction           5 cases, exit 1
+RUN-20260823102841701-fr15-validation-reproduction     6 cases, exit 1
+```
+
+Canonical classification is mutually exclusive: 16 PASS, 28 FAIL, 15 SPEC-GAP observations,
+0 HARNESS, and 0 BLOCKED. The registry stores the 15 observational cases as successful executions
+with classification `SPEC-GAP-OBSERVATION`; no SPEC GAP was converted into a product failure.
+
+Two candidates are open for genuine-bug confirmation:
+
+- `BUG-CANDIDATE-FR15-AUTHORIZATION`: 10 canonical failures. Five representative cases reproduced
+  5/5 in the targeted authorization run, with 40/40 student-header requests and no harness failure.
+- `BUG-CANDIDATE-FR15-VALIDATION`: 18 canonical failures. Six representative cases reproduced 6/6
+  in the targeted validation run, with 52/52 student-header requests and no harness failure.
+
+The human review packet is `work/reviews/HG-FR15-BUG-02-proposal.md`. No screenshot has been
+attested, no GitHub Issue has been created, and the official AI Audit Report remains unchanged.
+
+Meaningful commits through execution:
+
+```text
+8abb7b4  test(hw06): review and extend FR15 cases
+316c847  test(hw06): implement FR15 Postman suite
+9c62e11  test(hw06): capture and triage FR15 canonical run
+bbd76c0  test(hw06): reproduce FR15 bug candidates
+```
+
+These commits are local and not pushed. The only unrelated working-tree modification at execution
+close was the runtime database `eshop-sut/backend/database.sqlite`.
+
+Next genuine human gate: `HG-FR15-BUG-02`. The student must explicitly confirm or reject each of
+`BUG-CANDIDATE-FR15-AUTHORIZATION` and `BUG-CANDIDATE-FR15-VALIDATION` as a genuine bug. Do not infer
+the decision, publish Issues, or create human evidence attestation.
