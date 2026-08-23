@@ -1,0 +1,16 @@
+{
+  "id": "EVID-FR08-CART-NOT-CLEARED",
+  "type": "bug-runtime-report",
+  "description": "Canonical FR-08 run, iteration 30 (FR08-AI-031). Top card: POST /api/checkout returns 200 {\"message\":\"Checkout successful\",\"orderId\":27}. Bottom card: the post-checkout GET /api/cart read-back still returns [{\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}], and the test table shows the failed assertion 'FR08-AI-031 cart is cleared after a successful checkout (FR-08)' with 'expected 1 to equal +0'. Note for the reader: htmlextra attributes pm.sendRequest helper calls to the enclosing item, which is why the Verify card displays the helper cart read-back rather than the order-history call. X-Student-Id 23127179 is visible in the request headers.",
+  "path": "work/evidence/screenshots/EVID-FR08-CART-NOT-CLEARED.png",
+  "sha256": "7348970f870fd93ad468df4b51f97fb6c39c1947cf7721a83797349dc25be0fd",
+  "capturedAt": "2026-08-23T08:21:11.145Z",
+  "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr08-report-cards.mjs against the unmodified newman-report.html served read-only at http://127.0.0.1:39093; the script performs only the clicks a human reviewer performs (open the Total Requests tab, select the iteration, expand the request cards) and clips the two real cards.",
+  "sourceUrl": "http://127.0.0.1:39093/work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+  "image": {
+    "bytes": 239565,
+    "width": 1046,
+    "height": 5069
+  },
+  "humanAttestation": false
+}

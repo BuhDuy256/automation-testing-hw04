@@ -1,0 +1,16 @@
+{
+  "id": "EVID-FR08-CLIENT-TOTAL",
+  "type": "bug-runtime-report",
+  "description": "Canonical FR-08 run, iteration 2 (FR08-AI-002). Shows the checkout request body carrying the forged client total_amount 1000, the 200 'Checkout successful' response, the order history response persisting total_amount 1000, and the failed assertion 'persisted total equals the server-derived cart total (200000)' with 'expected 1000 to equal 200000'. X-Student-Id 23127179 is visible in the request headers.",
+  "path": "work/evidence/screenshots/EVID-FR08-CLIENT-TOTAL.png",
+  "sha256": "97d8bc900c339259e7004015a84ecb257e48a5203e765783b00461d8e5f2097b",
+  "capturedAt": "2026-08-23T08:18:30.239Z",
+  "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr08-report-cards.mjs against the unmodified newman-report.html served read-only at http://127.0.0.1:39093; the script performs only the clicks a human reviewer performs (open the Total Requests tab, select the iteration, expand the two request cards) and clips the two real cards.",
+  "sourceUrl": "http://127.0.0.1:39093/work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+  "image": {
+    "bytes": 241692,
+    "width": 1046,
+    "height": 5062
+  },
+  "humanAttestation": false
+}
