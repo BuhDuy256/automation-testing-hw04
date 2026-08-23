@@ -99,6 +99,46 @@ function issueDetails(bug) {
       reproducibility: 'Reproduced in the clean targeted run RUN-20260823022329715-fr04-role-corrected.'
     };
   }
+  if (bug.id === 'BUG-CANDIDATE-FR08-CLIENT-TOTAL') {
+    return {
+      title: '[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart',
+      caseIds: ['FR08-AI-002', 'FR08-AI-003', 'FR08-AI-004', 'FR08-AI-005', 'FR08-AI-035', 'FR08-H-001'],
+      expected: bug.expected,
+      actual: bug.actual,
+      reproduction: bug.reproduction,
+      evidencePaths: [
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json',
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html',
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log'
+      ],
+      endpoint: 'POST /api/checkout',
+      requirement: 'FR-08 Checkout states that the payable total is calculated automatically from the cart and that the backend must recalculate it and must not accept the client-supplied total_amount (eshop-sut/README.md, FR-08). The selected operation and its request body are documented in eshop-sut/api_specification.md, §4.3.',
+      preconditions: 'Freshly seeded local SUT. Each case registers its own account through POST /api/register and logs in, because implementation cart state is per-user process memory, POST /api/cart only appends, and no cart-clearing endpoint is documented. The cart is then seeded and confirmed with GET /api/cart so the server-side cart total is known before checkout.',
+      genuineDefect: 'The assertion compares the persisted order total against the total derived from the cart state the server itself reported immediately before checkout, so the expected value is never hardcoded. No HTTP status code and no response schema is asserted anywhere, because the API specification documents none for this endpoint. Sixteen independent input partitions reproduced the same behaviour in one run, including a cart worth 200000 charged as 1000 and an empty cart producing a paid order of 200000. This is a contract violation, not a setup, mapping, or harness failure: the run recorded zero harness defects, zero state contamination and zero blocked cases.',
+      impact: 'The amount stored on an order is controlled by the caller rather than by the cart, so an order can be persisted for an arbitrary amount, including zero, a negative amount, or an amount unrelated to any real cart. Absent or non-numeric client values are stored as NULL instead of the derived total. No severity level is asserted here because the assignment specification does not define one.',
+      reproducibility: 'Reproduced by 16 canonical cases in the single canonical run RUN-20260823080014785-fr08-canonical-full-suite, plus FR08-AI-040 and FR08-H-005 whose failures require this defect together with the cart-clearing defect. Note on scope: cases whose client value happened to equal the cart-derived total passed, and those passes do not prove that any server-side derivation occurs.'
+    };
+  }
+  if (bug.id === 'BUG-CANDIDATE-FR08-CART-NOT-CLEARED') {
+    return {
+      title: '[HW06][FR-08] The cart is not cleared after a successful checkout',
+      caseIds: ['FR08-AI-031'],
+      expected: bug.expected,
+      actual: bug.actual,
+      reproduction: bug.reproduction,
+      evidencePaths: [
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json',
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html',
+        'work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log'
+      ],
+      endpoint: 'POST /api/checkout',
+      requirement: 'FR-08 Checkout states that after a successful checkout the cart is cleared (eshop-sut/README.md, FR-08). The cart read-back endpoint is documented in eshop-sut/api_specification.md, §4.1.',
+      preconditions: 'Freshly seeded local SUT. The case registers its own account through POST /api/register and logs in, seeds exactly one cart line with POST /api/cart, and confirms that starting cart with GET /api/cart before checking out.',
+      genuineDefect: 'The checkout returned 200 with {"message":"Checkout successful","orderId":27}, so the success precondition of the documented clearing rule was met. The immediate GET /api/cart read-back still returned the purchased line, and the assertion asserted only the documented state transition, not an undocumented empty-cart response shape. The stale line then changed the observed pre-checkout cart of the next checkout in FR08-AI-040 and FR08-H-005 from the rebuilt 50000 to 250000, which is a second-order consequence of the same defect rather than a separate finding.',
+      impact: 'Purchased items remain in the cart after payment, so the next checkout derives from contaminated state and a user can be charged again for items already bought. No severity level is asserted here because the assignment specification does not define one.',
+      reproducibility: 'Reproduced by FR08-AI-031 in the canonical run RUN-20260823080014785-fr08-canonical-full-suite, with the downstream contamination visible in FR08-AI-040 and FR08-H-005 in the same run.'
+    };
+  }
   throw new Error(`No publication details configured for ${bug.id}`);
 }
 

@@ -303,7 +303,9 @@
         "width": 1600,
         "height": 1100
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:28.961Z"
     },
     {
       "id": "EVID-FR08-CLIENT-TOTAL",
@@ -319,7 +321,9 @@
         "width": 1046,
         "height": 5062
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:29.555Z"
     },
     {
       "id": "EVID-FR08-CART-NOT-CLEARED",
@@ -335,7 +339,9 @@
         "width": 1046,
         "height": 5069
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:30.165Z"
     }
   ]
 }
