@@ -1,0 +1,24 @@
+{
+  "id": "EVID-FR08-CART-NOT-CLEARED-ISSUE",
+  "type": "github-issue-page",
+  "description": "Published GitHub Issue #16 for BUG-CANDIDATE-FR08-CART-NOT-CLEARED, showing the public title, the canonical bug ID, the linked case FR08-AI-031, the canonical run reference, and the embedded evidence images.",
+  "path": "work/evidence/screenshots/EVID-FR08-CART-NOT-CLEARED-ISSUE.png",
+  "sha256": "2350023669b7a48ac1c61c82274630fdccede72186dc887f94b750d2414fe899",
+  "capturedAt": "2026-08-23T08:36:07.405Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+  "pageTitle": "[HW06][FR-08] The cart is not cleared after a successful checkout · Issue #16 · BuhDuy256/automation-testing-hw04",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 794262,
+    "width": 1600,
+    "height": 7512
+  },
+  "humanAttestation": false
+}

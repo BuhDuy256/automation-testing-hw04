@@ -1,0 +1,24 @@
+{
+  "id": "EVID-FR08-CLIENT-TOTAL-ISSUE",
+  "type": "github-issue-page",
+  "description": "Published GitHub Issue #15 for BUG-CANDIDATE-FR08-CLIENT-TOTAL, showing the public title, the canonical bug ID, the linked FR-08 case IDs, the canonical run reference, and the embedded evidence images.",
+  "path": "work/evidence/screenshots/EVID-FR08-CLIENT-TOTAL-ISSUE.png",
+  "sha256": "422ac8a81c42d3dcca5ba2675d73690098aff65d7c2916c274b33919b456ec4f",
+  "capturedAt": "2026-08-23T08:35:57.158Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+  "pageTitle": "[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart · Issue #15 · BuhDuy256/automation-testing-hw04",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 847762,
+    "width": 1600,
+    "height": 7709
+  },
+  "humanAttestation": false
+}
