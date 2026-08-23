@@ -1247,3 +1247,45 @@ FR-15                              PAUSED at HG-FR15-REV-01, 58 candidates, no v
 
 Next genuine human gate: `HG-FR08-EVID-04`, attestation of the three manual Postman screenshots.
 After that, re-running derive promotes them into `out/fr08/evidence/` and FR-08 can be frozen.
+
+## 40. Checkpoint — FR-08 FROZEN
+
+The student attested the three manual Postman screenshots at `HG-FR08-EVID-04`. Derivation promoted
+them, and `out/fr08/README.md` now states that every FR-08 evidence item carries explicit student
+attestation. `npm run hw06:validate` is clean at 0 errors and 0 warnings.
+
+Freeze audit, every figure re-read from the canonical registries rather than from earlier prose:
+
+```text
+cases          62  (57 AI candidates + 5 student-selected extensions)
+human audit    57 reviews: 40 VALID, 11 INCOMPLETE with approved corrections, 6 INVALID
+executable     56
+canonical run  RUN-20260823080014785-fr08-canonical-full-suite, exit code 1 preserved
+results        56 mapped, 37 PASS, 19 FAIL, all failures mapped to published bugs
+bugs           #15 BUG-CANDIDATE-FR08-CLIENT-TOTAL, #16 BUG-CANDIDATE-FR08-CART-NOT-CLEARED
+evidence       10 items, 10 attested, 10 promoted to out/fr08/evidence/
+CI             all-pass success 0 failures; intentional-single-failure failure exactly 1
+```
+
+Curated bundle: `out/fr08/` holds the Postman inputs, the Postman Desktop manual-import copies, the
+canonical Newman JSON/HTML/stdout/metadata, the CI workflow, the ten attested images, the derived
+test summary, and the manifest.
+
+Standing limitations recorded with FR-08 and not to be softened later:
+
+- The 37 passes do not prove server-side total derivation; cases whose client value happened to equal
+  the cart total pass under the confirmed defect. This is stated in `out/fr08/test-summary.md`.
+- SEC-04 conformance is not proved by any FR-08 case; only API-side preservation was observed.
+- SEC-05 cannot be proved black-box; only persistence integrity was observed.
+- SEC-03 is not claimed for `POST /api/checkout`.
+- No FR-08 canonical full-suite CI workflow exists; that artifact is provided by FR-04 only.
+
+```text
+FR-08  FROZEN
+```
+
+Do not reopen FR-08 unless a genuine defect in its evidence is found. Commits `cef5f68`, `630a434`,
+`57f1c81`, all pushed.
+
+Next: FR-15 resumes at `HG-FR15-REV-01`, still paused with 58 candidates generated, no verdict
+recorded, and the non-canonical proposal at `work/reviews/HG-FR15-REV-01-proposal.md`.
