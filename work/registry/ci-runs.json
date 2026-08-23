@@ -183,6 +183,72 @@
       ],
       "screenshotEvidenceId": "EVID-CI-FR08-SINGLE-FAILURE",
       "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32636054520-all-pass",
+      "purpose": "all-pass",
+      "commitSha": "60639072dc11d2ea4085df7e6bcacdc644c968cb",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+      "status": "completed",
+      "conclusion": "success",
+      "workflowName": "HW06 FR-15 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T11:15:54Z",
+      "capturedAtUtc": "2026-08-23T11:16:56.535Z",
+      "failedTests": 0,
+      "failedAssertions": 0,
+      "newmanReportPath": "work/ci/runs/CI-32636054520-all-pass/artifacts/ci-artifacts/newman-report.json",
+      "newmanReportPaths": [
+        "work/ci/runs/CI-32636054520-all-pass/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "work/ci/runs/CI-32636054520-all-pass/github-run.json",
+      "evidencePaths": [
+        "work/evidence/screenshots/EVID-CI-FR15-ALL-PASS.png",
+        "work/ci/runs/CI-32636054520-all-pass/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR15-ALL-PASS",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32636132200-intentional-single-failure",
+      "purpose": "intentional-single-failure",
+      "commitSha": "50fb45139427fb6981c9c41cfecd530dccb643df",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-15 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T11:17:40Z",
+      "capturedAtUtc": "2026-08-23T11:18:58.046Z",
+      "failedTests": 1,
+      "failedAssertions": 1,
+      "newmanReportPath": "work/ci/runs/CI-32636132200-intentional-single-failure/artifacts/ci-artifacts/newman-report.json",
+      "newmanReportPaths": [
+        "work/ci/runs/CI-32636132200-intentional-single-failure/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "work/ci/runs/CI-32636132200-intentional-single-failure/github-run.json",
+      "evidencePaths": [
+        "work/evidence/screenshots/EVID-CI-FR15-SINGLE-FAILURE.png",
+        "work/ci/runs/CI-32636132200-intentional-single-failure/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR15-SINGLE-FAILURE",
+      "screenshotHumanAttestation": true
     }
   ]
 }

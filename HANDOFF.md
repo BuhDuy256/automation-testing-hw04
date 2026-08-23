@@ -1568,3 +1568,93 @@ Next genuine human gate: `HG-FR15-CI-01`. The student must choose either:
 BUILD FR-15 CI — use FR15-AI-001 and intentionally fail only the labelled CI-demo assertion
 SKIP FR-15 CI — rely on the already-complete assignment-wide FR-04/FR-08 CI evidence
 ```
+
+## 47. Checkpoint — FR-15 CI evidence captured; visual attestation gate open
+
+The student selected `FR15-AI-001` for the FR-15 CI demonstration and explicitly required that only
+the labelled CI-demo assertion be intentionally failed. The implementation is:
+
+```text
+.github/workflows/hw06-fr15-ci.yml
+work/ci/fr15/FR15-ci-demo.postman_collection.json
+work/ci/fr15/FR15-ci-demo.postman_environment.json
+work/ci/fr15/FR15-ci-demo.postman_data.json
+```
+
+The dedicated suite logs in as the seeded admin, captures the exact product baseline, executes the
+reviewed valid create case, verifies exact name/price/category persistence, deletes the created row,
+and verifies exact baseline restoration. All six requests assert `X-Student-Id: 23127179`. The local
+preflight `RUN-20260823111036185-fr15-ci-demo-local` passed with 11/11 assertions and exact cleanup.
+
+Real GitHub Actions evidence:
+
+```text
+CI-32636054520-all-pass                    success  0 failed cases  commit 6063907
+CI-32636132200-intentional-single-failure  failure  1 failed case   commit 50fb451
+```
+
+`capture-ci-run.mjs` downloaded both `hw06-fr15-ci-newman` artifacts and verified the remote run
+metadata against the Newman JSON. In the intentional run, the valid-product persistence oracle and
+exact cleanup oracle both passed; the only failure was
+`FR15-AI-001 [CI-DEMO] intentional single failure`. No product oracle was weakened.
+
+The data flag was restored to `intentionalFailure=false` in commit `725b591`. The resulting restore
+run `32636274089` completed successfully, proving that the branch default is green again.
+
+Two real GitHub Actions screenshots were captured and AI-inspected:
+
+```text
+EVID-CI-FR15-ALL-PASS        1600x1141  humanAttestation=false
+EVID-CI-FR15-SINGLE-FAILURE  1600x1206  humanAttestation=false
+```
+
+Both show the public repository, workflow, triggering commit, real success/failure status, duration,
+and uploaded Newman artifact. AI inspection does not substitute for student visual attestation.
+The AI Audit Report remains unchanged because no explicit audit update was requested.
+
+Status:
+
+```text
+FR-15 CI CONFIGURATION            COMPLETE
+FR-15 CI ALL-PASS EVIDENCE        COMPLETE
+FR-15 CI SINGLE-FAILURE EVIDENCE  COMPLETE
+FR-15 CI DEFAULT STATE            RESTORED TO ALL-PASS
+FR-15 CI SCREENSHOTS              AWAITING student visual attestation
+```
+
+Next genuine human gate: `HG-FR15-EVID-03`. The student must visually inspect
+`EVID-CI-FR15-ALL-PASS` and `EVID-CI-FR15-SINGLE-FAILURE` before attestation is recorded.
+
+## 48. Checkpoint — FR-15 CI evidence attested; FR-15 implementation pipeline complete
+
+The student explicitly inspected and attested both FR-15 GitHub Actions screenshots at
+`HG-FR15-EVID-03`. `ACT-EVID-01` recorded:
+
+```text
+EVID-CI-FR15-ALL-PASS        humanAttestation=true  attestedAt 2026-08-23T11:22:01.048Z
+EVID-CI-FR15-SINGLE-FAILURE  humanAttestation=true  attestedAt 2026-08-23T11:22:01.736Z
+```
+
+Both records are attributed to `Nguyen Bao Duy`; their PNG hashes and dimensions remain unchanged.
+The corresponding `ci-runs.json` records now also carry `screenshotHumanAttestation=true`.
+
+FR-15 is complete through generation, human audit, human extension, Postman/Newman execution,
+confirmed bugs, published GitHub Issues, and CI demonstration. The canonical failing run and the two
+confirmed product defects remain unchanged; the CI sample does not hide or reinterpret them.
+
+Current FR-15 evidence summary:
+
+```text
+59 AI-generated artifacts, all human-reviewed
+7 human-authored extension cases
+59 executable cases: 16 PASS, 28 FAIL, 15 SPEC-GAP observations
+2 published GitHub Issues (#17, #18)
+3 attested Newman screenshots, 2 attested Issue-page screenshots, 2 attested CI screenshots
+real CI all-pass run 32636054520
+real CI intentional-one-failure run 32636132200
+default CI state restored and verified by successful run 32636274089
+```
+
+The next work is final FR-15 curation into `out/` and then assignment-wide final curation. Strict
+submission validation must continue to fail if required real evidence or student-authored generator
+design inputs are still missing. Do not fabricate or silently substitute those artifacts.

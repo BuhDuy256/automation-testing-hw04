@@ -1,0 +1,26 @@
+{
+  "id": "EVID-CI-FR15-ALL-PASS",
+  "type": "github-actions-run",
+  "description": "Completed FR-15 CI all-pass GitHub Actions run 32636054520 for FR15-AI-001, showing the real successful workflow state and commit.",
+  "path": "work/evidence/screenshots/EVID-CI-FR15-ALL-PASS.png",
+  "sha256": "6c273dd2c4f9fa624fcfd6eb56ea8379bd03ac5b94d812eb0b4a9c0299424ffa",
+  "capturedAt": "2026-08-23T11:16:43.897Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+  "pageTitle": "feat(hw06): add FR15 all-pass CI sample · BuhDuy256/automation-testing-hw04@6063907 · GitHub",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 105563,
+    "width": 1600,
+    "height": 1141
+  },
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T11:22:01.048Z"
+}

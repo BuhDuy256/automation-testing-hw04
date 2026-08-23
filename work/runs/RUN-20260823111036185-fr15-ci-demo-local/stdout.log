@@ -1,0 +1,58 @@
+newman
+
+HW06 FR-15 CI Demonstration Sample
+
+→ CI setup: admin login
+  POST http://127.0.0.1:3000/api/login [200 OK, 640B, 48ms]
+  √  Request carried X-Student-Id: 23127179
+  √  CI setup: admin login returned a token
+
+→ CI setup: capture exact product baseline
+  GET http://127.0.0.1:3000/api/products [200 OK, 1.24kB, 8ms]
+  √  Request carried X-Student-Id: 23127179
+  √  CI setup: product baseline is readable
+
+→ Execute {{caseId}} - valid admin POST /api/products
+  POST http://127.0.0.1:3000/api/products [200 OK, 304B, 19ms]
+  √  Request carried X-Student-Id: 23127179
+  ┌
+  │ 'FR15-AI-001 create response 200 :: {"message":"Produc
+  │ t created","id":17}'
+  │ 'SPEC GAP: no exact POST success status or response sc
+  │ hema is asserted.'
+  └
+
+→ Verify {{caseId}} - product persisted with exact documented fields
+  GET http://127.0.0.1:3000/api/products [200 OK, 1.42kB, 5ms]
+  √  Request carried X-Student-Id: 23127179
+  √  FR15-AI-001 valid product is persisted with exact name, price, and category_id
+  √  FR15-AI-001 [CI-DEMO] intentional failure is disabled
+
+→ CI cleanup: delete the created product
+  DELETE http://127.0.0.1:3000/api/products/17 [200 OK, 296B, 228ms]
+  √  Request carried X-Student-Id: 23127179
+
+→ CI cleanup: verify exact product baseline
+  GET http://127.0.0.1:3000/api/products [200 OK, 1.24kB, 5ms]
+  √  Request carried X-Student-Id: 23127179
+  √  CI cleanup restored the exact product baseline
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                 6 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                11 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                11 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 888ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 3.52kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 52ms [min: 5ms, max: 228ms, s.d.: 80ms] │
+└────────────────────────────────────────────────────────────────┘

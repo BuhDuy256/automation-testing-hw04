@@ -1,0 +1,26 @@
+{
+  "id": "EVID-CI-FR15-SINGLE-FAILURE",
+  "type": "github-actions-run",
+  "description": "Completed FR-15 intentional-single-failure GitHub Actions run 32636132200 for FR15-AI-001, showing the real failed workflow state and commit.",
+  "path": "work/evidence/screenshots/EVID-CI-FR15-SINGLE-FAILURE.png",
+  "sha256": "8e11caaf547c42671fc02c2edea37a527d8debdc2d5c4e482d5fa8d75e7027e1",
+  "capturedAt": "2026-08-23T11:18:46.584Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+  "pageTitle": "test(hw06): demonstrate one FR15 CI failure · BuhDuy256/automation-testing-hw04@50fb451 · GitHub",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 111946,
+    "width": 1600,
+    "height": 1206
+  },
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T11:22:01.736Z"
+}

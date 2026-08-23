@@ -1,0 +1,100 @@
+{
+  "id": "RUN-20260823111036185-fr15-ci-demo-local",
+  "fixture": false,
+  "startedAtUtc": "2026-08-23T11:10:36.185Z",
+  "completedAtUtc": "2026-08-23T11:11:16.590Z",
+  "hostname": "127.0.0.1:3000",
+  "command": "C:\\dev_env\\nodejs\\node.exe",
+  "arguments": [
+    "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+    "run",
+    "work/ci/fr15/FR15-ci-demo.postman_collection.json",
+    "--reporters",
+    "cli,json,htmlextra",
+    "--reporter-json-export",
+    "work/runs/RUN-20260823111036185-fr15-ci-demo-local/newman-report.json",
+    "--reporter-htmlextra-export",
+    "work/runs/RUN-20260823111036185-fr15-ci-demo-local/newman-report.html",
+    "--environment",
+    "work/ci/fr15/FR15-ci-demo.postman_environment.json",
+    "--iteration-data",
+    "work/ci/fr15/FR15-ci-demo.postman_data.json"
+  ],
+  "exitCode": 0,
+  "collectionPath": "work/ci/fr15/FR15-ci-demo.postman_collection.json",
+  "collectionSha256": "af20bf33efe21163c0b3aea45a290cd1e1939d4c4f8a97cbfcae74e16914d57d",
+  "environmentPath": "work/ci/fr15/FR15-ci-demo.postman_environment.json",
+  "environmentSha256": "b70c2850c45203fe9cc4789ae8aa5061a1e960c630a7f67a45079fb3ba9134cc",
+  "dataPath": "work/ci/fr15/FR15-ci-demo.postman_data.json",
+  "dataSha256": "44d78858d0a7e7ce500dd4fd070449976ce8527f412ff95d5e54f4721601131e",
+  "rawJsonPath": "work/runs/RUN-20260823111036185-fr15-ci-demo-local/newman-report.json",
+  "htmlReportPath": "work/runs/RUN-20260823111036185-fr15-ci-demo-local/newman-report.html",
+  "consoleLogPath": "work/runs/RUN-20260823111036185-fr15-ci-demo-local/stdout.log",
+  "stderrPath": "work/runs/RUN-20260823111036185-fr15-ci-demo-local/stderr.log",
+  "metadataPath": "work/runs/RUN-20260823111036185-fr15-ci-demo-local/metadata.json",
+  "reporters": [
+    "cli",
+    "json",
+    "htmlextra"
+  ],
+  "actualHostnames": [
+    "127.0.0.1:3000"
+  ],
+  "summaryStats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 18,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 11,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 11,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 7,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "executionCount": 6,
+  "studentHeaderRequests": 6,
+  "caseResults": [
+    {
+      "caseId": "FR15-AI-001",
+      "result": "PASS",
+      "classification": "CI-DEMO-LOCAL-PREFLIGHT"
+    }
+  ],
+  "resultImportStatus": "mapped-from-raw-json"
+}
