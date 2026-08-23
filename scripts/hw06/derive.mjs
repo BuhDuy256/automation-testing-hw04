@@ -342,6 +342,89 @@ if (officialRuns.length > 0) {
   writeText('out/fr04/README.md', manifestLines.join('\n'));
 }
 
+const fr08Config = project.postmanFr08;
+const fr08Summary = apiRows.find((row) => row.feature === 'FR-08');
+if (fr08Config && fr08Summary && fr08Summary.executed > 0) {
+  const fr08Runs = (fr08Config.officialRunIds ?? []).map((id) => {
+    const run = runs.find((candidate) => candidate.id === id);
+    if (!run) throw new Error(`Unknown official FR-08 run: ${id}`);
+    return run;
+  });
+  const fr08Primary = fr08Runs.find((run) => run.id === fr08Config.officialPrimaryRunId);
+  if (!fr08Primary) throw new Error('Official FR-08 primary run is not in officialRunIds');
+
+  const fr08SummaryLines = [
+    '# FR-08 Test Summary (Derived)',
+    '',
+    '> Generated from `work/registry/*.json` by `npm run hw06:derive`. Raw Newman evidence outranks this file.',
+    '',
+    `- Selected API: ${fr08Summary.endpoint}`,
+    `- AI-generated cases: ${fr08Summary.aiGenerated}`,
+    `- Human-added cases: ${fr08Summary.humanAdded}`,
+    `- Executable cases: ${fr08Summary.executable}`,
+    `- Executed cases: ${fr08Summary.executed}`,
+    `- Passed cases: ${fr08Summary.passed}`,
+    `- Failed cases: ${fr08Summary.failed}`,
+    `- Known-bug-related failures: ${fr08Summary.knownBugFailures}`,
+    `- Other failures: ${fr08Summary.otherFailures}`,
+    '',
+    `Arithmetic check: ${fr08Summary.passed} + ${fr08Summary.failed} = ${fr08Summary.executed}.`,
+    '',
+    'Evidence limitation recorded at execution time: because the implementation does not derive the total from the cart at all, cases whose client-supplied total happened to equal the cart-derived total pass without proving that any server-side derivation occurs. The passed count must not be read as evidence that checkout recalculates the total.',
+    '',
+  ];
+  writeText('out/fr08/test-summary.md', fr08SummaryLines.join('\n'));
+
+  const fr08Pairs = [
+    [fr08Config.collectionPath, 'out/fr08/postman/FR08-checkout.postman_collection.json'],
+    [fr08Config.environmentPath, 'out/fr08/postman/FR08-checkout.postman_environment.json'],
+    [fr08Config.dataFiles[0], 'out/fr08/postman/FR08-checkout.data.json'],
+    [fr08Primary.rawJsonPath, 'out/fr08/newman/FR08-canonical-full-suite.json'],
+    [fr08Primary.htmlReportPath, 'out/fr08/newman/FR08-canonical-full-suite.html'],
+    [fr08Primary.consoleLogPath, 'out/fr08/newman/FR08-canonical-full-suite.stdout.log'],
+    [fr08Primary.metadataPath, 'out/fr08/newman/FR08-canonical-full-suite.metadata.json'],
+  ];
+  for (const item of fr08Config.manualImportPaths ?? []) {
+    fr08Pairs.push([item, `out/fr08/postman/manual-import/${path.basename(item)}`]);
+  }
+  for (const item of fr08Config.ciWorkflowPaths ?? []) {
+    fr08Pairs.push([item, `out/fr08/ci/${path.basename(item)}`]);
+  }
+  const fr08EvidencePrefixes = ['EVID-FR08-', 'EVID-CI-FR08-'];
+  const promotedFr08Evidence = evidence.filter((item) =>
+    fr08EvidencePrefixes.some((prefix) => item.id.startsWith(prefix)) && item.humanAttestation === true);
+  for (const item of promotedFr08Evidence) fr08Pairs.push([item.path, `out/fr08/evidence/${item.id}.png`]);
+  for (const [source, target] of fr08Pairs) copyArtifact(source, target);
+
+  const pendingFr08Evidence = evidence.filter((item) =>
+    fr08EvidencePrefixes.some((prefix) => item.id.startsWith(prefix)) && item.humanAttestation !== true);
+  const fr08Bugs = bugs.filter((bug) => (bug.caseIds ?? []).some((id) => id.startsWith('FR08-')));
+  const fr08ManifestLines = [
+    '# FR-08 Finalized Artifacts',
+    '',
+    '> Promoted from canonical registries and the official raw run by `npm run hw06:derive`.',
+    '',
+    `- Primary run: ${fr08Primary.id}`,
+    `- Collection SHA-256: ${fr08Primary.collectionSha256}`,
+    `- Environment SHA-256: ${fr08Primary.environmentSha256}`,
+    `- Data SHA-256: ${fr08Primary.dataSha256}`,
+    `- Newman exit code preserved: ${fr08Primary.exitCode}`,
+    `- Runtime student-header coverage: ${fr08Primary.studentHeaderRequests}/${fr08Primary.executionCount} executed requests`,
+    '- Primary Newman HTML: out/fr08/newman/FR08-canonical-full-suite.html',
+    '- Postman Desktop manual-import copies: out/fr08/postman/manual-import/',
+    `- CI workflow configuration: ${(fr08Config.ciWorkflowPaths ?? []).map((item) => `out/fr08/ci/${path.basename(item)}`).join(', ')}`,
+    `- Published bugs: ${fr08Bugs.filter((bug) => bug.status === 'published').map((bug) => `${bug.id} (#${bug.githubIssueNumber})`).join(', ') || 'none'}`,
+    `- Promoted attested evidence: ${promotedFr08Evidence.map((item) => item.id).join(', ') || 'none'}`,
+    pendingFr08Evidence.length
+      ? `- Pending student attestation, still under work/evidence: ${pendingFr08Evidence.map((item) => item.id).join(', ')}`
+      : '- All FR-08 evidence carries explicit student attestation.',
+    '',
+    'The primary run preserves genuine bug-revealing failures and its original exit code. Its 19 failures map to the two published bugs; no oracle was changed after results were observed.',
+    '',
+  ];
+  writeText('out/fr08/README.md', fr08ManifestLines.join('\n'));
+}
+
 for (const bug of bugs.filter((item) => item.status !== 'candidate')) {
   const issueBody = [
     `# ${bug.id}: ${bug.title}`,

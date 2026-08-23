@@ -1,0 +1,16 @@
+{
+  "id": "EVID-FR08-POSTMAN-CONSOLE",
+  "type": "postman-desktop",
+  "description": "Postman Console entry for POST http://localhost:3000/api/checkout during the manual Collection Runner run, showing the request headers including X-Student-Id: 23127179 and a 200 response in 14 ms.",
+  "path": "work/evidence/screenshots/EVID-FR08-POSTMAN-CONSOLE.png",
+  "sha256": "08ea550c200b97a30ec9efade8c8aa3521d66b5bb97e9027ad03f8e8073f6f3f",
+  "capturedAt": "2026-08-23T09:29:16.324Z",
+  "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+  "sourceUrl": null,
+  "image": {
+    "bytes": 58232,
+    "width": 1434,
+    "height": 428
+  },
+  "humanAttestation": false
+}

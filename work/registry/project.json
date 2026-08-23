@@ -46,9 +46,13 @@
   ],
   "postman": {
     "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
-    "supportingCollectionPaths": ["work/postman/fr04/FR04-profile-stateful.postman_collection.json"],
+    "supportingCollectionPaths": [
+      "work/postman/fr04/FR04-profile-stateful.postman_collection.json"
+    ],
     "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
-    "dataFiles": ["work/postman/fr04/FR04-cases.postman_data.json"],
+    "dataFiles": [
+      "work/postman/fr04/FR04-cases.postman_data.json"
+    ],
     "officialFr04RunIds": [
       "RUN-20260823040227192-fr04-canonical-input",
       "RUN-20260823035912444-fr04-final-stateful",
@@ -56,5 +60,24 @@
       "RUN-20260823022342040-fr04-ai027-corrected"
     ],
     "officialFr04PrimaryRunId": "RUN-20260823040227192-fr04-canonical-input"
+  },
+  "postmanFr08": {
+    "collectionPath": "work/postman/fr08/FR08-checkout.postman_collection.json",
+    "environmentPath": "work/postman/fr08/FR08-checkout.postman_environment.json",
+    "dataFiles": [
+      "work/postman/fr08/FR08-checkout.data.json"
+    ],
+    "manualImportPaths": [
+      "work/postman/fr08/manual-import/FR08-checkout.postman_collection.json",
+      "work/postman/fr08/manual-import/FR08-checkout.postman_environment.json",
+      "work/postman/fr08/manual-import/FR08-cases.postman_data.json"
+    ],
+    "ciWorkflowPaths": [
+      ".github/workflows/hw06-fr08-ci.yml"
+    ],
+    "officialRunIds": [
+      "RUN-20260823080014785-fr08-canonical-full-suite"
+    ],
+    "officialPrimaryRunId": "RUN-20260823080014785-fr08-canonical-full-suite"
   }
 }

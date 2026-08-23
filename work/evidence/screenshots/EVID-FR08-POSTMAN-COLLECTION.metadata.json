@@ -1,0 +1,16 @@
+{
+  "id": "EVID-FR08-POSTMAN-COLLECTION",
+  "type": "postman-desktop",
+  "description": "Postman Desktop sidebar after the student imported the FR-08 manual-import package: collection 'HW06 FR-08 Checkout - POST /api/checkout' expanded showing all eight requests in run order, with the environment 'HW06 FR-08 Local - localhost:3000' selected.",
+  "path": "work/evidence/screenshots/EVID-FR08-POSTMAN-COLLECTION.png",
+  "sha256": "6c62c16629ce2e3b80331c66d6900d1d3ac63660107bae5ae0b4599fea90554b",
+  "capturedAt": "2026-08-23T09:29:14.570Z",
+  "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+  "sourceUrl": null,
+  "image": {
+    "bytes": 85001,
+    "width": 484,
+    "height": 960
+  },
+  "humanAttestation": false
+}

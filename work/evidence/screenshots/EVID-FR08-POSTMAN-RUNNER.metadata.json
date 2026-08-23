@@ -1,0 +1,16 @@
+{
+  "id": "EVID-FR08-POSTMAN-RUNNER",
+  "type": "postman-desktop",
+  "description": "Postman Collection Runner results for the manual FR-08 run driven by FR08-cases.postman_data.json: environment 'HW06 FR-08 Local', one iteration, seven tests passed, test names carrying the canonical case id FR08-AI-001, and the console showing the server-observed cart, the derived expected total 200000, the checkout 200 response with orderId 55, and the persisted order at total_amount 200000.",
+  "path": "work/evidence/screenshots/EVID-FR08-POSTMAN-RUNNER.png",
+  "sha256": "0053ac4c6963d69cfa785e98c59a685a82afc75bb8d6ecdef1fd079bae64b7e9",
+  "capturedAt": "2026-08-23T09:29:17.935Z",
+  "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+  "sourceUrl": null,
+  "image": {
+    "bytes": 288579,
+    "width": 1919,
+    "height": 1027
+  },
+  "humanAttestation": false
+}

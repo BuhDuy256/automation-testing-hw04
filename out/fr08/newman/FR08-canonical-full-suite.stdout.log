@@ -1,0 +1,4526 @@
+newman
+
+HW06 FR-08 Checkout - POST /api/checkout
+
+Iteration 1/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 37ms]
+  √  FR08-AI-001 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 7ms]
+  √  FR08-AI-001 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 8ms]
+  ┌
+  │ 'FR08-AI-001 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-001 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-001 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-001 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-001 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-001 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-001 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-001 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 14ms]
+  √  FR08-AI-001 checkout returned an observable HTTP response
+  √  FR08-AI-001 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-001 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":1}'
+  │ 'FR08-AI-001 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 406B, 6ms]
+  √  FR08-AI-001 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-001 orders after the attempt: [{"id":1,"user_
+  │ id":3,"total_amount":200000,"status":"pending","shippi
+  │ ng_address":"123 Le Loi, TP.HCM","created_at":"2026-08
+  │ -23 08:00:16"}]'
+  │ 'FR08-AI-001 new orders created by this case: [{"id":1
+  │ ,"user_id":3,"total_amount":200000,"status":"pending",
+  │ "shipping_address":"123 Le Loi, TP.HCM","created_at":"
+  │ 2026-08-23 08:00:16"}]'
+  └
+  √  FR08-AI-001 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-001 verification complete'
+  └
+
+Iteration 2/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 15ms]
+  √  FR08-AI-002 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 10ms]
+  √  FR08-AI-002 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-002 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-002 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-002 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-002 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-002 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-002 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-002 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-002 request body sent verbatim: {"total_amoun
+  │ t":1000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 17ms]
+  √  FR08-AI-002 checkout returned an observable HTTP response
+  √  FR08-AI-002 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-002 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":2}'
+  │ 'FR08-AI-002 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 404B, 4ms]
+  √  FR08-AI-002 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-002 orders after the attempt: [{"id":2,"user_
+  │ id":4,"total_amount":1000,"status":"pending","shipping
+  │ _address":"123 Le Loi, TP.HCM","created_at":"2026-08-2
+  │ 3 08:00:16"}]'
+  │ 'FR08-AI-002 new orders created by this case: [{"id":2
+  │ ,"user_id":4,"total_amount":1000,"status":"pending","s
+  │ hipping_address":"123 Le Loi, TP.HCM","created_at":"20
+  │ 26-08-23 08:00:16"}]'
+  └
+  1. FR08-AI-002 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-002 verification complete'
+  └
+
+Iteration 3/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 18ms]
+  √  FR08-AI-003 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 8ms]
+  √  FR08-AI-003 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-003 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-003 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-003 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-003 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-003 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-003 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-003 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-003 request body sent verbatim: {"total_amoun
+  │ t":9999000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 18ms]
+  √  FR08-AI-003 checkout returned an observable HTTP response
+  √  FR08-AI-003 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-003 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":3}'
+  │ 'FR08-AI-003 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 407B, 5ms]
+  √  FR08-AI-003 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-003 orders after the attempt: [{"id":3,"user_
+  │ id":5,"total_amount":9999000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:17"}]'
+  │ 'FR08-AI-003 new orders created by this case: [{"id":3
+  │ ,"user_id":5,"total_amount":9999000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:17"}]'
+  └
+  2. FR08-AI-003 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-003 verification complete'
+  └
+
+Iteration 4/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 14ms]
+  √  FR08-AI-004 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 5ms]
+  √  FR08-AI-004 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-004 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-004 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-004 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  √  FR08-AI-004 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-004 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-004 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-004 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-004 request body sent verbatim: {"total_amoun
+  │ t":0,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 15ms]
+  √  FR08-AI-004 checkout returned an observable HTTP response
+  √  FR08-AI-004 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-004 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":4}'
+  │ 'FR08-AI-004 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 401B, 4ms]
+  √  FR08-AI-004 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-004 orders after the attempt: [{"id":4,"user_
+  │ id":6,"total_amount":0,"status":"pending","shipping_ad
+  │ dress":"123 Le Loi, TP.HCM","created_at":"2026-08-23 0
+  │ 8:00:18"}]'
+  │ 'FR08-AI-004 new orders created by this case: [{"id":4
+  │ ,"user_id":6,"total_amount":0,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:18"}]'
+  └
+  3. FR08-AI-004 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-004 verification complete'
+  └
+
+Iteration 5/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 11ms]
+  √  FR08-AI-005 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 6ms]
+  √  FR08-AI-005 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-005 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-005 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-005 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-005 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-005 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-005 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-005 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-005 request body sent verbatim: {"total_amoun
+  │ t":-200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 16ms]
+  √  FR08-AI-005 checkout returned an observable HTTP response
+  √  FR08-AI-005 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-005 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":5}'
+  │ 'FR08-AI-005 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 407B, 7ms]
+  √  FR08-AI-005 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-005 orders after the attempt: [{"id":5,"user_
+  │ id":7,"total_amount":-200000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:18"}]'
+  │ 'FR08-AI-005 new orders created by this case: [{"id":5
+  │ ,"user_id":7,"total_amount":-200000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:18"}]'
+  └
+  4. FR08-AI-005 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-005 verification complete'
+  └
+
+Iteration 6/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 18ms]
+  √  FR08-AI-006 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 6ms]
+  √  FR08-AI-006 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-006 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-006 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-006 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  √  FR08-AI-006 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-006 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-006 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-006 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-006 request body sent verbatim: {"shipping_ad
+  │ dress":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 20ms]
+  √  FR08-AI-006 checkout returned an observable HTTP response
+  √  FR08-AI-006 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-006 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":6}'
+  │ 'FR08-AI-006 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 404B, 6ms]
+  √  FR08-AI-006 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-006 orders after the attempt: [{"id":6,"user_
+  │ id":8,"total_amount":null,"status":"pending","shipping
+  │ _address":"123 Le Loi, TP.HCM","created_at":"2026-08-2
+  │ 3 08:00:19"}]'
+  │ 'FR08-AI-006 new orders created by this case: [{"id":6
+  │ ,"user_id":8,"total_amount":null,"status":"pending","s
+  │ hipping_address":"123 Le Loi, TP.HCM","created_at":"20
+  │ 26-08-23 08:00:19"}]'
+  └
+  5. FR08-AI-006 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-006 verification complete'
+  └
+
+Iteration 7/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 316B, 14ms]
+  √  FR08-AI-007 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 8ms]
+  √  FR08-AI-007 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-007 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-007 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-007 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-007 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-007 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-007 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-007 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-007 request body sent verbatim: {"total_amoun
+  │ t":null,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 25ms]
+  √  FR08-AI-007 checkout returned an observable HTTP response
+  √  FR08-AI-007 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-007 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":7}'
+  │ 'FR08-AI-007 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 404B, 4ms]
+  √  FR08-AI-007 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-007 orders after the attempt: [{"id":7,"user_
+  │ id":9,"total_amount":null,"status":"pending","shipping
+  │ _address":"123 Le Loi, TP.HCM","created_at":"2026-08-2
+  │ 3 08:00:19"}]'
+  │ 'FR08-AI-007 new orders created by this case: [{"id":7
+  │ ,"user_id":9,"total_amount":null,"status":"pending","s
+  │ hipping_address":"123 Le Loi, TP.HCM","created_at":"20
+  │ 26-08-23 08:00:19"}]'
+  └
+  6. FR08-AI-007 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-007 verification complete'
+  └
+
+Iteration 8/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-008 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-008 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-008 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-008 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-008 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-008 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-008 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-008 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-008 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-008 request body sent verbatim: {"total_amoun
+  │ t":"200000","shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 21ms]
+  √  FR08-AI-008 checkout returned an observable HTTP response
+  √  FR08-AI-008 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-008 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":8}'
+  │ 'FR08-AI-008 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 407B, 4ms]
+  √  FR08-AI-008 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-008 orders after the attempt: [{"id":8,"user_
+  │ id":10,"total_amount":200000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:20"}]'
+  │ 'FR08-AI-008 new orders created by this case: [{"id":8
+  │ ,"user_id":10,"total_amount":200000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:20"}]'
+  └
+  √  FR08-AI-008 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-008 verification complete'
+  └
+
+Iteration 9/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-AI-009 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 8ms]
+  √  FR08-AI-009 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-009 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 3ms]
+  ┌
+  │ 'FR08-AI-009 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-009 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-009 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-009 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-009 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-009 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-009 request body sent verbatim: {"total_amoun
+  │ t":"abc","shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 312B, 14ms]
+  √  FR08-AI-009 checkout returned an observable HTTP response
+  √  FR08-AI-009 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-009 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":9}'
+  │ 'FR08-AI-009 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 406B, 5ms]
+  √  FR08-AI-009 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-009 orders after the attempt: [{"id":9,"user_
+  │ id":11,"total_amount":"abc","status":"pending","shippi
+  │ ng_address":"123 Le Loi, TP.HCM","created_at":"2026-08
+  │ -23 08:00:21"}]'
+  │ 'FR08-AI-009 new orders created by this case: [{"id":9
+  │ ,"user_id":11,"total_amount":"abc","status":"pending",
+  │ "shipping_address":"123 Le Loi, TP.HCM","created_at":"
+  │ 2026-08-23 08:00:21"}]'
+  └
+  7. FR08-AI-009 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-009 verification complete'
+  └
+
+Iteration 10/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 17ms]
+  √  FR08-AI-010 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 6ms]
+  √  FR08-AI-010 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-010 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-010 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-010 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-010 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-010 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-010 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-010 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-010 request body sent verbatim: {"total_amoun
+  │ t":199999.99,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 14ms]
+  √  FR08-AI-010 checkout returned an observable HTTP response
+  √  FR08-AI-010 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-010 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":10}'
+  │ 'FR08-AI-010 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 411B, 7ms]
+  √  FR08-AI-010 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-010 orders after the attempt: [{"id":10,"user
+  │ _id":12,"total_amount":199999.99,"status":"pending","s
+  │ hipping_address":"123 Le Loi, TP.HCM","created_at":"20
+  │ 26-08-23 08:00:21"}]'
+  │ 'FR08-AI-010 new orders created by this case: [{"id":1
+  │ 0,"user_id":12,"total_amount":199999.99,"status":"pend
+  │ ing","shipping_address":"123 Le Loi, TP.HCM","created_
+  │ at":"2026-08-23 08:00:21"}]'
+  └
+  8. FR08-AI-010 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-010 verification complete'
+  └
+
+Iteration 11/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-011 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 7ms]
+  √  FR08-AI-011 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-011 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-011 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-011 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 7ms]
+  √  FR08-AI-011 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-011 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-011 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-011 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-011 request body sent verbatim: {"total_amoun
+  │ t":999999999999,"shipping_address":"123 Le Loi, TP.HCM
+  │ "}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 22ms]
+  √  FR08-AI-011 checkout returned an observable HTTP response
+  √  FR08-AI-011 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-011 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":11}'
+  │ 'FR08-AI-011 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 414B, 8ms]
+  √  FR08-AI-011 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-011 orders after the attempt: [{"id":11,"user
+  │ _id":13,"total_amount":999999999999,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:22"}]'
+  │ 'FR08-AI-011 new orders created by this case: [{"id":1
+  │ 1,"user_id":13,"total_amount":999999999999,"status":"p
+  │ ending","shipping_address":"123 Le Loi, TP.HCM","creat
+  │ ed_at":"2026-08-23 08:00:22"}]'
+  └
+  9. FR08-AI-011 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-011 verification complete'
+  └
+
+Iteration 12/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-012 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-012 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-012 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-012 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-012 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-012 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-012 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-012 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-012 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-012 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"12 Đường Nguyễn Văn Cừ, 
+  │ Phường 4, Quận 5, Thành phố Hồ Chí Minh"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 15ms]
+  √  FR08-AI-012 checkout returned an observable HTTP response
+  √  FR08-AI-012 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-012 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":12}'
+  │ 'FR08-AI-012 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 473B, 7ms]
+  √  FR08-AI-012 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-012 orders after the attempt: [{"id":12,"user
+  │ _id":14,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"12 Đường Nguyễn Văn Cừ, Phường 4, Quận 
+  │ 5, Thành phố Hồ Chí Minh","created_at":"2026-08-23 08:
+  │ 00:23"}]'
+  │ 'FR08-AI-012 new orders created by this case: [{"id":1
+  │ 2,"user_id":14,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"12 Đường Nguyễn Văn Cừ, Phường 4
+  │ , Quận 5, Thành phố Hồ Chí Minh","created_at":"2026-08
+  │ -23 08:00:23"}]'
+  └
+  √  FR08-AI-012 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-012 persisted shipping_address observation: "
+  │ 12 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Thành phố Hồ
+  │  Chí Minh" | type string | length 63'
+  │ 'FR08-AI-012 verification complete'
+  └
+
+Iteration 13/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-013 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-013 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-013 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-013 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-013 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-013 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-013 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-013 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-013 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-013 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":""}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 24ms]
+  √  FR08-AI-013 checkout returned an observable HTTP response
+  √  FR08-AI-013 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-013 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":13}'
+  │ 'FR08-AI-013 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 390B, 6ms]
+  √  FR08-AI-013 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-013 orders after the attempt: [{"id":13,"user
+  │ _id":15,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"","created_at":"2026-08-23 08:00:23"}]'
+  │ 'FR08-AI-013 new orders created by this case: [{"id":1
+  │ 3,"user_id":15,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"","created_at":"2026-08-23 08:00
+  │ :23"}]'
+  └
+  √  FR08-AI-013 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-013 persisted shipping_address observation: "
+  │ " | type string | length 0'
+  │ 'FR08-AI-013 verification complete'
+  └
+
+Iteration 14/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-014 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 7ms]
+  √  FR08-AI-014 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-014 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-014 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-014 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 7ms]
+  √  FR08-AI-014 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-014 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-014 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-014 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-014 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"   "}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 21ms]
+  √  FR08-AI-014 checkout returned an observable HTTP response
+  √  FR08-AI-014 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-014 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":14}'
+  │ 'FR08-AI-014 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 393B, 12ms]
+  √  FR08-AI-014 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-014 orders after the attempt: [{"id":14,"user
+  │ _id":16,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"   ","created_at":"2026-08-23 08:00:24"
+  │ }]'
+  │ 'FR08-AI-014 new orders created by this case: [{"id":1
+  │ 4,"user_id":16,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"   ","created_at":"2026-08-23 08
+  │ :00:24"}]'
+  └
+  √  FR08-AI-014 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-014 persisted shipping_address observation: "
+  │    " | type string | length 3'
+  │ 'FR08-AI-014 verification complete'
+  └
+
+Iteration 15/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 19ms]
+  √  FR08-AI-015 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-015 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-015 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-015 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-015 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-015 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-015 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-015 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-015 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-015 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":null}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 13ms]
+  √  FR08-AI-015 checkout returned an observable HTTP response
+  √  FR08-AI-015 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-015 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":15}'
+  │ 'FR08-AI-015 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 392B, 6ms]
+  √  FR08-AI-015 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-015 orders after the attempt: [{"id":15,"user
+  │ _id":17,"total_amount":200000,"status":"pending","ship
+  │ ping_address":null,"created_at":"2026-08-23 08:00:24"}
+  │ ]'
+  │ 'FR08-AI-015 new orders created by this case: [{"id":1
+  │ 5,"user_id":17,"total_amount":200000,"status":"pending
+  │ ","shipping_address":null,"created_at":"2026-08-23 08:
+  │ 00:24"}]'
+  └
+  √  FR08-AI-015 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-015 persisted shipping_address observation: n
+  │ ull | type object | length 0'
+  │ 'FR08-AI-015 verification complete'
+  └
+
+Iteration 16/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 19ms]
+  √  FR08-AI-016 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 6ms]
+  √  FR08-AI-016 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-016 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-016 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-016 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-016 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-016 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-016 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-016 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-016 request body sent verbatim: {"total_amoun
+  │ t":200000}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 15ms]
+  √  FR08-AI-016 checkout returned an observable HTTP response
+  √  FR08-AI-016 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-016 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":16}'
+  │ 'FR08-AI-016 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 392B, 6ms]
+  √  FR08-AI-016 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-016 orders after the attempt: [{"id":16,"user
+  │ _id":18,"total_amount":200000,"status":"pending","ship
+  │ ping_address":null,"created_at":"2026-08-23 08:00:25"}
+  │ ]'
+  │ 'FR08-AI-016 new orders created by this case: [{"id":1
+  │ 6,"user_id":18,"total_amount":200000,"status":"pending
+  │ ","shipping_address":null,"created_at":"2026-08-23 08:
+  │ 00:25"}]'
+  └
+  √  FR08-AI-016 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-016 persisted shipping_address observation: n
+  │ ull | type object | length 0'
+  │ 'FR08-AI-016 verification complete'
+  └
+
+Iteration 17/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-017 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-017 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-017 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-017 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-017 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-017 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-017 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-017 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-017 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-017 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":12345}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 16ms]
+  √  FR08-AI-017 checkout returned an observable HTTP response
+  √  FR08-AI-017 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-017 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":17}'
+  │ 'FR08-AI-017 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 395B, 5ms]
+  √  FR08-AI-017 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-017 orders after the attempt: [{"id":17,"user
+  │ _id":19,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"12345","created_at":"2026-08-23 08:00:2
+  │ 6"}]'
+  │ 'FR08-AI-017 new orders created by this case: [{"id":1
+  │ 7,"user_id":19,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"12345","created_at":"2026-08-23 
+  │ 08:00:26"}]'
+  └
+  √  FR08-AI-017 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-017 persisted shipping_address observation: "
+  │ 12345" | type string | length 5'
+  │ 'FR08-AI-017 verification complete'
+  └
+
+Iteration 18/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-018 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 5ms]
+  √  FR08-AI-018 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-018 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-018 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-018 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-018 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-018 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-018 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-018 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-018 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"AAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAA"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 20ms]
+  √  FR08-AI-018 checkout returned an observable HTTP response
+  √  FR08-AI-018 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-018 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":18}'
+  │ 'FR08-AI-018 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 1.39kB, 5ms]
+  √  FR08-AI-018 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-018 orders after the attempt: [{"id":18,"user
+  │ _id":20,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","created_
+  │ at":"2026-08-23 08:00:26"}]'
+  │ 'FR08-AI-018 new orders created by this case: [{"id":1
+  │ 8,"user_id":20,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","c
+  │ reated_at":"2026-08-23 08:00:26"}]'
+  └
+  √  FR08-AI-018 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-018 persisted shipping_address observation: "
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  │ AAAAAAAAAAAAAAAAAAAAAAAAAAAA" | type string | length 1
+  │ 000'
+  │ 'FR08-AI-018 verification complete'
+  └
+
+Iteration 19/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 14ms]
+  √  FR08-AI-019 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 6ms]
+  √  FR08-AI-019 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-019 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-019 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-019 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-019 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-019 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-019 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-019 auth mode: none | Content-Type: applicati
+  │ on/json'
+  │ 'FR08-AI-019 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [401 Unauthorized, 301B, 4ms]
+  √  FR08-AI-019 checkout returned an observable HTTP response
+  √  FR08-AI-019 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-019 checkout response 401 :: {"error":"Unauth
+  │ orized"}'
+  │ 'FR08-AI-019 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  √  FR08-AI-019 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-019 orders after the attempt: []'
+  │ 'FR08-AI-019 new orders created by this case: []'
+  └
+  √  FR08-AI-019 unauthorised checkout created no order
+  ┌
+  │ 'FR08-AI-019 verification complete'
+  └
+
+Iteration 20/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-AI-020 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 7ms]
+  √  FR08-AI-020 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 7ms]
+  ┌
+  │ 'FR08-AI-020 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-020 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-020 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-020 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-020 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-020 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-020 auth mode: scheme | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-020 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [403 Forbidden, 295B, 2ms]
+  √  FR08-AI-020 checkout returned an observable HTTP response
+  √  FR08-AI-020 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-020 checkout response 403 :: {"error":"Forbid
+  │ den"}'
+  │ 'FR08-AI-020 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  √  FR08-AI-020 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-020 orders after the attempt: []'
+  │ 'FR08-AI-020 new orders created by this case: []'
+  └
+  √  FR08-AI-020 unauthorised checkout created no order
+  ┌
+  │ 'FR08-AI-020 verification complete'
+  └
+
+Iteration 21/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 20ms]
+  √  FR08-AI-021 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-021 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-021 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-021 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-021 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-021 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-021 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-021 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-021 auth mode: empty | Content-Type: applicat
+  │ ion/json'
+  │ 'FR08-AI-021 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [401 Unauthorized, 301B, 4ms]
+  √  FR08-AI-021 checkout returned an observable HTTP response
+  √  FR08-AI-021 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-021 checkout response 401 :: {"error":"Unauth
+  │ orized"}'
+  │ 'FR08-AI-021 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  √  FR08-AI-021 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-021 orders after the attempt: []'
+  │ 'FR08-AI-021 new orders created by this case: []'
+  └
+  √  FR08-AI-021 unauthorised checkout created no order
+  ┌
+  │ 'FR08-AI-021 verification complete'
+  └
+
+Iteration 22/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-022 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-022 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-022 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-022 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-022 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 7ms]
+  √  FR08-AI-022 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-022 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-022 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-022 deterministic signature mutation: final c
+  │ haracter s replaced with A'
+  │ 'FR08-AI-022 auth mode: tampered | Content-Type: appli
+  │ cation/json'
+  │ 'FR08-AI-022 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [403 Forbidden, 295B, 5ms]
+  √  FR08-AI-022 checkout returned an observable HTTP response
+  √  FR08-AI-022 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-022 checkout response 403 :: {"error":"Forbid
+  │ den"}'
+  │ 'FR08-AI-022 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  √  FR08-AI-022 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-022 orders after the attempt: []'
+  │ 'FR08-AI-022 new orders created by this case: []'
+  └
+  √  FR08-AI-022 unauthorised checkout created no order
+  ┌
+  │ 'FR08-AI-022 verification complete'
+  └
+
+Iteration 23/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 17ms]
+  √  FR08-AI-023 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-023 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-023 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-023 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-023 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  √  FR08-AI-023 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-023 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-023 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-023 auth mode: nonjwt | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-023 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [403 Forbidden, 295B, 6ms]
+  √  FR08-AI-023 checkout returned an observable HTTP response
+  √  FR08-AI-023 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-023 checkout response 403 :: {"error":"Forbid
+  │ den"}'
+  │ 'FR08-AI-023 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  √  FR08-AI-023 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-023 orders after the attempt: []'
+  │ 'FR08-AI-023 new orders created by this case: []'
+  └
+  √  FR08-AI-023 unauthorised checkout created no order
+  ┌
+  │ 'FR08-AI-023 verification complete'
+  └
+
+Iteration 24/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-025 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-025 setup: secondary case user registered
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-025 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-025 setup: secondary user login returns a token
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-025 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-025 secondary user cart observed: [] | derive
+  │ d total 0'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-025 secondary user baseline order ids: []'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-025 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-025 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-025 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-025 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-025 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-025 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-025 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 16ms]
+  √  FR08-AI-025 checkout returned an observable HTTP response
+  √  FR08-AI-025 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-025 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":19}'
+  │ 'FR08-AI-025 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 5ms]
+  √  FR08-AI-025 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-025 orders after the attempt: [{"id":19,"user
+  │ _id":26,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:30"}]'
+  │ 'FR08-AI-025 new orders created by this case: [{"id":1
+  │ 9,"user_id":26,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:30"}]'
+  └
+  √  FR08-AI-025 persisted total equals the server-derived cart total (200000)
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-025 secondary user orders after the attempt: 
+  │ []'
+  └
+  √  FR08-AI-025 no order was attributed to the secondary user
+  ┌
+  │ 'FR08-AI-025 verification complete'
+  └
+
+Iteration 25/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 11ms]
+  √  FR08-AI-026 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 14ms]
+  √  FR08-AI-026 setup: secondary case user registered
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 8ms]
+  √  FR08-AI-026 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 684B, 4ms]
+  √  FR08-AI-026 setup: secondary user login returns a token
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-026 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-026 secondary user cart observed: [] | derive
+  │ d total 0'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 3ms]
+  ┌
+  │ 'FR08-AI-026 secondary user baseline order ids: []'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-026 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-026 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-026 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-026 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-026 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-026 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-026 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM","use
+  │ r_id":29}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 12ms]
+  √  FR08-AI-026 checkout returned an observable HTTP response
+  √  FR08-AI-026 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-026 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":20}'
+  │ 'FR08-AI-026 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 6ms]
+  √  FR08-AI-026 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-026 orders after the attempt: [{"id":20,"user
+  │ _id":28,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:31"}]'
+  │ 'FR08-AI-026 new orders created by this case: [{"id":2
+  │ 0,"user_id":28,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:31"}]'
+  └
+  √  FR08-AI-026 persisted total equals the server-derived cart total (200000)
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-026 secondary user orders after the attempt: 
+  │ []'
+  └
+  √  FR08-AI-026 no order was attributed to the secondary user
+  ┌
+  │ 'FR08-AI-026 verification complete'
+  └
+
+Iteration 26/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-027 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-027 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-027 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-027 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-027 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-027 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-027 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-027 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-027 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-027 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM","sta
+  │ tus":"delivered"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 17ms]
+  √  FR08-AI-027 checkout returned an observable HTTP response
+  √  FR08-AI-027 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-027 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":21}'
+  │ 'FR08-AI-027 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 6ms]
+  √  FR08-AI-027 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-027 orders after the attempt: [{"id":21,"user
+  │ _id":30,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:31"}]'
+  │ 'FR08-AI-027 new orders created by this case: [{"id":2
+  │ 1,"user_id":30,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:31"}]'
+  └
+  √  FR08-AI-027 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-027 persisted status observation: "pending"'
+  │ 'FR08-AI-027 verification complete'
+  └
+
+Iteration 27/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 10ms]
+  √  FR08-AI-028 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-028 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-028 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-028 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-028 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  √  FR08-AI-028 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-028 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-028 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-028 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ `FR08-AI-028 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"<script>alert('xss')</sc
+  │ ript>123 Le Loi"}`
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 13ms]
+  √  FR08-AI-028 checkout returned an observable HTTP response
+  √  FR08-AI-028 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-028 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":22}'
+  │ 'FR08-AI-028 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 429B, 5ms]
+  √  FR08-AI-028 order history is readable after the attempt
+  ┌
+  │ `FR08-AI-028 orders after the attempt: [{"id":22,"user
+  │ _id":31,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"<script>alert('xss')</script>123 Le Loi
+  │ ","created_at":"2026-08-23 08:00:32"}]`
+  │ `FR08-AI-028 new orders created by this case: [{"id":2
+  │ 2,"user_id":31,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"<script>alert('xss')</script>123
+  │  Le Loi","created_at":"2026-08-23 08:00:32"}]`
+  └
+  √  FR08-AI-028 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ `FR08-AI-028 persisted shipping_address observation: "
+  │ <script>alert('xss')</script>123 Le Loi" | type string
+  │  | length 39`
+  │ 'FR08-AI-028 SEC-04 BOUNDARY: this is an API-side obse
+  │ rvation only. Safe UI/display-boundary escaping is NOT
+  │  proved or disproved here and needs separate evidence.
+  │ '
+  │ 'FR08-AI-028 verification complete'
+  └
+
+Iteration 28/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-029 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 6ms]
+  √  FR08-AI-029 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 13ms]
+  ┌
+  │ 'FR08-AI-029 setup prior order seed -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-029 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 411B, 6ms]
+  ┌
+  │ 'FR08-AI-029 primary baseline order ids before checkou
+  │ t: [23]'
+  │ 'FR08-AI-029 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-029 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-029 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-029 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-029 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ `FR08-AI-029 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"1 Le Loi'); DROP TABLE o
+  │ rders; --"}`
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 17ms]
+  √  FR08-AI-029 checkout returned an observable HTTP response
+  √  FR08-AI-029 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-029 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":24}'
+  │ 'FR08-AI-029 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 566B, 6ms]
+  √  FR08-AI-029 order history is readable after the attempt
+  ┌
+  │ `FR08-AI-029 orders after the attempt: [{"id":24,"user
+  │ _id":32,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"1 Le Loi'); DROP TABLE orders; --","cre
+  │ ated_at":"2026-08-23 08:00:33"},{"id":23,"user_id":32,
+  │ "total_amount":100000,"status":"pending","shipping_add
+  │ ress":"FR08 prior order seed","created_at":"2026-08-23
+  │  08:00:32"}]`
+  │ `FR08-AI-029 new orders created by this case: [{"id":2
+  │ 4,"user_id":32,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"1 Le Loi'); DROP TABLE orders; -
+  │ -","created_at":"2026-08-23 08:00:33"}]`
+  └
+  √  FR08-AI-029 previously persisted orders survive the attempt
+  ┌
+  │ 'FR08-AI-029 SEC-05 BOUNDARY: a safe response is consi
+  │ stent with, but is not proof of, parameterized queries
+  │ .'
+  └
+  √  FR08-AI-029 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ `FR08-AI-029 persisted shipping_address observation: "
+  │ 1 Le Loi'); DROP TABLE orders; --" | type string | len
+  │ gth 33`
+  │ 'FR08-AI-029 verification complete'
+  └
+
+Iteration 29/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-030 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 9ms]
+  √  FR08-AI-030 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 17ms]
+  ┌
+  │ 'FR08-AI-030 setup prior order seed -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-030 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 411B, 5ms]
+  ┌
+  │ 'FR08-AI-030 primary baseline order ids before checkou
+  │ t: [25]'
+  │ 'FR08-AI-030 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-030 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-030 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-030 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-030 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-030 request body sent verbatim: {"total_amoun
+  │ t":"1 OR 1=1","shipping_address":"123 Le Loi, TP.HCM"}
+  │ '
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 16ms]
+  √  FR08-AI-030 checkout returned an observable HTTP response
+  √  FR08-AI-030 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-030 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":26}'
+  │ 'FR08-AI-030 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 555B, 4ms]
+  √  FR08-AI-030 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-030 orders after the attempt: [{"id":26,"user
+  │ _id":33,"total_amount":"1 OR 1=1","status":"pending","
+  │ shipping_address":"123 Le Loi, TP.HCM","created_at":"2
+  │ 026-08-23 08:00:33"},{"id":25,"user_id":33,"total_amou
+  │ nt":100000,"status":"pending","shipping_address":"FR08
+  │  prior order seed","created_at":"2026-08-23 08:00:33"}
+  │ ]'
+  │ 'FR08-AI-030 new orders created by this case: [{"id":2
+  │ 6,"user_id":33,"total_amount":"1 OR 1=1","status":"pen
+  │ ding","shipping_address":"123 Le Loi, TP.HCM","created
+  │ _at":"2026-08-23 08:00:33"}]'
+  └
+  √  FR08-AI-030 previously persisted orders survive the attempt
+  ┌
+  │ 'FR08-AI-030 SEC-05 BOUNDARY: a safe response is consi
+  │ stent with, but is not proof of, parameterized queries
+  │ .'
+  └
+ 10. FR08-AI-030 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-030 verification complete'
+  └
+
+Iteration 30/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 14ms]
+  √  FR08-AI-031 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 6ms]
+  √  FR08-AI-031 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-031 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-031 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-031 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-031 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-031 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-031 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-031 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-031 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 18ms]
+  √  FR08-AI-031 checkout returned an observable HTTP response
+  √  FR08-AI-031 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-031 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":27}'
+  │ 'FR08-AI-031 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 4ms]
+  √  FR08-AI-031 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-031 orders after the attempt: [{"id":27,"user
+  │ _id":34,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:34"}]'
+  │ 'FR08-AI-031 new orders created by this case: [{"id":2
+  │ 7,"user_id":34,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:34"}]'
+  └
+  √  FR08-AI-031 persisted total equals the server-derived cart total (200000)
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  ┌
+  │ 'FR08-AI-031 primary cart after the attempt: [{"id":1,
+  │ "name":"San pham A","price":100000,"quantity":2}]'
+  └
+ 11. FR08-AI-031 cart is cleared after a successful checkout (FR-08)
+  ┌
+  │ 'FR08-AI-031 verification complete'
+  └
+
+Iteration 31/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 11ms]
+  √  FR08-AI-032 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-032 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-032 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-032 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-032 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-032 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-032 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-032 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-032 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-032 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 16ms]
+  √  FR08-AI-032 checkout returned an observable HTTP response
+  √  FR08-AI-032 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-032 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":28}'
+  │ 'FR08-AI-032 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 6ms]
+  √  FR08-AI-032 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-032 orders after the attempt: [{"id":28,"user
+  │ _id":35,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:35"}]'
+  │ 'FR08-AI-032 new orders created by this case: [{"id":2
+  │ 8,"user_id":35,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:35"}]'
+  └
+  √  FR08-AI-032 exactly one new order was created
+  √  FR08-AI-032 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-032 verification complete'
+  └
+
+Iteration 32/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 19ms]
+  √  FR08-AI-033 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-033 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-033 setup seed primary line 0 -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-033 setup seed primary line 1 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-033 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-033 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 382B, 4ms]
+  √  FR08-AI-033 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-033 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2},{"
+  │ id":2,"name":"San pham B","price":50000,"quantity":3}]
+  │ '
+  │ 'FR08-AI-033 server-derived expected total for this ch
+  │ eckout: 350000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-033 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-033 request body sent verbatim: {"total_amoun
+  │ t":350000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 20ms]
+  √  FR08-AI-033 checkout returned an observable HTTP response
+  √  FR08-AI-033 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-033 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":29}'
+  │ 'FR08-AI-033 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 11ms]
+  √  FR08-AI-033 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-033 orders after the attempt: [{"id":29,"user
+  │ _id":36,"total_amount":350000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:35"}]'
+  │ 'FR08-AI-033 new orders created by this case: [{"id":2
+  │ 9,"user_id":36,"total_amount":350000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:35"}]'
+  └
+  √  FR08-AI-033 persisted total equals the server-derived cart total (350000)
+  ┌
+  │ 'FR08-AI-033 verification complete'
+  └
+
+Iteration 33/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 18ms]
+  √  FR08-AI-034 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-034 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-034 setup seed primary line 0 -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-034 setup seed primary line 1 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-AI-034 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-034 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 383B, 3ms]
+  √  FR08-AI-034 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-034 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2},{"
+  │ id":1,"name":"San pham A","price":100000,"quantity":3}
+  │ ]'
+  │ 'FR08-AI-034 server-derived expected total for this ch
+  │ eckout: 500000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-034 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-034 request body sent verbatim: {"total_amoun
+  │ t":500000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 19ms]
+  √  FR08-AI-034 checkout returned an observable HTTP response
+  √  FR08-AI-034 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-034 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":30}'
+  │ 'FR08-AI-034 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 9ms]
+  √  FR08-AI-034 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-034 orders after the attempt: [{"id":30,"user
+  │ _id":37,"total_amount":500000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:36"}]'
+  │ 'FR08-AI-034 new orders created by this case: [{"id":3
+  │ 0,"user_id":37,"total_amount":500000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:36"}]'
+  └
+  √  FR08-AI-034 persisted total equals the server-derived cart total (500000)
+  ┌
+  │ 'FR08-AI-034 verification complete'
+  └
+
+Iteration 34/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-035 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-035 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 3ms]
+  ┌
+  │ 'FR08-AI-035 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-035 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 267B, 3ms]
+  √  FR08-AI-035 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-035 server-observed pre-checkout cart: []'
+  │ 'FR08-AI-035 server-derived expected total for this ch
+  │ eckout: 0'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-035 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-035 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 13ms]
+  √  FR08-AI-035 checkout returned an observable HTTP response
+  √  FR08-AI-035 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-035 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":31}'
+  │ 'FR08-AI-035 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 4ms]
+  √  FR08-AI-035 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-035 orders after the attempt: [{"id":31,"user
+  │ _id":38,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:36"}]'
+  │ 'FR08-AI-035 new orders created by this case: [{"id":3
+  │ 1,"user_id":38,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:36"}]'
+  └
+ 12. FR08-AI-035 persisted total equals the server-derived cart total (0)
+  ┌
+  │ 'FR08-AI-035 verification complete'
+  └
+
+Iteration 35/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-036 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-036 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-036 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-036 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-036 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 7ms]
+  √  FR08-AI-036 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-036 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-036 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-036 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-036 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 11ms]
+  √  FR08-AI-036 checkout returned an observable HTTP response
+  √  FR08-AI-036 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-036 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":32}'
+  │ 'FR08-AI-036 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  ┌
+  │ 'FR08-AI-036 phase 2 server-observed cart: [{"id":1,"n
+  │ ame":"San pham A","price":100000,"quantity":2}] | serv
+  │ er-derived expected total 200000'
+  │ 'FR08-AI-036 phase 2 setup complete'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 14ms]
+  √  FR08-AI-036 phase 2 checkout returned an observable HTTP response
+  √  FR08-AI-036 phase 2 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-036 phase 2 checkout response 200 :: {"messag
+  │ e":"Checkout successful","orderId":33}'
+  └
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 548B, 3ms]
+  √  FR08-AI-036 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-036 orders after the attempt: [{"id":33,"user
+  │ _id":39,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:37"},{"id":32,"user_id":39,"total_amount":
+  │ 200000,"status":"pending","shipping_address":"123 Le L
+  │ oi, TP.HCM","created_at":"2026-08-23 08:00:37"}]'
+  │ 'FR08-AI-036 new orders created by this case: [{"id":3
+  │ 2,"user_id":39,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:37"},{"id":33,"user_id":39,"total_a
+  │ mount":200000,"status":"pending","shipping_address":"1
+  │ 23 Le Loi, TP.HCM","created_at":"2026-08-23 08:00:37"}
+  │ ]'
+  └
+  √  FR08-AI-036 persisted total equals the server-derived cart total (200000)
+  √  FR08-AI-036 phase 2 persisted total equals the server-derived cart total at that moment (200000)
+  ┌
+  │ 'FR08-AI-036 verification complete'
+  └
+
+Iteration 36/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 11ms]
+  √  FR08-AI-037 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 6ms]
+  √  FR08-AI-037 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-037 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-037 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-037 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-037 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-037 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-037 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-037 auth mode: none | Content-Type: applicati
+  │ on/json'
+  │ 'FR08-AI-037 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [401 Unauthorized, 301B, 2ms]
+  √  FR08-AI-037 checkout returned an observable HTTP response
+  √  FR08-AI-037 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-037 checkout response 401 :: {"error":"Unauth
+  │ orized"}'
+  │ 'FR08-AI-037 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  √  FR08-AI-037 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-037 orders after the attempt: []'
+  │ 'FR08-AI-037 new orders created by this case: []'
+  └
+  √  FR08-AI-037 unauthorised checkout created no order
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  ┌
+  │ 'FR08-AI-037 primary cart after the attempt: [{"id":1,
+  │ "name":"San pham A","price":100000,"quantity":2}]'
+  └
+  √  FR08-AI-037 refused attempt did not modify the cart
+  ┌
+  │ 'FR08-AI-037 verification complete'
+  └
+
+Iteration 37/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-AI-038 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-038 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-038 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-038 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-038 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-038 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-038 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-038 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-038 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-038 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 20ms]
+  √  FR08-AI-038 checkout returned an observable HTTP response
+  √  FR08-AI-038 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-038 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":34}'
+  │ 'FR08-AI-038 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 4ms]
+  √  FR08-AI-038 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-038 orders after the attempt: [{"id":34,"user
+  │ _id":41,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:38"}]'
+  │ 'FR08-AI-038 new orders created by this case: [{"id":3
+  │ 4,"user_id":41,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:38"}]'
+  └
+  √  FR08-AI-038 persisted total equals the server-derived cart total (200000)
+  GET http://localhost:3000/api/orders/34 [200 OK, 406B, 3ms]
+  ┌
+  │ 'FR08-AI-038 order detail read-back: {"id":34,"user_id
+  │ ":41,"total_amount":200000,"status":"pending","shippin
+  │ g_address":"123 Le Loi, TP.HCM","created_at":"2026-08-
+  │ 23 08:00:38"}'
+  └
+  √  FR08-AI-038 created order is retrievable by its own identifier with the server-derived total
+  ┌
+  │ 'FR08-AI-038 verification complete'
+  └
+
+Iteration 38/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 11ms]
+  √  FR08-AI-039 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 11ms]
+  √  FR08-AI-039 setup: secondary case user registered
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 4ms]
+  √  FR08-AI-039 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 6ms]
+  √  FR08-AI-039 setup: secondary user login returns a token
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-039 setup seed primary line 0 -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-039 setup seed secondary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  ┌
+  │ 'FR08-AI-039 secondary user cart observed: [{"id":1,"n
+  │ ame":"San pham A","price":100000,"quantity":2}] | deri
+  │ ved total 200000'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-039 secondary user baseline order ids: []'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-039 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-039 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-039 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-039 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-039 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-039 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-039 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 15ms]
+  √  FR08-AI-039 checkout returned an observable HTTP response
+  √  FR08-AI-039 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-039 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":35}'
+  │ 'FR08-AI-039 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 5ms]
+  √  FR08-AI-039 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-039 orders after the attempt: [{"id":35,"user
+  │ _id":42,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:39"}]'
+  │ 'FR08-AI-039 new orders created by this case: [{"id":3
+  │ 5,"user_id":42,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:39"}]'
+  └
+  √  FR08-AI-039 persisted total equals the server-derived cart total (200000)
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 3ms]
+  ┌
+  │ 'FR08-AI-039 secondary user orders after the attempt: 
+  │ []'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 2ms]
+  ┌
+  │ 'FR08-AI-039 secondary user cart after the attempt: [{
+  │ "id":1,"name":"San pham A","price":100000,"quantity":2
+  │ }]'
+  └
+  √  FR08-AI-039 secondary user cart was not cleared by the primary user checkout
+  ┌
+  │ 'FR08-AI-039 verification complete'
+  └
+
+Iteration 39/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 9ms]
+  √  FR08-AI-040 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-040 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-040 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-040 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-040 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 7ms]
+  √  FR08-AI-040 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-040 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-040 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-040 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-040 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 19ms]
+  √  FR08-AI-040 checkout returned an observable HTTP response
+  √  FR08-AI-040 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-040 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":36}'
+  │ 'FR08-AI-040 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-040 phase 2 rebuild cart line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 382B, 4ms]
+  ┌
+  │ 'FR08-AI-040 phase 2 server-observed cart: [{"id":1,"n
+  │ ame":"San pham A","price":100000,"quantity":2},{"id":2
+  │ ,"name":"San pham B","price":50000,"quantity":1}] | se
+  │ rver-derived expected total 250000'
+  │ 'FR08-AI-040 phase 2 setup complete'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 18ms]
+  √  FR08-AI-040 phase 2 checkout returned an observable HTTP response
+  √  FR08-AI-040 phase 2 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-040 phase 2 checkout response 200 :: {"messag
+  │ e":"Checkout successful","orderId":37}'
+  └
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 547B, 7ms]
+  √  FR08-AI-040 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-040 orders after the attempt: [{"id":37,"user
+  │ _id":44,"total_amount":50000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:40"},{"id":36,"user_id":44,"total_amount":2
+  │ 00000,"status":"pending","shipping_address":"123 Le Lo
+  │ i, TP.HCM","created_at":"2026-08-23 08:00:40"}]'
+  │ 'FR08-AI-040 new orders created by this case: [{"id":3
+  │ 6,"user_id":44,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:40"},{"id":37,"user_id":44,"total_a
+  │ mount":50000,"status":"pending","shipping_address":"12
+  │ 3 Le Loi, TP.HCM","created_at":"2026-08-23 08:00:40"}]
+  │ '
+  └
+  √  FR08-AI-040 persisted total equals the server-derived cart total (200000)
+ 13. FR08-AI-040 phase 2 persisted total equals the server-derived cart total at that moment (250000)
+  ┌
+  │ 'FR08-AI-040 EVIDENCE GAP: the order endpoints expose 
+  │ no line-item composition, so only the persisted total 
+  │ can be compared against the rebuilt cart.'
+  │ 'FR08-AI-040 verification complete'
+  └
+
+Iteration 40/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 14ms]
+  √  FR08-AI-041 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 7ms]
+  √  FR08-AI-041 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-041 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-041 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-041 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-041 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-041 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-041 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-041 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-041 request body sent verbatim: <no body byte
+  │ s>'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 21ms]
+  √  FR08-AI-041 checkout returned an observable HTTP response
+  √  FR08-AI-041 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-041 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":38}'
+  │ 'FR08-AI-041 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 390B, 6ms]
+  √  FR08-AI-041 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-041 orders after the attempt: [{"id":38,"user
+  │ _id":45,"total_amount":null,"status":"pending","shippi
+  │ ng_address":null,"created_at":"2026-08-23 08:00:40"}]'
+  │ 'FR08-AI-041 new orders created by this case: [{"id":3
+  │ 8,"user_id":45,"total_amount":null,"status":"pending",
+  │ "shipping_address":null,"created_at":"2026-08-23 08:00
+  │ :40"}]'
+  └
+ 14. FR08-AI-041 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-041 verification complete'
+  └
+
+Iteration 41/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-042 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 8ms]
+  √  FR08-AI-042 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-042 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-042 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-042 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-042 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-042 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-042 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-042 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-042 request body sent verbatim: {}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 15ms]
+  √  FR08-AI-042 checkout returned an observable HTTP response
+  √  FR08-AI-042 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-042 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":39}'
+  │ 'FR08-AI-042 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 390B, 7ms]
+  √  FR08-AI-042 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-042 orders after the attempt: [{"id":39,"user
+  │ _id":46,"total_amount":null,"status":"pending","shippi
+  │ ng_address":null,"created_at":"2026-08-23 08:00:41"}]'
+  │ 'FR08-AI-042 new orders created by this case: [{"id":3
+  │ 9,"user_id":46,"total_amount":null,"status":"pending",
+  │ "shipping_address":null,"created_at":"2026-08-23 08:00
+  │ :41"}]'
+  └
+ 15. FR08-AI-042 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-042 verification complete'
+  └
+
+Iteration 42/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 12ms]
+  √  FR08-AI-043 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 4ms]
+  √  FR08-AI-043 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-043 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-043 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-043 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-043 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-043 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-043 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-043 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-043 request body sent verbatim: {"total_amoun
+  │ t": 200000, "shipping_address":'
+  └
+  POST http://localhost:3000/api/checkout [400 Bad Request, 1.51kB, 9ms]
+  √  FR08-AI-043 checkout returned an observable HTTP response
+  √  FR08-AI-043 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-043 checkout response 400 :: <!DOCTYPE html>\
+  │ n' +
+  │   '<html lang="en">\n' +
+  │   '<head>\n' +
+  │   '<meta charset="utf-8">\n' +
+  │   '<title>Error</title>\n' +
+  │   '</head>\n' +
+  │   '<body>\n' +
+  │   '<pre>SyntaxError: Unexpected end of JSON input<br> 
+  │ &nbsp; &nbsp;at JSON.parse (&lt;anonymous&gt;)<br> &nb
+  │ sp; &nbsp;at parse (C:\\Users\\Duy\\Desktop\\automatio
+  │ n-testing-hw04\\eshop-sut\\backend\\node_modules\\body
+  │ -parser\\lib\\types\\json.js:72:19)<br> &nbsp; &nbsp;a
+  │ t C:\\Users\\Duy\\Desktop\\automation-testing-hw0'
+  │ 'FR08-AI-043 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  √  FR08-AI-043 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-043 orders after the attempt: []'
+  │ 'FR08-AI-043 new orders created by this case: []'
+  │ 'FR08-AI-043 OBSERVATION: no order was created for thi
+  │ s input; the specification defines no required behavio
+  │ ur here, so this is recorded as SPEC GAP and not asser
+  │ ted.'
+  │ 'FR08-AI-043 verification complete'
+  └
+
+Iteration 43/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-044 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-044 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-044 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-044 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-044 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-AI-044 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-044 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-044 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-044 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-044 request body sent verbatim: [{"total_amou
+  │ nt":200000,"shipping_address":"123 Le Loi, TP.HCM"}]'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 15ms]
+  √  FR08-AI-044 checkout returned an observable HTTP response
+  √  FR08-AI-044 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-044 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":40}'
+  │ 'FR08-AI-044 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 390B, 8ms]
+  √  FR08-AI-044 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-044 orders after the attempt: [{"id":40,"user
+  │ _id":48,"total_amount":null,"status":"pending","shippi
+  │ ng_address":null,"created_at":"2026-08-23 08:00:42"}]'
+  │ 'FR08-AI-044 new orders created by this case: [{"id":4
+  │ 0,"user_id":48,"total_amount":null,"status":"pending",
+  │ "shipping_address":null,"created_at":"2026-08-23 08:00
+  │ :42"}]'
+  └
+ 16. FR08-AI-044 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-044 verification complete'
+  └
+
+Iteration 44/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 20ms]
+  √  FR08-AI-045 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-045 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-045 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-045 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-045 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-045 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-045 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-045 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-045 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-045 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":{"street":"123 Le Loi","c
+  │ ity":"TP.HCM"}}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 18ms]
+  √  FR08-AI-045 checkout returned an observable HTTP response
+  √  FR08-AI-045 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-045 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":41}'
+  │ 'FR08-AI-045 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 405B, 6ms]
+  √  FR08-AI-045 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-045 orders after the attempt: [{"id":41,"user
+  │ _id":49,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"[object Object]","created_at":"2026-08-
+  │ 23 08:00:43"}]'
+  │ 'FR08-AI-045 new orders created by this case: [{"id":4
+  │ 1,"user_id":49,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"[object Object]","created_at":"2
+  │ 026-08-23 08:00:43"}]'
+  └
+  √  FR08-AI-045 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-045 persisted shipping_address observation: "
+  │ [object Object]" | type string | length 15'
+  │ 'FR08-AI-045 verification complete'
+  └
+
+Iteration 45/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 19ms]
+  √  FR08-AI-046 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 8ms]
+  √  FR08-AI-046 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-046 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-046 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-046 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-046 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-046 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-046 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-046 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-046 request body sent verbatim: {"total_amoun
+  │ t":true,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 21ms]
+  √  FR08-AI-046 checkout returned an observable HTTP response
+  √  FR08-AI-046 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-046 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":42}'
+  │ 'FR08-AI-046 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 403B, 7ms]
+  √  FR08-AI-046 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-046 orders after the attempt: [{"id":42,"user
+  │ _id":50,"total_amount":1,"status":"pending","shipping_
+  │ address":"123 Le Loi, TP.HCM","created_at":"2026-08-23
+  │  08:00:43"}]'
+  │ 'FR08-AI-046 new orders created by this case: [{"id":4
+  │ 2,"user_id":50,"total_amount":1,"status":"pending","sh
+  │ ipping_address":"123 Le Loi, TP.HCM","created_at":"202
+  │ 6-08-23 08:00:43"}]'
+  └
+ 17. FR08-AI-046 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-046 verification complete'
+  └
+
+Iteration 46/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 20ms]
+  √  FR08-AI-047 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 10ms]
+  √  FR08-AI-047 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 10ms]
+  ┌
+  │ 'FR08-AI-047 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 11ms]
+  ┌
+  │ 'FR08-AI-047 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-047 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 9ms]
+  √  FR08-AI-047 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-047 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-047 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-047 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-047 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM","dis
+  │ count_code":"FREESHIP99"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 19ms]
+  √  FR08-AI-047 checkout returned an observable HTTP response
+  √  FR08-AI-047 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-047 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":43}'
+  │ 'FR08-AI-047 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 8ms]
+  √  FR08-AI-047 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-047 orders after the attempt: [{"id":43,"user
+  │ _id":51,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:44"}]'
+  │ 'FR08-AI-047 new orders created by this case: [{"id":4
+  │ 3,"user_id":51,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:44"}]'
+  └
+  √  FR08-AI-047 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-047 verification complete'
+  └
+
+Iteration 47/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 15ms]
+  √  FR08-AI-048 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 9ms]
+  √  FR08-AI-048 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-048 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-048 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-048 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-048 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-048 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-048 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-048 auth mode: bearer | Content-Type: text/pl
+  │ ain'
+  │ 'FR08-AI-048 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [500 Internal Server Error, 1.83kB, 8ms]
+  √  FR08-AI-048 checkout returned an observable HTTP response
+  √  FR08-AI-048 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-048 checkout response 500 :: <!DOCTYPE html>\
+  │ n' +
+  │   '<html lang="en">\n' +
+  │   '<head>\n' +
+  │   '<meta charset="utf-8">\n' +
+  │   '<title>Error</title>\n' +
+  │   '</head>\n' +
+  │   '<body>\n' +
+  │   '<pre>TypeError: Cannot destructure property &#39;to
+  │ tal_amount&#39; of &#39;req.body&#39; as it is undefin
+  │ ed.<br> &nbsp; &nbsp;at C:\\Users\\Duy\\Desktop\\autom
+  │ ation-testing-hw04\\eshop-sut\\backend\\server.js:299:
+  │ 11<br> &nbsp; &nbsp;at Layer.handleRequest (C:\\Users\
+  │ \Duy\\Desktop\\automation-testing-hw04\\eshop-'
+  │ 'FR08-AI-048 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  √  FR08-AI-048 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-048 orders after the attempt: []'
+  │ 'FR08-AI-048 new orders created by this case: []'
+  │ 'FR08-AI-048 OBSERVATION: no order was created for thi
+  │ s input; the specification defines no required behavio
+  │ ur here, so this is recorded as SPEC GAP and not asser
+  │ ted.'
+  │ 'FR08-AI-048 persisted shipping_address observation: <
+  │ no order created>'
+  │ 'FR08-AI-048 verification complete'
+  └
+
+Iteration 48/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 23ms]
+  √  FR08-AI-051 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 687B, 5ms]
+  √  FR08-AI-051 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-AI-051 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-AI-051 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-051 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 6ms]
+  √  FR08-AI-051 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-051 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":1}]'
+  │ 'FR08-AI-051 server-derived expected total for this ch
+  │ eckout: 100000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-051 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-051 request body sent verbatim: {"total_amoun
+  │ t":100000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 18ms]
+  √  FR08-AI-051 checkout returned an observable HTTP response
+  √  FR08-AI-051 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-051 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":44}'
+  │ 'FR08-AI-051 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 5ms]
+  √  FR08-AI-051 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-051 orders after the attempt: [{"id":44,"user
+  │ _id":53,"total_amount":100000,"status":"pending","ship
+  │ ping_address":"123 Le Loi, TP.HCM","created_at":"2026-
+  │ 08-23 08:00:45"}]'
+  │ 'FR08-AI-051 new orders created by this case: [{"id":4
+  │ 4,"user_id":53,"total_amount":100000,"status":"pending
+  │ ","shipping_address":"123 Le Loi, TP.HCM","created_at"
+  │ :"2026-08-23 08:00:45"}]'
+  └
+  √  FR08-AI-051 persisted total equals the server-derived cart total (100000)
+  ┌
+  │ 'FR08-AI-051 verification complete'
+  └
+
+Iteration 49/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 17ms]
+  √  FR08-AI-053 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 4ms]
+  √  FR08-AI-053 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  GET http://localhost:3000/api/products/1 [200 OK, 451B, 3ms]
+  ┌
+  │ 'FR08-AI-053 catalogue probe /api/products/1 -> 200 ::
+  │  {"id":1,"name":"iPhone 15 Pro Max","price":30000000,"
+  │ description":"Điện thoại cao cấp của Apple","imageUrl"
+  │ :"https://placehold.co/300x300/png?text=iPhone+15","ca
+  │ tegory_id":1}'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-AI-053 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-053 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-053 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 320B, 4ms]
+  √  FR08-AI-053 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-053 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":1,"quantity":1}]'
+  │ 'FR08-AI-053 server-derived expected total for this ch
+  │ eckout: 1'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-053 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-053 request body sent verbatim: {"total_amoun
+  │ t":1,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 10ms]
+  √  FR08-AI-053 checkout returned an observable HTTP response
+  √  FR08-AI-053 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-053 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":45}'
+  │ 'FR08-AI-053 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 403B, 3ms]
+  √  FR08-AI-053 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-053 orders after the attempt: [{"id":45,"user
+  │ _id":54,"total_amount":1,"status":"pending","shipping_
+  │ address":"123 Le Loi, TP.HCM","created_at":"2026-08-23
+  │  08:00:46"}]'
+  │ 'FR08-AI-053 new orders created by this case: [{"id":4
+  │ 5,"user_id":54,"total_amount":1,"status":"pending","sh
+  │ ipping_address":"123 Le Loi, TP.HCM","created_at":"202
+  │ 6-08-23 08:00:46"}]'
+  └
+  √  FR08-AI-053 persisted total equals the server-derived cart total (1)
+  ┌
+  │ 'FR08-AI-053 verification complete'
+  └
+
+Iteration 50/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-055 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 686B, 4ms]
+  √  FR08-AI-055 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-AI-055 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-AI-055 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-055 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-055 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-055 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-055 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-055 auth mode: bearer | Content-Type: applica
+  │ tion/json'
+  │ 'FR08-AI-055 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi\\r\\n\\tTP.HC
+  │ M"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 13ms]
+  √  FR08-AI-055 checkout returned an observable HTTP response
+  √  FR08-AI-055 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-055 checkout response 200 :: {"message":"Chec
+  │ kout successful","orderId":46}'
+  │ 'FR08-AI-055 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 412B, 6ms]
+  √  FR08-AI-055 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-055 orders after the attempt: [{"id":46,"user
+  │ _id":55,"total_amount":200000,"status":"pending","ship
+  │ ping_address":"123 Le Loi\\r\\n\\tTP.HCM","created_at"
+  │ :"2026-08-23 08:00:47"}]'
+  │ 'FR08-AI-055 new orders created by this case: [{"id":4
+  │ 6,"user_id":55,"total_amount":200000,"status":"pending
+  │ ","shipping_address":"123 Le Loi\\r\\n\\tTP.HCM","crea
+  │ ted_at":"2026-08-23 08:00:47"}]'
+  └
+  √  FR08-AI-055 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-AI-055 persisted shipping_address observation: "
+  │ 123 Le Loi\\r\\n\\tTP.HCM" | type string | length 19'
+  │ 'FR08-AI-055 verification complete'
+  └
+
+Iteration 51/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-AI-057 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  ┌
+  │ 'FR08-AI-057 HARNESS NOTE: this case uses the seeded a
+  │ ccount test@eshop.com because its expired-token fixtur
+  │ e is bound to that account id; the per-case registered
+  │  user stays unused.'
+  └
+  POST http://localhost:3000/api/login [200 OK, 635B, 7ms]
+  √  FR08-AI-057 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-AI-057 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-AI-057 primary baseline order ids before checkou
+  │ t: []'
+  │ 'FR08-AI-057 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-AI-057 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-AI-057 server-observed pre-checkout cart: [{"id"
+  │ :1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-AI-057 server-derived expected total for this ch
+  │ eckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-AI-057 auth mode: expired | Content-Type: applic
+  │ ation/json'
+  │ 'FR08-AI-057 request body sent verbatim: {"total_amoun
+  │ t":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [403 Forbidden, 295B, 5ms]
+  √  FR08-AI-057 checkout returned an observable HTTP response
+  √  FR08-AI-057 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-057 checkout response 403 :: {"error":"Forbid
+  │ den"}'
+  │ 'FR08-AI-057 SPEC GAP: the API specification defines n
+  │ o status code or response schema for POST /api/checkou
+  │ t, so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 3ms]
+  √  FR08-AI-057 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-057 orders after the attempt: []'
+  │ 'FR08-AI-057 new orders created by this case: []'
+  └
+  √  FR08-AI-057 unauthorised checkout created no order
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  ┌
+  │ 'FR08-AI-057 primary cart after the attempt: [{"id":1,
+  │ "name":"San pham A","price":100000,"quantity":2}]'
+  └
+  √  FR08-AI-057 refused attempt did not modify the cart
+  ┌
+  │ 'FR08-AI-057 verification complete'
+  └
+
+Iteration 52/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-H-001 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 4ms]
+  √  FR08-H-001 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-H-001 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  ┌
+  │ 'FR08-H-001 intermediate cart observed by the client b
+  │ efore the later mutation: [{"id":1,"name":"San pham A"
+  │ ,"price":100000,"quantity":2}] | total 200000'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 3ms]
+  ┌
+  │ 'FR08-H-001 setup seed primary line 1 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  ┌
+  │ 'FR08-H-001 primary baseline order ids before checkout
+  │ : []'
+  │ 'FR08-H-001 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 382B, 4ms]
+  √  FR08-H-001 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-H-001 server-observed pre-checkout cart: [{"id":
+  │ 1,"name":"San pham A","price":100000,"quantity":2},{"i
+  │ d":2,"name":"San pham B","price":50000,"quantity":1}]'
+  │ 'FR08-H-001 server-derived expected total for this che
+  │ ckout: 250000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-H-001 auth mode: bearer | Content-Type: applicat
+  │ ion/json'
+  │ 'FR08-H-001 request body sent verbatim: {"total_amount
+  │ ":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 17ms]
+  √  FR08-H-001 checkout returned an observable HTTP response
+  √  FR08-H-001 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-001 checkout response 200 :: {"message":"Check
+  │ out successful","orderId":47}'
+  │ 'FR08-H-001 SPEC GAP: the API specification defines no
+  │  status code or response schema for POST /api/checkout
+  │ , so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 4ms]
+  √  FR08-H-001 order history is readable after the attempt
+  ┌
+  │ 'FR08-H-001 orders after the attempt: [{"id":47,"user_
+  │ id":57,"total_amount":200000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:48"}]'
+  │ 'FR08-H-001 new orders created by this case: [{"id":47
+  │ ,"user_id":57,"total_amount":200000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:48"}]'
+  └
+ 18. FR08-H-001 persisted total equals the server-derived cart total (250000)
+  ┌
+  │ 'FR08-H-001 stale client total sent by the case: 20000
+  │ 0 | server-derived total at checkout time: 250000'
+  │ 'FR08-H-001 verification complete'
+  └
+
+Iteration 53/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 17ms]
+  √  FR08-H-002 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 13ms]
+  √  FR08-H-002 setup: secondary case user registered
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 8ms]
+  √  FR08-H-002 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 6ms]
+  √  FR08-H-002 setup: secondary user login returns a token
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 6ms]
+  ┌
+  │ 'FR08-H-002 setup seed primary line 0 -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-H-002 setup seed secondary line 0 -> 200'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-H-002 setup seed secondary line 1 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 382B, 3ms]
+  ┌
+  │ 'FR08-H-002 secondary user cart observed: [{"id":1,"na
+  │ me":"San pham A","price":100000,"quantity":2},{"id":2,
+  │ "name":"San pham B","price":50000,"quantity":3}] | der
+  │ ived total 350000'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-H-002 secondary user baseline order ids: []'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-H-002 primary baseline order ids before checkout
+  │ : []'
+  │ 'FR08-H-002 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  √  FR08-H-002 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-H-002 server-observed pre-checkout cart: [{"id":
+  │ 1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-H-002 server-derived expected total for this che
+  │ ckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-H-002 auth mode: bearer | Content-Type: applicat
+  │ ion/json'
+  │ 'FR08-H-002 request body sent verbatim: {"total_amount
+  │ ":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 16ms]
+  √  FR08-H-002 checkout returned an observable HTTP response
+  √  FR08-H-002 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-002 checkout response 200 :: {"message":"Check
+  │ out successful","orderId":48}'
+  │ 'FR08-H-002 SPEC GAP: the API specification defines no
+  │  status code or response schema for POST /api/checkout
+  │ , so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 6ms]
+  √  FR08-H-002 order history is readable after the attempt
+  ┌
+  │ 'FR08-H-002 orders after the attempt: [{"id":48,"user_
+  │ id":58,"total_amount":200000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:49"}]'
+  │ 'FR08-H-002 new orders created by this case: [{"id":48
+  │ ,"user_id":58,"total_amount":200000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:49"}]'
+  └
+  √  FR08-H-002 persisted total equals the server-derived cart total (200000)
+  ┌
+  │ 'FR08-H-002 secondary user cart derived total (must NO
+  │ T drive this order): 350000'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-H-002 secondary user orders after the attempt: [
+  │ ]'
+  │ 'FR08-H-002 verification complete'
+  └
+
+Iteration 54/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 14ms]
+  √  FR08-H-003 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 8ms]
+  √  FR08-H-003 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-H-003 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 5ms]
+  ┌
+  │ 'FR08-H-003 primary baseline order ids before checkout
+  │ : []'
+  │ 'FR08-H-003 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  √  FR08-H-003 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-H-003 server-observed pre-checkout cart: [{"id":
+  │ 1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-H-003 server-derived expected total for this che
+  │ ckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-H-003 auth mode: none | Content-Type: applicatio
+  │ n/json'
+  │ 'FR08-H-003 request body sent verbatim: {"total_amount
+  │ ":200000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [401 Unauthorized, 301B, 3ms]
+  √  FR08-H-003 checkout returned an observable HTTP response
+  √  FR08-H-003 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-003 checkout response 401 :: {"error":"Unautho
+  │ rized"}'
+  │ 'FR08-H-003 SPEC GAP: the API specification defines no
+  │  status code or response schema for POST /api/checkout
+  │ , so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+  GET http://localhost:3000/api/cart [200 OK, 325B, 5ms]
+  ┌
+  │ 'FR08-H-003 cart observed after the refused attempt: [
+  │ {"id":1,"name":"San pham A","price":100000,"quantity":
+  │ 2}]'
+  └
+  √  FR08-H-003 refused attempt did not modify the cart before the valid checkout
+  GET http://localhost:3000/api/cart [200 OK, 325B, 4ms]
+  ┌
+  │ 'FR08-H-003 phase 2 server-observed cart: [{"id":1,"na
+  │ me":"San pham A","price":100000,"quantity":2}] | serve
+  │ r-derived expected total 200000'
+  │ 'FR08-H-003 phase 2 setup complete'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 23ms]
+  √  FR08-H-003 phase 2 checkout returned an observable HTTP response
+  √  FR08-H-003 phase 2 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-003 phase 2 checkout response 200 :: {"message
+  │ ":"Checkout successful","orderId":49}'
+  └
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 8ms]
+  √  FR08-H-003 order history is readable after the attempt
+  ┌
+  │ 'FR08-H-003 orders after the attempt: [{"id":49,"user_
+  │ id":60,"total_amount":200000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:49"}]'
+  │ 'FR08-H-003 new orders created by this case: [{"id":49
+  │ ,"user_id":60,"total_amount":200000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:49"}]'
+  └
+  √  FR08-H-003 exactly one new order was created
+  √  FR08-H-003 phase 2 persisted total equals the server-derived cart total at that moment (200000)
+  ┌
+  │ 'FR08-H-003 verification complete'
+  └
+
+Iteration 55/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-H-004 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 6ms]
+  √  FR08-H-004 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  GET http://localhost:3000/api/products/9999 [200 OK, 267B, 3ms]
+  ┌
+  │ 'FR08-H-004 catalogue probe /api/products/9999 -> 200 
+  │ :: {}'
+  └
+  POST http://localhost:3000/api/cart [200 OK, 294B, 5ms]
+  ┌
+  │ 'FR08-H-004 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 4ms]
+  ┌
+  │ 'FR08-H-004 primary baseline order ids before checkout
+  │ : []'
+  │ 'FR08-H-004 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 331B, 4ms]
+  √  FR08-H-004 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-H-004 server-observed pre-checkout cart: [{"id":
+  │ 9999,"name":"Ghost Product","price":100000,"quantity":
+  │ 1}]'
+  │ 'FR08-H-004 server-derived expected total for this che
+  │ ckout: 100000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-H-004 auth mode: bearer | Content-Type: applicat
+  │ ion/json'
+  │ 'FR08-H-004 request body sent verbatim: {"total_amount
+  │ ":100000,"shipping_address":"123 Le Loi, TP.HCM"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 14ms]
+  √  FR08-H-004 checkout returned an observable HTTP response
+  √  FR08-H-004 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-004 checkout response 200 :: {"message":"Check
+  │ out successful","orderId":50}'
+  │ 'FR08-H-004 SPEC GAP: the API specification defines no
+  │  status code or response schema for POST /api/checkout
+  │ , so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 408B, 7ms]
+  √  FR08-H-004 order history is readable after the attempt
+  ┌
+  │ 'FR08-H-004 orders after the attempt: [{"id":50,"user_
+  │ id":61,"total_amount":100000,"status":"pending","shipp
+  │ ing_address":"123 Le Loi, TP.HCM","created_at":"2026-0
+  │ 8-23 08:00:50"}]'
+  │ 'FR08-H-004 new orders created by this case: [{"id":50
+  │ ,"user_id":61,"total_amount":100000,"status":"pending"
+  │ ,"shipping_address":"123 Le Loi, TP.HCM","created_at":
+  │ "2026-08-23 08:00:50"}]'
+  └
+  √  FR08-H-004 persisted total equals the server-derived cart total (100000)
+  ┌
+  │ 'FR08-H-004 verification complete'
+  └
+
+Iteration 56/56
+
+→ Setup: register primary user for {{caseId}}
+  POST http://localhost:3000/api/register [200 OK, 317B, 16ms]
+  √  FR08-H-005 setup: primary case user registered
+
+→ Setup: register secondary user for {{caseId}}
+
+→ Setup: login primary user for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 685B, 8ms]
+  √  FR08-H-005 setup: primary user login returns a token
+
+→ Setup: login secondary user for {{caseId}}
+
+→ Setup: seed carts and observe pre-checkout state for {{caseId}}
+  POST http://localhost:3000/api/cart [200 OK, 294B, 7ms]
+  ┌
+  │ 'FR08-H-005 setup seed primary line 0 -> 200'
+  └
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 267B, 7ms]
+  ┌
+  │ 'FR08-H-005 primary baseline order ids before checkout
+  │ : []'
+  │ 'FR08-H-005 setup complete'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 325B, 3ms]
+  √  FR08-H-005 setup: pre-checkout cart state is readable
+  ┌
+  │ 'FR08-H-005 server-observed pre-checkout cart: [{"id":
+  │ 1,"name":"San pham A","price":100000,"quantity":2}]'
+  │ 'FR08-H-005 server-derived expected total for this che
+  │ ckout: 200000'
+  └
+
+→ Execute {{caseId}} - POST /api/checkout
+  ┌
+  │ 'FR08-H-005 auth mode: bearer | Content-Type: applicat
+  │ ion/json'
+  │ 'FR08-H-005 request body sent verbatim: {"total_amount
+  │ ":200000,"shipping_address":"111 Nguyen Hue, Quan 1"}'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 19ms]
+  √  FR08-H-005 checkout returned an observable HTTP response
+  √  FR08-H-005 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-005 checkout response 200 :: {"message":"Check
+  │ out successful","orderId":51}'
+  │ 'FR08-H-005 SPEC GAP: the API specification defines no
+  │  status code or response schema for POST /api/checkout
+  │ , so no status oracle is asserted.'
+  └
+
+→ Execute {{caseId}} phase 2 - POST /api/checkout
+  POST http://localhost:3000/api/cart [200 OK, 294B, 4ms]
+  ┌
+  │ 'FR08-H-005 phase 2 rebuild cart line 0 -> 200'
+  └
+  GET http://localhost:3000/api/cart [200 OK, 382B, 4ms]
+  ┌
+  │ 'FR08-H-005 phase 2 server-observed cart: [{"id":1,"na
+  │ me":"San pham A","price":100000,"quantity":2},{"id":2,
+  │ "name":"San pham B","price":50000,"quantity":1}] | ser
+  │ ver-derived expected total 250000'
+  │ 'FR08-H-005 phase 2 setup complete'
+  └
+  POST http://localhost:3000/api/checkout [200 OK, 313B, 20ms]
+  √  FR08-H-005 phase 2 checkout returned an observable HTTP response
+  √  FR08-H-005 phase 2 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-H-005 phase 2 checkout response 200 :: {"message
+  │ ":"Checkout successful","orderId":52}'
+  └
+
+→ Verify {{caseId}} - persisted order and cart state
+  GET http://localhost:3000/api/orders/my-orders [200 OK, 552B, 5ms]
+  √  FR08-H-005 order history is readable after the attempt
+  ┌
+  │ 'FR08-H-005 orders after the attempt: [{"id":52,"user_
+  │ id":62,"total_amount":50000,"status":"pending","shippi
+  │ ng_address":"222 Le Duan, Quan 3","created_at":"2026-0
+  │ 8-23 08:00:51"},{"id":51,"user_id":62,"total_amount":2
+  │ 00000,"status":"pending","shipping_address":"111 Nguye
+  │ n Hue, Quan 1","created_at":"2026-08-23 08:00:51"}]'
+  │ 'FR08-H-005 new orders created by this case: [{"id":51
+  │ ,"user_id":62,"total_amount":200000,"status":"pending"
+  │ ,"shipping_address":"111 Nguyen Hue, Quan 1","created_
+  │ at":"2026-08-23 08:00:51"},{"id":52,"user_id":62,"tota
+  │ l_amount":50000,"status":"pending","shipping_address":
+  │ "222 Le Duan, Quan 3","created_at":"2026-08-23 08:00:5
+  │ 1"}]'
+  └
+  √  FR08-H-005 both checkouts persisted their own order
+  √  FR08-H-005 first order keeps its own server-derived total (200000) and its own address
+ 19. FR08-H-005 second order keeps its own server-derived total (250000) and its own address
+  ┌
+  │ 'FR08-H-005 verification complete'
+  └
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │              56 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │             438 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │             292 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │             840 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │             422 │              19 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 35.6s                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 48.15kB (approx)                       │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 7ms [min: 2ms, max: 37ms, s.d.: 5ms] │
+└─────────────────────────────────────────────────────────────┘
+
+[31m   # [39m[31m failure        [39m[31m detail                                                                                           [39m
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 01.  AssertionError  FR08-AI-002 persisted total equals the server-derived cart total (200000)                        
+      iteration: 2    expected 1000 to equal 200000                                                                    
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 02.  AssertionError  FR08-AI-003 persisted total equals the server-derived cart total (200000)                        
+      iteration: 3    expected 9999000 to equal 200000                                                                 
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 03.  AssertionError  FR08-AI-004 persisted total equals the server-derived cart total (200000)                        
+      iteration: 4    expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 04.  AssertionError  FR08-AI-005 persisted total equals the server-derived cart total (200000)                        
+      iteration: 5    expected -200000 to equal 200000                                                                 
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 05.  AssertionError  FR08-AI-006 persisted total equals the server-derived cart total (200000)                        
+      iteration: 6    expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 06.  AssertionError  FR08-AI-007 persisted total equals the server-derived cart total (200000)                        
+      iteration: 7    expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 07.  AssertionError  FR08-AI-009 persisted total equals the server-derived cart total (200000)                        
+      iteration: 9    expected NaN to equal 200000                                                                     
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 08.  AssertionError  FR08-AI-010 persisted total equals the server-derived cart total (200000)                        
+      iteration: 10   expected 199999.99 to equal 200000                                                               
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 09.  AssertionError  FR08-AI-011 persisted total equals the server-derived cart total (200000)                        
+      iteration: 11   expected 999999999999 to equal 200000                                                            
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 10.  AssertionError  FR08-AI-030 persisted total equals the server-derived cart total (200000)                        
+      iteration: 29   expected NaN to equal 200000                                                                     
+                      at assertion:2 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 11.  AssertionError  FR08-AI-031 cart is cleared after a successful checkout (FR-08)                                  
+      iteration: 30   expected 1 to equal +0                                                                           
+                      at assertion:2 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 12.  AssertionError  FR08-AI-035 persisted total equals the server-derived cart total (0)                             
+      iteration: 34   expected 200000 to equal +0                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 13.  AssertionError  FR08-AI-040 phase 2 persisted total equals the server-derived cart total at that moment (250000) 
+      iteration: 39   expected 50000 to equal 250000                                                                   
+                      at assertion:2 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 14.  AssertionError  FR08-AI-041 persisted total equals the server-derived cart total (200000)                        
+      iteration: 40   expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 15.  AssertionError  FR08-AI-042 persisted total equals the server-derived cart total (200000)                        
+      iteration: 41   expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 16.  AssertionError  FR08-AI-044 persisted total equals the server-derived cart total (200000)                        
+      iteration: 43   expected +0 to equal 200000                                                                      
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 17.  AssertionError  FR08-AI-046 persisted total equals the server-derived cart total (200000)                        
+      iteration: 45   expected 1 to equal 200000                                                                       
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 18.  AssertionError  FR08-H-001 persisted total equals the server-derived cart total (250000)                         
+      iteration: 52   expected 200000 to equal 250000                                                                  
+                      at assertion:1 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
+[90m     [39m[90m                [39m[90m                                                                                                  [39m
+ 19.  AssertionError  FR08-H-005 second order keeps its own server-derived total (250000) and its own address          
+      iteration: 56   expected 50000 to equal 250000                                                                   
+                      at assertion:3 in test-script                                                                    
+                      inside "Verify {{caseId}} - persisted order and cart state"                                      
