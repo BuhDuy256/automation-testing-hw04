@@ -20,7 +20,7 @@
 
 This report follows the FIT@HCMUS AI Audit Report template. It contains one row per original AI-generated FR-04 test-case artifact. The canonical source preserves 47 AI artifacts and the separate human-review registry preserves the confirmed verdicts, reasoning, and corrections.
 
-The report does not add rows for the seven HUMAN extension cases (FR04-H-001 through FR04-H-007), because they were student-authored extensions rather than AI-generated artifacts. No runtime execution evidence is claimed.
+The report does not add rows for the seven HUMAN extension cases (FR04-H-001 through FR04-H-007), because they were student-authored extensions rather than AI-generated artifacts. The later targeted Newman runs are recorded as evidence of the AI-assisted correction workflow; they do not constitute human bug confirmation or GitHub Issue publication.
 
 The exact standalone generation prompt was not separately captured in the repository. Each row therefore uses the preserved artifact-level generation context and actual tool (Codex) and explicitly marks the limitation; no prompt has been reconstructed from the output.
 
@@ -86,6 +86,16 @@ This addendum records the current correction interaction separately from the 47 
 
 The exact prompt time remains an unresolved audit field because it was not separately recorded by the conversation/runtime evidence. No earlier prompt or output is reconstructed in this addendum.
 
+## 3B. AI-Assisted FR-04 Targeted Bug-Review Correction and Rerun
+
+This addendum records the subsequent AI-assisted correction/rerun interaction separately from the 47 original AI-generated test-case artifacts. It does not change the original artifact verdicts or the 21/16/10 summary. The exact user prompt is the complete current conversation turn beginning: “Continue HW06 from the latest repository checkpoint.” It is preserved in the session record and is not rewritten here. The exact interaction time was not separately captured; the interaction date is 23/08/2026. Tool: Codex.
+
+| (1) Prompt + Tool | (2) AI Output | (3) Verdict | (4) Reasoning (ISTQB) | (5) Student Fix |
+|---|---|---|---|---|
+| Actual user correction/rerun prompt: complete current conversation turn beginning “Continue HW06 from the latest repository checkpoint.” The prompt required correction of H-001/H-002/H-003 mappings, targeted clean-state reruns, AI-027 isolation, AI-009 provenance verification, evidence registration, validation, HANDOFF update, no Issue publication, and no AI Audit Report update until explicitly authorized. Tool: Codex. Date: 23/08/2026. Exact time: not separately captured. | Verbatim evidence/result summary: corrected `FR04-profile.postman_collection.json`; H-001 sent JSON number `1234567890`, H-002 sent JSON `null`, and H-003 sent `shipping_address` as an array; targeted Newman runs recorded clean-state phone and role reproductions; AI-027 was rerun independently; AI-009 was verified as a validly signed expired JWT and rerun; `runs.json`, `bugs.json`, and `HANDOFF.md` were updated; `npm run hw06:derive` and `npm run hw06:validate` passed with 0 errors and 0 warnings; both bug records remained `candidate`; no GitHub Issue was created. Evidence: `work/runs/RUN-20260823022303042-fr04-harness-corrected`, `RUN-20260823022316955-fr04-phone-corrected`, `RUN-20260823022329715-fr04-role-corrected`, `RUN-20260823022342040-fr04-ai027-corrected`, and `RUN-20260823022618165-fr04-ai009-provenance`. | VALID | The output satisfies the requested targeted workflow and preserves the distinction between exploratory observations, verified contract violations, contaminated historical results, unresolved SPEC-GAP behavior, and human bug confirmation. Evidence is attributable to real Newman reports and repository validation; no unsupported bug confirmation or external publication is claimed. | The student reviewed the real Newman evidence, explicitly classified the affected cases, authorized the targeted correction/rerun phase, and then explicitly requested this AI Audit Report update. The student retained both bug records as candidates pending the next human decision. |
+
+The exact prompt time remains an unresolved audit field because it was not separately recorded by the conversation/runtime evidence. The targeted runtime evidence is recorded in the repository, but the two bug candidates remain unconfirmed and no GitHub Issue evidence is claimed.
+
 ## 4. Summary of AI Accuracy
 
 | Metric | Count | Percentage |
@@ -128,4 +138,4 @@ AI is useful for decomposing an authoritative API specification into candidate p
 
 ## Completion note
 
-This report records 47 original AI-generated test-case artifacts with their preserved artifact-level source context, output excerpts, confirmed human verdicts, reasoning, and student corrections. The seven HUMAN extension cases remain separately recorded in work/registry/test-cases.json. No runtime result, bug confirmation, or unsupported citation is claimed.
+This report records 47 original AI-generated test-case artifacts with their preserved artifact-level source context, output excerpts, confirmed human verdicts, reasoning, and student corrections. The seven HUMAN extension cases remain separately recorded in work/registry/test-cases.json. Targeted runtime evidence for the correction workflow is recorded in `work/runs/`; the two bug candidates remain unconfirmed, no GitHub Issue was created, and no unsupported citation is claimed.
