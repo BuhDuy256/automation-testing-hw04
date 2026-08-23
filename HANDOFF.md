@@ -2,7 +2,11 @@
 
 ## 1. Current objective
 
-FR-04 generation, human review, extension, Postman/Newman execution, genuine-bug publication, and CI evidence are complete at the latest checkpoint below, subject to the documented unresolved limitations. The internal Codex operating protocol and the separate section 7 API Test Generator Skill are now installed. The next major phase is FR-08, but it has not started. When older narrative in this cumulative handoff conflicts with a later numbered checkpoint, the latest checkpoint and canonical evidence win.
+`FINAL HW06 SUBMISSION COMPLETION`. FR-04, FR-08, and FR-15 are complete and frozen for the
+API-testing workflow. Do not regenerate or rerun them unless a validation failure proves that an
+existing artifact is actually broken. The next chat is submission-level only. When older narrative
+in this cumulative handoff conflicts with the latest numbered checkpoint, the latest checkpoint and
+canonical evidence win.
 
 ## 2. Human-confirmed API selection
 
@@ -1701,3 +1705,117 @@ because no explicit audit-update request was made.
 FR-15 curation is complete. The next work is assignment-wide final curation: create the still-missing
 student-authored/final submission outputs, run strict validation, and build the ZIP only after every
 required real artifact exists.
+
+## 50. Terminal checkpoint - FR-15 COMPLETE / FROZEN; final-submission handoff ready
+
+### Next-chat objective
+
+```text
+FINAL HW06 SUBMISSION COMPLETION
+```
+
+FR-04, FR-08, and FR-15 API-testing workflows are finished. Do not regenerate their cases, rebuild
+their Postman suites, or rerun their canonical Newman/CI executions unless a validation failure proves
+that an existing artifact is actually broken. The next chat is submission-level only.
+
+### FR-15 = COMPLETE / FROZEN for API-testing workflow
+
+The values below were re-read from the canonical registries, the immutable run record, and the actual
+`out/fr15/` contents:
+
+```text
+FR-15 = COMPLETE / FROZEN for API-testing workflow
+59 usable/executed cases
+16 PASS
+28 FAIL
+15 SPEC-GAP
+0 HARNESS
+0 BLOCKED
+10 attested FR-15 evidence screenshots
+X-Student-Id coverage = 485/485 requests
+out/fr15/ curated
+hw06:validate = PASS, 0 errors, 0 warnings
+```
+
+All 28 authoritative failures map to two confirmed and published root defects:
+
+- `BUG-CANDIDATE-FR15-AUTHORIZATION` - GitHub Issue #17:
+  `https://github.com/BuhDuy256/automation-testing-hw04/issues/17`
+- `BUG-CANDIDATE-FR15-VALIDATION` - GitHub Issue #18:
+  `https://github.com/BuhDuy256/automation-testing-hw04/issues/18`
+
+The curated `out/fr15/` contains the Postman inputs, three real Newman result bundles, the FR-15 CI
+workflow, derived README/test summary, and all ten student-attested evidence screenshots. The
+canonical non-zero Newman exit code and all genuine product failures remain preserved.
+
+### Completed assignment work
+
+- FR-04 API workflow.
+- FR-08 API workflow.
+- FR-15 API workflow.
+- Canonical Postman/Newman implementation and execution for all three selected APIs.
+- Human review, correction, and extension records.
+- Genuine-bug confirmation and publication where canonical records show publication.
+- Evidence attestation and per-feature `out/fr04/`, `out/fr08/`, and `out/fr15/` curation.
+- Real CI all-pass and intentional-single-failure evidence already captured.
+- AI Audit Report updated through this API-workflow freeze checkpoint.
+
+### Current strict-submission result and remaining work
+
+`npm run hw06:validate:submission` currently fails with 14 errors and 0 warnings. The exact missing
+validator requirements are:
+
+- evidence registration/types for the student-header console screenshot, Newman raw output, Newman
+  HTML report, and self-drawn generator diagram;
+- `out/main-report.md` and `out/main-report.pdf`;
+- `out/test-cases.xlsx`;
+- `out/generator/pseudocode.md` and the genuine student-designed generator diagram;
+- `out/ai-audit-report.pdf`;
+- `out/ai-critique.md`;
+- `out/git-commit-log.txt`;
+- `out/github-repo-link.txt`.
+
+The following submission-level work is also still required even where a current file or reusable
+source already exists and therefore is not reported as a missing path by the validator:
+
+- finalize the API-test-generator design/pseudocode presentation and package the existing Agent Skill
+  plus its submission/demo material as required;
+- finalize the root `out/README.md` self-assessment/test summary and a requirement-to-artifact grading
+  checklist;
+- make `out/` fully self-contained and remove or resolve submission-only inconsistencies;
+- append all final-submission-stage AI interactions to `out/ai-audit-report.md`, then produce its PDF;
+- run all normal and strict validation, build the final ZIP only after a three-digit self-assessed
+  grade and explicit final approval, and leave the YouTube demonstration URL for the student.
+
+Do not mark the existing root `out/README.md`, `out/ai-audit-report.md`, `out/bug-report.md`,
+`out/ci-cd-report.md`, or `out/postman-features.md` as absent. They exist, but final submission
+curation may still need to reconcile their content and references.
+
+### Human-only generator and video boundary
+
+The generator architecture/flow diagram must satisfy the assignment's student-designed/self-drawn
+requirement. Do not fabricate it or label an AI-generated diagram as student-drawn. AI may interpret
+the requirement, review a student diagram, suggest content/labels/layout before the student draws it,
+and integrate a genuine student-provided diagram into `out/`. Authorship claims must remain truthful.
+The student must also provide the final YouTube demonstration URL.
+
+### Recommended next-chat workflow
+
+1. Read `HANDOFF.md` and the authoritative HW06 requirements.
+2. Re-run the strict submission completeness check.
+3. Resolve the student-designed generator diagram requirement.
+4. Finalize generator pseudocode and Agent Skill submission/demo artifacts.
+5. Generate and finalize the 200-300 word AI Critique.
+6. Generate Git commit evidence from the real final branch history.
+7. Rewrite/finalize root `out/README.md` and the requirement-to-artifact grading checklist.
+8. Make `out/` completely self-contained.
+9. Append remaining final-stage AI interactions to the AI Audit Report and produce required PDFs.
+10. Run derive, normal validation, strict submission validation, and integrity checks.
+11. After strict validation passes and the student supplies a three-digit self-assessed grade plus
+    explicit final approval, build the final ZIP/package.
+12. Leave only the YouTube URL for the student if it has not yet been supplied.
+
+At this checkpoint, normal derive/validation and `git diff --check` pass. Strict validation is
+expected to remain at 14 errors because final-submission artifacts are intentionally deferred. Never
+create placeholders or weaken validation to hide those errors. The runtime-only
+`eshop-sut/backend/database.sqlite` remains excluded from commits.
