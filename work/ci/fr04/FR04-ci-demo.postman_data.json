@@ -4,7 +4,7 @@
     "name": "FR04 CI Stable User",
     "shipping_address": "FR04 CI Stable Address",
     "phone": "0123456789",
-    "intentionalFailure": false,
+    "intentionalFailure": true,
     "expectedSource": "eshop-sut/api_specification.md §2.2 and eshop-sut/README.md FR-04"
   }
 ]
