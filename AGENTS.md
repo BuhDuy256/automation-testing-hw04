@@ -83,6 +83,8 @@ Test accounts:
 
 ## HW06 Automation Harness
 
+- For HW06 continuation, read `HANDOFF.md` and `HW06_ORCHESTRATOR.md` before acting.
+
 - Before performing a recurring HW06 operation, route through the matching entry in
   `docs/hw06-standard-actions.md`; follow its trigger, preconditions, procedure, validation, and fallback instead of improvising.
 - External publication actions such as creating a GitHub Issue require an explicit student confirmation immediately before execution.

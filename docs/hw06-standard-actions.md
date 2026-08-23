@@ -89,11 +89,11 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 ### ACT-GEN-01 — Run an AI test-generation session
 
 - **Trigger:** A verified spec extract exists and a bounded generation batch is planned.
-- **Human decision required:** Batch scope and later case verdicts.
+- **Human decision required:** Later case verdicts; batch scope only when selected API, requirements, and current coverage do not resolve it.
 - **Preconditions:** ACT-SPEC-01 complete; target API and coverage slice identified.
 - **Inputs:** Verified extract, existing case IDs, coverage gap, and explicit requested output structure.
-- **Preferred mechanism:** Instantiate `work/templates/ai-generation-prompt.md` for focused slices and write candidates to `test-cases.json`.
-- **Procedure:** Generate stepwise; preserve candidates unchanged; assign stable IDs; record concise source context on each artifact when useful; validate before starting another batch.
+- **Preferred mechanism:** Invoke `hw06-api-test-generator` through a focused `work/templates/ai-generation-prompt.md` scaffold and write candidates to `test-cases.json`.
+- **Procedure:** Generate stepwise; preserve candidates unchanged; assign stable IDs; record the actual tool, date/time, verbatim generation prompt, output boundary, and source anchors for new interactions; validate before starting another batch.
 - **Outputs/storage:** Candidates in `test-cases.json` with `origin=AI`; no automatic interaction archive is required.
 - **Validation:** Unique IDs, coverage, requirement references, and artifact-level source context where needed for later report writing.
 - **Fallback:** Narrow the batch or clarify the spec; never use one generic prompt for all APIs.

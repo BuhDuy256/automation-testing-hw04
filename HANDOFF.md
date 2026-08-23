@@ -2,7 +2,7 @@
 
 ## 1. Current objective
 
-The HW06 automation setup is complete and frozen. API selection and scoped specification are complete. FR-04 generation, human review cleanup, and human extension are complete. No API execution, Postman implementation, Newman execution, bug publication, or CI execution has started.
+FR-04 generation, human review, extension, Postman/Newman execution, genuine-bug publication, and CI evidence are complete at the latest checkpoint below, subject to the documented unresolved limitations. The internal Codex operating protocol and the separate section 7 API Test Generator Skill are now installed. The next major phase is FR-08, but it has not started. When older narrative in this cumulative handoff conflicts with a later numbered checkpoint, the latest checkpoint and canonical evidence win.
 
 ## 2. Human-confirmed API selection
 
@@ -668,3 +668,56 @@ Next-phase intent for a new Codex chat:
 - Sub-agents may independently review and recommend approval, but AI review must remain distinct from real student attestation.
 - Only the student's explicit approval may set `humanAttestation=true`, `HUMAN-APPROVED`, or an equivalent canonical human-verification state.
 - Design this system before using FR-08 as its first real reuse/validation case. Do not implement the architecture as part of this checkpoint.
+
+## 28. Corrected orchestration boundary and API generator Skill installed
+
+The architecture requested after FR-04 is complete. It deliberately separates internal project operation from the assignment-facing generator:
+
+### Internal workflow
+
+- Main Codex is the orchestrator.
+- Its single operating procedure is `HW06_ORCHESTRATOR.md`.
+- No orchestration Skill, orchestration registry, proxy-human status taxonomy, or separate workflow state machine is used.
+- Cross-session state remains in this `HANDOFF.md`; structured test/evidence truth remains in `work/registry/*.json`; recurring mechanics remain in `docs/hw06-standard-actions.md`.
+- Normal semantic flow is analyze, produce/delegate, independent review, adversarial verification, automatic repair, evidence verification, deterministic validation, and then continue or stop at a genuine human gate.
+- Native independent sub-agents are used when available. Otherwise the main session performs clearly separated passes without inventing agent identities.
+- Human gates are limited to real assignment/student actions, unresolved authoritative ambiguity, visual attestation, external publication approval, the student-designed generator diagram, and final submission approval.
+- AI may make a clearly labelled recommendation but may not set `humanAttestation=true`, write a human verdict, claim student authorship, or impersonate the student.
+
+### Assignment-facing Skill
+
+- Codex location: `.codex/skills/hw06-api-test-generator/SKILL.md`.
+- Claude mirror: `.claude/skills/hw06-api-test-generator/SKILL.md`.
+- Purpose: accept a selected API plus API/FR/SEC/state/schema sources and generate at least 35 meaningful structured API test candidates with source anchors and a coverage ledger.
+- Boundary: generation only. The Skill does not perform human review, execute tests, attest evidence, publish Issues, or curate the assignment.
+- FR-08 will be its first real reuse; FR-15 will be the next reuse/refinement opportunity.
+- The section 7 pseudocode and student-designed diagram remain separate submission artifacts. This internal workflow document is not presented as the G9.5 deliverable.
+
+### FR-04 read-only design validation
+
+FR-04 was used only to refine generator assumptions. Historical candidates, reviews, runtime evidence, and attestations were not rewritten or reopened.
+
+The generator now directly addresses observed FR-04 review problems: duplicate or compound cases, vague inputs, cleanup counted as a case, invented status/schema oracles, weak mutation verification, missing source anchors, and insufficient audit provenance. For every mutating negative/protected-field case, it requires baseline capture, authoritative read-back, and a persisted-state assertion or an explicit evidence gap.
+
+FR-04 status remains unchanged:
+
+- 44 executable and executed cases: 35 PASS, 9 FAIL.
+- 8 failures map to two published genuine bugs.
+- `FR04-AI-024` still lacks real SEC-04 UI/display-boundary evidence.
+- `FR04-H-007` remains a non-bug specification-gap observation.
+- Strict all-tests-green CI remains `PARTIAL / documented limitation due to confirmed SUT defects`.
+- FR-04 overall remains not closed; the architecture correction does not manufacture closure.
+
+### Validation
+
+- Generator Skill validation: PASS for both `.codex` and `.claude` copies.
+- Skill inventory and byte-content parity: PASS.
+- Independent SOP review: PASS after resolving ACT-GEN routing and new-interaction audit provenance.
+- Independent generator forward-test against FR-04 history: PASS after strengthening persisted-state and executability rules.
+- `npm run hw06:derive`: PASS.
+- `npm run hw06:validate`: PASS with 0 errors and 0 warnings.
+- `git diff --check`: PASS.
+
+### Exact next action
+
+Start FR-08 using `HW06_ORCHESTRATOR.md` and the new API Test Generator Skill. Do not reopen FR-04 and do not begin FR-15 first.
