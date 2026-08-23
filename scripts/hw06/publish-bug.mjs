@@ -139,6 +139,46 @@ function issueDetails(bug) {
       reproducibility: 'Reproduced by FR08-AI-031 in the canonical run RUN-20260823080014785-fr08-canonical-full-suite, with the downstream contamination visible in FR08-AI-040 and FR08-H-005 in the same run.'
     };
   }
+  if (bug.id === 'BUG-CANDIDATE-FR15-AUTHORIZATION') {
+    return {
+      title: bug.title,
+      caseIds: bug.caseIds,
+      expected: bug.expected,
+      actual: bug.actual,
+      reproduction: bug.reproduction,
+      evidencePaths: [
+        'work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.json',
+        'work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html',
+        'work/runs/RUN-20260823102829114-fr15-auth-reproduction/stdout.log'
+      ],
+      endpoint: 'POST /api/products',
+      requirement: 'FR-12 limits product data changes to administrators. SEC-02 requires a valid JWT for every authenticated endpoint, and SEC-03 requires role=admin for product creation (eshop-sut/README.md, FR-12, SEC-02, and SEC-03). The selected operation is documented in eshop-sut/api_specification.md, section 3.3.',
+      preconditions: 'Freshly seeded local SUT. Capture the product-list baseline, prepare the authorization context under test, and use a run-unique otherwise-valid product body so persistence can be identified unambiguously.',
+      genuineDefect: 'The canonical suite observed persistent product creation across ten invalid authorization contexts. The targeted reproduction then repeated five representative contexts, including an ordinary-user JWT, with five failed no-persistence oracles, 40/40 requests carrying X-Student-Id: 23127179, and no harness or setup failure. The oracle checks persistent state and does not require an undocumented HTTP rejection status or error schema.',
+      impact: 'A caller without a valid admin authorization context can create persistent catalog products. This bypasses the documented product-management privilege boundary and can permit unauthorized catalog modification. No severity level is asserted because the assignment specification does not define one.',
+      reproducibility: 'Reproduced by all ten mapped authorization cases in RUN-20260823102155874-fr15-canonical-full-suite and by five representative cases in RUN-20260823102829114-fr15-auth-reproduction.'
+    };
+  }
+  if (bug.id === 'BUG-CANDIDATE-FR15-VALIDATION') {
+    return {
+      title: bug.title,
+      caseIds: bug.caseIds,
+      expected: bug.expected,
+      actual: bug.actual,
+      reproduction: bug.reproduction,
+      evidencePaths: [
+        'work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.json',
+        'work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html',
+        'work/runs/RUN-20260823102841701-fr15-validation-reproduction/stdout.log'
+      ],
+      endpoint: 'POST /api/products',
+      requirement: 'FR-15 requires a non-empty product name of at most 255 characters, a positive numeric price, and an existing category (eshop-sut/README.md, FR-15). The selected operation and request fields are documented in eshop-sut/api_specification.md, section 3.3.',
+      preconditions: 'Freshly seeded local SUT. Authenticate as admin, capture the product-list baseline, and submit a run-unique request with one diagnostically isolated invalid name, price, or category condition.',
+      genuineDefect: 'The canonical suite observed persistent rows for eighteen documented-invalid name, price, and category cases. The targeted reproduction repeated six representative partitions with six failed no-persistence oracles, 52/52 requests carrying X-Student-Id: 23127179, and no harness or setup failure. The oracle checks persistent state and does not require an undocumented HTTP rejection status or error schema.',
+      impact: 'The catalog can retain products that violate its documented identity, pricing, or category constraints. This can expose malformed product data and invalid category relationships to later catalog and checkout flows. No severity level is asserted because the assignment specification does not define one.',
+      reproducibility: 'Reproduced by all eighteen mapped validation cases in RUN-20260823102155874-fr15-canonical-full-suite and by six representative cases in RUN-20260823102841701-fr15-validation-reproduction.'
+    };
+  }
   throw new Error(`No publication details configured for ${bug.id}`);
 }
 

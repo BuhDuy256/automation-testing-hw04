@@ -1457,3 +1457,41 @@ to `origin/hw06-api-testing`. The runtime database remains excluded.
 Next genuine human gate: `HG-FR15-EVID-01`. The student must open and visually inspect all three PNGs
 before giving explicit attestation. Do not record attestation, publish either Issue, or proceed past
 this gate without that decision.
+
+## 44. Checkpoint — FR-15 evidence attested; Issue bodies prepared; publication gate open
+
+The student explicitly confirmed the exact `HG-FR15-EVID-01` attestation statement. `ACT-EVID-01`
+recorded all three screenshots under `Nguyen Bao Duy` without modifying their PNG bytes:
+
+```text
+EVID-FR15-RUN-SUMMARY    humanAttestation=true  attestedAt 2026-08-23T10:54:35.077Z
+EVID-FR15-AUTHORIZATION  humanAttestation=true  attestedAt 2026-08-23T10:54:36.414Z
+EVID-FR15-VALIDATION     humanAttestation=true  attestedAt 2026-08-23T10:54:37.758Z
+```
+
+`scripts/hw06/publish-bug.mjs` now carries publication details for both human-confirmed FR-15 root
+bugs. Local `preview` succeeded and produced the exact Issue bodies:
+
+```text
+work/generated/issues/BUG-CANDIDATE-FR15-AUTHORIZATION.md
+work/generated/issues/BUG-CANDIDATE-FR15-VALIDATION.md
+```
+
+Each preview preserves the canonical case mapping, uses persistence as the oracle, states that exact
+HTTP rejection behavior remains unspecified, and embeds two committed screenshots by blob reference.
+All three screenshot files already exist in pushed commit `532e3e8509d7da8c5e43e95737119e6c80c3296e`.
+
+Neither GitHub Issue has been created. The attestation does not authorize external publication, and
+the AI Audit Report was not changed by this evidence-only continuation.
+
+Status:
+
+```text
+FR-15 ACT-EVID-01  COMPLETE — three student-attested screenshots
+FR-15 ACT-BUG-03   PREPARED — two local previews; publication not authorized
+FR-15 CI           NOT STARTED
+```
+
+Next genuine human gate: `HG-FR15-BUG-03`. Obtain one explicit student decision authorizing creation
+of both GitHub Issues before running either `publish-bug.mjs publish` command. After publication,
+verify and persist the real Issue numbers/URLs; never infer or fabricate them.

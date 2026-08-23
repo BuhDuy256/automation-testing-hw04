@@ -20,7 +20,7 @@
     "width": 1600,
     "height": 1100
   },
-  "humanAttestation": false,
+  "humanAttestation": true,
   "sourceRunIds": [
     "RUN-20260823102155874-fr15-canonical-full-suite"
   ],
@@ -29,5 +29,7 @@
     "BUG-CANDIDATE-FR15-AUTHORIZATION",
     "BUG-CANDIDATE-FR15-VALIDATION"
   ],
-  "provenanceNote": "Viewport capture of the unmodified real canonical Newman HTML dashboard. Newman reports 30 failed assertions, while the canonical registry supplies the reviewed mutually exclusive case classification of 16 PASS, 28 FAIL, and 15 SPEC-GAP observations."
+  "provenanceNote": "Viewport capture of the unmodified real canonical Newman HTML dashboard. Newman reports 30 failed assertions, while the canonical registry supplies the reviewed mutually exclusive case classification of 16 PASS, 28 FAIL, and 15 SPEC-GAP observations.",
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T10:54:35.077Z"
 }

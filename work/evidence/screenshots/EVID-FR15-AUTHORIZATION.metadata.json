@@ -12,7 +12,7 @@
     "width": 1046,
     "height": 5089
   },
-  "humanAttestation": false,
+  "humanAttestation": true,
   "sourceRunIds": [
     "RUN-20260823102829114-fr15-auth-reproduction"
   ],
@@ -22,5 +22,7 @@
   "bugIds": [
     "BUG-CANDIDATE-FR15-AUTHORIZATION"
   ],
-  "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The request body, ordinary-user bearer token fixture, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence."
+  "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The request body, ordinary-user bearer token fixture, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence.",
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T10:54:36.414Z"
 }
