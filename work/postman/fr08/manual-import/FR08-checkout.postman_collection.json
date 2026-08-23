@@ -1,0 +1,711 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr08-checkout-manual-import",
+    "name": "HW06 FR-08 Checkout — POST /api/checkout",
+    "description": "MANUAL-IMPORT COPY for Postman Desktop. Identical in behaviour to the canonical implementation work/postman/fr08/FR08-checkout.postman_collection.json (sha256 7d185f739fa800f84d4433ddd7586928aabae225277e88b546984926e099de82); only info.name and info._postman_id differ, so no request, script, oracle or data value was changed.\n\nData-driven collection covering all 56 reviewed-usable FR-08 cases (51 AI-origin after the human audit plus the 5 student-selected extensions). One iteration per canonical case, driven by FR08-checkout.data.json. Optional phases (second user, second checkout, cart rebuild) are skipped per row with pm.execution.skipRequest. Harness notes: implementation cart state is process memory keyed by user id, POST /api/cart only appends, and no cart-clearing endpoint is documented, so each case registers its own fresh user to obtain a deterministic empty starting cart. The expected total is never hardcoded: it is derived at run time from the cart state the server itself reports immediately before each checkout, which is exactly the reviewed FR-08 oracle. No HTTP status code and no response schema is asserted anywhere, because the API specification documents none for this endpoint; undocumented behaviour is logged as SPEC GAP instead.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "studentId",
+      "value": "23127179"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') || pm.collectionVariables.get('studentId') || '23127179' });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup: register primary user for {{caseId}}",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"FR08 {{caseId}} A\",\n  \"email\": \"{{caseEmail}}\",\n  \"password\": \"{{casePassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var stamp = Date.now() + '-' + Math.floor(Math.random() * 1000000);",
+              "pm.environment.set('caseId', row.caseId);",
+              "pm.environment.set('caseEmail', 'fr08-' + String(row.caseId).toLowerCase() + '-a-' + stamp + '@eshop.test');",
+              "pm.environment.set('caseEmailB', 'fr08-' + String(row.caseId).toLowerCase() + '-b-' + stamp + '@eshop.test');",
+              "pm.environment.set('casePassword', 'Fr08Test1234!');",
+              "pm.environment.set('priorOrderIds', '[]');",
+              "pm.environment.set('priorOrderIdsB', '[]');",
+              "pm.environment.set('observedCart', '[]');",
+              "pm.environment.set('observedCartB', '[]');",
+              "pm.environment.set('observedCart2', '[]');",
+              "pm.environment.set('derivedTotal', '0');",
+              "pm.environment.set('derivedTotal2', '0');",
+              "pm.environment.set('checkoutOrderId', '');",
+              "pm.environment.set('checkoutOrderId2', '');",
+              "pm.environment.set('caseUserIdB', '');",
+              "pm.environment.set('caseTokenB', '');",
+              "pm.environment.set('derivedTotalB', '0');",
+              "pm.environment.set('staleClientTotal', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.environment.get('caseId');",
+              "pm.test(id + ' setup: primary case user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });",
+              "pm.environment.set('caseUserId', String(pm.response.json().id));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Setup: register secondary user for {{caseId}}",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"FR08 {{caseId}} B\",\n  \"email\": \"{{caseEmailB}}\",\n  \"password\": \"{{casePassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "if (!row.secondUser) { pm.execution.skipRequest(); }"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.environment.get('caseId');",
+              "pm.test(id + ' setup: secondary case user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });",
+              "pm.environment.set('caseUserIdB', String(pm.response.json().id));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Setup: login primary user for {{caseId}}",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{caseEmail}}\",\n  \"password\": \"{{casePassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "if (row.useSeededUser) {",
+              "  pm.environment.set('caseEmail', row.useSeededUser);",
+              "  pm.environment.set('casePassword', row.useSeededPassword);",
+              "  console.log(row.caseId + ' HARNESS NOTE: this case uses the seeded account ' + row.useSeededUser + ' because its expired-token fixture is bound to that account id; the per-case registered user stays unused.');",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.environment.get('caseId');",
+              "pm.test(id + ' setup: primary user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.environment.set('caseToken', json.token); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Setup: login secondary user for {{caseId}}",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{caseEmailB}}\",\n  \"password\": \"{{casePassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "if (!row.secondUser) { pm.execution.skipRequest(); }"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.environment.get('caseId');",
+              "pm.test(id + ' setup: secondary user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.environment.set('caseTokenB', json.token); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Setup: seed carts and observe pre-checkout state for {{caseId}}",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{caseToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cart",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cart"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var base = pm.collectionVariables.get('baseUrl');",
+              "var id = row.caseId;",
+              "var token = pm.environment.get('caseToken');",
+              "var tokenB = pm.environment.get('caseTokenB');",
+              "function hdr(tok, extra) { return Object.assign({ 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + tok }, extra || {}); }",
+              "function seedInto(tok, lines, label, i, done) {",
+              "  if (i >= lines.length) { return done(); }",
+              "  pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: hdr(tok, { 'Content-Type': 'application/json' }), body: { mode: 'raw', raw: JSON.stringify(lines[i]) } }, function (err, res) {",
+              "    console.log(id + ' setup seed ' + label + ' line ' + i + ' -> ' + (err ? ('TRANSPORT ERROR ' + err) : res.code));",
+              "    if (row.logIntermediateCart && label === 'primary' && i === 0) {",
+              "      pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr(tok) }, function (e2, r2) {",
+              "        var mid = [];",
+              "        if (!e2) { try { mid = r2.json(); } catch (x) { mid = []; } }",
+              "        var midTotal = mid.reduce(function (s, l) { return s + (Number(l && l.price) || 0) * (Number(l && l.quantity) || 0); }, 0);",
+              "        console.log(id + ' intermediate cart observed by the client before the later mutation: ' + JSON.stringify(mid) + ' | total ' + midTotal);",
+              "        pm.environment.set('staleClientTotal', String(midTotal));",
+              "        seedInto(tok, lines, label, i + 1, done);",
+              "      });",
+              "      return;",
+              "    }",
+              "    seedInto(tok, lines, label, i + 1, done);",
+              "  });",
+              "}",
+              "function probeProducts(done) {",
+              "  var probes = [];",
+              "  if (row.readCatalogueProductId) { probes.push(row.readCatalogueProductId); }",
+              "  if (row.probeMissingProductId) { probes.push(row.probeMissingProductId); }",
+              "  function next(i) {",
+              "    if (i >= probes.length) { return done(); }",
+              "    pm.sendRequest({ url: base + '/api/products/' + probes[i], method: 'GET', header: hdr(token) }, function (err, res) {",
+              "      console.log(id + ' catalogue probe /api/products/' + probes[i] + ' -> ' + (err ? ('TRANSPORT ERROR ' + err) : (res.code + ' :: ' + res.text().substring(0, 200))));",
+              "      next(i + 1);",
+              "    });",
+              "  }",
+              "  next(0);",
+              "}",
+              "function seedPriorOrder(done) {",
+              "  if (!row.seedPriorOrder) { return done(); }",
+              "  pm.sendRequest({ url: base + '/api/checkout', method: 'POST', header: hdr(token, { 'Content-Type': 'application/json' }), body: { mode: 'raw', raw: JSON.stringify({ total_amount: 100000, shipping_address: 'FR08 prior order seed' }) } }, function (err, res) {",
+              "    console.log(id + ' setup prior order seed -> ' + (err ? ('TRANSPORT ERROR ' + err) : res.code));",
+              "    done();",
+              "  });",
+              "}",
+              "function observeSecondUser(done) {",
+              "  if (!row.secondUser) { return done(); }",
+              "  var linesB = (row.secondUser && Array.isArray(row.secondUser.cart)) ? row.secondUser.cart : [];",
+              "  seedInto(tokenB, linesB, 'secondary', 0, function () {",
+              "    pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr(tokenB) }, function (e1, r1) {",
+              "      var cartB = [];",
+              "      if (!e1) { try { cartB = r1.json(); } catch (x) { cartB = []; } }",
+              "      var derivedB = cartB.reduce(function (s, l) { return s + (Number(l && l.price) || 0) * (Number(l && l.quantity) || 0); }, 0);",
+              "      pm.environment.set('observedCartB', JSON.stringify(cartB));",
+              "      pm.environment.set('derivedTotalB', String(derivedB));",
+              "      console.log(id + ' secondary user cart observed: ' + JSON.stringify(cartB) + ' | derived total ' + derivedB);",
+              "      pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: hdr(tokenB) }, function (e2, r2) {",
+              "        var ids = [];",
+              "        if (!e2) { try { ids = r2.json().map(function (o) { return o.id; }); } catch (x) { ids = []; } }",
+              "        pm.environment.set('priorOrderIdsB', JSON.stringify(ids));",
+              "        console.log(id + ' secondary user baseline order ids: ' + JSON.stringify(ids));",
+              "        done();",
+              "      });",
+              "    });",
+              "  });",
+              "}",
+              "function captureBaselineOrders(done) {",
+              "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: hdr(token) }, function (err, res) {",
+              "    var ids = [];",
+              "    if (!err) { try { ids = res.json().map(function (o) { return o.id; }); } catch (e) { ids = []; } }",
+              "    pm.environment.set('priorOrderIds', JSON.stringify(ids));",
+              "    console.log(id + ' primary baseline order ids before checkout: ' + JSON.stringify(ids));",
+              "    done();",
+              "  });",
+              "}",
+              "var lines = Array.isArray(row.cart) ? row.cart : [];",
+              "probeProducts(function () { seedPriorOrder(function () { seedInto(token, lines, 'primary', 0, function () { observeSecondUser(function () { captureBaselineOrders(function () { console.log(id + ' setup complete'); }); }); }); }); });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "pm.test(id + ' setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+              "var cart = [];",
+              "try { cart = pm.response.json(); } catch (e) { cart = []; }",
+              "if (!Array.isArray(cart)) { cart = []; }",
+              "var derived = cart.reduce(function (sum, line) { return sum + (Number(line && line.price) || 0) * (Number(line && line.quantity) || 0); }, 0);",
+              "pm.environment.set('observedCart', JSON.stringify(cart));",
+              "pm.environment.set('derivedTotal', String(derived));",
+              "console.log(id + ' server-observed pre-checkout cart: ' + JSON.stringify(cart));",
+              "console.log(id + ' server-derived expected total for this checkout: ' + derived);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Execute {{caseId}} - POST /api/checkout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/checkout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "checkout"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "var token = pm.environment.get('caseToken');",
+              "pm.request.headers.remove('Authorization');",
+              "var mode = row.auth || 'bearer';",
+              "if (mode === 'bearer') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token }); }",
+              "if (mode === 'scheme') { pm.request.headers.add({ key: 'Authorization', value: 'Token abc123' }); }",
+              "if (mode === 'empty') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer' }); }",
+              "if (mode === 'nonjwt') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer not-a-jwt' }); }",
+              "if (mode === 'tampered') { var parts = token.split('.'); var sig = parts[2]; var last = sig.slice(-1); parts[2] = sig.slice(0, -1) + (last === 'A' ? 'B' : 'A'); pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + parts.join('.') }); console.log(id + ' deterministic signature mutation: final character ' + last + ' replaced with ' + (last === 'A' ? 'B' : 'A')); }",
+              "if (mode === 'expired') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('expiredToken') }); }",
+              "pm.request.headers.upsert({ key: 'Content-Type', value: row.contentType || 'application/json' });",
+              "var raw = '';",
+              "if (row.bodyMode === 'none') { raw = ''; }",
+              "else if (row.bodyMode === 'raw') { raw = row.raw; }",
+              "else {",
+              "  var body = (row.body === null || row.body === undefined) ? {} : JSON.parse(JSON.stringify(row.body));",
+              "  if (row.injectSecondUserIdField) { body[row.injectSecondUserIdField] = Number(pm.environment.get('caseUserIdB')); }",
+              "  raw = JSON.stringify(body);",
+              "}",
+              "pm.request.body.update({ mode: 'raw', raw: raw, options: { raw: { language: 'json' } } });",
+              "console.log(id + ' auth mode: ' + mode + ' | Content-Type: ' + (row.contentType || 'application/json'));",
+              "console.log(id + ' request body sent verbatim: ' + (raw === '' ? '<no body bytes>' : raw));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "pm.test(id + ' checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "pm.test(id + ' request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+              "var orderId = '';",
+              "try { var json = pm.response.json(); if (json && json.orderId) { orderId = String(json.orderId); } } catch (e) { orderId = ''; }",
+              "pm.environment.set('checkoutOrderId', orderId);",
+              "console.log(id + ' checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 400));",
+              "console.log(id + ' SPEC GAP: the API specification defines no status code or response schema for POST /api/checkout, so no status oracle is asserted.');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Execute {{caseId}} phase 2 - POST /api/checkout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/checkout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "checkout"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "if (!row.secondCheckout) { pm.execution.skipRequest(); }",
+              "else {",
+              "  var id = row.caseId;",
+              "  var base = pm.collectionVariables.get('baseUrl');",
+              "  var token = pm.environment.get('caseToken');",
+              "  function hdr(extra) { return Object.assign({ 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token }, extra || {}); }",
+              "  pm.request.headers.remove('Authorization');",
+              "  pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });",
+              "  pm.request.headers.upsert({ key: 'Content-Type', value: 'application/json' });",
+              "  pm.request.body.update({ mode: 'raw', raw: JSON.stringify(row.secondCheckout.body || {}), options: { raw: { language: 'json' } } });",
+              "  var rebuild = Array.isArray(row.secondCheckout.rebuildCart) ? row.secondCheckout.rebuildCart : [];",
+              "  function checkCartUnchanged(done) {",
+              "    if (!row.assertCartUnchangedBeforeSecond) { return done(); }",
+              "    pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr() }, function (err, res) {",
+              "      var after = [];",
+              "      if (!err) { try { after = res.json(); } catch (e) { after = []; } }",
+              "      console.log(id + ' cart observed after the refused attempt: ' + JSON.stringify(after));",
+              "      pm.test(id + ' refused attempt did not modify the cart before the valid checkout', function () { pm.expect(JSON.stringify(after)).to.equal(pm.environment.get('observedCart')); });",
+              "      done();",
+              "    });",
+              "  }",
+              "  function rebuildCart(i, done) {",
+              "    if (i >= rebuild.length) { return done(); }",
+              "    pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: hdr({ 'Content-Type': 'application/json' }), body: { mode: 'raw', raw: JSON.stringify(rebuild[i]) } }, function (err, res) {",
+              "      console.log(id + ' phase 2 rebuild cart line ' + i + ' -> ' + (err ? ('TRANSPORT ERROR ' + err) : res.code));",
+              "      rebuildCart(i + 1, done);",
+              "    });",
+              "  }",
+              "  function observe(done) {",
+              "    pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr() }, function (err, res) {",
+              "      var cart2 = [];",
+              "      if (!err) { try { cart2 = res.json(); } catch (e) { cart2 = []; } }",
+              "      var derived2 = cart2.reduce(function (s, l) { return s + (Number(l && l.price) || 0) * (Number(l && l.quantity) || 0); }, 0);",
+              "      pm.environment.set('observedCart2', JSON.stringify(cart2));",
+              "      pm.environment.set('derivedTotal2', String(derived2));",
+              "      console.log(id + ' phase 2 server-observed cart: ' + JSON.stringify(cart2) + ' | server-derived expected total ' + derived2);",
+              "      done();",
+              "    });",
+              "  }",
+              "  checkCartUnchanged(function () { rebuildCart(0, function () { observe(function () { console.log(id + ' phase 2 setup complete'); }); }); });",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "pm.test(id + ' phase 2 checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "pm.test(id + ' phase 2 request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+              "var orderId = '';",
+              "try { var json = pm.response.json(); if (json && json.orderId) { orderId = String(json.orderId); } } catch (e) { orderId = ''; }",
+              "pm.environment.set('checkoutOrderId2', orderId);",
+              "console.log(id + ' phase 2 checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Verify {{caseId}} - persisted order and cart state",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{caseToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/my-orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "orders",
+            "my-orders"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "var base = pm.collectionVariables.get('baseUrl');",
+              "var token = pm.environment.get('caseToken');",
+              "var tokenB = pm.environment.get('caseTokenB');",
+              "function hdr(tok, extra) { return Object.assign({ 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + tok }, extra || {}); }",
+              "var derived = Number(pm.environment.get('derivedTotal'));",
+              "var derived2 = Number(pm.environment.get('derivedTotal2'));",
+              "var prior = JSON.parse(pm.environment.get('priorOrderIds') || '[]');",
+              "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+              "var orders = [];",
+              "try { orders = pm.response.json(); } catch (e) { orders = []; }",
+              "if (!Array.isArray(orders)) { orders = []; }",
+              "var newOrders = orders.filter(function (o) { return prior.indexOf(o.id) === -1; }).sort(function (a, b) { return a.id - b.id; });",
+              "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+              "console.log(id + ' new orders created by this case: ' + JSON.stringify(newOrders));",
+              "if (row.assertPriorOrdersIntact) {",
+              "  if (prior.length === 0) { console.log(id + ' EVIDENCE GAP: no prior order existed, so persistence integrity is limited to the order endpoint still responding.'); }",
+              "  else { pm.test(id + ' previously persisted orders survive the attempt', function () { var ids = orders.map(function (o) { return o.id; }); prior.forEach(function (pid) { pm.expect(ids).to.include(pid); }); }); }",
+              "  console.log(id + ' SEC-05 BOUNDARY: a safe response is consistent with, but is not proof of, parameterized queries.');",
+              "}",
+              "if (row.expectNoNewOrder && !row.secondCheckout) {",
+              "  pm.test(id + ' unauthorised checkout created no order', function () { pm.expect(newOrders.length).to.equal(0); });",
+              "}",
+              "if (row.assertExactlyOneNewOrder) {",
+              "  pm.test(id + ' exactly one new order was created', function () { pm.expect(newOrders.length).to.equal(1); });",
+              "}",
+              "if (!row.expectNoNewOrder && (!row.secondCheckout || row.assertFirstOrderDerived)) {",
+              "  if (newOrders.length > 0) {",
+              "    pm.test(id + ' persisted total equals the server-derived cart total (' + derived + ')', function () { pm.expect(Number(newOrders[0].total_amount)).to.equal(derived); });",
+              "  } else {",
+              "    console.log(id + ' OBSERVATION: no order was created for this input; the specification defines no required behaviour here, so this is recorded as SPEC GAP and not asserted.');",
+              "  }",
+              "}",
+              "if (row.assertSecondOrderDerived) {",
+              "  var lastOrder = newOrders.length ? newOrders[newOrders.length - 1] : null;",
+              "  if (lastOrder && String(lastOrder.id) === String(pm.environment.get('checkoutOrderId2'))) {",
+              "    pm.test(id + ' phase 2 persisted total equals the server-derived cart total at that moment (' + derived2 + ')', function () { pm.expect(Number(lastOrder.total_amount)).to.equal(derived2); });",
+              "  } else if (pm.environment.get('checkoutOrderId2')) {",
+              "    pm.test(id + ' phase 2 order is retrievable in the order history', function () { pm.expect(newOrders.map(function (o) { return String(o.id); })).to.include(String(pm.environment.get('checkoutOrderId2'))); });",
+              "  } else {",
+              "    console.log(id + ' OBSERVATION: phase 2 produced no order identifier; recorded as SPEC GAP rather than asserted.');",
+              "  }",
+              "}",
+              "if (row.assertBothOrdersIndependent) {",
+              "  var expectations = row.assertBothOrdersIndependent;",
+              "  pm.test(id + ' both checkouts persisted their own order', function () { pm.expect(newOrders.length).to.equal(2); });",
+              "  if (newOrders.length === 2) {",
+              "    pm.test(id + ' first order keeps its own server-derived total (' + derived + ') and its own address', function () { pm.expect(Number(newOrders[0].total_amount)).to.equal(derived); pm.expect(newOrders[0].shipping_address).to.equal(expectations.firstAddress); });",
+              "    pm.test(id + ' second order keeps its own server-derived total (' + derived2 + ') and its own address', function () { pm.expect(Number(newOrders[1].total_amount)).to.equal(derived2); pm.expect(newOrders[1].shipping_address).to.equal(expectations.secondAddress); });",
+              "  }",
+              "}",
+              "if (row.recordAddress) { console.log(id + ' persisted shipping_address observation: ' + (newOrders.length ? (JSON.stringify(newOrders[0].shipping_address) + ' | type ' + (typeof newOrders[0].shipping_address) + ' | length ' + String(newOrders[0].shipping_address === null ? '' : newOrders[0].shipping_address).length) : '<no order created>')); }",
+              "if (row.recordStatus) { console.log(id + ' persisted status observation: ' + (newOrders.length ? JSON.stringify(newOrders[0].status) : '<no order created>')); }",
+              "if (row.secUiGap) { console.log(id + ' SEC-04 BOUNDARY: this is an API-side observation only. Safe UI/display-boundary escaping is NOT proved or disproved here and needs separate evidence.'); }",
+              "if (row.logItemCompositionGap) { console.log(id + ' EVIDENCE GAP: the order endpoints expose no line-item composition, so only the persisted total can be compared against the rebuilt cart.'); }",
+              "if (row.logStaleClientTotal) { console.log(id + ' stale client total sent by the case: ' + pm.environment.get('staleClientTotal') + ' | server-derived total at checkout time: ' + derived); }",
+              "if (row.logSecondUserDerived) { console.log(id + ' secondary user cart derived total (must NOT drive this order): ' + pm.environment.get('derivedTotalB')); }",
+              "function afterCartChecks(done) {",
+              "  if (!row.assertCartCleared && !row.assertCartUnchanged) { return done(); }",
+              "  pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr(token) }, function (err, res) {",
+              "    var after = [];",
+              "    if (!err) { try { after = res.json(); } catch (e) { after = []; } }",
+              "    console.log(id + ' primary cart after the attempt: ' + JSON.stringify(after));",
+              "    if (row.assertCartCleared) { pm.test(id + ' cart is cleared after a successful checkout (FR-08)', function () { pm.expect(after.length).to.equal(0); }); }",
+              "    if (row.assertCartUnchanged) { pm.test(id + ' refused attempt did not modify the cart', function () { pm.expect(JSON.stringify(after)).to.equal(pm.environment.get('observedCart')); }); }",
+              "    done();",
+              "  });",
+              "}",
+              "function secondUserChecks(done) {",
+              "  if (!row.secondUser) { return done(); }",
+              "  var priorB = JSON.parse(pm.environment.get('priorOrderIdsB') || '[]');",
+              "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: hdr(tokenB) }, function (err, res) {",
+              "    var ordersB = [];",
+              "    if (!err) { try { ordersB = res.json(); } catch (e) { ordersB = []; } }",
+              "    var newB = ordersB.filter(function (o) { return priorB.indexOf(o.id) === -1; });",
+              "    console.log(id + ' secondary user orders after the attempt: ' + JSON.stringify(ordersB));",
+              "    if (row.assertSecondUserNoNewOrder) { pm.test(id + ' no order was attributed to the secondary user', function () { pm.expect(newB.length).to.equal(0); }); }",
+              "    if (row.assertSecondUserCartUnchanged) {",
+              "      pm.sendRequest({ url: base + '/api/cart', method: 'GET', header: hdr(tokenB) }, function (e2, r2) {",
+              "        var cartB = [];",
+              "        if (!e2) { try { cartB = r2.json(); } catch (x) { cartB = []; } }",
+              "        console.log(id + ' secondary user cart after the attempt: ' + JSON.stringify(cartB));",
+              "        pm.test(id + ' secondary user cart was not cleared by the primary user checkout', function () { pm.expect(JSON.stringify(cartB)).to.equal(pm.environment.get('observedCartB')); });",
+              "        done();",
+              "      });",
+              "      return;",
+              "    }",
+              "    done();",
+              "  });",
+              "}",
+              "function orderDetailCheck(done) {",
+              "  if (!row.assertOrderDetail) { return done(); }",
+              "  var oid = pm.environment.get('checkoutOrderId');",
+              "  if (!oid) { console.log(id + ' EVIDENCE GAP: checkout returned no order identifier, so the detail read-back falls back to the newest history entry.'); if (newOrders.length) { oid = String(newOrders[0].id); } }",
+              "  if (!oid) { return done(); }",
+              "  pm.sendRequest({ url: base + '/api/orders/' + oid, method: 'GET', header: hdr(token) }, function (err, res) {",
+              "    var detail = null;",
+              "    if (!err) { try { detail = res.json(); } catch (e) { detail = null; } }",
+              "    console.log(id + ' order detail read-back: ' + JSON.stringify(detail));",
+              "    pm.test(id + ' created order is retrievable by its own identifier with the server-derived total', function () { pm.expect(detail, 'order detail body').to.not.equal(null); pm.expect(Number(detail.id)).to.equal(Number(oid)); pm.expect(Number(detail.total_amount)).to.equal(derived); });",
+              "    done();",
+              "  });",
+              "}",
+              "afterCartChecks(function () { secondUserChecks(function () { orderDetailCheck(function () { console.log(id + ' verification complete'); }); }); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

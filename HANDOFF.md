@@ -1163,3 +1163,45 @@ Final submission curation          NOT STARTED
 
 `work/registry/human-reviews.json` holds no FR-15 record and must not be written until the student
 answers `HG-FR15-REV-01` explicitly.
+
+## 38. Checkpoint — FR-15 paused; FR-08 manual-import package prepared
+
+FR-15 is paused on the student's instruction so FR-08 can be finished and frozen first.
+
+```text
+FR-15 ACT-GEN-01 COMPLETE
+FR-15 stopped at HG-FR15-REV-01
+58 AI candidates exist
+No FR-15 human review has been canonically recorded yet
+Resume only after FR-08 is frozen
+```
+
+FR-15 candidate provenance, prompts, coverage ledger and the non-canonical review proposal are
+untouched. Nothing was regenerated.
+
+For FR-08, `work/postman/fr08/manual-import/` now holds presentation copies for Postman Desktop:
+`FR08-checkout.postman_collection.json`, `FR08-checkout.postman_environment.json`, and
+`FR08-cases.postman_data.json`. They differ from the canonical artifacts only in the displayed
+collection and environment names plus their ids and a provenance sentence; every variable, script,
+request and data row is byte-identical, so the package is the same reviewed implementation used for
+`RUN-20260823080014785-fr08-canonical-full-suite`. No test was regenerated, no oracle changed, and
+Newman was not rerun.
+
+Package verification passed mechanically: all three files parse, the data contains exactly the 56
+reviewed executable cases, no INVALID case appears, the collection-level `X-Student-Id: 23127179`
+mechanism is intact, the base URL is `http://localhost:3000`, and no credential is introduced.
+`npm run hw06:validate` PASS with 0 errors and 0 warnings; `git diff --check` clean.
+
+Status:
+
+```text
+FR-08 manual Postman package       READY — awaiting the student's manual Postman Desktop evidence
+FR-08 curation / out/ deliverables NOT STARTED (deliberately)
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              PAUSED at HG-FR15-REV-01
+```
+
+Next genuine human gate: `HG-FR08-POSTMAN-MANUAL-01`. The student imports the package by hand and
+captures three screenshots that AI must not substitute or attest:
+`work/evidence/screenshots/EVID-FR08-POSTMAN-COLLECTION.png`,
+`EVID-FR08-POSTMAN-CONSOLE.png`, and `EVID-FR08-POSTMAN-RUNNER.png`.
