@@ -729,3 +729,56 @@ The reusable action catalog now contains action mechanics rather than historical
 For new FR-08 and FR-15 AI cases, ACT-GEN-01 uses bounded contract/domain, authorization/security, state-transition, schema, and closure/deduplication interactions. Each interaction must preserve its actual available tool/model identity, completion time, verbatim prompt, batch ID, source anchors, coverage slice, and candidate output boundary at generation time. The validator enforces these prospective fields and within-batch provenance consistency while leaving historical FR-04 records unchanged. Official AI Audit Report updates remain explicitly human-triggered and use this preserved provenance later; no second audit or orchestration registry was added.
 
 FR-08 remains unstarted. The next action is to begin FR-08 under `HW06_ORCHESTRATOR.md` with the `hw06-api-test-generator` Skill. This cumulative handoff is becoming long; after FR-08 starts, a non-blocking cleanup may reduce it to current state plus the latest checkpoint and move older checkpoints to a non-authoritative history file.
+
+## 30. Checkpoint — FR-08 generation complete, student review gate open
+
+FR-08 `POST /api/checkout` generation (`ACT-GEN-01`) is complete and is the first real reuse of both
+`HW06_ORCHESTRATOR.md` and the `hw06-api-test-generator` Skill. FR-04 was not reopened.
+
+Work performed in this session, by Claude Code (`claude-opus-5`):
+
+- Five bounded generation batches, each with its verbatim prompt stored under `work/prompts/fr08/`:
+  `FR08-GEN-B1` contract-domain (18), `FR08-GEN-B2` authorization-security (12),
+  `FR08-GEN-B3` state-transition (10), `FR08-GEN-B4` schema (10), `FR08-GEN-B5` closure-deduplication (6).
+- 56 AI candidates `FR08-AI-001` … `FR08-AI-056` appended to `work/registry/test-cases.json`, each
+  stamped at write time with `generationBatchId`, `generationTool`, verbatim `generationPrompt`,
+  real `generatedAt`, `generationContext`, and `sourceAnchors`.
+- Coverage ledger: `work/prompts/fr08/FR08-GEN-coverage-ledger.md`.
+- Independent review, adversarial verification, and mechanical checks were performed as separate
+  passes inside one Claude Code session; no independent agent identity is claimed.
+- Non-canonical review proposal: `work/reviews/HG-FR08-REV-01-proposal.md`.
+
+Mechanical check results: no candidate asserts a bare HTTP status code, every candidate marks the
+undocumented behavior `SPEC GAP`, no duplicate titles, no vague request values, every candidate
+states a read-back. `npm run hw06:validate` PASS (0 errors, 0 warnings); `npm run hw06:derive` run.
+
+AI recommendation awaiting the student at `HG-FR08-REV-01`: 48 VALID, 5 INCOMPLETE
+(`FR08-AI-010`, `FR08-AI-012`, `FR08-AI-022`, `FR08-AI-035`, `FR08-AI-043`), 3 INVALID
+(`FR08-AI-024`, `FR08-AI-049`, `FR08-AI-050`, all duplicate diagnostics). If accepted in full, the
+usable AI-origin FR-08 suite is 53 cases.
+
+Adversarial verification found one authoritative coverage gap: the expired-JWT partition named in
+the verified spec extract has no candidate, because an expired token cannot be minted black-box and
+any foreign-signed token fails signature verification first. It is recorded as uncovered in the
+coverage ledger; no look-alike or fabricated case was added.
+
+Commits on `hw06-api-testing`:
+
+```text
+42eb5f0 feat(hw06): generate FR-08 checkout AI test candidates
+518122d docs(hw06): prepare FR-08 AI review proposal for the student gate
+```
+
+Status:
+
+```text
+FR-08 ACT-GEN-01                   COMPLETE
+FR-08 ACT-REV-01                   BLOCKED — awaiting the student response to HG-FR08-REV-01
+FR-08 ACT-EXT-01 and later         NOT STARTED
+FR-15                              NOT STARTED
+```
+
+`work/registry/human-reviews.json` is unchanged and contains no FR-08 record. Nothing may be written
+there until the student answers `HG-FR08-REV-01` explicitly. The next action after that response is
+to write only the approved or overridden verdicts, then run `ACT-EXT-01` for at least five
+human-added FR-08 cases.
