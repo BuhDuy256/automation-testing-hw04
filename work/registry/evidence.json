@@ -250,6 +250,34 @@
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T04:41:39.767Z"
+    },
+    {
+      "id": "EVID-CI-FR04-CANONICAL-FULL-SUITE",
+      "type": "ci-canonical-full-suite-screenshot",
+      "description": "Real GitHub Actions run for the complete canonical FR-04 suite, showing repository, workflow, commit, failed status, and full-suite execution context",
+      "path": "work/evidence/screenshots/EVID-CI-FR04-CANONICAL-FULL-SUITE.png",
+      "sha256": "93523c64edf30ad11377ff92555517d5221a1c353395bd05275641a41b96c722",
+      "capturedAt": "2026-08-23T04:49:05.104Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832/job/97143508037",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832/job/97143508037",
+      "pageTitle": "ci(hw06): integrate canonical FR04 full suite · BuhDuy256/automation-testing-hw04@f34b71b · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 80484,
+        "width": 1600,
+        "height": 1145
+      },
+      "githubActionsRunId": 32618732832,
+      "commitSha": "f34b71b24f368c819140fa077ce8942b76893470",
+      "ciPurpose": "canonical-full-suite",
+      "mappedRequirement": "HW06 CI/CD integration of the complete canonical FR-04 API suite",
+      "humanAttestation": false
     }
   ]
 }

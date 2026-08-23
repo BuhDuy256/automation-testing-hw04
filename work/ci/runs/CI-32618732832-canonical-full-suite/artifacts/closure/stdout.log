@@ -1,0 +1,93 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+Iteration 1/2
+
+❏ Setup / Authentication
+↳ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 19ms]
+  ✓  User A login returns a token
+
+↳ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  ✓  Baseline A captured without null normalization
+
+❏ Data-driven input partitions - 41 cases
+↳ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-006 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 06","shipping_address":"Address FR04-H-006","phone":"0
+  │ 123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  ✓  FR04-H-006 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 482B, 8ms]
+  ✓  FR04-H-006 persisted editable values match submitted values
+  ✓  FR04-H-006 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 32ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 2ms]
+  ✓  FR04-H-006 cleanup restores exact baseline profile
+
+❏ Verification helpers / Cleanup
+↳ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 1ms]
+  ✓  Final cleanup verifies exact baseline A
+
+Iteration 2/2
+
+❏ Setup / Authentication
+↳ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 2ms]
+  ✓  User A login returns a token
+
+↳ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  ✓  Baseline A captured without null normalization
+
+❏ Data-driven input partitions - 41 cases
+↳ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-007 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 07","shipping_address":"Address FR04-H-007","phone":"0
+  │ 123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 3ms]
+  ✓  FR04-H-007 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 445B, 1ms]
+  1. FR04-H-007 missing body did not mutate the exact baseline profile
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 3ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 2ms]
+  ✓  FR04-H-007 cleanup restores exact baseline profile
+
+❏ Verification helpers / Cleanup
+↳ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 1ms]
+  ✓  Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               2 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              14 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │               8 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │              10 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              13 │               1 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 241ms                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 2.34kB (approx)                        │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 6ms [min: 1ms, max: 32ms, s.d.: 8ms] │
+└─────────────────────────────────────────────────────────────┘
+
+  #  failure         detail                                                                                    
+                                                                                                               
+ 1.  AssertionError  FR04-H-007 missing body did not mutate the exact baseline profile                         
+     iteration: 2    expected null to deeply equal 'Test User'                                                 
+                     at assertion:1 in test-script                                                             
+                     inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 

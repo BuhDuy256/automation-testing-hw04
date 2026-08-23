@@ -1,0 +1,4 @@
+input=1
+stateful=0
+closure=1
+ai027=1

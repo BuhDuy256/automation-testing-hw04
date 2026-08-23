@@ -1,0 +1,14 @@
+{
+  "attempt": 1,
+  "conclusion": "failure",
+  "createdAt": "2026-08-23T04:47:31Z",
+  "databaseId": 32618732832,
+  "headBranch": "hw06-api-testing",
+  "headSha": "f34b71b24f368c819140fa077ce8942b76893470",
+  "name": "HW06 FR-04 Canonical Full Suite",
+  "startedAt": "2026-08-23T04:47:31Z",
+  "status": "completed",
+  "updatedAt": "2026-08-23T04:48:05Z",
+  "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832",
+  "workflowName": "HW06 FR-04 Canonical Full Suite"
+}

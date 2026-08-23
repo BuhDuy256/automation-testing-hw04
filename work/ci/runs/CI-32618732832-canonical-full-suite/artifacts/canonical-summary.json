@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-08-23T04:48:00.415Z",
+  "scope": "complete canonical FR-04 suite",
+  "executionSemantics": [
+    "RUN-20260823040227192-fr04-canonical-input",
+    "RUN-20260823035912444-fr04-final-stateful",
+    "RUN-20260823040119709-fr04-final-closure",
+    "RUN-20260823022342040-fr04-ai027-corrected"
+  ],
+  "counts": {
+    "executable": 44,
+    "executed": 44,
+    "passed": 35,
+    "failed": 9,
+    "knownBugFailures": 8,
+    "otherFailures": 1
+  },
+  "failedCaseIds": [
+    "FR04-AI-013",
+    "FR04-AI-014",
+    "FR04-AI-015",
+    "FR04-AI-016",
+    "FR04-AI-017",
+    "FR04-AI-026",
+    "FR04-AI-027",
+    "FR04-H-004",
+    "FR04-H-007"
+  ],
+  "knownBugFailureCaseIds": [
+    "FR04-AI-013",
+    "FR04-AI-014",
+    "FR04-AI-015",
+    "FR04-AI-016",
+    "FR04-AI-017",
+    "FR04-AI-026",
+    "FR04-AI-027",
+    "FR04-H-004"
+  ],
+  "otherFailureCaseIds": [
+    "FR04-H-007"
+  ],
+  "caseResults": [
+    {
+      "caseId": "FR04-AI-001",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-004",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-005",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-006",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-007",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-008",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-009",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-010",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-011",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-012",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-013",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-014",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-015",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-016",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-017",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-018",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-019",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-020",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-021",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-022",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-023",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-024",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-025",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-026",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-027",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-AI-029",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-030",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-031",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-033",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-035",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-036",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-038",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-039",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-040",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-041",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-042",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-AI-046",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-001",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-002",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-003",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-004",
+      "result": "FAIL"
+    },
+    {
+      "caseId": "FR04-H-005",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-006",
+      "result": "PASS"
+    },
+    {
+      "caseId": "FR04-H-007",
+      "result": "FAIL"
+    }
+  ],
+  "caseResultMismatches": [],
+  "reports": [
+    {
+      "key": "input",
+      "reportPath": "ci-artifacts/input/newman-report.json",
+      "officialTemplateRunId": "RUN-20260823040227192-fr04-canonical-input",
+      "mappedCases": 40,
+      "executionCount": 264,
+      "studentHeaderRequests": 264,
+      "hostnames": [
+        "localhost:3000"
+      ],
+      "assertionsFailed": 10
+    },
+    {
+      "key": "stateful",
+      "reportPath": "ci-artifacts/stateful/newman-report.json",
+      "officialTemplateRunId": "RUN-20260823035912444-fr04-final-stateful",
+      "mappedCases": 3,
+      "executionCount": 20,
+      "studentHeaderRequests": 20,
+      "hostnames": [
+        "localhost:3000"
+      ],
+      "assertionsFailed": 0
+    },
+    {
+      "key": "closure",
+      "reportPath": "ci-artifacts/closure/newman-report.json",
+      "officialTemplateRunId": "RUN-20260823040119709-fr04-final-closure",
+      "mappedCases": 2,
+      "executionCount": 14,
+      "studentHeaderRequests": 14,
+      "hostnames": [
+        "localhost:3000"
+      ],
+      "assertionsFailed": 1
+    },
+    {
+      "key": "ai027",
+      "reportPath": "ci-artifacts/ai027/newman-report.json",
+      "officialTemplateRunId": "RUN-20260823022342040-fr04-ai027-corrected",
+      "mappedCases": 1,
+      "executionCount": 7,
+      "studentHeaderRequests": 7,
+      "hostnames": [
+        "localhost:3000"
+      ],
+      "assertionsFailed": 3
+    }
+  ],
+  "runtimeHeaderCoverage": {
+    "requests": 305,
+    "studentHeaderRequests": 305
+  },
+  "identities": {
+    "mainCollectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+    "statefulCollectionSha256": "a121d17a1ebb8aaa8c682b8ab846352b84653ed52b82a156e074f69d51aeb9af",
+    "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+    "mainDataSha256": "905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14",
+    "closureDataSha256": "b228739986fb1028567455a9035a92fa3948b0b6611356b22e7da79c67b5fce3",
+    "ai027DataSha256": "006542d3139bf477528dae95908c41feb1098c79d63654fab4c32da6ca5351da"
+  },
+  "integrityOk": true,
+  "integrityErrors": []
+}

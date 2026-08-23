@@ -199,12 +199,21 @@ for (const feature of featureRegistry.features ?? []) {
 
 const ciRuns = ciRegistry.runs ?? [];
 for (const run of ciRuns) {
-  if (!['all-pass', 'intentional-single-failure'].includes(run.purpose)) error(`CI run ${run.id} has invalid purpose`);
+  if (!['all-pass', 'intentional-single-failure', 'canonical-full-suite'].includes(run.purpose)) error(`CI run ${run.id} has invalid purpose`);
   if (!/^[0-9a-f]{7,40}$/i.test(run.commitSha ?? '') || !/^https:\/\/github\.com\//.test(run.url ?? '')) error(`CI run ${run.id} lacks a valid commit SHA or GitHub URL`);
   for (const evidencePath of run.evidencePaths ?? []) requireExisting(evidencePath, `CI run ${run.id} evidence`);
   if (!nonEmpty(run.newmanReportPath) || !nonEmpty(run.screenshotEvidenceId)) error(`CI run ${run.id} lacks Newman artifact or screenshot evidence ID`);
   if (run.purpose === 'all-pass' && run.failedTests !== 0) error(`CI all-pass run ${run.id} must have zero failed tests`);
   if (run.purpose === 'intentional-single-failure' && run.failedTests !== 1) error(`CI intentional failure run ${run.id} must have exactly one failed test`);
+  if (run.purpose === 'canonical-full-suite') {
+    requireExisting(run.canonicalSummaryPath, `CI canonical full-suite ${run.id} summary`);
+    if (run.conclusion !== 'failure') error(`CI canonical full-suite ${run.id} must expose its genuine failing result`);
+    if (!Number.isInteger(run.counts?.executable) || run.counts.executed !== run.counts.executable) error(`CI canonical full-suite ${run.id} does not execute every canonical case`);
+    if (run.counts?.passed + run.counts?.failed !== run.counts?.executed) error(`CI canonical full-suite ${run.id} arithmetic does not reconcile`);
+    if (run.runtimeHeaderCoverage?.requests !== run.runtimeHeaderCoverage?.studentHeaderRequests) error(`CI canonical full-suite ${run.id} lacks complete student-header coverage`);
+    if (run.matchesCanonicalLocalResults !== true) error(`CI canonical full-suite ${run.id} differs from canonical local results`);
+    if (typeof run.screenshotHumanAttestation !== 'boolean') error(`CI canonical full-suite ${run.id} lacks screenshot attestation state`);
+  }
 }
 
 function resolvePathFrom(source) {

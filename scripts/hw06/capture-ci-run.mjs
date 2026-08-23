@@ -77,13 +77,23 @@ function findReports(directory) {
   return found;
 }
 
+function findNamedFiles(directory, fileName) {
+  const found = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const candidate = path.join(directory, entry.name);
+    if (entry.isDirectory()) found.push(...findNamedFiles(candidate, fileName));
+    else if (entry.isFile() && entry.name === fileName) found.push(candidate);
+  }
+  return found;
+}
+
 try {
   if (action === 'inspect-report') {
     const report = relativeToRepo(path.resolve(required('report')));
     process.stdout.write(`${JSON.stringify(newmanSummary(report), null, 2)}\n`);
   } else if (action === 'capture') {
     const purpose = required('purpose');
-    if (!['all-pass', 'intentional-single-failure'].includes(purpose)) throw new Error('Invalid --purpose');
+    if (!['all-pass', 'intentional-single-failure', 'canonical-full-suite'].includes(purpose)) throw new Error('Invalid --purpose');
     const runReference = runId(required('run'));
     const artifactName = required('artifact-name');
     const screenshotEvidenceId = required('screenshot-evidence-id');
@@ -106,14 +116,45 @@ try {
     fs.mkdirSync(artifactDirectory, { recursive: true });
     run('gh', ['run', 'download', String(remoteRun.databaseId), '--repo', repo, '--name', artifactName, '--dir', artifactDirectory]);
     const reports = findReports(artifactDirectory);
-    if (reports.length !== 1) throw new Error(`Expected exactly one newman-report.json in artifact; found ${reports.length}`);
-    const reportPath = relativeToRepo(reports[0]);
-    const summary = newmanSummary(reportPath);
+    let reportPath;
+    let reportPaths;
+    let summary;
+    let canonicalSummaryPath = null;
+    let canonicalSummary = null;
+    if (purpose === 'canonical-full-suite') {
+      const summaries = findNamedFiles(artifactDirectory, 'canonical-summary.json');
+      if (summaries.length !== 1) throw new Error(`Expected exactly one canonical-summary.json in artifact; found ${summaries.length}`);
+      if (reports.length !== 4) throw new Error(`Expected four canonical Newman JSON reports; found ${reports.length}`);
+      canonicalSummaryPath = relativeToRepo(summaries[0]);
+      canonicalSummary = JSON.parse(fs.readFileSync(summaries[0], 'utf8'));
+      reportPaths = reports.map(relativeToRepo).sort();
+      reportPath = reportPaths.find((item) => item.includes('/input/newman-report.json'));
+      if (!reportPath) throw new Error('Canonical artifact lacks the main input Newman report');
+      summary = {
+        executionCount: canonicalSummary.counts?.executed,
+        failedTestCases: canonicalSummary.counts?.failed,
+        failedAssertions: canonicalSummary.reports?.reduce((total, item) => total + (item.assertionsFailed ?? 0), 0),
+      };
+    } else {
+      if (reports.length !== 1) throw new Error(`Expected exactly one newman-report.json in artifact; found ${reports.length}`);
+      reportPath = relativeToRepo(reports[0]);
+      reportPaths = [reportPath];
+      summary = newmanSummary(reportPath);
+    }
     if (purpose === 'all-pass' && (remoteRun.conclusion !== 'success' || summary.failedTestCases !== 0)) {
       throw new Error('All-pass CI evidence is not successful with zero failed test cases');
     }
     if (purpose === 'intentional-single-failure' && (remoteRun.conclusion !== 'failure' || summary.failedTestCases !== 1)) {
       throw new Error('Intentional-failure CI evidence must conclude failure with exactly one failed test case');
+    }
+    if (purpose === 'canonical-full-suite' && (
+      remoteRun.conclusion !== 'failure'
+      || canonicalSummary.integrityOk !== true
+      || canonicalSummary.counts?.executed !== canonicalSummary.counts?.executable
+      || canonicalSummary.counts?.passed + canonicalSummary.counts?.failed !== canonicalSummary.counts?.executed
+      || canonicalSummary.caseResultMismatches?.length !== 0
+    )) {
+      throw new Error('Canonical full-suite evidence does not prove a complete, internally consistent failing execution');
     }
     writeJson(`${directoryRel}/github-run.json`, remoteRun);
     const record = {
@@ -129,8 +170,18 @@ try {
       failedTests: summary.failedTestCases,
       failedAssertions: summary.failedAssertions,
       newmanReportPath: reportPath,
+      newmanReportPaths: reportPaths,
+      canonicalSummaryPath,
+      counts: canonicalSummary?.counts ?? null,
+      failedCaseIds: canonicalSummary?.failedCaseIds ?? null,
+      knownBugFailureCaseIds: canonicalSummary?.knownBugFailureCaseIds ?? null,
+      otherFailureCaseIds: canonicalSummary?.otherFailureCaseIds ?? null,
+      runtimeHeaderCoverage: canonicalSummary?.runtimeHeaderCoverage ?? null,
+      identities: canonicalSummary?.identities ?? null,
+      matchesCanonicalLocalResults: canonicalSummary ? canonicalSummary.caseResultMismatches.length === 0 : null,
+      limitationStatus: purpose === 'canonical-full-suite' ? 'PARTIAL / documented limitation due to confirmed SUT defects' : null,
       githubRunMetadataPath: `${directoryRel}/github-run.json`,
-      evidencePaths: [screenshot.path, reportPath],
+      evidencePaths: [screenshot.path, reportPath, ...(canonicalSummaryPath ? [canonicalSummaryPath] : [])],
       screenshotEvidenceId,
       screenshotHumanAttestation: screenshot.humanAttestation === true,
     };

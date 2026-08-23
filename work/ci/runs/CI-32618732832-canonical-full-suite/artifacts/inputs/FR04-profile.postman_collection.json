@@ -1,0 +1,82 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr04-profile-20260822-corrected",
+    "name": "HW06 FR-04 Personal Profile Management - Input Partitions",
+    "description": "Data-driven preparation collection for 41 FR-04 input-partition cases. FR04-AI-031, FR04-AI-046, and FR04-H-005 are in FR04-profile-stateful.postman_collection.json because their reviewed semantics require dedicated multi-request flows.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000" }, { "key": "studentId", "value": "23127179" }],
+  "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') || pm.collectionVariables.get('studentId') || '23127179' });"] } }],
+  "item": [
+    {
+      "name": "Setup / Authentication",
+      "item": [
+        {
+          "name": "Login user A",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('User A login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.environment.set('token', json.token); });"] } }]
+        },
+        {
+          "name": "Capture exact baseline profile A",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Baseline A captured without null normalization', function () { pm.expect(pm.response.code).to.equal(200); var p = pm.response.json(); ['name','shipping_address','phone','email','role'].forEach(function (key) { pm.expect(p).to.have.property(key); }); pm.environment.set('baselineProfile', JSON.stringify({ name: p.name, shipping_address: p.shipping_address, phone: p.phone, email: p.email, role: p.role })); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Data-driven input partitions - 41 cases",
+      "item": [
+        {
+          "name": "Execute {{caseId}} - PUT /api/users/me",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "var id = pm.iterationData.get('caseId'); pm.variables.set('fr04CaseId', id);",
+              "var submitted = { name: 'FR04 ' + id, shipping_address: 'Address ' + id, phone: '0123456789' };",
+              "var phoneByCase = { 'FR04-AI-011': '0123456789', 'FR04-AI-012': '01234567890', 'FR04-AI-013': '012345678', 'FR04-AI-014': '012345678901', 'FR04-AI-015': '1123456789', 'FR04-AI-016': '012345678A', 'FR04-AI-017': '+84123456789', 'FR04-H-004': '' };",
+              "if (Object.prototype.hasOwnProperty.call(phoneByCase, id)) { submitted.phone = phoneByCase[id]; }",
+              "if (id === 'FR04-AI-004' || id === 'FR04-AI-030') { submitted = { phone: '0123456789' }; }",
+              "if (id === 'FR04-AI-020') { submitted.name = ''; }",
+              "if (id === 'FR04-AI-021') { submitted.shipping_address = null; }",
+              "if (id === 'FR04-AI-022') { submitted.name = 12345; }",
+              "if (id === 'FR04-H-001') { submitted.phone = 1234567890; }",
+              "if (id === 'FR04-H-002') { submitted.phone = null; }",
+              "if (id === 'FR04-H-003') { submitted.shipping_address = ['wrong', 'type']; }",
+              "if (id === 'FR04-AI-023') { submitted.name = Array(257).join('L'); }",
+              "if (id === 'FR04-AI-019') { submitted.name = 'Nguyễn Thị Lan'; submitted.shipping_address = '12 Đường Lê Lợi, Quận 1, Thành phố Hồ Chí Minh'; }",
+              "if (id === 'FR04-AI-024') { submitted.name = '<b>Lan</b>'; submitted.shipping_address = '<img src=x onerror=alert(1)>'; }",
+              "if (id === 'FR04-AI-025') { submitted.email = 'changed-FR04-AI-025@example.test'; }",
+              "if (id === 'FR04-AI-026') { submitted.role = 'admin'; }",
+              "if (id === 'FR04-AI-027') { submitted.email = 'changed-FR04-AI-027@example.test'; submitted.role = 'admin'; }",
+              "if (id === 'FR04-AI-035') { submitted.name = 'O\\'Connor \\\"Test\\\"'; }",
+              "if (id === 'FR04-AI-036') { submitted.name = \"Robert'); SELECT 1; --\"; }",
+              "if (id === 'FR04-AI-041') { submitted.unexpected_property = 'FR04 unexpected property'; }",
+              "if (id === 'FR04-AI-039') { submitted = {}; }",
+              "if (id === 'FR04-AI-040') { pm.request.body.update({ mode: 'raw', raw: '[]', options: { raw: { language: 'json' } } }); } else if (id === 'FR04-AI-042') { pm.request.body.update({ mode: 'raw', raw: '{name:', options: { raw: { language: 'json' } } }); } else if (id === 'FR04-H-007') { pm.request.body.update({ mode: 'raw', raw: '', options: { raw: { language: 'json' } } }); } else { pm.request.body.update({ mode: 'raw', raw: JSON.stringify(submitted), options: { raw: { language: 'json' } } }); }",
+              "pm.variables.set('fr04Submitted', JSON.stringify(submitted));",
+              "console.log(id + ' submitted stimulus: ' + JSON.stringify(submitted));",
+              "pm.request.headers.remove('Authorization'); var authMode = ['FR04-AI-005','FR04-AI-033'].includes(id) ? 'none' : 'bearer'; if (id === 'FR04-AI-006') { authMode = 'basic'; } if (id === 'FR04-AI-007') { authMode = 'empty'; } if (id === 'FR04-AI-008') { authMode = 'invalid'; } if (id === 'FR04-AI-009') { authMode = 'expired'; } if (authMode === 'bearer') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') }); } if (authMode === 'basic') { pm.request.headers.add({ key: 'Authorization', value: 'Basic dGVzdDp0ZXN0' }); } if (authMode === 'empty') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer' }); } if (authMode === 'invalid') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer invalid.invalid.invalid' }); } if (authMode === 'expired') { pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('expiredToken') }); } pm.variables.set('fr04AuthMode', authMode);"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "var id = pm.variables.get('fr04CaseId'); var authMode = pm.variables.get('fr04AuthMode'); var submitted = JSON.parse(pm.variables.get('fr04Submitted') || '{}'); var baseline = JSON.parse(pm.environment.get('baselineProfile'));",
+              "function apiRequest(options, callback) { options.header = Object.assign({ 'X-Student-Id': pm.environment.get('studentId') }, options.header || {}); pm.sendRequest(options, function (error, response) { pm.expect(error, 'helper transport error').to.equal(null); callback(response); }); }",
+              "function readA(callback) { apiRequest({ url: pm.environment.get('baseUrl') + '/api/users/me', method: 'GET', header: { Authorization: 'Bearer ' + pm.environment.get('token') } }, function (response) { pm.expect(response.code, 'authenticated read-back').to.equal(200); callback(response.json()); }); }",
+              "function restoreA(callback) { apiRequest({ url: pm.environment.get('baseUrl') + '/api/users/me', method: 'PUT', header: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + pm.environment.get('token') }, body: { mode: 'raw', raw: JSON.stringify({ name: baseline.name, shipping_address: baseline.shipping_address, phone: baseline.phone }) } }, function () { readA(function (actual) { pm.test(id + ' cleanup restores exact baseline profile', function () { pm.expect(actual.name).to.eql(baseline.name); pm.expect(actual.shipping_address).to.eql(baseline.shipping_address); pm.expect(actual.phone).to.eql(baseline.phone); pm.expect(actual.email).to.eql(baseline.email); pm.expect(actual.role).to.eql(baseline.role); }); if (callback) { callback(); } }); }); }",
+              "function assertExactEditable(actual, expected, label) { pm.test(label + ' persisted editable values match submitted values', function () { Object.keys(expected).forEach(function (key) { pm.expect(actual[key]).to.eql(expected[key]); }); }); }",
+              "pm.test(id + ' response is observable without invented status oracle', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "if (authMode !== 'bearer') { readA(function (actual) { pm.test(id + ' invalid authentication did not mutate authenticated profile', function () { pm.expect(actual.name).to.eql(baseline.name); pm.expect(actual.shipping_address).to.eql(baseline.shipping_address); pm.expect(actual.phone).to.eql(baseline.phone); pm.expect(actual.email).to.eql(baseline.email); pm.expect(actual.role).to.eql(baseline.role); }); }); } else if (id === 'FR04-AI-004' || id === 'FR04-AI-030') { readA(function (actual) { console.log(id + ' omission observation:', JSON.stringify(actual)); restoreA(); }); } else if (id === 'FR04-H-007') { readA(function (actual) { pm.test(id + ' missing body did not mutate the exact baseline profile', function () { ['name','shipping_address','phone','email','role'].forEach(function (key) { pm.expect(actual[key]).to.eql(baseline[key]); }); }); restoreA(); }); } else if (['FR04-H-001','FR04-H-002','FR04-H-003'].includes(id)) { readA(function (actual) { console.log(id + ' wrong-type observation:', JSON.stringify(actual)); restoreA(); }); } else if (['FR04-AI-010','FR04-AI-018','FR04-AI-019','FR04-AI-025','FR04-AI-026','FR04-AI-027','FR04-AI-029','FR04-AI-035','FR04-AI-036','FR04-AI-038','FR04-H-006'].includes(id)) { readA(function (actual) { var expected = {}; ['name','shipping_address','phone'].forEach(function (key) { if (Object.prototype.hasOwnProperty.call(submitted, key)) { expected[key] = submitted[key]; } }); assertExactEditable(actual, expected, id); if (['FR04-AI-025','FR04-AI-026','FR04-AI-027','FR04-H-006'].includes(id)) { pm.test(id + ' protected fields remain baseline', function () { pm.expect(actual.email).to.eql(baseline.email); pm.expect(actual.role).to.eql(baseline.role); }); } restoreA(); }); } else if (['FR04-AI-013','FR04-AI-014','FR04-AI-015','FR04-AI-016','FR04-AI-017','FR04-H-004'].includes(id)) { readA(function (actual) { pm.test(id + ' invalid phone did not become the persisted phone value', function () { pm.expect(actual.phone).to.eql(baseline.phone); }); restoreA(); }); } else if (id === 'FR04-AI-024') { readA(function (actual) { assertExactEditable(actual, { name: submitted.name, shipping_address: submitted.shipping_address, phone: submitted.phone }, id + ' API-side'); console.log(id + ' requires separate manual/UI display-boundary verification under SEC-04; API read-back is not a UI PASS.'); restoreA(); }); } else { restoreA(); }"
+            ] } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Verification helpers / Cleanup",
+      "item": [{
+        "name": "Final exact baseline verification for user A",
+        "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] } },
+        "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["var actual = pm.response.json(); var baseline = JSON.parse(pm.environment.get('baselineProfile')); pm.test('Final cleanup verifies exact baseline A', function () { ['name','shipping_address','phone','email','role'].forEach(function (key) { pm.expect(actual[key]).to.eql(baseline[key]); }); });"] } }]
+      }]
+    }
+  ]
+}
