@@ -1,0 +1,14 @@
+{
+  "attempt": 1,
+  "conclusion": "success",
+  "createdAt": "2026-08-23T04:10:15Z",
+  "databaseId": 32617199599,
+  "headBranch": "hw06-api-testing",
+  "headSha": "d8670c47fd18ede663f4da11410d46ed598de891",
+  "name": "HW06 FR-04 Newman CI Sample",
+  "startedAt": "2026-08-23T04:10:15Z",
+  "status": "completed",
+  "updatedAt": "2026-08-23T04:10:44Z",
+  "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599",
+  "workflowName": "HW06 FR-04 Newman CI Sample"
+}

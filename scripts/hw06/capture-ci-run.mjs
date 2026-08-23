@@ -47,11 +47,23 @@ function newmanSummary(reportPath) {
   if (!Array.isArray(executions)) throw new Error('Newman JSON lacks run.executions');
   const failedExecutions = executions.filter((execution) =>
     (execution.assertions ?? []).some((assertion) => assertion.error));
+  // Newman can repeat one request execution in run.executions when setNextRequest
+  // revisits the same item. Count the logical item/iteration/position once so a
+  // single failing case is not misreported as several failed test cases.
+  const failedCases = new Map();
+  for (const execution of failedExecutions) {
+    const key = [
+      execution.item?.id ?? execution.item?.name ?? '<unnamed>',
+      execution.cursor?.iteration ?? '<unknown-iteration>',
+      execution.cursor?.position ?? '<unknown-position>',
+    ].join(':');
+    if (!failedCases.has(key)) failedCases.set(key, execution.item?.name ?? '<unnamed>');
+  }
   return {
     executionCount: executions.length,
-    failedTestCases: failedExecutions.length,
+    failedTestCases: failedCases.size,
     failedAssertions: report.run?.stats?.assertions?.failed ?? null,
-    failedExecutionNames: failedExecutions.map((execution) => execution.item?.name ?? '<unnamed>'),
+    failedExecutionNames: [...failedCases.values()],
   };
 }
 

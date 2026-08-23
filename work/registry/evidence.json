@@ -193,7 +193,7 @@
     },
     {
       "id": "EVID-CI-FR04-ALL-PASS",
-      "type": "github-actions-run",
+      "type": "ci-all-pass-screenshot",
       "description": "Real GitHub Actions all-pass FR-04 CI sample showing repository, workflow/job identity, commit/run status, and Newman execution context.",
       "path": "work/evidence/screenshots/EVID-CI-FR04-ALL-PASS.png",
       "sha256": "3760745a5d1ca866f6a72e2161e8f96a8b4a5198c2dd101ab5db8e825be54036",
@@ -213,6 +213,38 @@
         "width": 1600,
         "height": 1145
       },
+      "githubActionsRunId": 32617199599,
+      "commitSha": "d8670c47fd18ede663f4da11410d46ed598de891",
+      "ciPurpose": "all-pass",
+      "mappedRequirement": "HW06 CI/CD all-pass API-test sample",
+      "humanAttestation": false
+    },
+    {
+      "id": "EVID-CI-FR04-INTENTIONAL-FAILURE",
+      "type": "ci-intentional-single-failure-screenshot",
+      "description": "GitHub Actions FR-04 CI run with exactly one transparent intentional assertion failure",
+      "path": "work/evidence/screenshots/EVID-CI-FR04-INTENTIONAL-FAILURE.png",
+      "sha256": "f82247517bbd810bdc9876d44ba3e58dd13b431e81fa7b1db562a802b0e5e02e",
+      "capturedAt": "2026-08-23T04:18:16.676Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761/job/97140028096",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761/job/97140028096",
+      "pageTitle": "ci(hw06): demonstrate one intentional FR04 failure · BuhDuy256/automation-testing-hw04@84f837f · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 73976,
+        "width": 1600,
+        "height": 1145
+      },
+      "githubActionsRunId": 32617321761,
+      "commitSha": "84f837f95c44f928add2d719d0a5669688d45350",
+      "ciPurpose": "intentional-single-failure",
+      "mappedRequirement": "HW06 CI/CD sample with exactly one intentional test failure",
       "humanAttestation": false
     }
   ]
