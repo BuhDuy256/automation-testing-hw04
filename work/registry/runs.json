@@ -1260,9 +1260,537 @@
       "executionCount": 5,
       "studentHeaderRequests": 5,
       "caseResults": [
-        { "caseId": "FR04-AI-009", "result": "PASS", "classification": "VALID-SIGNED-EXPIRED-JWT" }
+        {
+          "caseId": "FR04-AI-009",
+          "result": "PASS",
+          "classification": "VALID-SIGNED-EXPIRED-JWT"
+        }
       ],
       "resultImportStatus": "pending-human-checked-mapping"
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823035831066-fr04-final-input",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T03:58:31.066Z",
+      "completedAtUtc": "2026-08-23T03:58:58.735Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr04/FR04-profile.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823035831066-fr04-final-input/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823035831066-fr04-final-input/newman-report.html",
+        "--environment",
+        "work/postman/fr04/FR04-profile.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr04/FR04-cases.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+      "collectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+      "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+      "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+      "dataPath": "work/postman/fr04/FR04-cases.postman_data.json",
+      "dataSha256": "905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14",
+      "rawJsonPath": "work/runs/RUN-20260823035831066-fr04-final-input/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823035831066-fr04-final-input/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823035831066-fr04-final-input/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823035831066-fr04-final-input/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823035831066-fr04-final-input/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 41,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 369,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 264,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 228,
+          "pending": 0,
+          "failed": 7
+        },
+        "testScripts": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 205,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 264,
+      "studentHeaderRequests": 264,
+      "caseResults": [],
+      "resultImportStatus": "excluded-harness-concurrency",
+      "mappingNote": "This run overlapped RUN-20260823035802091-fr04-final-input against the same mutable user profile. Raw evidence is preserved, but case results are intentionally not canonical."
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823035802091-fr04-final-input",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T03:58:02.091Z",
+      "completedAtUtc": "2026-08-23T03:58:58.772Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr04/FR04-profile.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823035802091-fr04-final-input/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823035802091-fr04-final-input/newman-report.html",
+        "--environment",
+        "work/postman/fr04/FR04-profile.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr04/FR04-cases.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+      "collectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+      "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+      "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+      "dataPath": "work/postman/fr04/FR04-cases.postman_data.json",
+      "dataSha256": "905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14",
+      "rawJsonPath": "work/runs/RUN-20260823035802091-fr04-final-input/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823035802091-fr04-final-input/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823035802091-fr04-final-input/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823035802091-fr04-final-input/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823035802091-fr04-final-input/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 41,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 369,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 264,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 228,
+          "pending": 0,
+          "failed": 14
+        },
+        "testScripts": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 205,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 264,
+      "studentHeaderRequests": 264,
+      "caseResults": [],
+      "resultImportStatus": "excluded-harness-concurrency",
+      "mappingNote": "This run overlapped RUN-20260823035831066-fr04-final-input against the same mutable user profile. Raw evidence is preserved, but case results are intentionally not canonical."
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823035912444-fr04-final-stateful",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T03:59:12.444Z",
+      "completedAtUtc": "2026-08-23T03:59:14.350Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr04/FR04-profile-stateful.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823035912444-fr04-final-stateful/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823035912444-fr04-final-stateful/newman-report.html",
+        "--environment",
+        "work/postman/fr04/FR04-profile.postman_environment.json"
+      ],
+      "exitCode": 0,
+      "collectionPath": "work/postman/fr04/FR04-profile-stateful.postman_collection.json",
+      "collectionSha256": "a121d17a1ebb8aaa8c682b8ab846352b84653ed52b82a156e074f69d51aeb9af",
+      "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+      "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+      "dataPath": null,
+      "dataSha256": null,
+      "rawJsonPath": "work/runs/RUN-20260823035912444-fr04-final-stateful/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823035912444-fr04-final-stateful/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823035912444-fr04-final-stateful/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823035912444-fr04-final-stateful/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823035912444-fr04-final-stateful/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 1,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 12,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 25,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 12,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 20,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 12,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 16,
+          "pending": 0,
+          "failed": 0
+        },
+        "testScripts": {
+          "total": 12,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 13,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 20,
+      "studentHeaderRequests": 20,
+      "caseResults": [
+        { "caseId": "FR04-AI-031", "result": "PASS" },
+        { "caseId": "FR04-AI-046", "result": "PASS" },
+        { "caseId": "FR04-H-005", "result": "PASS" }
+      ],
+      "resultImportStatus": "human-checked-mapping"
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823040119709-fr04-final-closure",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T04:01:19.709Z",
+      "completedAtUtc": "2026-08-23T04:01:22.588Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr04/FR04-profile.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823040119709-fr04-final-closure/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823040119709-fr04-final-closure/newman-report.html",
+        "--environment",
+        "work/postman/fr04/FR04-profile.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr04/FR04-target-closure.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+      "collectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+      "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+      "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+      "dataPath": "work/postman/fr04/FR04-target-closure.postman_data.json",
+      "dataSha256": "b228739986fb1028567455a9035a92fa3948b0b6611356b22e7da79c67b5fce3",
+      "rawJsonPath": "work/runs/RUN-20260823040119709-fr04-final-closure/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823040119709-fr04-final-closure/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823040119709-fr04-final-closure/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823040119709-fr04-final-closure/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823040119709-fr04-final-closure/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 2,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 8,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 18,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 8,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 14,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 8,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 13,
+          "pending": 0,
+          "failed": 1
+        },
+        "testScripts": {
+          "total": 8,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 10,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 14,
+      "studentHeaderRequests": 14,
+      "caseResults": [
+        { "caseId": "FR04-H-006", "result": "PASS", "classification": "CLEAN-TARGETED-CLOSURE" },
+        { "caseId": "FR04-H-007", "result": "FAIL", "classification": "SPEC-GAP-OBSERVATION" }
+      ],
+      "resultImportStatus": "human-checked-mapping"
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823040227192-fr04-canonical-input",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T04:02:27.192Z",
+      "completedAtUtc": "2026-08-23T04:02:47.212Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr04/FR04-profile.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.html",
+        "--environment",
+        "work/postman/fr04/FR04-profile.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr04/FR04-cases.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
+      "collectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+      "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
+      "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+      "dataPath": "work/postman/fr04/FR04-cases.postman_data.json",
+      "dataSha256": "905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14",
+      "rawJsonPath": "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823040227192-fr04-canonical-input/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823040227192-fr04-canonical-input/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823040227192-fr04-canonical-input/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 41,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 369,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 264,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 228,
+          "pending": 0,
+          "failed": 10
+        },
+        "testScripts": {
+          "total": 164,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 205,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 264,
+      "studentHeaderRequests": 264,
+      "caseResults": [
+        { "caseId": "FR04-AI-001", "result": "PASS" },
+        { "caseId": "FR04-AI-004", "result": "PASS" },
+        { "caseId": "FR04-AI-005", "result": "PASS" },
+        { "caseId": "FR04-AI-006", "result": "PASS" },
+        { "caseId": "FR04-AI-007", "result": "PASS" },
+        { "caseId": "FR04-AI-008", "result": "PASS" },
+        { "caseId": "FR04-AI-009", "result": "PASS" },
+        { "caseId": "FR04-AI-010", "result": "PASS" },
+        { "caseId": "FR04-AI-011", "result": "PASS" },
+        { "caseId": "FR04-AI-012", "result": "PASS" },
+        { "caseId": "FR04-AI-013", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-014", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-015", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-016", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-017", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-018", "result": "PASS" },
+        { "caseId": "FR04-AI-019", "result": "PASS" },
+        { "caseId": "FR04-AI-020", "result": "PASS" },
+        { "caseId": "FR04-AI-021", "result": "PASS" },
+        { "caseId": "FR04-AI-022", "result": "PASS" },
+        { "caseId": "FR04-AI-023", "result": "PASS" },
+        { "caseId": "FR04-AI-024", "result": "PASS", "manualVerification": "PENDING_UI_SEC-04" },
+        { "caseId": "FR04-AI-025", "result": "PASS" },
+        { "caseId": "FR04-AI-026", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-AI-029", "result": "PASS" },
+        { "caseId": "FR04-AI-030", "result": "PASS" },
+        { "caseId": "FR04-AI-033", "result": "PASS" },
+        { "caseId": "FR04-AI-035", "result": "PASS" },
+        { "caseId": "FR04-AI-036", "result": "PASS" },
+        { "caseId": "FR04-AI-038", "result": "PASS" },
+        { "caseId": "FR04-AI-039", "result": "PASS" },
+        { "caseId": "FR04-AI-040", "result": "PASS" },
+        { "caseId": "FR04-AI-041", "result": "PASS" },
+        { "caseId": "FR04-AI-042", "result": "PASS" },
+        { "caseId": "FR04-H-001", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
+        { "caseId": "FR04-H-002", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
+        { "caseId": "FR04-H-003", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
+        { "caseId": "FR04-H-004", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
+        { "caseId": "FR04-H-006", "result": "PASS" },
+        { "caseId": "FR04-H-007", "result": "FAIL", "classification": "SPEC-GAP-OBSERVATION" }
+      ],
+      "resultImportStatus": "human-checked-mapping-with-ai027-excluded-for-intra-run-role-contamination",
+      "mappingNote": "FR04-AI-027 executed after FR04-AI-026 changed the shared role and could not restore it. Its result is intentionally excluded here; the clean current-hash targeted run remains canonical for AI-027."
     }
   ]
 }

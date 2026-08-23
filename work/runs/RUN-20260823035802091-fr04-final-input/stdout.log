@@ -1,0 +1,1366 @@
+newman
+
+HW06 FR-04 Personal Profile Management - Input Partitions
+
+Iteration 1/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 172ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 11ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-001 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -001","shipping_address":"Address FR04-AI-001","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 18ms]
+  √  FR04-AI-001 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 11ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-001 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 2/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 9ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-004 submitted stimulus: {"phone":"0123456789"
+  │ }'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 15ms]
+  √  FR04-AI-004 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 13ms]
+  ┌
+  │ 'FR04-AI-004 omission observation:', '{"id":2,"name":"
+  │ Test User","email":"test@eshop.com","password":"Test12
+  │ 34!","role":"user","login_attempts":0,"locked_until":n
+  │ ull,"reset_token":null,"shipping_address":null,"phone"
+  │ :null}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 6ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-004 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 3/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 6ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-005 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -005","shipping_address":"Address FR04-AI-005","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [401 Unauthorized, 301B, 4ms]
+  √  FR04-AI-005 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-005 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 4/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 10ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-006 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -006","shipping_address":"Address FR04-AI-006","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [403 Forbidden, 295B, 3ms]
+  √  FR04-AI-006 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 13ms]
+  √  FR04-AI-006 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 5/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 8ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-007 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -007","shipping_address":"Address FR04-AI-007","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [401 Unauthorized, 301B, 4ms]
+  √  FR04-AI-007 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  FR04-AI-007 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 6/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-008 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -008","shipping_address":"Address FR04-AI-008","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [403 Forbidden, 295B, 2ms]
+  √  FR04-AI-008 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  FR04-AI-008 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 7/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 12ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-009 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -009","shipping_address":"Address FR04-AI-009","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [403 Forbidden, 295B, 3ms]
+  √  FR04-AI-009 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-009 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 8/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 6ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-010 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -010","shipping_address":"Address FR04-AI-010","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-010 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 6ms]
+  √  FR04-AI-010 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 12ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-010 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 9/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-011 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -011","shipping_address":"Address FR04-AI-011","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 5ms]
+  √  FR04-AI-011 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 5ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-011 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 10/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 7ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-012 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -012","shipping_address":"Address FR04-AI-012","phone"
+  │ :"01234567890"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-012 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-012 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 11/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 9ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-013 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -013","shipping_address":"Address FR04-AI-013","phone"
+  │ :"012345678"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-013 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 483B, 5ms]
+  1. FR04-AI-013 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 4ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-013 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 12/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-014 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -014","shipping_address":"Address FR04-AI-014","phone"
+  │ :"012345678901"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-014 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 486B, 3ms]
+  2. FR04-AI-014 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 3ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-014 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 13/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 7ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-015 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -015","shipping_address":"Address FR04-AI-015","phone"
+  │ :"1123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-015 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 4ms]
+  3. FR04-AI-015 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 12ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-015 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 14/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 8ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-016 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -016","shipping_address":"Address FR04-AI-016","phone"
+  │ :"012345678A"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  √  FR04-AI-016 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 7ms]
+  4. FR04-AI-016 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 20ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 9ms]
+  √  FR04-AI-016 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 15/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 6ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-017 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -017","shipping_address":"Address FR04-AI-017","phone"
+  │ :"+84123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 19ms]
+  √  FR04-AI-017 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 486B, 9ms]
+  5. FR04-AI-017 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 15ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  FR04-AI-017 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 16/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-018 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -018","shipping_address":"Address FR04-AI-018","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  √  FR04-AI-018 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 4ms]
+  √  FR04-AI-018 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 3ms]
+  6. FR04-AI-018 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 17/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-019 submitted stimulus: {"name":"Nguyễn Thị L
+  │ an","shipping_address":"12 Đường Lê Lợi, Quận 1, Thành
+  │  phố Hồ Chí Minh","phone":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-019 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 529B, 6ms]
+  √  FR04-AI-019 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-019 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 18/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-020 submitted stimulus: {"name":"","shipping_
+  │ address":"Address FR04-AI-020","phone":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 5ms]
+  √  FR04-AI-020 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  FR04-AI-020 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 19/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-021 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -021","shipping_address":null,"phone":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 25ms]
+  √  FR04-AI-021 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 15ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  FR04-AI-021 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 20/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 2ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 10ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-022 submitted stimulus: {"name":12345,"shippi
+  │ ng_address":"Address FR04-AI-022","phone":"0123456789"
+  │ }'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-022 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-022 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 13ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 21/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-023 submitted stimulus: {"name":"LLLLLLLLLLLL
+  │ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+  │ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+  │ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+  │ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+  │ LLLLLLLLLLLLLLLLLLLLLLLLLLLL","shipping_address":"Addr
+  │ ess FR04-AI-023","phone":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-023 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  FR04-AI-023 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 22/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 7ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-024 submitted stimulus: {"name":"<b>Lan</b>",
+  │ "shipping_address":"<img src=x onerror=alert(1)>","pho
+  │ ne":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 25ms]
+  √  FR04-AI-024 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 487B, 7ms]
+  √  FR04-AI-024 API-side persisted editable values match submitted values
+  ┌
+  │ 'FR04-AI-024 requires separate manual/UI display-bound
+  │ ary verification under SEC-04; API read-back is not a 
+  │ UI PASS.'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 6ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 9ms]
+  √  FR04-AI-024 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 23/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 635B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-025 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -025","shipping_address":"Address FR04-AI-025","phone"
+  │ :"0123456789","email":"changed-FR04-AI-025@example.tes
+  │ t"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 26ms]
+  √  FR04-AI-025 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 9ms]
+  √  FR04-AI-025 persisted editable values match submitted values
+  √  FR04-AI-025 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 13ms]
+  GET http://localhost:3000/api/users/me [200 OK, 452B, 8ms]
+  √  FR04-AI-025 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 6ms]
+  7. Final cleanup verifies exact baseline A
+
+Iteration 24/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 667B, 9ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 484B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-026 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -026","shipping_address":"Address FR04-AI-026","phone"
+  │ :"0123456789","role":"admin"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  √  FR04-AI-026 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  FR04-AI-026 persisted editable values match submitted values
+  8. FR04-AI-026 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 2ms]
+  9. FR04-AI-026 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+ 10. Final cleanup verifies exact baseline A
+
+Iteration 25/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-027 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -027","shipping_address":"Address FR04-AI-027","phone"
+  │ :"0123456789","email":"changed-FR04-AI-027@example.tes
+  │ t","role":"admin"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 20ms]
+  √  FR04-AI-027 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 10ms]
+  √  FR04-AI-027 persisted editable values match submitted values
+  √  FR04-AI-027 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+ 11. FR04-AI-027 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 26/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-029 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -029","shipping_address":"Address FR04-AI-029","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  √  FR04-AI-029 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  FR04-AI-029 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-AI-029 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 27/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 7ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-030 submitted stimulus: {"phone":"0123456789"
+  │ }'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-AI-030 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 454B, 2ms]
+  ┌
+  │ 'FR04-AI-030 omission observation:', '{"id":2,"name":n
+  │ ull,"email":"test@eshop.com","password":"Test1234!","r
+  │ ole":"admin","login_attempts":0,"locked_until":null,"r
+  │ eset_token":null,"shipping_address":null,"phone":"0123
+  │ 456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  FR04-AI-030 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 28/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-033 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -033","shipping_address":"Address FR04-AI-033","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [401 Unauthorized, 301B, 4ms]
+  √  FR04-AI-033 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-AI-033 invalid authentication did not mutate authenticated profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 29/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 6ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ `FR04-AI-035 submitted stimulus: {"name":"O'Connor \\"
+  │ Test\\"","shipping_address":"Address FR04-AI-035","pho
+  │ ne":"0123456789"}`
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  √  FR04-AI-035 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 486B, 5ms]
+  √  FR04-AI-035 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-AI-035 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 30/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ `FR04-AI-036 submitted stimulus: {"name":"Robert'); SE
+  │ LECT 1; --","shipping_address":"Address FR04-AI-036","
+  │ phone":"0123456789"}`
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 14ms]
+  √  FR04-AI-036 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 491B, 4ms]
+  √  FR04-AI-036 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 11ms]
+  GET http://localhost:3000/api/users/me [200 OK, 491B, 7ms]
+ 12. FR04-AI-036 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 9ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 31/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 10ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-038 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -038","shipping_address":"Address FR04-AI-038","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 24ms]
+  √  FR04-AI-038 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  FR04-AI-038 persisted editable values match submitted values
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 6ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  FR04-AI-038 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 32/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-039 submitted stimulus: {}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 4ms]
+  √  FR04-AI-039 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 4ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-AI-039 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 33/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-040 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -040","shipping_address":"Address FR04-AI-040","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  √  FR04-AI-040 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 19ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 9ms]
+  √  FR04-AI-040 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 34/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-041 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -041","shipping_address":"Address FR04-AI-041","phone"
+  │ :"0123456789","unexpected_property":"FR04 unexpected p
+  │ roperty"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 11ms]
+  √  FR04-AI-041 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  FR04-AI-041 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 35/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 5ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-AI-042 submitted stimulus: {"name":"FR04 FR04-AI
+  │ -042","shipping_address":"Address FR04-AI-042","phone"
+  │ :"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [400 Bad Request, 1.56kB, 3ms]
+  √  FR04-AI-042 response is observable without invented status oracle
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 3ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-AI-042 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 2ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 36/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-001 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 01","shipping_address":"Address FR04-H-001","phone":12
+  │ 34567890}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  √  FR04-H-001 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 483B, 5ms]
+  ┌
+  │ 'FR04-H-001 wrong-type observation:', '{"id":2,"name":
+  │ "FR04 FR04-H-001","email":"test@eshop.com","password":
+  │ "Test1234!","role":"admin","login_attempts":0,"locked_
+  │ until":null,"reset_token":null,"shipping_address":"Add
+  │ ress FR04-H-001","phone":"1234567890"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 10ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-H-001 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 37/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-002 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 02","shipping_address":"Address FR04-H-002","phone":nu
+  │ ll}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 6ms]
+  √  FR04-H-002 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 475B, 6ms]
+  ┌
+  │ 'FR04-H-002 wrong-type observation:', '{"id":2,"name":
+  │ "FR04 FR04-H-002","email":"test@eshop.com","password":
+  │ "Test1234!","role":"admin","login_attempts":0,"locked_
+  │ until":null,"reset_token":null,"shipping_address":"Add
+  │ ress FR04-H-002","phone":null}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 3ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-H-002 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 38/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-003 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 03","shipping_address":["wrong","type"],"phone":"01234
+  │ 56789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 4ms]
+  √  FR04-H-003 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 480B, 4ms]
+  ┌
+  │ 'FR04-H-003 wrong-type observation:', '{"id":2,"name":
+  │ "FR04 FR04-H-003","email":"test@eshop.com","password":
+  │ "Test1234!","role":"admin","login_attempts":0,"locked_
+  │ until":null,"reset_token":null,"shipping_address":"[ob
+  │ ject Object]","phone":"0123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 9ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 3ms]
+  √  FR04-H-003 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 39/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 3ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-004 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 04","shipping_address":"Address FR04-H-004","phone":""
+  │ }'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 14ms]
+  √  FR04-H-004 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 473B, 8ms]
+ 13. FR04-H-004 invalid phone did not become the persisted phone value
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 8ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 5ms]
+  √  FR04-H-004 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 40/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 7ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 10ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-006 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 06","shipping_address":"Address FR04-H-006","phone":"0
+  │ 123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 13ms]
+  √  FR04-H-006 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 483B, 7ms]
+  √  FR04-H-006 persisted editable values match submitted values
+  √  FR04-H-006 protected fields remain baseline
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 13ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 7ms]
+  √  FR04-H-006 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 8ms]
+  √  Final cleanup verifies exact baseline A
+
+Iteration 41/41
+
+□ Setup / Authentication
+└ Login user A
+  POST http://localhost:3000/api/login [200 OK, 670B, 4ms]
+  √  User A login returns a token
+
+└ Capture exact baseline profile A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 6ms]
+  √  Baseline A captured without null normalization
+
+□ Data-driven input partitions - 41 cases
+└ Execute {{caseId}} - PUT /api/users/me
+  ┌
+  │ 'FR04-H-007 submitted stimulus: {"name":"FR04 FR04-H-0
+  │ 07","shipping_address":"Address FR04-H-007","phone":"0
+  │ 123456789"}'
+  └
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 5ms]
+  √  FR04-H-007 response is observable without invented status oracle
+  GET http://localhost:3000/api/users/me [200 OK, 446B, 3ms]
+ 14. FR04-H-007 missing body did not mutate the exact baseline profile
+  PUT http://localhost:3000/api/users/me [200 OK, 296B, 7ms]
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 4ms]
+  √  FR04-H-007 cleanup restores exact baseline profile
+
+□ Verification helpers / Cleanup
+└ Final exact baseline verification for user A
+  GET http://localhost:3000/api/users/me [200 OK, 485B, 10ms]
+  √  Final cleanup verifies exact baseline A
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │               41 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │              264 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │              164 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │              205 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │              228 │               14 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 14.1s                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 48.63kB (approx)                         │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 7ms [min: 2ms, max: 172ms, s.d.: 10ms] │
+└───────────────────────────────────────────────────────────────┘
+
+[31m   # [39m[31m failure        [39m[31m detail                                                                                    [39m
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 01.  AssertionError  FR04-AI-013 invalid phone did not become the persisted phone value                        
+      iteration: 11   expected '012345678' to deeply equal null                                                 
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 02.  AssertionError  FR04-AI-014 invalid phone did not become the persisted phone value                        
+      iteration: 12   expected '012345678901' to deeply equal null                                              
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 03.  AssertionError  FR04-AI-015 invalid phone did not become the persisted phone value                        
+      iteration: 13   expected '1123456789' to deeply equal null                                                
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 04.  AssertionError  FR04-AI-016 invalid phone did not become the persisted phone value                        
+      iteration: 14   expected '012345678A' to deeply equal null                                                
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 05.  AssertionError  FR04-AI-017 invalid phone did not become the persisted phone value                        
+      iteration: 15   expected '+84123456789' to deeply equal null                                              
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 06.  AssertionError  FR04-AI-018 cleanup restores exact baseline profile                                       
+      iteration: 16   expected 'FR04 FR04-AI-018' to deeply equal 'Test User'                                   
+                      at assertion:2 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 07.  AssertionError  Final cleanup verifies exact baseline A                                                   
+      iteration: 23   expected 'FR04 FR04-AI-025' to deeply equal 'Test User'                                   
+                      at assertion:0 in test-script                                                             
+                      inside "Verification helpers / Cleanup / Final exact baseline verification for user A"    
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 08.  AssertionError  FR04-AI-026 protected fields remain baseline                                              
+      iteration: 24   expected 'admin' to deeply equal 'user'                                                   
+                      at assertion:2 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 09.  AssertionError  FR04-AI-026 cleanup restores exact baseline profile                                       
+      iteration: 24   expected 'admin' to deeply equal 'user'                                                   
+                      at assertion:3 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 10.  AssertionError  Final cleanup verifies exact baseline A                                                   
+      iteration: 24   expected 'FR04 FR04-AI-026' to deeply equal 'FR04 FR04-AI-025'                            
+                      at assertion:0 in test-script                                                             
+                      inside "Verification helpers / Cleanup / Final exact baseline verification for user A"    
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 11.  AssertionError  FR04-AI-027 cleanup restores exact baseline profile                                       
+      iteration: 25   expected 'FR04 FR04-AI-027' to deeply equal 'FR04 FR04-AI-026'                            
+                      at assertion:3 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 12.  AssertionError  FR04-AI-036 cleanup restores exact baseline profile                                       
+      iteration: 30   expected 'Robert\'); SELECT 1; --' to deeply equal 'FR04 FR04-AI-026'                     
+                      at assertion:2 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 13.  AssertionError  FR04-H-004 invalid phone did not become the persisted phone value                         
+      iteration: 39   expected '' to deeply equal '0123456789'                                                  
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
+[90m     [39m[90m                [39m[90m                                                                                           [39m
+ 14.  AssertionError  FR04-H-007 missing body did not mutate the exact baseline profile                         
+      iteration: 41   expected null to deeply equal 'FR04 FR04-AI-026'                                          
+                      at assertion:1 in test-script                                                             
+                      inside "Data-driven input partitions - 41 cases / Execute {{caseId}} - PUT /api/users/me" 
