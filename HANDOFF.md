@@ -1005,3 +1005,47 @@ Next genuine human gate: `HG-FR08-BUG-03`, one explicit decision authorizing cre
 GitHub Issues. Publication must use `publish-bug.mjs publish --confirm <BUG-ID>` so the returned
 number and URL are verified against GitHub and persisted; a URL must never be recorded after a
 failed create.
+
+## 35. Checkpoint — FR-08 bugs published; Issue-page evidence awaiting attestation
+
+The student explicitly authorized publication, and ACT-BUG-03 completed for both bugs:
+
+```text
+BUG-CANDIDATE-FR08-CLIENT-TOTAL        published  issue #15
+BUG-CANDIDATE-FR08-CART-NOT-CLEARED    published  issue #16
+```
+
+Both were created through `publish-bug.mjs publish --confirm`, which verified each returned Issue via
+`gh issue view` before persisting: OPEN state, matching title, canonical bug ID, every linked case
+id, and rendered image Markdown. Numbers and URLs come from GitHub's own response. Evidence images
+are embedded by committed blob reference at `713bad65fb85966e9eb9febf2627a0d228bd8d11`, which was
+pushed before publication, and both render inside the Issue bodies.
+
+`https://github.com/BuhDuy256/automation-testing-hw04/issues/15`
+`https://github.com/BuhDuy256/automation-testing-hw04/issues/16`
+
+Two new Issue-page screenshots were captured anonymously against the public URLs, which also
+demonstrates public readability:
+
+```text
+EVID-FR08-CLIENT-TOTAL-ISSUE        1600x7709  humanAttestation=false
+EVID-FR08-CART-NOT-CLEARED-ISSUE    1600x7512  humanAttestation=false
+```
+
+The canonical run `RUN-20260823080014785-fr08-canonical-full-suite` is still unchanged and was never
+rerun. Validation: `npm run hw06:validate` PASS with 0 errors and exactly the 2 expected
+"no explicit human attestation" warnings for the new Issue screenshots. Commits `b23657c` and
+`9409003`, both pushed.
+
+Status:
+
+```text
+FR-08 ACT-BUG-03                   COMPLETE — issues #15 and #16 published and verified
+FR-08 Issue-page evidence          AWAITING student visual attestation
+FR-08 CI                           NOT STARTED
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              NOT STARTED
+```
+
+Next genuine human gate: `HG-FR08-EVID-02`, attestation of the two Issue-page screenshots. After that
+the remaining FR-08 work is CI evidence, then FR-15.
