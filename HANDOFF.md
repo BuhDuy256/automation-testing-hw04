@@ -1289,3 +1289,74 @@ Do not reopen FR-08 unless a genuine defect in its evidence is found. Commits `c
 
 Next: FR-15 resumes at `HG-FR15-REV-01`, still paused with 58 candidates generated, no verdict
 recorded, and the non-canonical proposal at `work/reviews/HG-FR15-REV-01-proposal.md`.
+
+## 41. Checkpoint — AI Audit Report written; FR-08 FROZEN; FR-15 held at HG-FR15-REV-01
+
+This is the clean context-switch checkpoint. Start a new session here.
+
+### FR-08 = FROZEN
+
+Final state, every figure re-read from the canonical registries:
+
+```text
+selected API    POST /api/checkout  (Pool B, FR-08)
+cases           62 = 57 AI candidates + 5 student-selected extensions
+human audit     57 reviews: 40 VALID, 11 INCOMPLETE with approved corrections, 6 INVALID
+usable          51 AI-origin + 5 HUMAN = 56 executable
+canonical run   RUN-20260823080014785-fr08-canonical-full-suite, exit code 1 preserved
+results         56 executed, 37 PASS, 19 FAIL, every failure mapped to a published bug
+bugs            #15 client-supplied total persisted; #16 cart not cleared after checkout
+evidence        10 items, all human-attested, all promoted to out/fr08/evidence/
+CI              all-pass 32629097098 success 0 failures; intentional 32629191161 failure exactly 1
+curation        out/fr08/ holds postman inputs, manual-import copies, newman artifacts, ci, evidence,
+                test-summary.md and README.md
+```
+
+Standing limitations that must never be softened: the 37 passes do not prove server-side total
+derivation; SEC-04 is not proved by any FR-08 case; SEC-05 cannot be proved black-box; SEC-03 is not
+claimed for checkout; no FR-08 canonical full-suite CI workflow exists.
+
+Do not reopen FR-08 unless a genuine defect in its evidence is found.
+
+### AI Audit Report = WRITTEN
+
+`out/ai-audit-report.md` is cumulative and now covers FR-04 and FR-08.
+
+```text
+114 audited artifacts: 69 VALID, 16 INVALID, 29 INCOMPLETE
+FR-04 subset 53 (unchanged)
+FR-08 subset 61 = 57 test candidates (40/11/6) + 1 Postman implementation + 2 GitHub Issues + 1 CI
+```
+
+FR-08 rows quote the verbatim bounded prompt stored with each candidate, the actual tool
+`Claude Opus 5 (claude-opus-5) via Claude Code`, and the real generation timestamp. No FR-08 prompt is
+reconstructed from an output. FR-04 rows keep their disclosed limitation that prompts were not
+captured at the time. A mechanical consistency audit confirmed all 57 FR-08 case ids, both Issue URLs,
+the canonical run id and collection hash, and both CI run ids appear in the report, with zero verdict
+mismatches against `work/registry/human-reviews.json`.
+
+### FR-15 = UNTOUCHED, held at HG-FR15-REV-01
+
+```text
+FR-15 ACT-GEN-01                COMPLETE
+candidates                      58 original AI candidates FR15-AI-001..FR15-AI-058
+prompts                         work/prompts/fr15/FR15-GEN-B1..B5 (verbatim, unchanged)
+coverage ledger                 work/prompts/fr15/FR15-GEN-coverage-ledger.md
+current gate                    HG-FR15-REV-01
+proposed AI review              52 VALID / 4 INCOMPLETE / 2 INVALID
+proposal (non-canonical)        work/reviews/HG-FR15-REV-01-proposal.md
+canonical human verdict         NONE recorded
+```
+
+Proposed INCOMPLETE: `FR15-AI-002`, `FR15-AI-046`, `FR15-AI-049`, `FR15-AI-056`.
+Proposed INVALID: `FR15-AI-038`, `FR15-AI-045`.
+
+Next action after the context switch: resume `HG-FR15-REV-01` by presenting the proposal to the
+student and waiting for an explicit verdict decision. Do not regenerate FR-15 cases, do not record any
+FR-15 human review without an explicit student response, and do not start `ACT-EXT-01`.
+
+### Validation at this checkpoint
+
+`npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and 0 warnings,
+`git diff --check` clean. `eshop-sut/backend/database.sqlite` remains an uncommitted runtime-only
+modification.
