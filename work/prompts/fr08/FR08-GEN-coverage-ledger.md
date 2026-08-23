@@ -20,7 +20,7 @@ Total AI candidates: 56.
 | `shipping_address` — blank forms | empty string, whitespace-only, null, omitted | FR08-AI-013, FR08-AI-014, FR08-AI-015, FR08-AI-016 |
 | `shipping_address` — wrong type | scalar number, nested object | FR08-AI-017, FR08-AI-045 |
 | `shipping_address` — robustness | 1000 characters, control characters, HTML payload, SQL metacharacters | FR08-AI-018, FR08-AI-055, FR08-AI-028, FR08-AI-029 |
-| `Authorization` header | valid user, missing, non-Bearer scheme, empty credential, tampered signature, non-JWT string, foreign-signed JWT, admin identity | FR08-AI-001, FR08-AI-019, FR08-AI-020, FR08-AI-021, FR08-AI-022, FR08-AI-023, FR08-AI-024, FR08-AI-056 |
+| `Authorization` header | valid user, missing, non-Bearer scheme, empty credential, tampered signature, non-JWT string, foreign-signed JWT, admin identity (expired token uncovered — see below) | FR08-AI-001, FR08-AI-019, FR08-AI-020, FR08-AI-021, FR08-AI-022, FR08-AI-023, FR08-AI-024, FR08-AI-056 |
 | Undocumented extra body fields | `user_id`, `status`, `discount_code` | FR08-AI-026, FR08-AI-027, FR08-AI-047 |
 | Upstream cart input `price` (§4.2) | client-supplied price below catalogue price | FR08-AI-053 |
 
@@ -68,6 +68,7 @@ Total AI candidates: 56.
 | Item | Reason not covered |
 |---|---|
 | Exact HTTP status codes for every negative case | The API specification documents no status or error schema for `POST /api/checkout`; asserting one would invent a contract (`SPEC GAP` recorded on every affected candidate). |
+| Expired JWT partition named in the verified spec extract | Found by adversarial verification after batch `FR08-GEN-B2`. Minting an expired token requires the server signing secret, which is not available black-box, and a token signed with any other secret fails signature verification first, so the result would be indistinguishable from FR08-AI-022. Waiting for natural expiry is not executable inside a Newman run. Recorded as an uncovered authoritative partition rather than covered by a look-alike case. |
 | Cart item removal before checkout | No cart-removal endpoint is documented in `eshop-sut/api_specification.md` §4, so such a case would not be executable as written. |
 | `shipping_address` maximum length boundary pair (for example 255/256) | No maximum length is documented; the single 1000-character robustness case (FR08-AI-018) covers the risk without inventing a limit. |
 | Order status lifecycle after creation | `PUT /api/orders/:id/cancel` (§4.6) is a separate operation outside the selected API; only client-supplied status at creation time is covered (FR08-AI-027). |
