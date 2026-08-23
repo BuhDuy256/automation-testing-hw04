@@ -1,0 +1,72 @@
+newman
+
+HW06 FR-08 CI Demonstration Sample
+
+→ CI setup: register demonstration user
+  POST http://127.0.0.1:3000/api/register [200 OK, 317B, 75ms]
+  √  CI setup: demonstration user registered
+
+→ CI setup: login demonstration user
+  POST http://127.0.0.1:3000/api/login [200 OK, 673B, 14ms]
+  √  CI setup: demonstration user login returns a token
+
+→ CI setup: seed a known cart and capture the baseline
+  POST http://127.0.0.1:3000/api/cart [200 OK, 294B, 11ms]
+  ┌
+  │ 'CI seed cart -> 200'
+  └
+  GET http://127.0.0.1:3000/api/orders/my-orders [200 OK, 267B, 8ms]
+  ┌
+  │ 'CI baseline order ids: []'
+  └
+  GET http://127.0.0.1:3000/api/cart [200 OK, 325B, 6ms]
+  √  CI setup: pre-checkout cart state is readable
+  ┌
+  │ 'CI server-observed pre-checkout cart: [{"id":1,"name"
+  │ :"San pham A","price":100000,"quantity":2}]'
+  └
+
+→ Execute {{caseId}} - unauthenticated POST /api/checkout
+  ┌
+  │ 'FR08-AI-019 sending checkout with no Authorization he
+  │ ader'
+  └
+  POST http://127.0.0.1:3000/api/checkout [401 Unauthorized, 301B, 5ms]
+  √  FR08-AI-019 checkout returned an observable HTTP response
+  √  FR08-AI-019 request carried the student header X-Student-Id: 23127179
+  ┌
+  │ 'FR08-AI-019 checkout response 401 :: {"error":"Unauth
+  │ orized"}'
+  │ 'FR08-AI-019 SPEC GAP: the API specification defines n
+  │ o status code for POST /api/checkout, so no status ora
+  │ cle is asserted.'
+  └
+
+→ Verify {{caseId}} - no order was created
+  GET http://127.0.0.1:3000/api/orders/my-orders [200 OK, 267B, 6ms]
+  √  FR08-AI-019 order history is readable after the attempt
+  ┌
+  │ 'FR08-AI-019 orders after the attempt: []'
+  └
+  √  FR08-AI-019 unauthenticated checkout created no order (FR-08 login rule, SEC-02)
+  √  FR08-AI-019 [CI-DEMO] intentional failure is disabled
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                7 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                8 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                8 │                0 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 602ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 567B (approx)                            │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 17ms [min: 5ms, max: 75ms, s.d.: 23ms] │
+└───────────────────────────────────────────────────────────────┘

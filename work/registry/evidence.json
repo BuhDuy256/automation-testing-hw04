@@ -365,7 +365,9 @@
         "width": 1600,
         "height": 7709
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:40:10.138Z"
     },
     {
       "id": "EVID-FR08-CART-NOT-CLEARED-ISSUE",
@@ -389,7 +391,9 @@
         "width": 1600,
         "height": 7512
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:40:10.758Z"
     }
   ]
 }

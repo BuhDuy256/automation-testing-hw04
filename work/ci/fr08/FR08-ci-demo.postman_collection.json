@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr08-ci-demo-20260823",
+    "name": "HW06 FR-08 CI Demonstration Sample",
+    "description": "Small CI demonstration suite for POST /api/checkout. It executes one canonical FR-08 case, FR08-AI-019, whose oracle is the documented FR-08 login rule and SEC-02: an unauthenticated checkout must be refused and must create no order. That case genuinely passes against the SUT, so this workflow demonstrates a green CI pipeline without hiding either published FR-08 defect. The intentionalFailure flag in the data file drives the separate intentional-single-failure demonstration; it is a CI-behaviour demonstration only and never changes a product oracle.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:3000" },
+    { "key": "studentId", "value": "23127179" }
+  ],
+  "event": [
+    { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+      "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.collectionVariables.get('studentId') || '23127179' });"
+    ] } }
+  ],
+  "item": [
+    {
+      "name": "CI setup: register demonstration user",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"FR08 CI Demo User\",\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{baseUrl}}/api/register", "host": ["{{baseUrl}}"], "path": ["api", "register"] }
+      },
+      "event": [
+        { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+          "pm.collectionVariables.set('ciEmail', 'fr08-ci-' + Date.now() + '-' + Math.floor(Math.random() * 1000000) + '@eshop.test');",
+          "pm.collectionVariables.set('ciPassword', 'Fr08Ci1234!');"
+        ] } },
+        { "listen": "test", "script": { "type": "text/javascript", "exec": [
+          "pm.test('CI setup: demonstration user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });"
+        ] } }
+      ]
+    },
+    {
+      "name": "CI setup: login demonstration user",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+      },
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": [
+          "pm.test('CI setup: demonstration user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.collectionVariables.set('ciToken', json.token); });"
+        ] } }
+      ]
+    },
+    {
+      "name": "CI setup: seed a known cart and capture the baseline",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{ciToken}}" }],
+        "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api", "cart"] }
+      },
+      "event": [
+        { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+          "var base = pm.collectionVariables.get('baseUrl');",
+          "var token = pm.collectionVariables.get('ciToken');",
+          "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+          "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+          "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+          "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+          "    var ids = [];",
+          "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+          "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+          "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+          "  });",
+          "});"
+        ] } },
+        { "listen": "test", "script": { "type": "text/javascript", "exec": [
+          "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+          "var cart = [];",
+          "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+          "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+        ] } }
+      ]
+    },
+    {
+      "name": "Execute {{caseId}} - unauthenticated POST /api/checkout",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"total_amount\": 200000,\n  \"shipping_address\": \"123 Le Loi, TP.HCM\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{baseUrl}}/api/checkout", "host": ["{{baseUrl}}"], "path": ["api", "checkout"] }
+      },
+      "event": [
+        { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+          "pm.request.headers.remove('Authorization');",
+          "console.log(pm.iterationData.get('caseId') + ' sending checkout with no Authorization header');"
+        ] } },
+        { "listen": "test", "script": { "type": "text/javascript", "exec": [
+          "var id = pm.iterationData.get('caseId');",
+          "pm.test(id + ' checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+          "pm.test(id + ' request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+          "console.log(id + ' checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 200));",
+          "console.log(id + ' SPEC GAP: the API specification defines no status code for POST /api/checkout, so no status oracle is asserted.');"
+        ] } }
+      ]
+    },
+    {
+      "name": "Verify {{caseId}} - no order was created",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{ciToken}}" }],
+        "url": { "raw": "{{baseUrl}}/api/orders/my-orders", "host": ["{{baseUrl}}"], "path": ["api", "orders", "my-orders"] }
+      },
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": [
+          "var id = pm.iterationData.get('caseId');",
+          "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+          "var baseline = JSON.parse(pm.collectionVariables.get('ciBaselineOrderIds') || '[]');",
+          "var orders = [];",
+          "try { orders = pm.response.json(); } catch (error) { orders = []; }",
+          "var newOrders = orders.filter(function (order) { return baseline.indexOf(order.id) === -1; });",
+          "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+          "pm.test(id + ' unauthenticated checkout created no order (FR-08 login rule, SEC-02)', function () { pm.expect(newOrders.length).to.equal(0); });",
+          "if (pm.iterationData.get('intentionalFailure') === true) {",
+          "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+          "} else {",
+          "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+          "}"
+        ] } }
+      ]
+    }
+  ]
+}
