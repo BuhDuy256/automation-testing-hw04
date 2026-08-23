@@ -555,3 +555,51 @@ CI evidence is registered with real run IDs, URLs, commit SHAs, Newman artifacts
 Both CI screenshots intentionally remain `humanAttestation=false`; these two warnings are the next human gate. Derived/finalized reports are `work/generated/ci-cd-report.md`, `out/ci-cd-report.md`, `work/generated/bug-report.md`, `out/bug-report.md`, `work/generated/postman-features.md`, and `out/postman-features.md`. Promoted official FR-04 Postman/Newman artifacts and provenance are under `out/fr04/`.
 
 FR-04 must not yet be labeled CLOSED. Remaining gates are: human visual attestation of the two CI screenshots; real UI/display-boundary verification for `FR04-AI-024` under SEC-04; and explicit disposition of the documented `FR04-H-007` specification-gap observation if closure policy requires more than retaining it as an exploratory non-bug failure. FR-08, Agent Skill/generator work, and unrelated external publication have not started.
+
+## 26. Latest checkpoint — canonical FR-04 suite integrated in CI; new screenshot attestation pending
+
+The student explicitly inspected and attested the two existing CI mechanism screenshots under `Nguyen Bao Duy`:
+
+- `EVID-CI-FR04-ALL-PASS`
+- `EVID-CI-FR04-INTENTIONAL-FAILURE`
+
+Their evidence registry, metadata, and CI registry states now record completed human attestation. Validation immediately after attestation passed with 0 errors and 0 warnings. The two finalized PNGs are promoted under `out/fr04/evidence/`.
+
+The existing smoke workflow and real runs remain unchanged. They use only stable canonical case `FR04-AI-001` to demonstrate one genuine green CI state and one transparent intentional failure named `FR04-AI-001 [CI-DEMO] intentional single failure`. They do not prove that all 44 canonical FR-04 cases pass and are not described as full-suite evidence.
+
+A separate frozen-before-execution workflow now integrates the complete canonical FR-04 suite:
+
+- Workflow: `.github/workflows/hw06-fr04-canonical-full-suite.yml`
+- Freeze commit: `f34b71b24f368c819140fa077ce8942b76893470`
+- Real run: `32618732832` — https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832
+- Result: `failure`, exposed after the complete artifact bundle was uploaded.
+- Verified logical results: 44/44 executed, 35 PASS, 9 FAIL, 8 published-bug failures, and 1 `FR04-H-007` specification-gap observation.
+- Runtime header proof: 305/305 Newman requests carried `X-Student-Id: 23127179`.
+- Main collection/data hashes exactly match the official local canonical execution, and all 44 CI case results match latest canonical local results.
+
+The run repeats the four official execution groups from `project.json` with a freshly restarted/reseeded backend for each independent group. It preserves every canonical oracle, uploads JSON/HTML/stdout/copied inputs/exit codes/backend logs, and leaves the job red through the final result step. No expected result, known-bug case, or SUT behavior was changed to manufacture a green result.
+
+Canonical CI evidence is recorded as `CI-32618732832-canonical-full-suite`. Its real screenshot is:
+
+- `EVID-CI-FR04-CANONICAL-FULL-SUITE` — `work/evidence/screenshots/EVID-CI-FR04-CANONICAL-FULL-SUITE.png`
+
+This new screenshot intentionally remains `humanAttestation=false` and is not promoted to `out/`. It is the next human evidence gate.
+
+The derived `out/ci-cd-report.md` now states the strict CI status as **PARTIAL / documented limitation due to confirmed SUT defects**. It separates authoritative full-suite integration from the smoke behavior demonstration and explicitly says that the green smoke run does not satisfy or prove “all API test cases passing.”
+
+Finalized FR-04 submission material under `out/` now includes the canonical Postman inputs, official local Newman JSON/HTML/stdout/metadata, stateful Newman evidence, test summary, Postman feature report, bug report, all attested bug/Issue/header screenshots, both attested CI demo screenshots, and copies of both CI workflow configurations. The full-suite CI raw artifact bundle remains canonical working provenance under `work/ci/runs/`; duplication of that bundle into `out/` is unnecessary. Its screenshot remains under `work/` specifically because human attestation is pending.
+
+Current status:
+
+```text
+FR-04 GENERATE/AUDIT/EXTEND       COMPLETE
+FR-04 CANONICAL EXECUTION          COMPLETE
+FR-04 BUG REPORTING                COMPLETE
+POSTMAN FEATURES                   COMPLETE
+CI SMOKE BEHAVIOR EVIDENCE         COMPLETE
+CI FULL-SUITE INTEGRATION          IMPLEMENTED AND VERIFIED
+STRICT ALL-API-TESTS GREEN RUN     PARTIAL — CONFIRMED SUT DEFECT LIMITATION
+NEW FULL-SUITE CI SCREENSHOT       WAITING FOR HUMAN ATTESTATION
+```
+
+FR-04 is still not CLOSED. After the new CI screenshot gate, `FR04-AI-024` still requires real SEC-04 UI/display-boundary evidence. `FR04-H-007` remains a documented non-bug specification-gap observation and needs explicit disposition only if closure policy requires a separate human decision. FR-08 and Agent Skill/generator work remain not started.

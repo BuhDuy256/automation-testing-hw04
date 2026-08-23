@@ -184,20 +184,51 @@ function ciReportSummary(run) {
 
 const allPassCiRun = ciRuns.find((run) => run.purpose === 'all-pass');
 const intentionalFailureCiRun = ciRuns.find((run) => run.purpose === 'intentional-single-failure');
+const canonicalFullSuiteCiRun = ciRuns.find((run) => run.purpose === 'canonical-full-suite');
 const ciLines = [
   '# HW06 CI/CD Report (Derived)',
   '',
   '> Generated from `work/registry/ci-runs.json` and registered evidence. Screenshot attestation is reported independently from run verification.',
   '',
-  '## Workflow',
+  '## Compliance status',
   '',
-  '- Configuration: `.github/workflows/hw06-fr04-ci.yml`',
-  '- The Ubuntu job installs the locked root and backend dependencies, starts the EShop backend, waits for its health endpoint, and runs Newman.',
-  '- The CI sample is the explicitly identified stable canonical case `FR04-AI-001`; it does not replace the complete 44-case FR-04 execution and does not weaken the confirmed bug-revealing assertions.',
-  '- The CI collection injects `X-Student-Id: 23127179` into every request and Newman determines the job result.',
-  '- Newman JSON, HTML, stdout, and backend logs are uploaded as the `hw06-fr04-ci-newman` artifact.',
+  '- CI infrastructure and complete canonical FR-04 integration: implemented.',
+  '- Existing all-pass and intentional-single-failure smoke demonstration: complete as CI behavior evidence.',
+  '- Strict assignment requirement that one pipeline run show "all API test cases passing": **PARTIAL / documented limitation due to confirmed SUT defects**.',
+  '- The smoke all-pass result must not be interpreted as all 44 canonical FR-04 cases passing.',
   '',
 ];
+if (canonicalFullSuiteCiRun) {
+  const screenshot = evidence.find((item) => item.id === canonicalFullSuiteCiRun.screenshotEvidenceId);
+  ciLines.push(
+    '## Complete canonical FR-04 suite integration',
+    '',
+    '- Workflow: `.github/workflows/hw06-fr04-canonical-full-suite.yml` (`HW06 FR-04 Canonical Full Suite`).',
+    '- The job installs locked dependencies, starts and reseeds the EShop backend for each independent execution group, and runs the current canonical collections/environment/data with Newman.',
+    '- Newman JSON, HTML, stdout, copied inputs, canonical summary, exit codes, and backend logs are uploaded as `hw06-fr04-canonical-full-suite` before the final step exposes the genuine suite result.',
+    `- Commit: ${canonicalFullSuiteCiRun.commitSha}`,
+    `- GitHub Actions run: ${canonicalFullSuiteCiRun.url}`,
+    `- Result: ${canonicalFullSuiteCiRun.conclusion}`,
+    `- Canonical logical cases: ${canonicalFullSuiteCiRun.counts.executed}/${canonicalFullSuiteCiRun.counts.executable} executed; ${canonicalFullSuiteCiRun.counts.passed} passed; ${canonicalFullSuiteCiRun.counts.failed} failed.`,
+    `- Failure classification: ${canonicalFullSuiteCiRun.counts.knownBugFailures} known-bug failures; ${canonicalFullSuiteCiRun.counts.otherFailures} other/specification-gap failure.`,
+    `- Student-header runtime proof: ${canonicalFullSuiteCiRun.runtimeHeaderCoverage.studentHeaderRequests}/${canonicalFullSuiteCiRun.runtimeHeaderCoverage.requests} requests.`,
+    `- Main collection SHA-256: ${canonicalFullSuiteCiRun.identities.mainCollectionSha256}`,
+    `- Main data SHA-256: ${canonicalFullSuiteCiRun.identities.mainDataSha256}`,
+    `- Canonical summary: ${canonicalFullSuiteCiRun.canonicalSummaryPath}`,
+    `- Screenshot: ${canonicalFullSuiteCiRun.screenshotEvidenceId} (${screenshot?.path ?? 'missing'}; human attestation ${screenshot?.humanAttestation === true ? 'complete' : 'pending'})`,
+    '',
+    'The complete canonical FR-04 suite is retained as the authoritative API test suite and is executed in CI without weakening its test oracles. Because the suite currently exposes confirmed SUT defects, its real full-suite CI execution is expected to fail. Changing the expected results, suppressing the confirmed bug cases, or modifying the SUT solely to obtain a green pipeline would invalidate the testing evidence. Therefore, the separate stable-case runs are retained only to demonstrate an all-pass CI state and an intentional single-failure state, while the canonical full-suite CI run demonstrates that the complete FR-04 suite is genuinely integrated into the pipeline.',
+    '',
+  );
+}
+ciLines.push(
+  '## CI behavior demonstration',
+  '',
+  '- Workflow: `.github/workflows/hw06-fr04-ci.yml` (`HW06 FR-04 Newman CI Sample`).',
+  '- This workflow uses only the explicitly identified stable canonical case `FR04-AI-001` to demonstrate CI mechanics.',
+  '- It injects `X-Student-Id: 23127179`, runs Newman, and uploads JSON/HTML/backend evidence as `hw06-fr04-ci-newman`.',
+  '',
+);
 for (const [heading, run] of [['All-pass sample', allPassCiRun], ['Intentional single-failure sample', intentionalFailureCiRun]]) {
   if (!run) continue;
   const summary = ciReportSummary(run);
@@ -217,9 +248,9 @@ for (const [heading, run] of [['All-pass sample', allPassCiRun], ['Intentional s
   );
 }
 ciLines.push(
-  '## Integrity note',
+  '## Demonstration integrity note',
   '',
-  'The intentional sample adds one transparent assertion named `FR04-AI-001 [CI-DEMO] intentional single failure`; it is not classified as an SUT bug. The separate complete FR-04 execution retains the genuine phone-format and protected-role failures.',
+  'The intentional sample adds one transparent assertion named `FR04-AI-001 [CI-DEMO] intentional single failure`; it is not classified as an SUT bug. These two smoke runs demonstrate green/red CI behavior only and do not replace the complete canonical suite or prove that all 44 FR-04 cases pass.',
   '',
 );
 writeText('work/generated/ci-cd-report.md', `${ciLines.join('\n')}\n`);
@@ -246,6 +277,10 @@ if (officialRuns.length > 0) {
     [project.postman.supportingCollectionPaths[0], 'out/fr04/postman/FR04-profile-stateful.postman_collection.json'],
     [project.postman.environmentPath, 'out/fr04/postman/FR04-profile.postman_environment.json'],
     [project.postman.dataFiles[0], 'out/fr04/postman/FR04-cases.postman_data.json'],
+    ['work/postman/fr04/FR04-target-closure.postman_data.json', 'out/fr04/postman/FR04-target-closure.postman_data.json'],
+    ['work/postman/fr04/FR04-target-ai027.postman_data.json', 'out/fr04/postman/FR04-target-ai027.postman_data.json'],
+    ['.github/workflows/hw06-fr04-ci.yml', 'out/fr04/ci/hw06-fr04-ci.yml'],
+    ['.github/workflows/hw06-fr04-canonical-full-suite.yml', 'out/fr04/ci/hw06-fr04-canonical-full-suite.yml'],
     [primaryRun.rawJsonPath, 'out/fr04/newman/FR04-canonical-input.json'],
     [primaryRun.htmlReportPath, 'out/fr04/newman/FR04-canonical-input.html'],
     [primaryRun.consoleLogPath, 'out/fr04/newman/FR04-canonical-input.stdout.log'],
@@ -268,6 +303,20 @@ if (officialRuns.length > 0) {
     [statefulRun.consoleLogPath, 'out/fr04/newman/FR04-final-stateful.stdout.log'],
     [statefulRun.metadataPath, 'out/fr04/newman/FR04-final-stateful.metadata.json'],
   );
+  const closureRun = officialRuns.find((run) => run.dataPath?.endsWith('FR04-target-closure.postman_data.json'));
+  if (closureRun) promotionPairs.push(
+    [closureRun.rawJsonPath, 'out/fr04/newman/FR04-final-closure.json'],
+    [closureRun.htmlReportPath, 'out/fr04/newman/FR04-final-closure.html'],
+    [closureRun.consoleLogPath, 'out/fr04/newman/FR04-final-closure.stdout.log'],
+    [closureRun.metadataPath, 'out/fr04/newman/FR04-final-closure.metadata.json'],
+  );
+  const ai027Run = officialRuns.find((run) => run.dataPath?.endsWith('FR04-target-ai027.postman_data.json'));
+  if (ai027Run) promotionPairs.push(
+    [ai027Run.rawJsonPath, 'out/fr04/newman/FR04-ai027-corrected.json'],
+    [ai027Run.htmlReportPath, 'out/fr04/newman/FR04-ai027-corrected.html'],
+    [ai027Run.consoleLogPath, 'out/fr04/newman/FR04-ai027-corrected.stdout.log'],
+    [ai027Run.metadataPath, 'out/fr04/newman/FR04-ai027-corrected.metadata.json'],
+  );
   for (const [source, target] of promotionPairs) copyArtifact(source, target);
   const manifestLines = [
     '# FR-04 Finalized Artifacts',
@@ -280,6 +329,9 @@ if (officialRuns.length > 0) {
     `- Data SHA-256: ${primaryRun.dataSha256}`,
     `- Primary Newman HTML: out/fr04/newman/FR04-canonical-input.html`,
     `- Supporting official runs: ${officialRuns.filter((run) => run.id !== primaryRun.id).map((run) => run.id).join(', ')}`,
+    '- Finalized CI demo screenshots: out/fr04/evidence/EVID-CI-FR04-ALL-PASS.png and out/fr04/evidence/EVID-CI-FR04-INTENTIONAL-FAILURE.png',
+    '- CI workflow configurations: out/fr04/ci/hw06-fr04-ci.yml and out/fr04/ci/hw06-fr04-canonical-full-suite.yml',
+    '- Canonical full-suite CI screenshot remains under work/evidence until explicit human attestation.',
     '',
     'The primary run preserves genuine bug-revealing failures. Latest canonical per-case results across the listed official runs are summarized in `work/generated/test-summary.md`.',
     '',

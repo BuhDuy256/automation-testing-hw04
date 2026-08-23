@@ -1,0 +1,138 @@
+name: HW06 FR-04 Canonical Full Suite
+
+on:
+  push:
+    branches:
+      - hw06-api-testing
+    paths:
+      - .github/workflows/hw06-fr04-canonical-full-suite.yml
+      - scripts/hw06/analyze-fr04-canonical-ci.mjs
+      - work/postman/fr04/**
+      - work/registry/project.json
+      - work/registry/test-cases.json
+      - work/registry/human-reviews.json
+      - work/registry/runs.json
+      - work/registry/bugs.json
+      - package.json
+      - package-lock.json
+      - eshop-sut/backend/**
+  workflow_dispatch:
+
+jobs:
+  fr04-canonical-full-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            eshop-sut/backend/package-lock.json
+
+      - name: Install Newman dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: npm ci --prefix eshop-sut/backend
+
+      - name: Execute complete canonical FR-04 suite
+        shell: bash
+        run: |
+          mkdir -p ci-artifacts/{input,stateful,closure,ai027,inputs}
+          : > ci-artifacts/newman-exit-codes.txt
+
+          stop_backend() {
+            if [[ -f backend.pid ]]; then
+              kill "$(cat backend.pid)" 2>/dev/null || true
+              wait "$(cat backend.pid)" 2>/dev/null || true
+              rm -f backend.pid
+            fi
+          }
+
+          start_backend() {
+            local label="$1"
+            stop_backend
+            node eshop-sut/backend/server.js > "ci-artifacts/backend-${label}.log" 2>&1 &
+            echo $! > backend.pid
+            for attempt in {1..30}; do
+              if curl --fail --silent http://localhost:3000/api/products > /dev/null; then
+                echo "Backend ready for ${label}"
+                return 0
+              fi
+              sleep 1
+            done
+            cat "ci-artifacts/backend-${label}.log"
+            return 1
+          }
+
+          run_newman() {
+            local label="$1"
+            local collection="$2"
+            local data="${3:-}"
+            local data_args=()
+            if [[ -n "$data" ]]; then
+              data_args=(--iteration-data "$data")
+            fi
+            set +e
+            npx newman run "$collection" \
+              --environment work/postman/fr04/FR04-profile.postman_environment.json \
+              "${data_args[@]}" \
+              --reporters cli,json,htmlextra \
+              --reporter-json-export "ci-artifacts/${label}/newman-report.json" \
+              --reporter-htmlextra-export "ci-artifacts/${label}/newman-report.html" \
+              2>&1 | tee "ci-artifacts/${label}/stdout.log"
+            local newman_exit=${PIPESTATUS[0]}
+            set -e
+            echo "${label}=${newman_exit}" | tee -a ci-artifacts/newman-exit-codes.txt
+          }
+
+          trap stop_backend EXIT
+
+          start_backend input
+          run_newman input \
+            work/postman/fr04/FR04-profile.postman_collection.json \
+            work/postman/fr04/FR04-cases.postman_data.json
+
+          start_backend stateful
+          run_newman stateful \
+            work/postman/fr04/FR04-profile-stateful.postman_collection.json
+
+          start_backend closure
+          run_newman closure \
+            work/postman/fr04/FR04-profile.postman_collection.json \
+            work/postman/fr04/FR04-target-closure.postman_data.json
+
+          start_backend ai027
+          run_newman ai027 \
+            work/postman/fr04/FR04-profile.postman_collection.json \
+            work/postman/fr04/FR04-target-ai027.postman_data.json
+
+          cp work/postman/fr04/FR04-profile.postman_collection.json ci-artifacts/inputs/
+          cp work/postman/fr04/FR04-profile-stateful.postman_collection.json ci-artifacts/inputs/
+          cp work/postman/fr04/FR04-profile.postman_environment.json ci-artifacts/inputs/
+          cp work/postman/fr04/FR04-cases.postman_data.json ci-artifacts/inputs/
+          cp work/postman/fr04/FR04-target-closure.postman_data.json ci-artifacts/inputs/
+          cp work/postman/fr04/FR04-target-ai027.postman_data.json ci-artifacts/inputs/
+
+          node scripts/hw06/analyze-fr04-canonical-ci.mjs --artifact-dir ci-artifacts
+
+      - name: Preserve complete Newman and backend evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hw06-fr04-canonical-full-suite
+          path: ci-artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Expose canonical suite result
+        if: always()
+        shell: bash
+        run: |
+          node -e "const s=require('./ci-artifacts/canonical-summary.json'); console.log(JSON.stringify(s.counts)); if(!s.integrityOk || s.counts.failed > 0) process.exit(1)"

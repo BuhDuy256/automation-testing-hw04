@@ -8,5 +8,8 @@
 - Data SHA-256: 905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14
 - Primary Newman HTML: out/fr04/newman/FR04-canonical-input.html
 - Supporting official runs: RUN-20260823035912444-fr04-final-stateful, RUN-20260823040119709-fr04-final-closure, RUN-20260823022342040-fr04-ai027-corrected
+- Finalized CI demo screenshots: out/fr04/evidence/EVID-CI-FR04-ALL-PASS.png and out/fr04/evidence/EVID-CI-FR04-INTENTIONAL-FAILURE.png
+- CI workflow configurations: out/fr04/ci/hw06-fr04-ci.yml and out/fr04/ci/hw06-fr04-canonical-full-suite.yml
+- Canonical full-suite CI screenshot remains under work/evidence until explicit human attestation.
 
 The primary run preserves genuine bug-revealing failures. Latest canonical per-case results across the listed official runs are summarized in `work/generated/test-summary.md`.
