@@ -41,3 +41,23 @@
 - GitHub Issue: https://github.com/BuhDuy256/automation-testing-hw04/issues/16
 - Runtime evidence: work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html
 - Screenshot evidence: work/evidence/screenshots/EVID-FR08-CART-NOT-CLEARED.png, work/evidence/screenshots/EVID-FR08-RUN-SUMMARY.png
+
+## Not published yet: [HW06][FR-15][SEC-02/SEC-03] POST /api/products permits creation without a valid admin authorization context
+
+- Status: human-confirmed
+- Canonical cases supporting the public finding: FR15-AI-027, FR15-AI-028, FR15-AI-029, FR15-AI-030, FR15-AI-031, FR15-AI-032, FR15-AI-033, FR15-AI-037, FR15-H-002, FR15-H-004
+- Expected: README FR-12, SEC-02, and SEC-03 require a valid JWT carrying role=admin for product data changes. Requests without that authorization context must not create a persistent product. Exact rejection status and error schema are unspecified.
+- Actual: The canonical run observed a newly persisted product after every tested invalid authorization context: no Authorization header, ordinary-user JWT, non-Bearer scheme, malformed token, deterministically tampered signature, validly signed expired admin token, body-borne role claim with a user token, validly signed unexpired token with no role claim, and the refused-attempt phases of the authorization state cases. Representative selected requests returned HTTP 200 with {"message":"Product created","id":N}; the HTTP code is observation only, while persistence caused the oracle failures.
+- GitHub Issue: not published yet; publication needs separate student approval
+- Runtime evidence: work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html
+- Screenshot evidence: work/evidence/screenshots/EVID-FR15-AUTHORIZATION.png, work/evidence/screenshots/EVID-FR15-RUN-SUMMARY.png
+
+## Not published yet: [HW06][FR-15] POST /api/products persists products that violate documented name, price, and category rules
+
+- Status: human-confirmed
+- Canonical cases supporting the public finding: FR15-AI-003, FR15-AI-005, FR15-AI-007, FR15-AI-009, FR15-AI-010, FR15-AI-014, FR15-AI-015, FR15-AI-016, FR15-AI-017, FR15-AI-018, FR15-AI-019, FR15-AI-036, FR15-AI-044, FR15-AI-047, FR15-AI-048, FR15-AI-059, FR15-H-003, FR15-H-005
+- Expected: README FR-15 requires a non-empty name of at most 255 characters, a positive numeric price, and an existing category. Invalid data must not become a persistent valid product. Exact rejection status and error schema are unspecified.
+- Actual: The canonical run observed new persistent rows for overlong, empty, omitted, and null names; zero, negative, non-numeric, omitted, and null prices; nonexistent, omitted, non-numeric, null, SQL-like, and previously deleted category references; and no-body or empty-object requests. Representative selected requests returned HTTP 200 and a created id; persistence, not the response code, caused the oracle failures.
+- GitHub Issue: not published yet; publication needs separate student approval
+- Runtime evidence: work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html
+- Screenshot evidence: work/evidence/screenshots/EVID-FR15-VALIDATION.png, work/evidence/screenshots/EVID-FR15-RUN-SUMMARY.png

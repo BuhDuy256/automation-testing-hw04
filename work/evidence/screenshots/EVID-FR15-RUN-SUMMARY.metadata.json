@@ -1,0 +1,33 @@
+{
+  "id": "EVID-FR15-RUN-SUMMARY",
+  "type": "bug-runtime-report",
+  "description": "Newman dashboard of the canonical FR-15 run RUN-20260823102155874-fr15-canonical-full-suite showing all 59 iterations and the preserved canonical assertion totals for run traceability.",
+  "path": "work/evidence/screenshots/EVID-FR15-RUN-SUMMARY.png",
+  "sha256": "d39c6a741f7792098fe6822420bdab6996aed09e8f1e0eba601046241507f28b",
+  "capturedAt": "2026-08-23T10:43:46.981Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.html",
+  "finalUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.html",
+  "pageTitle": "Newman Summary Report",
+  "mode": "viewport",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1100
+  },
+  "image": {
+    "bytes": 97399,
+    "width": 1600,
+    "height": 1100
+  },
+  "humanAttestation": false,
+  "sourceRunIds": [
+    "RUN-20260823102155874-fr15-canonical-full-suite"
+  ],
+  "caseIds": [],
+  "bugIds": [
+    "BUG-CANDIDATE-FR15-AUTHORIZATION",
+    "BUG-CANDIDATE-FR15-VALIDATION"
+  ],
+  "provenanceNote": "Viewport capture of the unmodified real canonical Newman HTML dashboard. Newman reports 30 failed assertions, while the canonical registry supplies the reviewed mutually exclusive case classification of 16 PASS, 28 FAIL, and 15 SPEC-GAP observations."
+}

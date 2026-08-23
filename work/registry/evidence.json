@@ -500,6 +500,91 @@
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T09:38:35.534Z"
+    },
+    {
+      "id": "EVID-FR15-RUN-SUMMARY",
+      "type": "bug-runtime-report",
+      "description": "Newman dashboard of the canonical FR-15 run RUN-20260823102155874-fr15-canonical-full-suite showing all 59 iterations and the preserved canonical assertion totals for run traceability.",
+      "path": "work/evidence/screenshots/EVID-FR15-RUN-SUMMARY.png",
+      "sha256": "d39c6a741f7792098fe6822420bdab6996aed09e8f1e0eba601046241507f28b",
+      "capturedAt": "2026-08-23T10:43:46.981Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.html",
+      "finalUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.html",
+      "pageTitle": "Newman Summary Report",
+      "mode": "viewport",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1100
+      },
+      "image": {
+        "bytes": 97399,
+        "width": 1600,
+        "height": 1100
+      },
+      "humanAttestation": false,
+      "sourceRunIds": [
+        "RUN-20260823102155874-fr15-canonical-full-suite"
+      ],
+      "caseIds": [],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-AUTHORIZATION",
+        "BUG-CANDIDATE-FR15-VALIDATION"
+      ],
+      "provenanceNote": "Viewport capture of the unmodified real canonical Newman HTML dashboard. Newman reports 30 failed assertions, while the canonical registry supplies the reviewed mutually exclusive case classification of 16 PASS, 28 FAIL, and 15 SPEC-GAP observations."
+    },
+    {
+      "id": "EVID-FR15-AUTHORIZATION",
+      "type": "bug-runtime-report",
+      "description": "Targeted FR-15 authorization reproduction, iteration 2 (FR15-AI-028): an ordinary-user JWT request creates a persistent product and the read-back persistence oracle fails; request headers include X-Student-Id 23127179.",
+      "path": "work/evidence/screenshots/EVID-FR15-AUTHORIZATION.png",
+      "sha256": "0e128b82d61a51a805040db0bbdccf2447cc0d604ed41abf4f3e303a707c84c5",
+      "capturedAt": "2026-08-23T10:44:14.415Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr15-report-cards.mjs against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+      "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+      "image": {
+        "bytes": 245952,
+        "width": 1046,
+        "height": 5089
+      },
+      "humanAttestation": false,
+      "sourceRunIds": [
+        "RUN-20260823102829114-fr15-auth-reproduction"
+      ],
+      "caseIds": [
+        "FR15-AI-028"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-AUTHORIZATION"
+      ],
+      "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The request body, ordinary-user bearer token fixture, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence."
+    },
+    {
+      "id": "EVID-FR15-VALIDATION",
+      "type": "bug-runtime-report",
+      "description": "Targeted FR-15 validation reproduction, iteration 2 (FR15-AI-009): price zero is submitted, a persistent product is created, and the FR-15 persistence oracle fails; request headers include X-Student-Id 23127179.",
+      "path": "work/evidence/screenshots/EVID-FR15-VALIDATION.png",
+      "sha256": "880712809f90640e7e49fcd46cebfed7355650eac3495a252883c0af01fcce78",
+      "capturedAt": "2026-08-23T10:44:14.816Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr15-report-cards.mjs against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+      "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html",
+      "image": {
+        "bytes": 246357,
+        "width": 1046,
+        "height": 5089
+      },
+      "humanAttestation": false,
+      "sourceRunIds": [
+        "RUN-20260823102841701-fr15-validation-reproduction"
+      ],
+      "caseIds": [
+        "FR15-AI-009"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-VALIDATION"
+      ],
+      "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The price=0 request, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence."
     }
   ]
 }

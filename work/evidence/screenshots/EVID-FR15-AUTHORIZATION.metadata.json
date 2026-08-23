@@ -1,0 +1,26 @@
+{
+  "id": "EVID-FR15-AUTHORIZATION",
+  "type": "bug-runtime-report",
+  "description": "Targeted FR-15 authorization reproduction, iteration 2 (FR15-AI-028): an ordinary-user JWT request creates a persistent product and the read-back persistence oracle fails; request headers include X-Student-Id 23127179.",
+  "path": "work/evidence/screenshots/EVID-FR15-AUTHORIZATION.png",
+  "sha256": "0e128b82d61a51a805040db0bbdccf2447cc0d604ed41abf4f3e303a707c84c5",
+  "capturedAt": "2026-08-23T10:44:14.415Z",
+  "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr15-report-cards.mjs against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+  "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+  "image": {
+    "bytes": 245952,
+    "width": 1046,
+    "height": 5089
+  },
+  "humanAttestation": false,
+  "sourceRunIds": [
+    "RUN-20260823102829114-fr15-auth-reproduction"
+  ],
+  "caseIds": [
+    "FR15-AI-028"
+  ],
+  "bugIds": [
+    "BUG-CANDIDATE-FR15-AUTHORIZATION"
+  ],
+  "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The request body, ordinary-user bearer token fixture, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence."
+}

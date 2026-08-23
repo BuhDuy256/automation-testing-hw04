@@ -1,0 +1,26 @@
+{
+  "id": "EVID-FR15-VALIDATION",
+  "type": "bug-runtime-report",
+  "description": "Targeted FR-15 validation reproduction, iteration 2 (FR15-AI-009): price zero is submitted, a persistent product is created, and the FR-15 persistence oracle fails; request headers include X-Student-Id 23127179.",
+  "path": "work/evidence/screenshots/EVID-FR15-VALIDATION.png",
+  "sha256": "880712809f90640e7e49fcd46cebfed7355650eac3495a252883c0af01fcce78",
+  "capturedAt": "2026-08-23T10:44:14.816Z",
+  "captureMethod": "manual fallback: Playwright headless Edge via work/evidence/capture-fr15-report-cards.mjs against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+  "sourceUrl": "http://127.0.0.1:39094/work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html",
+  "image": {
+    "bytes": 246357,
+    "width": 1046,
+    "height": 5089
+  },
+  "humanAttestation": false,
+  "sourceRunIds": [
+    "RUN-20260823102841701-fr15-validation-reproduction"
+  ],
+  "caseIds": [
+    "FR15-AI-009"
+  ],
+  "bugIds": [
+    "BUG-CANDIDATE-FR15-VALIDATION"
+  ],
+  "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The price=0 request, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence."
+}
