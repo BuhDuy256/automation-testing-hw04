@@ -142,19 +142,32 @@ if (submissionMode) {
 
 const runs = runRegistry.runs ?? [];
 const executedCaseIds = new Set();
+const latestResultByCase = new Map();
 for (const duplicate of duplicateValues(runs.map((run) => run.id))) error(`Duplicate run id: ${duplicate}`);
-for (const run of runs) {
+const chronologicalRuns = [...runs].sort((left, right) =>
+  Date.parse(left.completedAtUtc ?? left.startedAtUtc) - Date.parse(right.completedAtUtc ?? right.startedAtUtc));
+for (const run of chronologicalRuns) {
   if (!['local', 'ci'].includes(run.mode)) error(`Run ${run.id} has invalid mode`);
   if (!isIso(run.startedAtUtc) || !Number.isInteger(run.exitCode)) error(`Run ${run.id} lacks a valid time or exit code`);
   for (const field of ['collectionPath', 'rawJsonPath', 'htmlReportPath', 'consoleLogPath', 'metadataPath']) requireExisting(run[field], `Run ${run.id}.${field}`);
+  for (const duplicate of duplicateValues((run.caseResults ?? []).map((result) => result.caseId))) error(`Run ${run.id} has duplicate result for ${duplicate}`);
   for (const result of run.caseResults ?? []) {
     executedCaseIds.add(result.caseId);
+    latestResultByCase.set(result.caseId, result);
     if (!caseIds.has(result.caseId)) error(`Run ${run.id} references unknown case ${result.caseId}`);
     if (!['PASS', 'FAIL'].includes(result.result)) error(`Run ${run.id}/${result.caseId} has invalid result`);
   }
 }
+for (const api of selectedApis) {
+  const executableCases = cases.filter((testCase) => testCase.apiId === api.id &&
+    (testCase.origin === 'HUMAN' || reviewsByCase.get(testCase.id)?.verdict !== 'INVALID'));
+  const executed = executableCases.filter((testCase) => latestResultByCase.has(testCase.id));
+  const passed = executed.filter((testCase) => latestResultByCase.get(testCase.id).result === 'PASS').length;
+  const failed = executed.filter((testCase) => latestResultByCase.get(testCase.id).result === 'FAIL').length;
+  if (passed + failed !== executed.length) error(`${api.id} latest-result arithmetic does not reconcile`);
+}
 if (submissionMode) {
-  for (const testCase of cases) {
+  for (const testCase of cases.filter((item) => item.origin === 'HUMAN' || reviewsByCase.get(item.id)?.verdict !== 'INVALID')) {
     if (!executedCaseIds.has(testCase.id)) error(`Test case ${testCase.id} has no registered execution result`);
   }
 }
