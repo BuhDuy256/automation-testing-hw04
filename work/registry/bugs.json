@@ -106,7 +106,7 @@
     },
     {
       "id": "BUG-CANDIDATE-FR08-CLIENT-TOTAL",
-      "status": "human-confirmed",
+      "status": "published",
       "title": "[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart",
       "caseIds": [
         "FR08-AI-002",
@@ -158,11 +158,15 @@
       "note": "HUMAN-CONFIRMED genuine bug. No GitHub Issue has been created yet and no screenshot has been attested yet; external publication needs separate explicit approval. 16 cases fail on this root cause directly; FR08-AI-040 and FR08-H-005 fail on a combination of this and BUG-CANDIDATE-FR08-CART-NOT-CLEARED. Evidence limitation: because no derivation happens at all, the cases whose client value happens to equal the cart-derived total (for example FR08-AI-001, FR08-AI-033, FR08-AI-034, FR08-AI-051, FR08-H-002) pass without proving that the server derives anything.",
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23T08:21:39.033Z",
-      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: the backend must calculate the total from cart state and must not trust the client-supplied total_amount, and the canonical run shows client-controlled values becoming or controlling the persisted checkout total. The student directed that all failing partitions stay grouped under this single root-defect record."
+      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: the backend must calculate the total from cart state and must not trust the client-supplied total_amount, and the canonical run shows client-controlled values becoming or controlling the persisted checkout total. The student directed that all failing partitions stay grouped under this single root-defect record.",
+      "githubIssueNumber": 15,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+      "publishedAt": "2026-08-23T08:34:18.692Z",
+      "publishedCommitSha": "713bad65fb85966e9eb9febf2627a0d228bd8d11"
     },
     {
       "id": "BUG-CANDIDATE-FR08-CART-NOT-CLEARED",
-      "status": "human-confirmed",
+      "status": "published",
       "title": "[HW06][FR-08] The cart is not cleared after a successful checkout",
       "caseIds": [
         "FR08-AI-031",
@@ -194,7 +198,11 @@
       "note": "HUMAN-CONFIRMED genuine bug. No GitHub Issue has been created yet and no screenshot has been attested yet; external publication needs separate explicit approval. FR08-AI-040 and FR08-H-005 are shared with BUG-CANDIDATE-FR08-CLIENT-TOTAL because their failures need both defects to explain them.",
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23T08:21:39.033Z",
-      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: FR-08 requires the cart to be cleared after a successful checkout, and the canonical run shows purchased cart lines remaining and contaminating subsequent checkout state. The student directed that secondary failures caused by this defect stay grouped under this single record."
+      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: FR-08 requires the cart to be cleared after a successful checkout, and the canonical run shows purchased cart lines remaining and contaminating subsequent checkout state. The student directed that secondary failures caused by this defect stay grouped under this single record.",
+      "githubIssueNumber": 16,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+      "publishedAt": "2026-08-23T08:34:32.340Z",
+      "publishedCommitSha": "713bad65fb85966e9eb9febf2627a0d228bd8d11"
     }
   ]
 }

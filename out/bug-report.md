@@ -22,22 +22,22 @@
 - Runtime evidence: work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.json, work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html, work/runs/RUN-20260823022329715-fr04-role-corrected/stdout.log
 - Screenshot evidence: work/evidence/screenshots/EVID-FR04-ROLE-TAMPERING.png, work/evidence/screenshots/EVID-FR04-ROLE-REPORT.png, work/evidence/screenshots/EVID-FR04-ROLE-ISSUE.png
 
-## Not published yet: [HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart
+## Issue #15: [HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart
 
-- Status: human-confirmed
+- Status: published
 - Canonical cases supporting the public finding: FR08-AI-002, FR08-AI-003, FR08-AI-004, FR08-AI-005, FR08-AI-035, FR08-H-001
 - Expected: README FR-08 states that the checkout total is calculated automatically from the cart and that the backend must recalculate it and must not accept the client-supplied total_amount. The persisted order total must therefore equal the total derived from the cart state the server itself reports immediately before checkout. The exact status code and error schema are undocumented and are not claimed.
 - Actual: The persisted order total equalled the client-supplied value in every observed variation: 1000 and 9999000 against a 200000 cart, 0, -200000, 199999.99, 999999999999, and 200000 against an empty cart (server-derived 0). Non-numeric and absent client values were persisted as NULL or NaN rather than the derived total, and the boolean true was persisted as 1. FR08-H-001 shows the same behaviour with a stale client total of 200000 against a cart the server itself reported as 250000.
-- GitHub Issue: not published yet; publication needs separate student approval
+- GitHub Issue: https://github.com/BuhDuy256/automation-testing-hw04/issues/15
 - Runtime evidence: work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html
 - Screenshot evidence: work/evidence/screenshots/EVID-FR08-CLIENT-TOTAL.png, work/evidence/screenshots/EVID-FR08-RUN-SUMMARY.png
 
-## Not published yet: [HW06][FR-08] The cart is not cleared after a successful checkout
+## Issue #16: [HW06][FR-08] The cart is not cleared after a successful checkout
 
-- Status: human-confirmed
+- Status: published
 - Canonical cases supporting the public finding: FR08-AI-031
 - Expected: README FR-08 states that after a successful checkout the cart is cleared, so GET /api/cart must report no lines for that user once checkout succeeds. The exact empty-cart response shape is undocumented and is not claimed.
 - Actual: After a successful checkout returning {"message":"Checkout successful","orderId":N}, GET /api/cart still reported the purchased line, so the cart retained 1 line where 0 were expected. The stale line then polluted the next checkout: in FR08-AI-040 and FR08-H-005 the server-observed cart before the second checkout was 250000 because the already-purchased 200000 line was still present.
-- GitHub Issue: not published yet; publication needs separate student approval
+- GitHub Issue: https://github.com/BuhDuy256/automation-testing-hw04/issues/16
 - Runtime evidence: work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html
 - Screenshot evidence: work/evidence/screenshots/EVID-FR08-CART-NOT-CLEARED.png, work/evidence/screenshots/EVID-FR08-RUN-SUMMARY.png
