@@ -103,7 +103,11 @@ for (const duplicate of duplicateValues(selectedApis.map((api) => api.id))) erro
 const cases = caseRegistry.cases ?? [];
 const caseIds = new Set(cases.map((testCase) => testCase.id));
 const apiIds = new Set(selectedApis.map((api) => api.id));
+const prospectiveProvenanceApiIds = new Set(selectedApis
+  .filter((api) => ['FR-08', 'FR-15'].includes(api.featureId))
+  .map((api) => api.id));
 const coverageValues = new Set(['domain_partition', 'state_transition', 'security', 'schema_validation']);
+const generationBatches = new Map();
 for (const duplicate of duplicateValues(cases.map((testCase) => testCase.id))) error(`Duplicate test case id: ${duplicate}`);
 for (const testCase of cases) {
   if (!apiIds.has(testCase.apiId)) error(`Test case ${testCase.id} references unselected API ${testCase.apiId}`);
@@ -113,6 +117,30 @@ for (const testCase of cases) {
   if (!Array.isArray(testCase.coverage) || testCase.coverage.length === 0) error(`Test case ${testCase.id} has no coverage classification`);
   for (const coverage of testCase.coverage ?? []) if (!coverageValues.has(coverage)) error(`Test case ${testCase.id} has unknown coverage ${coverage}`);
   if (testCase.origin === 'HUMAN' && !nonEmpty(testCase.humanExtensionRationale)) error(`Human test case ${testCase.id} lacks humanExtensionRationale`);
+  if (testCase.origin === 'AI' && prospectiveProvenanceApiIds.has(testCase.apiId)) {
+    for (const field of ['generationBatchId', 'generationTool', 'generationPrompt', 'generatedAt', 'generationContext']) {
+      if (!nonEmpty(testCase[field])) error(`Prospective AI test case ${testCase.id} lacks ${field}`);
+    }
+    if (!isIso(testCase.generatedAt)) error(`Prospective AI test case ${testCase.id} has invalid generatedAt`);
+    if (!Array.isArray(testCase.sourceAnchors) || testCase.sourceAnchors.length === 0 || testCase.sourceAnchors.some((anchor) => !nonEmpty(anchor))) {
+      error(`Prospective AI test case ${testCase.id} lacks sourceAnchors`);
+    }
+    if (nonEmpty(testCase.generationBatchId)) {
+      const signature = JSON.stringify({
+        apiId: testCase.apiId,
+        generationTool: testCase.generationTool,
+        generationPrompt: testCase.generationPrompt,
+        generatedAt: testCase.generatedAt,
+        generationContext: testCase.generationContext,
+      });
+      const existingSignature = generationBatches.get(testCase.generationBatchId);
+      if (existingSignature && existingSignature !== signature) {
+        error(`Generation batch ${testCase.generationBatchId} has inconsistent provenance`);
+      } else {
+        generationBatches.set(testCase.generationBatchId, signature);
+      }
+    }
+  }
 }
 
 const reviews = reviewRegistry.reviews ?? [];

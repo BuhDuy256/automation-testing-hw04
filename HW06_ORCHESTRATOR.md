@@ -75,7 +75,7 @@ For each next action:
 1. Use the matching entry in `docs/hw06-standard-actions.md`.
 2. Read the correct authoritative source for the fact being decided.
 3. For ACT-GEN-01, use `hw06-api-test-generator` as the generation methodology and `work/templates/ai-generation-prompt.md` as the bounded prompt scaffold. Existing coverage and the selected API determine batch scope unless a genuine unresolved choice remains.
-4. Preserve original AI candidates and their generation context for later audit.
+4. For each bounded generation interaction, create the exact prompt before invocation, then immediately stamp every original candidate with the actual available tool/model, actual date/time, `generationBatchId`, verbatim prompt, source anchors, and coverage slice. Stable candidate IDs plus the batch ID define the output boundary; do not reconstruct provenance later.
 5. Use independent review and adversarial verification before preparing any student-review packet.
 6. Repair AI-detectable defects automatically and rerun relevant checks.
 7. Update canonical registries only for facts they own.
@@ -132,6 +132,50 @@ AI recommendation:
 If correct, reply:
 "I reviewed HG-... and approve."
 ```
+
+### ACT-REV-01 batch audit packet
+
+Complete independent review, adversarial verification, and repair before stopping. Present every AI case once in a compact table:
+
+```text
+HUMAN GATE: HG-<API>-REV-01
+
+| Case | Purpose | AI recommendation | Reason | Proposed correction | Source anchor | Uncertainty |
+|---|---|---|---|---|---|---|
+```
+
+Do not write `work/registry/human-reviews.json` yet. The student may approve the whole proposal and override exceptions in one message, for example:
+
+```text
+I reviewed HG-FR08-REV-01 and approve all proposed verdicts/corrections except FR08-AI-014 and FR08-AI-027: <overrides>.
+```
+
+After that explicit response, mechanically write only the approved or overridden human verdicts, reasoning, corrections, reviewer identity, and time. Original AI candidates remain immutable.
+
+### ACT-EXT-01 human-extension packet
+
+After the audited suite is known, have AI analyze remaining coverage gaps and adversarially remove weak or duplicate ideas. Present one labelled shortlist with each idea's purpose, source anchor, proposed oracle, why AI generation missed it, and an AI-recommended subset:
+
+```text
+HUMAN GATE: HG-<API>-EXT-01
+
+A. <idea and why it was missed>
+B. <idea and why it was missed>
+...
+
+AI recommendation: select <at least five labels>.
+```
+
+Do not create `origin=HUMAN` cases yet. A response such as `I choose A, C, D, F, H. Change D from X to Y.` is sufficient. Only then materialize the selected/modified cases and their student-approved `humanExtensionRationale`.
+
+## Expected phase gates
+
+- Generation normally runs as AI_REVIEW/AUTO once the selected API and verified specification exist.
+- Human audit uses one ACT-REV-01 batch gate for the full AI candidate set.
+- Human extension uses one ACT-EXT-01 selection gate for at least five added cases.
+- Evidence stops only for genuine visual inspection or attestation.
+- Bug confirmation/publication stops only for genuine human judgment or existing external-publication approval.
+- Do not create a human gate merely because a phase ended.
 
 ## AI Audit behavior
 

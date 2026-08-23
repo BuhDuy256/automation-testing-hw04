@@ -1,5 +1,11 @@
 # HW06 AI Generation Prompt — <API-ID> / <BATCH-ID>
 
+## Batch identity
+
+- Generation batch ID: `<BATCH-ID>`
+- Coverage stage: `<contract-domain | authorization-security | state-transition | schema | closure-deduplication>`
+- The invoking session records the actual tool/model and completion time immediately after the response.
+
 ## Task boundary
 
 Generate candidate API test cases only for the coverage slice stated below. Do not claim execution,
@@ -22,13 +28,13 @@ observed responses, or product bugs.
 
 ## Required candidate fields
 
-- Temporary candidate title
-- Preconditions/setup
-- Request inputs
-- Expected status and response assertions derived from the specification
-- Coverage tags
-- Requirement/source references
-- Assumptions or missing information
+- All candidate fields required by `hw06-api-test-generator`, including a stable temporary ID,
+  concrete request, observable oracle, basis, coverage tags, requirement references, exact source
+  anchors, setup/reset, assumptions, and generation context.
+- Use `SPEC GAP` instead of inventing an expected status or schema that the authoritative sources do
+  not define.
+- Repeat the supplied generation batch ID. The invoking session stamps the actual tool/model,
+  verbatim prompt, and completion time immediately after the response.
 
 ## Output rule
 

@@ -721,3 +721,11 @@ FR-04 status remains unchanged:
 ### Exact next action
 
 Start FR-08 using `HW06_ORCHESTRATOR.md` and the new API Test Generator Skill. Do not reopen FR-04 and do not begin FR-15 first.
+
+## 29. Final workflow correction before FR-08
+
+The reusable action catalog now contains action mechanics rather than historical project status. ACT-REV-01 uses one complete-set AI pre-review and adversarial verification pass followed by one compact student audit gate; canonical `human-reviews.json` records are written only after the student's explicit batch approval or overrides. ACT-EXT-01 similarly uses an adversarially filtered AI shortlist followed by one student selection/modification gate; only selected designs may become `origin=HUMAN` cases with student-approved rationales.
+
+For new FR-08 and FR-15 AI cases, ACT-GEN-01 uses bounded contract/domain, authorization/security, state-transition, schema, and closure/deduplication interactions. Each interaction must preserve its actual available tool/model identity, completion time, verbatim prompt, batch ID, source anchors, coverage slice, and candidate output boundary at generation time. The validator enforces these prospective fields and within-batch provenance consistency while leaving historical FR-04 records unchanged. Official AI Audit Report updates remain explicitly human-triggered and use this preserved provenance later; no second audit or orchestration registry was added.
+
+FR-08 remains unstarted. The next action is to begin FR-08 under `HW06_ORCHESTRATOR.md` with the `hw06-api-test-generator` Skill. This cumulative handoff is becoming long; after FR-08 starts, a non-blocking cleanup may reduce it to current state plus the latest checkpoint and move older checkpoints to a non-authoritative history file.

@@ -6,41 +6,31 @@ This catalog defines one repeatable behavior for each recurring HW06 action. Age
 through the matching action instead of inventing a new procedure. The official assignment remains
 authoritative for academic requirements; this catalog is authoritative for repository mechanics.
 
-Status meanings:
-
-- `READY`: the trigger, procedure, mechanism, outputs, validation, and fallback are defined and usable.
-- `PARTIAL`: the standard is defined, but a real prerequisite such as selected APIs or a CI workflow does not yet exist.
-- `MISSING`: no reliable standard exists.
-- `OVERBUILT`: existing machinery costs more than the recurring action warrants.
-
 ## Catalog summary
 
-| Action | Name | Baseline | Current | Preferred mechanism |
-|---|---|---|---|---|
-| ACT-AI-01 | Record an AI-generated artifact in the official audit report | PARTIAL | READY | Human-triggered update of `out/ai-audit-report.md` |
-| ACT-SEL-01 | Record confirmed API selection | PARTIAL | READY | `project.json` + validator |
-| ACT-SPEC-01 | Produce a verified API-spec extract | MISSING | PARTIAL | Human-verified Markdown extract |
-| ACT-GEN-01 | Run an AI test-generation session | MISSING | PARTIAL | Guided generation + `test-cases.json` |
-| ACT-REV-01 | Record human review and correction | PARTIAL | PARTIAL | `human-reviews.json` + validator |
-| ACT-EXT-01 | Record a human-added case | PARTIAL | PARTIAL | `test-cases.json` + validator |
-| ACT-PM-01 | Update the Postman implementation | MISSING | PARTIAL | Postman collection v2 JSON + validation |
-| ACT-RUN-01 | Execute Newman and capture run evidence | PARTIAL | READY | `run-newman.mjs` |
-| ACT-RUN-02 | Map Newman results to canonical cases | PARTIAL | PARTIAL | Raw JSON review + `runs.json` |
-| ACT-EVID-01 | Capture and attest screenshot evidence | MISSING | READY | Playwright headless + `capture-screenshot.mjs` |
-| ACT-BUG-01 | Register a bug candidate | PARTIAL | PARTIAL | `bugs.json` + evidence references |
-| ACT-BUG-02 | Record genuine-bug confirmation | PARTIAL | PARTIAL | Human decision + `bugs.json` |
-| ACT-BUG-03 | Publish and link a confirmed GitHub Issue | MISSING | READY | `publish-bug.mjs` + GitHub CLI |
-| ACT-CI-01 | Capture a completed CI run | MISSING | PARTIAL | `capture-ci-run.mjs` + GitHub CLI |
-| ACT-PM-02 | Record a used Postman feature | PARTIAL | PARTIAL | `postman-features.json` + evidence |
-| ACT-DERIVE-01 | Regenerate factual reports | READY | READY | `npm run hw06:derive` |
-| ACT-AUDIT-01 | Build the AI Audit Report | PARTIAL | READY | Official `out/ai-audit-report.md` template + human reviews |
-| ACT-GIT-01 | Commit a meaningful procedure step | PARTIAL | READY | Git + workspace validation |
-| ACT-GIT-02 | Export Git history | READY | READY | `npm run hw06:git-log` |
-| ACT-SUB-01 | Validate submission readiness | READY | READY | Strict validator |
-| ACT-SUB-02 | Build the final ZIP | READY | READY | `build-submission.ps1` |
-
-No action is classified `OVERBUILT` after this pass. The existing registries remain supporting
-bookkeeping, while this catalog—not additional schemas—is the behavioral routing layer.
+| Action | Name | Preferred mechanism |
+|---|---|---|
+| ACT-AI-01 | Record an AI-generated artifact in the official audit report | Human-triggered update of `out/ai-audit-report.md` |
+| ACT-SEL-01 | Record confirmed API selection | `project.json` + validator |
+| ACT-SPEC-01 | Produce a verified API-spec extract | Human-verified Markdown extract |
+| ACT-GEN-01 | Run an AI test-generation session | Generator Skill + bounded prompt + `test-cases.json` |
+| ACT-REV-01 | Record human review and correction | AI-prepared batch gate + `human-reviews.json` |
+| ACT-EXT-01 | Record a human-added case | AI shortlist + human selection + `test-cases.json` |
+| ACT-PM-01 | Update the Postman implementation | Postman collection v2 JSON + validation |
+| ACT-RUN-01 | Execute Newman and capture run evidence | `run-newman.mjs` |
+| ACT-RUN-02 | Map Newman results to canonical cases | Raw JSON review + `runs.json` |
+| ACT-EVID-01 | Capture and attest screenshot evidence | Playwright headless + `capture-screenshot.mjs` |
+| ACT-BUG-01 | Register a bug candidate | `bugs.json` + evidence references |
+| ACT-BUG-02 | Record genuine-bug confirmation | Human decision + `bugs.json` |
+| ACT-BUG-03 | Publish and link a confirmed GitHub Issue | `publish-bug.mjs` + GitHub CLI |
+| ACT-CI-01 | Capture a completed CI run | `capture-ci-run.mjs` + GitHub CLI |
+| ACT-PM-02 | Record a used Postman feature | `postman-features.json` + evidence |
+| ACT-DERIVE-01 | Regenerate factual reports | `npm run hw06:derive` |
+| ACT-AUDIT-01 | Build the AI Audit Report | Official `out/ai-audit-report.md` template + human reviews |
+| ACT-GIT-01 | Commit a meaningful procedure step | Git + workspace validation |
+| ACT-GIT-02 | Export Git history | `npm run hw06:git-log` |
+| ACT-SUB-01 | Validate submission readiness | Strict validator |
+| ACT-SUB-02 | Build the final ZIP | `build-submission.ps1` |
 
 ## Action standards
 
@@ -49,7 +39,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Trigger:** The human explicitly asks to write, record, or update the AI Audit Report, for example “Ghi AI Audit Report”.
 - **Human decision required:** The student's VALID / INVALID / INCOMPLETE verdict, reasoning, and correction.
 - **Preconditions:** `out/ai-audit-report.md` exists; the artifact and the student's review are available.
-- **Inputs:** One AI-generated artifact, its prompt/context and tool, the original output, and the separate human review record.
+- **Inputs:** One AI-generated artifact, actual tool and date/time, verbatim prompt for prospective work (or a disclosed historical context fallback), original output boundary, and the separate human review record.
 - **Procedure:** Add or update one official-template row per AI-generated artifact; never create rows for ordinary reasoning, commands, or intermediate conversations.
 - **Outputs/storage:** The official report under `out/`; canonical candidates remain in `work/registry/test-cases.json` and reviews in `human-reviews.json`.
 - **Validation:** Preserve the five template fields and leave missing human decisions pending; never invent verdicts, reasoning, or student fixes.
@@ -84,50 +74,49 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Validation:** Endpoint matches `project.json`; every rule has a source reference; unknowns remain explicit.
 - **Fallback:** Return to the full specification; never treat an unverified summary as authority.
 - **Official source:** Official HW06 requirement and the repository API specification.
-- **Implementation:** `work/templates/verified-api-spec.md`; waits for API selection.
+- **Implementation:** `work/templates/verified-api-spec.md`.
 
 ### ACT-GEN-01 — Run an AI test-generation session
 
 - **Trigger:** A verified spec extract exists and a bounded generation batch is planned.
 - **Human decision required:** Later case verdicts; batch scope only when selected API, requirements, and current coverage do not resolve it.
 - **Preconditions:** ACT-SPEC-01 complete; target API and coverage slice identified.
-- **Inputs:** Verified extract, existing case IDs, coverage gap, and explicit requested output structure.
+- **Inputs:** Verified extract, existing case IDs, coverage gap, bounded prompt, batch ID, and explicit output structure.
 - **Preferred mechanism:** Invoke `hw06-api-test-generator` through a focused `work/templates/ai-generation-prompt.md` scaffold and write candidates to `test-cases.json`.
-- **Procedure:** Generate stepwise; preserve candidates unchanged; assign stable IDs; record the actual tool, date/time, verbatim generation prompt, output boundary, and source anchors for new interactions; validate before starting another batch.
-- **Outputs/storage:** Candidates in `test-cases.json` with `origin=AI`; no automatic interaction archive is required.
-- **Validation:** Unique IDs, coverage, requirement references, and artifact-level source context where needed for later report writing.
+- **Procedure:** Generate separate contract/domain, authorization/security, state-transition, schema, and closure/deduplication batches. Before each invocation, instantiate the exact bounded prompt and assign a unique `generationBatchId`. Immediately after the response, stamp every original candidate with the actual available AI tool/model identity, actual date/time, verbatim prompt, batch ID, coverage slice, source anchors, and stable output candidate ID. Preserve the original output fields unchanged; later corrections belong in human review records. Validate before starting another batch.
+- **Outputs/storage:** Original candidates in `test-cases.json` with `origin=AI`; their stable IDs and shared `generationBatchId` define the exact output boundary. Candidate provenance fields supply the later official audit without a second audit registry.
+- **Validation:** Unique IDs; at least 35 meaningful candidates per API overall; complete coverage and requirement references; every new candidate has `generationBatchId`, `generationTool`, `generationPrompt`, `generatedAt`, and source anchors; all candidates from one batch share identical batch provenance.
 - **Fallback:** Narrow the batch or clarify the spec; never use one generic prompt for all APIs.
 - **Official source:** Official HW06 requirement, guiding principles and section 6.1.
-- **Implementation:** Prompt template, canonical case registry, and validator; waits for API selection.
+- **Implementation:** `hw06-api-test-generator`, prompt template, canonical case registry, and validator.
 
 ### ACT-REV-01 — Record human review and correction
 
-- **Trigger:** An AI candidate is ready for student review.
-- **Human decision required:** Verdict, reasoning, and correction.
-- **Preconditions:** Immutable AI candidate exists.
-- **Inputs:** Case ID, VALID/INVALID/INCOMPLETE, reasoning, correction, reviewer, and time.
-- **Preferred mechanism:** Append a separate record to `human-reviews.json`; do not overwrite the candidate.
-- **Procedure:** Student states judgment; agent records it verbatim; correction is mandatory for INVALID or
-  INCOMPLETE; regenerate counts and traceability.
+- **Trigger:** The complete AI candidate set for one selected API is ready for audit.
+- **Human decision required:** Final verdict, reasoning, and correction for every AI candidate.
+- **Preconditions:** Immutable AI candidates exist; independent AI review and adversarial verification can access the verified specification and full candidate set.
+- **Inputs:** For every case: ID, concise purpose, AI-recommended VALID/INVALID/INCOMPLETE verdict, short reasoning, proposed correction where needed, important source anchor, and remaining uncertainty.
+- **Preferred mechanism:** AI prepares one compact batch review table in chat or a clearly non-canonical working artifact. Do not write `human-reviews.json` before explicit student approval.
+- **Procedure:** An independent AI reviewer pre-classifies every candidate; an adversarial verifier checks every recommendation against the specification and duplicates; AI repairs obvious recommendation/correction defects and reruns review. Present one batch HUMAN GATE. The student may approve all, reject all, or override named cases in one response. Only then append the explicitly approved verdicts/corrections to `human-reviews.json`; never overwrite original AI candidates. Regenerate counts and traceability.
 - **Outputs/storage:** `work/registry/human-reviews.json`.
-- **Validation:** Exactly one review per AI case and attributable reviewer/time.
-- **Fallback:** Leave the case unreviewed; never infer or auto-assign a verdict.
+- **Validation:** The batch covers every AI case exactly once; canonical records match the student's explicit response; correction is non-empty for INVALID/INCOMPLETE; reviewer and time are attributable to the student action.
+- **Fallback:** Keep the proposal non-canonical and all cases unreviewed until the student responds; never infer or auto-assign a verdict.
 - **Official source:** Official HW06 requirement, sections 2 and 6.2.
-- **Implementation:** Registry, deriver, and validator; cases do not exist yet.
+- **Implementation:** Compact AI review proposal, one batch human gate, registry, deriver, and validator.
 
 ### ACT-EXT-01 — Record a human-added case
 
-- **Trigger:** The student identifies a test missed by AI.
-- **Human decision required:** Case design and why AI missed it.
-- **Preconditions:** Selected API and verified spec.
-- **Inputs:** Case fields, requirement/coverage references, and extension rationale.
-- **Preferred mechanism:** Append to `test-cases.json` with `origin=HUMAN`.
-- **Procedure:** Record the student-authored case; preserve attribution; validate; regenerate summaries.
+- **Trigger:** Human audit is complete and the reviewed suite's coverage gaps are known.
+- **Human decision required:** Selection and final design of at least five added cases, including why AI missed each one.
+- **Preconditions:** Selected API, verified specification, reviewed AI suite, and current coverage ledger.
+- **Inputs:** AI-shortlisted missed-test ideas with distinct purpose, request/oracle outline, requirement/coverage anchor, why AI likely missed the idea, duplicate analysis, and recommended subset.
+- **Preferred mechanism:** Present one compact labelled shortlist in chat or a clearly non-canonical working artifact. Do not append `origin=HUMAN` cases before explicit student selection.
+- **Procedure:** Generator and reviewers identify remaining gaps; an adversarial verifier removes weak, unsupported, or duplicate ideas. Present one HUMAN GATE with labelled options and a recommended set. The student selects/modifies at least five in one response. Only then materialize the selected designs in `test-cases.json` with `origin=HUMAN` and the student-approved `humanExtensionRationale`.
 - **Outputs/storage:** `work/registry/test-cases.json`.
-- **Validation:** Rationale is non-empty; case counts remain derived.
-- **Fallback:** Keep it as a working note until the student supplies the missing rationale.
+- **Validation:** At least five student-selected cases exist for the API; every case is distinct, source-grounded, marked `origin=HUMAN`, and has a non-empty approved rationale; counts remain derived.
+- **Fallback:** Keep all shortlist ideas non-canonical until the student selects or modifies them; never attribute an AI proposal to the student.
 - **Official source:** Official HW06 requirement, section 6.3.
-- **Implementation:** Registry, deriver, and validator; cases do not exist yet.
+- **Implementation:** AI coverage-gap shortlist, one human-selection gate, registry, deriver, and validator.
 
 ### ACT-PM-01 — Update the Postman implementation
 
@@ -143,7 +132,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Validation:** JSON parses, case IDs are traceable, student header passes static preflight.
 - **Fallback:** Use Postman UI, export v2 JSON, inspect the diff, then run the same validation.
 - **Official source:** Postman collection/Newman documentation and official HW06 section 6.4.
-- **Implementation:** Validator and Newman preflight; waits for selected APIs/cases.
+- **Implementation:** Validator and Newman preflight.
 
 ### ACT-RUN-01 — Execute Newman and capture run evidence
 
@@ -175,7 +164,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Validation:** Every mapped ID exists and result is PASS/FAIL; submission mode catches unexecuted cases.
 - **Fallback:** Record mapping as pending and inspect raw JSON; never infer from aggregate totals.
 - **Official source:** Newman JSON reporter documentation.
-- **Implementation:** Current registry/validator; importer intentionally waits for the first real report.
+- **Implementation:** Registry, validator, and raw-report mapping procedure.
 
 ### ACT-EVID-01 — Capture and attest screenshot evidence
 
@@ -205,7 +194,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Validation:** Case/evidence references resolve; reports label it candidate.
 - **Fallback:** Classify as test defect/unknown in working notes; do not publish.
 - **Official source:** Official HW06 requirement, section 6.5 and anti-fabrication constraints.
-- **Implementation:** Registry, deriver, and validator; no real failures exist yet.
+- **Implementation:** Registry, deriver, and validator.
 
 ### ACT-BUG-02 — Record genuine-bug confirmation
 
@@ -252,7 +241,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Fallback:** Download artifact through GitHub UI, retain run URL and screenshot, then record only after the same
   report checks; never enter counts from the screenshot alone.
 - **Official source:** GitHub workflow artifact, artifact download, and GitHub CLI run-view documentation.
-- **Implementation:** `scripts/hw06/capture-ci-run.mjs`; real use waits for CI workflow.
+- **Implementation:** `scripts/hw06/capture-ci-run.mjs`.
 
 ### ACT-PM-02 — Record a used Postman feature
 
@@ -266,7 +255,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Validation:** Evidence paths resolve; no unused feature is listed.
 - **Fallback:** Omit the feature until real evidence exists.
 - **Official source:** Official HW06 technical requirements.
-- **Implementation:** Registry and validator; no features have been exercised yet.
+- **Implementation:** Registry and validator.
 
 ### ACT-DERIVE-01 — Regenerate factual reports
 
@@ -289,7 +278,7 @@ bookkeeping, while this catalog—not additional schemas—is the behavioral rou
 - **Preconditions:** The official template, generated artifacts, and available human review data exist.
 - **Inputs:** `test-cases.json`, `human-reviews.json`, source context, and the official template.
 - **Preferred mechanism:** The `ai-audit-report` skill against `out/ai-audit-report.md`.
-- **Procedure:** Create one row per AI-generated artifact; use the actual artifact-level prompt/context and output; preserve pending fields when human review is missing.
+- **Procedure:** Create one row per AI-generated artifact; use the captured actual tool/date/time/verbatim prompt and original output for prospective work; disclose any historical context fallback; preserve pending fields when human review is missing.
 - **Outputs/storage:** Curated report under `out/`; derived factual summaries remain under `work/generated/`.
 - **Validation:** One row per artifact with the five official fields; verdicts, reasoning, and student fixes must be attributable to human review.
 - **Fallback:** Leave unresolved rows pending; never invent missing evidence or human decisions.
