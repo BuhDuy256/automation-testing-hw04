@@ -908,3 +908,57 @@ FR-15                              NOT STARTED
 
 Next genuine human gate: `HG-FR08-BUG-02`. No GitHub Issue may be created, no screenshot may be
 attested, and the official AI Audit Report may not be updated without a separate explicit request.
+
+## 33. Checkpoint — FR-08 bugs human-confirmed, evidence prepared, attestation gate open
+
+ACT-BUG-02 is complete. The student explicitly confirmed both candidates as genuine product bugs and
+directed that failing partitions stay grouped under their single root-defect record:
+
+```text
+BUG-CANDIDATE-FR08-CLIENT-TOTAL        human-confirmed
+BUG-CANDIDATE-FR08-CART-NOT-CLEARED    human-confirmed
+```
+
+The canonical run `RUN-20260823080014785-fr08-canonical-full-suite` is unchanged: 56 executed, 37
+PASS, 19 FAIL, 0 harness defects, 0 contamination, 0 blocked, 438/438 requests carrying
+`X-Student-Id`, original exit code 1. The suite was not rerun and no oracle was modified. Derivation
+now maps all 19 failures to the two confirmed bugs (`knownBugFailures = 19`, `otherFailures = 0`).
+
+The recorded evidence limitation stands: cases whose client-supplied total happened to equal the
+cart-derived total pass without proving that the backend recalculates anything, so the 37 PASS count
+must never be presented as proof of server-side derivation.
+
+ACT-EVID-01 produced three screenshots from that same run, all with `humanAttestation = false`:
+
+```text
+EVID-FR08-RUN-SUMMARY        dashboard: 56 iterations, 422 assertions, 19 failures, 0 skipped
+EVID-FR08-CLIENT-TOTAL       iteration 2  (FR08-AI-002) forged total 1000 vs derived 200000
+EVID-FR08-CART-NOT-CLEARED   iteration 30 (FR08-AI-031) cart still holds the purchased line
+```
+
+Capture note: `scripts/hw06/capture-screenshot.mjs` cannot click, so
+`work/evidence/capture-fr08-report-cards.mjs` performs the same clicks a human reviewer performs on
+the unmodified report and the PNGs are recorded through the `register` fallback with that method
+stated. Iteration numbers are data-file row positions, not case-id suffixes, because the six INVALID
+cases were excluded; a first capture at iteration 31 actually showed FR08-AI-032 and was removed and
+recaptured at iteration 30.
+
+Harness repair: the deriver printed `Issue #undefined` for confirmed but unpublished bugs; it now
+states that the bug is not published yet.
+
+Validation: `npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and exactly the 3
+expected "no explicit human attestation" warnings, `git diff --check` clean. Commit `a44ce44`.
+
+Status:
+
+```text
+FR-08 ACT-BUG-02                   COMPLETE
+FR-08 ACT-EVID-01                  SCREENSHOTS PREPARED — awaiting student visual attestation
+FR-08 ACT-BUG-03                   NOT STARTED — no GitHub Issue created; needs separate approval
+FR-08 CI                           NOT STARTED
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              NOT STARTED
+```
+
+Next genuine human gate: `HG-FR08-EVID-01`, the student's visual inspection and attestation of the
+three screenshots. Only after that may external publication be requested separately.
