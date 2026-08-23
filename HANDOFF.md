@@ -1049,3 +1049,56 @@ FR-15                              NOT STARTED
 
 Next genuine human gate: `HG-FR08-EVID-02`, attestation of the two Issue-page screenshots. After that
 the remaining FR-08 work is CI evidence, then FR-15.
+
+## 36. Checkpoint — FR-08 CI evidence captured; CI screenshot attestation gate open
+
+The student attested both Issue-page screenshots at `HG-FR08-EVID-02`
+(`EVID-FR08-CLIENT-TOTAL-ISSUE`, `EVID-FR08-CART-NOT-CLEARED-ISSUE`).
+
+ACT-CI-01 completed for FR-08 with a new workflow and a small demonstration suite:
+
+```text
+.github/workflows/hw06-fr08-ci.yml
+work/ci/fr08/FR08-ci-demo.postman_collection.json | .postman_environment.json | .postman_data.json
+```
+
+The demo executes canonical case `FR08-AI-019`, whose oracle is the documented FR-08 login rule and
+SEC-02: an unauthenticated checkout must be refused and must create no order. That case genuinely
+passes, so the green pipeline hides neither published defect. It was smoke-tested locally first
+(`RUN-20260823084429748-fr08-ci-demo-local`, exit code 0, 8/8 assertions).
+
+```text
+CI-32629097098-all-pass                      success  0 failed cases  commit a1f2188
+CI-32629191161-intentional-single-failure    failure  1 failed case   commit 87054fd
+```
+
+Both were recorded with `capture-ci-run.mjs`, which reads the real run JSON, downloads the named
+artifact, parses the Newman report, and refuses any run whose remote conclusion and failure count
+contradict the declared purpose. No count came from a screenshot. The `intentionalFailure` flag is
+back to `false`, so the workflow's default state is green; the single failure came only from the
+CI-behaviour assertion and never from weakening an FR-08 oracle.
+
+Deliberate scope decision, reversible on request: no FR-08 canonical full-suite CI workflow was
+built. FR-04 already provides that artifact (`CI-32618732832-canonical-full-suite`), and an FR-08
+equivalent would need its own canonical analyzer. The FR-08 canonical execution evidence remains the
+local run `RUN-20260823080014785-fr08-canonical-full-suite`, which is unchanged.
+
+Validation: `npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and exactly the 2
+expected "no explicit human attestation" warnings for the new CI screenshots. Commits `a1f2188`,
+`87054fd`, `2945fb5`, all pushed.
+
+Status:
+
+```text
+FR-08 CI CONFIGURATION             COMPLETE
+FR-08 CI ALL-PASS EVIDENCE         COMPLETE
+FR-08 CI SINGLE-FAILURE EVIDENCE   COMPLETE
+FR-08 CI SCREENSHOTS               AWAITING student visual attestation
+FR-08 canonical full-suite in CI   NOT BUILT (deliberate, documented above)
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              NOT STARTED
+```
+
+Next genuine human gate: `HG-FR08-EVID-03`, attestation of `EVID-CI-FR08-ALL-PASS` and
+`EVID-CI-FR08-SINGLE-FAILURE`. After that, FR-08 is complete apart from final curation, and FR-15 is
+the next major phase.
