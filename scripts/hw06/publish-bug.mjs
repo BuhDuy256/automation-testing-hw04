@@ -58,18 +58,51 @@ function imageLink(commitSha, screenshotPath) {
   return `../blob/${commitSha}/${encoded}?raw=true`;
 }
 
+function issueDetails(bug) {
+  if (bug.id === 'BUG-CANDIDATE-FR04-PHONE-FORMAT') {
+    return {
+      endpoint: 'PUT /api/users/me',
+      requirement: 'FR-04 Personal profile management: the phone must begin with 0 and contain 10-11 digits (eshop-sut/README.md, FR-04). The selected operation is documented in eshop-sut/api_specification.md, §2.2.',
+      preconditions: 'Freshly seeded local SUT; authenticate as test@eshop.com; capture the authenticated user profile baseline before mutation.',
+      genuineDefect: 'The targeted run used the reviewed invalid-phone stimuli, reached the persisted round-trip assertion, and reproduced the same contract violation. The test did not assert an undocumented status or error schema; it asserted only that an invalid phone must not become the persisted valid profile value.',
+      impact: 'Profile data can retain phone values outside the documented FR-04 format. This can make the user profile inconsistent with the stated contract and may affect downstream phone-based contact or validation flows. No severity level is asserted here because the assignment specification does not define one.',
+      reproducibility: 'Reproduced in the original data-driven run and in the clean targeted phone run RUN-20260823022316955-fr04-phone-corrected, including FR04-AI-013 and FR04-H-004.'
+    };
+  }
+  if (bug.id === 'BUG-CANDIDATE-FR04-ROLE-TAMPERING') {
+    return {
+      endpoint: 'PUT /api/users/me',
+      requirement: 'FR-04 Personal profile management: a user cannot change the role attribute. SEC-06 states that the profile-update API must not allow the client to change role (eshop-sut/README.md, FR-04 and SEC-06). The selected operation is documented in eshop-sut/api_specification.md, §2.2.',
+      preconditions: 'Freshly seeded local SUT; authenticate as test@eshop.com; verify the authenticated baseline role is user before submitting the mutation.',
+      genuineDefect: 'The clean targeted run verified the ordinary-user baseline before the PUT, submitted role=admin, reached the protected-field persistence assertion, and observed the stored role become admin. An independent clean rerun of FR04-AI-027 reproduced protected-field mutation. This is not a setup or mapping failure.',
+      impact: 'A client can mutate the protected role field from user to admin. This creates a privilege-boundary exposure because downstream authorization that trusts the stored role could treat the account as an administrator. This report does not claim that a separate admin action was executed.',
+      reproducibility: 'Reproduced in the original data-driven run and in the clean targeted runs RUN-20260823022329715-fr04-role-corrected and RUN-20260823022342040-fr04-ai027-corrected. The primary finding is the role mutation; the email mutation observed in FR04-AI-027 is retained only as supporting protected-field evidence.'
+    };
+  }
+  throw new Error(`No publication details configured for ${bug.id}`);
+}
+
 function issueBody(bug, commitSha) {
+  const details = issueDetails(bug);
   return [
     `# ${bug.id}: ${bug.title}`,
     '',
-    `Test cases: ${bug.caseIds.join(', ')}`,
+    `Affected endpoint: ${details.endpoint}`,
+    `Requirement / specification: ${details.requirement}`,
+    '',
+    '## Preconditions', '', details.preconditions, '',
+    `Related canonical test cases: ${bug.caseIds.join(', ')}`,
     `Confirmed by: ${bug.confirmedBy}`,
     `Confirmed at: ${bug.confirmedAt}`,
-    `Evidence commit: ${commitSha}`,
     '',
     '## Expected behavior', '', bug.expected, '',
     '## Actual behavior', '', bug.actual, '',
+    '## Why this is a genuine SUT defect', '', details.genuineDefect, '',
+    '## Impact assessment', '', details.impact, '',
+    '## Reproducibility', '', details.reproducibility, '',
     '## Reproduction', '', bug.reproduction, '',
+    `Evidence commit: ${commitSha}`,
+    '',
     '## Evidence', '',
     ...(bug.evidencePaths ?? []).map((item) => `- \`${item}\``),
     '',
