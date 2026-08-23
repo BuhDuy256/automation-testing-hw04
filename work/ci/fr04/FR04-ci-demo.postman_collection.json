@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "HW06 FR-04 CI Demonstration Sample",
+    "description": "CI-only stable sample using canonical case FR04-AI-001. This does not replace or weaken the complete 44-case FR-04 suite. The external data row transparently controls one isolated intentional CI demonstration assertion.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "Login stable FR-04 user",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('CI setup login succeeds', function () { pm.expect(pm.response.code).to.equal(200); var body = pm.response.json(); pm.expect(body.token).to.be.a('string').and.not.empty; pm.environment.set('token', body.token); });"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Capture stable FR-04 baseline",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('CI baseline is readable', function () { pm.expect(pm.response.code).to.equal(200); var p = pm.response.json(); ['name','shipping_address','phone','email','role'].forEach(function (key) { pm.expect(p).to.have.property(key); }); pm.environment.set('ciBaseline', JSON.stringify({ name: p.name, shipping_address: p.shipping_address, phone: p.phone, email: p.email, role: p.role })); });"
+              ]
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "Execute FR04-AI-001 CI sample",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var submitted = { name: pm.iterationData.get('name'), shipping_address: pm.iterationData.get('shipping_address'), phone: pm.iterationData.get('phone') };",
+              "pm.variables.set('ciSubmitted', JSON.stringify(submitted));",
+              "pm.request.body.update({ mode: 'raw', raw: JSON.stringify(submitted), options: { raw: { language: 'json' } } });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.iterationData.get('caseId'); var submitted = JSON.parse(pm.variables.get('ciSubmitted')); var baseline = JSON.parse(pm.environment.get('ciBaseline')); var baseUrl = pm.environment.get('baseUrl'); var token = pm.environment.get('token'); var studentId = pm.environment.get('studentId');",
+              "pm.test(id + ' PUT response is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "pm.sendRequest({ url: baseUrl + '/api/users/me', method: 'GET', header: { Authorization: 'Bearer ' + token, 'X-Student-Id': studentId } }, function (readError, readResponse) { pm.test(id + ' persisted profile matches the stable canonical input', function () { pm.expect(readError).to.equal(null); pm.expect(readResponse.code).to.equal(200); var actual = readResponse.json(); pm.expect(actual.name).to.eql(submitted.name); pm.expect(actual.shipping_address).to.eql(submitted.shipping_address); pm.expect(actual.phone).to.eql(submitted.phone); pm.expect(actual.email).to.eql(baseline.email); pm.expect(actual.role).to.eql(baseline.role); }); pm.sendRequest({ url: baseUrl + '/api/users/me', method: 'PUT', header: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json', 'X-Student-Id': studentId }, body: { mode: 'raw', raw: JSON.stringify({ name: baseline.name, shipping_address: baseline.shipping_address, phone: baseline.phone }) } }, function (restoreError) { pm.test(id + ' cleanup request completes', function () { pm.expect(restoreError).to.equal(null); }); }); });",
+              "if (pm.iterationData.get('intentionalFailure') === true) { pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); }); } else { pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); }); }"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
