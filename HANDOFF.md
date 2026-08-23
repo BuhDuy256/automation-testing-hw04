@@ -835,3 +835,76 @@ FR-15                              NOT STARTED
 
 `work/registry/human-reviews.json` still holds 0 FR-08 records. Nothing may be written there, and no
 `origin=HUMAN` FR-08 case may be created, until the student responds explicitly.
+
+## 32. Checkpoint — FR-08 audited, extended, implemented, executed; bug confirmation gate open
+
+Both FR-08 human gates are closed and execution has completed. `out/` is untouched so far.
+
+ACT-REV-01 (student decision recorded at `2026-08-23T07:33:31.094Z`):
+
+```text
+57 AI candidates -> 40 VALID, 11 INCOMPLETE with approved corrections, 6 INVALID
+INVALID     FR08-AI-024 FR08-AI-049 FR08-AI-050 FR08-AI-052 FR08-AI-054 FR08-AI-056
+INCOMPLETE  FR08-AI-010 FR08-AI-012 FR08-AI-018 FR08-AI-022 FR08-AI-028 FR08-AI-035
+            FR08-AI-040 FR08-AI-043 FR08-AI-048 FR08-AI-053 FR08-AI-055
+51 reviewed-usable AI-origin cases
+```
+
+ACT-EXT-01: the student reviewed the AI-proposed shortlist and selected all five ideas without
+modification. Materialised as `FR08-H-001` stale client total after cart mutation, `FR08-H-002`
+cross-user cart-to-total derivation isolation, `FR08-H-003` valid checkout after a rejected attempt,
+`FR08-H-004` cart line for a nonexistent product, `FR08-H-005` independent persistence of two
+completed orders. Each rationale records truthfully that the idea was AI-proposed and student-selected.
+An adversarial duplicate check against the 51 usable AI cases found no true duplicate.
+
+Total usable FR-08 cases: **56**. `npm run hw06:derive` computes `executable = 56` independently.
+
+ACT-PM-01: `work/postman/fr08/` holds one data-driven collection covering all 56 cases, its
+environment, the generated data file, `build-data.mjs`, and a README of the harness decisions. It was
+committed in `ec6db5d` **before** execution. Key harness decisions: a fresh registered user per case
+because cart state is process memory with append-only writes and no clearing endpoint; expected totals
+derived at run time from the cart the server itself reports immediately before each checkout; no
+status or schema oracle anywhere; `X-Student-Id` upserted collection-wide and asserted per checkout.
+
+ACT-RUN-01 / ACT-RUN-02: `RUN-20260823080014785-fr08-canonical-full-suite`, local Newman, hostname
+`localhost:3000` verified on every request, exit code 1 preserved.
+
+```text
+56 iterations | 438 requests | 422 assertions | 19 failed
+37 PASS | 19 FAIL, mapped case-by-case from the raw JSON
+X-Student-Id proven on 438/438 executed requests
+```
+
+Triage (`work/reviews/FR08-run-triage.md`): all 19 failures are genuine; 0 harness defects, 0 state
+contamination, 0 blocked cases, 0 SPEC GAP cases converted into failures. Nothing was repaired or
+rerun and no oracle was changed after results were seen.
+
+ACT-BUG-01: two candidates registered with `status=candidate`.
+
+```text
+BUG-CANDIDATE-FR08-CLIENT-TOTAL        16 cases directly + 2 combined
+BUG-CANDIDATE-FR08-CART-NOT-CLEARED     1 case directly + 2 combined
+```
+
+Recorded evidence limitation: because no derivation happens at all, cases whose client value happens
+to equal the cart-derived total pass without proving derivation occurred. The 37 PASS count must not
+be read as proof that checkout computes the total from the cart.
+
+Commits on `hw06-api-testing`: `732f16a`, `ec6db5d`, `d52736a`.
+`eshop-sut/backend/database.sqlite` remains an uncommitted runtime-only modification.
+
+Status:
+
+```text
+FR-08 ACT-REV-01 / ACT-EXT-01      COMPLETE (student decisions recorded)
+FR-08 ACT-PM-01                    COMPLETE (committed before execution)
+FR-08 ACT-RUN-01 / ACT-RUN-02      COMPLETE
+FR-08 ACT-BUG-01                   COMPLETE (candidates only)
+FR-08 ACT-BUG-02                   BLOCKED — needs the student's genuine-bug confirmation
+FR-08 ACT-EVID-01 / ACT-BUG-03     NOT STARTED (screenshot attestation, Issue publication)
+FR-08 CI                           NOT STARTED
+FR-15                              NOT STARTED
+```
+
+Next genuine human gate: `HG-FR08-BUG-02`. No GitHub Issue may be created, no screenshot may be
+attested, and the official AI Audit Report may not be updated without a separate explicit request.
