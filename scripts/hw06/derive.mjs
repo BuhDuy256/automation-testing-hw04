@@ -126,6 +126,18 @@ const bugLines = [
 ];
 writeText('work/generated/bug-report.md', `${bugLines.join('\n')}\n`);
 
+const postmanFeatureLines = [
+  '# HW06 Postman Features (Derived)',
+  '',
+  '> Generated from `work/registry/postman-features.json`; only features with real evidence are listed.',
+  '',
+  '| Feature | Verified usage | Evidence |',
+  '|---|---|---|',
+  ...features.map((feature) => `| ${markdownCell(feature.name)} | ${markdownCell(feature.usage)} | ${markdownCell((feature.evidencePaths ?? []).join(', '))} |`),
+  '',
+];
+writeText('work/generated/postman-features.md', `${postmanFeatureLines.join('\n')}\n`);
+
 for (const bug of bugs.filter((item) => item.status !== 'candidate')) {
   const issueBody = [
     `# ${bug.id}: ${bug.title}`,
