@@ -149,7 +149,7 @@
         "work/ci/runs/CI-32629097098-all-pass/artifacts/ci-artifacts/newman-report.json"
       ],
       "screenshotEvidenceId": "EVID-CI-FR08-ALL-PASS",
-      "screenshotHumanAttestation": false
+      "screenshotHumanAttestation": true
     },
     {
       "id": "CI-32629191161-intentional-single-failure",
@@ -182,7 +182,7 @@
         "work/ci/runs/CI-32629191161-intentional-single-failure/artifacts/ci-artifacts/newman-report.json"
       ],
       "screenshotEvidenceId": "EVID-CI-FR08-SINGLE-FAILURE",
-      "screenshotHumanAttestation": false
+      "screenshotHumanAttestation": true
     }
   ]
 }
