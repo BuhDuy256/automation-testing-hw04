@@ -23,7 +23,9 @@
         "width": 1600,
         "height": 1337
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:55.723Z"
     },
     {
       "id": "EVID-FR04-ROLE-REPORT",
@@ -47,7 +49,9 @@
         "width": 1600,
         "height": 1337
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.450Z"
     },
     {
       "id": "EVID-FR04-PHONE-FAILURE",
@@ -63,7 +67,7 @@
         "width": 1600,
         "height": 1000
       },
-      "humanAttestation": false,
+      "humanAttestation": true,
       "sourceRunIds": [
         "RUN-20260823022316955-fr04-phone-corrected"
       ],
@@ -75,7 +79,9 @@
         "BUG-CANDIDATE-FR04-PHONE-FORMAT"
       ],
       "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
-      "humanManualCaptureRequired": false
+      "humanManualCaptureRequired": false,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.107Z"
     },
     {
       "id": "EVID-FR04-ROLE-TAMPERING",
@@ -91,7 +97,7 @@
         "width": 1600,
         "height": 1025
       },
-      "humanAttestation": false,
+      "humanAttestation": true,
       "sourceRunIds": [
         "RUN-20260823022329715-fr04-role-corrected",
         "RUN-20260823022342040-fr04-ai027-corrected"
@@ -104,7 +110,9 @@
         "BUG-CANDIDATE-FR04-ROLE-TAMPERING"
       ],
       "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; the independent AI-027 run is preserved as supporting evidence in the bug registry.",
-      "humanManualCaptureRequired": false
+      "humanManualCaptureRequired": false,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.787Z"
     },
     {
       "id": "EVID-FR04-POSTMAN-CONSOLE",

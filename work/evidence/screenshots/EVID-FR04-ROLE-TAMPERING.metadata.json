@@ -12,10 +12,20 @@
     "width": 1600,
     "height": 1025
   },
-  "humanAttestation": false,
-  "sourceRunIds": ["RUN-20260823022329715-fr04-role-corrected", "RUN-20260823022342040-fr04-ai027-corrected"],
-  "caseIds": ["FR04-AI-026", "FR04-AI-027"],
-  "bugIds": ["BUG-CANDIDATE-FR04-ROLE-TAMPERING"],
+  "humanAttestation": true,
+  "sourceRunIds": [
+    "RUN-20260823022329715-fr04-role-corrected",
+    "RUN-20260823022342040-fr04-ai027-corrected"
+  ],
+  "caseIds": [
+    "FR04-AI-026",
+    "FR04-AI-027"
+  ],
+  "bugIds": [
+    "BUG-CANDIDATE-FR04-ROLE-TAMPERING"
+  ],
   "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; the independent AI-027 run is preserved as supporting evidence in the bug registry.",
-  "humanManualCaptureRequired": false
+  "humanManualCaptureRequired": false,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T03:15:56.787Z"
 }

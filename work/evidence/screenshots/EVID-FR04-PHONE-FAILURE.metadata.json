@@ -12,10 +12,19 @@
     "width": 1600,
     "height": 1000
   },
-  "humanAttestation": false,
-  "sourceRunIds": ["RUN-20260823022316955-fr04-phone-corrected"],
-  "caseIds": ["FR04-AI-013", "FR04-H-004"],
-  "bugIds": ["BUG-CANDIDATE-FR04-PHONE-FORMAT"],
+  "humanAttestation": true,
+  "sourceRunIds": [
+    "RUN-20260823022316955-fr04-phone-corrected"
+  ],
+  "caseIds": [
+    "FR04-AI-013",
+    "FR04-H-004"
+  ],
+  "bugIds": [
+    "BUG-CANDIDATE-FR04-PHONE-FORMAT"
+  ],
   "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
-  "humanManualCaptureRequired": false
+  "humanManualCaptureRequired": false,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T03:15:56.107Z"
 }

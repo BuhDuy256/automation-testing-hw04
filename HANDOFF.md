@@ -478,3 +478,14 @@ The student manually captured and supplied the real Postman Desktop Console scre
 - Human attestation: recorded for `Nguyen Bao Duy`.
 
 The evidence registry and screenshot metadata now contain the manual-capture provenance and requirement mapping. ACT-EVID-01 remains **PARTIAL** only because the previously created Newman bug screenshots have not yet received explicit human attestation. No API rerun, collection change, GitHub Issue, or AI Audit Report update was made in this step.
+
+## 22. Latest checkpoint — ACT-EVID-01 complete
+
+The student explicitly confirmed that the four Newman screenshots are genuine execution evidence and visually correct. The standard attestation command recorded human attestation under `Nguyen Bao Duy` for:
+
+- `EVID-FR04-PHONE-REPORT`
+- `EVID-FR04-PHONE-FAILURE`
+- `EVID-FR04-ROLE-REPORT`
+- `EVID-FR04-ROLE-TAMPERING`
+
+Together with the already-attested `EVID-FR04-POSTMAN-CONSOLE`, all screenshot evidence required for the current ACT-EVID-01 scope now has explicit human attestation. ACT-EVID-01 is **COMPLETE**. No API was rerun, no collection was changed, no GitHub Issue was published, and no AI Audit Report update was made.
