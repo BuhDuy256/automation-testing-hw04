@@ -4,8 +4,9 @@
 > `work/registry/human-reviews.json` after the `HG-FR08-REV-01` student gate.
 
 Batches: `FR08-GEN-B1` contract-domain (18), `FR08-GEN-B2` authorization-security (12),
-`FR08-GEN-B3` state-transition (10), `FR08-GEN-B4` schema (10), `FR08-GEN-B5` closure-deduplication (6).
-Total AI candidates: 56.
+`FR08-GEN-B3` state-transition (10), `FR08-GEN-B4` schema (10), `FR08-GEN-B5` closure-deduplication (6),
+`FR08-GEN-B6` authorization-closure (1).
+Total AI candidates: 57.
 
 ## Request parameters
 
@@ -20,7 +21,7 @@ Total AI candidates: 56.
 | `shipping_address` — blank forms | empty string, whitespace-only, null, omitted | FR08-AI-013, FR08-AI-014, FR08-AI-015, FR08-AI-016 |
 | `shipping_address` — wrong type | scalar number, nested object | FR08-AI-017, FR08-AI-045 |
 | `shipping_address` — robustness | 1000 characters, control characters, HTML payload, SQL metacharacters | FR08-AI-018, FR08-AI-055, FR08-AI-028, FR08-AI-029 |
-| `Authorization` header | valid user, missing, non-Bearer scheme, empty credential, tampered signature, non-JWT string, foreign-signed JWT, admin identity (expired token uncovered — see below) | FR08-AI-001, FR08-AI-019, FR08-AI-020, FR08-AI-021, FR08-AI-022, FR08-AI-023, FR08-AI-024, FR08-AI-056 |
+| `Authorization` header | valid user, missing, non-Bearer scheme, empty credential, tampered signature, non-JWT string, foreign-signed JWT, validly signed but expired, admin identity | FR08-AI-001, FR08-AI-019, FR08-AI-020, FR08-AI-021, FR08-AI-022, FR08-AI-023, FR08-AI-024, FR08-AI-057, FR08-AI-056 |
 | Undocumented extra body fields | `user_id`, `status`, `discount_code` | FR08-AI-026, FR08-AI-027, FR08-AI-047 |
 | Upstream cart input `price` (§4.2) | client-supplied price below catalogue price | FR08-AI-053 |
 
@@ -40,13 +41,14 @@ Total AI candidates: 56.
 | Cleared cart → rebuild and checkout again → independent total | `GET /api/cart`, `GET /api/orders/:id` | FR08-AI-040 |
 | One cart → two back-to-back identical checkouts → at most one paid order | `GET /api/orders/my-orders` | FR08-AI-054 |
 | Quantity boundaries 1 and 99 → checkout → exact arithmetic | `GET /api/orders/:id` | FR08-AI-051, FR08-AI-052 |
-| Any refused request → no order created | `GET /api/orders/my-orders` | FR08-AI-019 … FR08-AI-024 |
+| Any refused request → no order created | `GET /api/orders/my-orders` | FR08-AI-019 … FR08-AI-024, FR08-AI-057 |
+| Expired-token attempt → no order created and cart unchanged | `GET /api/orders/my-orders`, `GET /api/cart` | FR08-AI-057 |
 
 ## Applicable security rules
 
 | SEC | Applicability | Candidate IDs | Evidence boundary |
 |---|---|---|---|
-| SEC-02 valid JWT required | Direct | FR08-AI-019 … FR08-AI-024, FR08-AI-037, FR08-AI-050 | Fully observable at the API |
+| SEC-02 valid JWT required | Direct | FR08-AI-019 … FR08-AI-024, FR08-AI-037, FR08-AI-050, FR08-AI-057 | Fully observable at the API |
 | SEC-04 escaping at display | Relevant to the stored address | FR08-AI-028 | API storage cannot prove UI escaping; a separate UI/display-boundary observation is required |
 | SEC-05 parameterized queries | Relevant to order persistence | FR08-AI-029, FR08-AI-030 | A safe response is consistent with, but not proof of, parameterized queries |
 | SEC-03 admin role check | Not directly applicable; checkout is not an admin route | FR08-AI-056 | Covered only as the role dimension of a non-admin route |
@@ -68,7 +70,6 @@ Total AI candidates: 56.
 | Item | Reason not covered |
 |---|---|
 | Exact HTTP status codes for every negative case | The API specification documents no status or error schema for `POST /api/checkout`; asserting one would invent a contract (`SPEC GAP` recorded on every affected candidate). |
-| Expired JWT partition named in the verified spec extract | Found by adversarial verification after batch `FR08-GEN-B2`. Minting an expired token requires the server signing secret, which is not available black-box, and a token signed with any other secret fails signature verification first, so the result would be indistinguishable from FR08-AI-022. Waiting for natural expiry is not executable inside a Newman run. Recorded as an uncovered authoritative partition rather than covered by a look-alike case. |
 | Cart item removal before checkout | No cart-removal endpoint is documented in `eshop-sut/api_specification.md` §4, so such a case would not be executable as written. |
 | `shipping_address` maximum length boundary pair (for example 255/256) | No maximum length is documented; the single 1000-character robustness case (FR08-AI-018) covers the risk without inventing a limit. |
 | Order status lifecycle after creation | `PUT /api/orders/:id/cancel` (§4.6) is a separate operation outside the selected API; only client-supplied status at creation time is covered (FR08-AI-027). |
@@ -76,3 +77,12 @@ Total AI candidates: 56.
 | True parallel concurrency | Only back-to-back sequential submission is executable in Newman (FR08-AI-054); a genuine race would need a tool outside the agreed Postman/Newman toolchain. |
 | SEC-04 UI escaping conformance | Requires a display-boundary observation outside this API suite; recorded as an explicit evidence gap on FR08-AI-028. |
 | SEC-05 internal query construction | Not observable from black-box API responses; recorded as an explicit evidence gap on FR08-AI-029 and FR08-AI-030. |
+
+## Correction after adversarial verification (revision 2)
+
+The `expired` authorization partition was first recorded here as uncovered and untestable. That was
+wrong for this repository: `work/postman/fr04/FR04-profile.postman_environment.json` already carries
+a validly-signed-but-expired JWT fixture whose signature verifies against the local SUT development
+secret and whose `exp` claim is `1`. The mechanism was re-minted for user id 2 and used to generate
+`FR08-AI-057` in batch `FR08-GEN-B6`. The fixture is a test input only; no oracle in that candidate
+is derived from implementation code.
