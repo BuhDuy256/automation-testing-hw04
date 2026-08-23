@@ -1,0 +1,5 @@
+Public GitHub repository:
+https://github.com/BuhDuy256/automation-testing-hw04
+
+HW06 branch:
+https://github.com/BuhDuy256/automation-testing-hw04/tree/hw06-api-testing

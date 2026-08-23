@@ -1,0 +1,32 @@
+HW06 Final Submission Validation Record
+Date: 2026-08-23
+
+npm run hw06:derive
+PASS — factual summaries regenerated from canonical registries.
+
+npm run hw06:validate
+PASS — workspace validation: 0 errors, 0 warnings.
+
+npm run hw06:validate:out
+PASS — standalone out/ self-containment: 0 errors, 0 warnings.
+Checks include Markdown links, local path escape patterns, required reports/images,
+forbidden databases, token/private-key signatures, canonical counts, Issue records,
+Git hashes, CI commit/link records, and PDF/XLSX signatures.
+
+npm run hw06:validate:submission
+FAIL — 2 errors, 0 warnings.
+Both errors have one genuine human-only cause:
+- missing required evidence type: self-drawn-generator-diagram
+- generator-diagram artifact lacks that evidence type
+
+git diff --check
+PASS — no whitespace errors after final artifact repair.
+
+XLSX structural validation
+PASS — Open XML ZIP contains valid workbook XML plus Summary and Test Cases worksheets.
+
+AI Audit row reconciliation
+PASS — 190 rows = 132 VALID + 21 INVALID + 37 INCOMPLETE.
+
+Packaging
+NOT BUILT — strict validation correctly blocks the ZIP until a genuine student-designed/self-drawn diagram is supplied and registered. No validator was weakened.

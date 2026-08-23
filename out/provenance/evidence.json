@@ -1,0 +1,791 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "EVID-FR04-PHONE-REPORT",
+      "type": "bug-runtime-report",
+      "description": "Real Newman HTML report for the corrected FR04 phone-format reproduction, including the failed persisted-phone assertion and captured request evidence.",
+      "path": "fr04/evidence/EVID-FR04-PHONE-REPORT.png",
+      "sha256": "cffa72d03e90a6f18cecd08d985be996751c645a925854299b25dee55b819ce9",
+      "capturedAt": "2026-08-23T02:44:26.825Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+      "finalUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+      "pageTitle": "Newman Summary Report",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 97845,
+        "width": 1600,
+        "height": 1337
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:55.723Z"
+    },
+    {
+      "id": "EVID-FR04-ROLE-REPORT",
+      "type": "bug-runtime-report",
+      "description": "Real Newman HTML report for the corrected FR04-AI-026 role-tampering reproduction, including baseline-protection failure and persisted role evidence.",
+      "path": "fr04/evidence/EVID-FR04-ROLE-REPORT.png",
+      "sha256": "800ea72b9fbb3f3de8e0b15447dc71286d0541ed1f378a733767020b528e39f7",
+      "capturedAt": "2026-08-23T02:44:45.475Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+      "finalUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+      "pageTitle": "Newman Summary Report",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 97227,
+        "width": 1600,
+        "height": 1337
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.450Z"
+    },
+    {
+      "id": "EVID-FR04-PHONE-FAILURE",
+      "type": "bug-runtime-report",
+      "description": "Real Newman failure tab for FR04-AI-013: submitted invalid phone 012345678 and assertion that the persisted value was not the captured baseline.",
+      "path": "fr04/evidence/EVID-FR04-PHONE-FAILURE.png",
+      "sha256": "3b22e8beddf4e21c8aecf64dcde883042e6f592d83dbe45f70cdaa3617e51c44",
+      "capturedAt": "2026-08-23T02:46:55.192Z",
+      "captureMethod": "Playwright headless Chromium from real Newman HTML failure tab",
+      "sourceUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+      "image": {
+        "bytes": 60040,
+        "width": 1600,
+        "height": 1000
+      },
+      "humanAttestation": true,
+      "sourceRunIds": [
+        "RUN-20260823022316955-fr04-phone-corrected"
+      ],
+      "caseIds": [
+        "FR04-AI-013",
+        "FR04-H-004"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR04-PHONE-FORMAT"
+      ],
+      "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
+      "humanManualCaptureRequired": false,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.107Z"
+    },
+    {
+      "id": "EVID-FR04-ROLE-TAMPERING",
+      "type": "bug-runtime-report",
+      "description": "Real Newman failure tab for FR04-AI-026: protected-field assertion observed persisted role admin instead of baseline role user.",
+      "path": "fr04/evidence/EVID-FR04-ROLE-TAMPERING.png",
+      "sha256": "7cb1a1c3a83c88706c39a4e6436cd8b2b547b76a902ce1b2f89a37c289a2cc59",
+      "capturedAt": "2026-08-23T02:47:31.480Z",
+      "captureMethod": "Playwright headless Chromium from real Newman HTML failure tab",
+      "sourceUrl": "http://127.0.0.1:39092/provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+      "image": {
+        "bytes": 78674,
+        "width": 1600,
+        "height": 1025
+      },
+      "humanAttestation": true,
+      "sourceRunIds": [
+        "RUN-20260823022329715-fr04-role-corrected",
+        "RUN-20260823022342040-fr04-ai027-corrected"
+      ],
+      "caseIds": [
+        "FR04-AI-026",
+        "FR04-AI-027"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR04-ROLE-TAMPERING"
+      ],
+      "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; the independent AI-027 run is preserved as supporting evidence in the bug registry.",
+      "humanManualCaptureRequired": false,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:15:56.787Z"
+    },
+    {
+      "id": "EVID-FR04-POSTMAN-CONSOLE",
+      "type": "postman-console-header",
+      "description": "Manual Postman Console screenshot of the real Login user A request showing X-Student-Id: 23127179.",
+      "path": "fr04/evidence/EVID-FR04-POSTMAN-CONSOLE.png",
+      "sha256": "7b6256dec9a0114e780faca0c8a08f8b9a5d6a1884c37b591df02a6935014226",
+      "capturedAt": "2026-08-23T03:10:18.627Z",
+      "captureMethod": "manual Postman Desktop Console capture",
+      "sourceUrl": "http://localhost:3000/api/login",
+      "image": {
+        "bytes": 47951,
+        "width": 1437,
+        "height": 388
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:10:19.082Z",
+      "sourceRunIds": [],
+      "caseIds": [],
+      "bugIds": [],
+      "supportingRequest": "Login user A — POST /api/login",
+      "requirement": "Every request includes X-Student-Id: 23127179",
+      "provenanceNote": "Manual screenshot captured from the real Postman Desktop Console after a real request; no Newman run is claimed.",
+      "humanManualCaptureRequired": true
+    },
+    {
+      "id": "EVID-FR04-PHONE-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue page for the confirmed FR04 phone-format bug, showing repository, issue number, title, and evidence context.",
+      "path": "fr04/evidence/EVID-FR04-PHONE-ISSUE.png",
+      "sha256": "07dc7fac4798cd2a7712a117cf3c936a76c4b0b7e0c695c7ffaa562093ee3678",
+      "capturedAt": "2026-08-23T03:43:22.383Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/13",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/13",
+      "pageTitle": "[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format · Issue #13 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 282356,
+        "width": 1600,
+        "height": 2657
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:52:00.357Z"
+    },
+    {
+      "id": "EVID-FR04-ROLE-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue page for the confirmed FR04 protected-role bug, showing repository, issue number, title, and evidence context.",
+      "path": "fr04/evidence/EVID-FR04-ROLE-ISSUE.png",
+      "sha256": "fa08e3c4b0fe66eda2efc18db9d7494c6237ffa7b1d9e5414f26319c997fa119",
+      "capturedAt": "2026-08-23T03:43:27.975Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
+      "pageTitle": "[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin · Issue #14 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 387081,
+        "width": 1600,
+        "height": 3879
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:52:00.694Z"
+    },
+    {
+      "id": "EVID-CI-FR04-ALL-PASS",
+      "type": "ci-all-pass-screenshot",
+      "description": "Real GitHub Actions all-pass FR-04 CI sample showing repository, workflow/job identity, commit/run status, and Newman execution context.",
+      "path": "fr04/evidence/EVID-CI-FR04-ALL-PASS.png",
+      "sha256": "3760745a5d1ca866f6a72e2161e8f96a8b4a5198c2dd101ab5db8e825be54036",
+      "capturedAt": "2026-08-23T04:11:30.944Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599/job/97139714492",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599/job/97139714492",
+      "pageTitle": "ci(hw06): add all-pass FR04 Newman sample · BuhDuy256/automation-testing-hw04@d8670c4 · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 79068,
+        "width": 1600,
+        "height": 1145
+      },
+      "githubActionsRunId": 32617199599,
+      "commitSha": "d8670c47fd18ede663f4da11410d46ed598de891",
+      "ciPurpose": "all-pass",
+      "mappedRequirement": "HW06 CI/CD all-pass API-test sample",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T04:41:39.163Z"
+    },
+    {
+      "id": "EVID-CI-FR04-INTENTIONAL-FAILURE",
+      "type": "ci-intentional-single-failure-screenshot",
+      "description": "GitHub Actions FR-04 CI run with exactly one transparent intentional assertion failure",
+      "path": "fr04/evidence/EVID-CI-FR04-INTENTIONAL-FAILURE.png",
+      "sha256": "f82247517bbd810bdc9876d44ba3e58dd13b431e81fa7b1db562a802b0e5e02e",
+      "capturedAt": "2026-08-23T04:18:16.676Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761/job/97140028096",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761/job/97140028096",
+      "pageTitle": "ci(hw06): demonstrate one intentional FR04 failure · BuhDuy256/automation-testing-hw04@84f837f · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 73976,
+        "width": 1600,
+        "height": 1145
+      },
+      "githubActionsRunId": 32617321761,
+      "commitSha": "84f837f95c44f928add2d719d0a5669688d45350",
+      "ciPurpose": "intentional-single-failure",
+      "mappedRequirement": "HW06 CI/CD sample with exactly one intentional test failure",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T04:41:39.767Z"
+    },
+    {
+      "id": "EVID-CI-FR04-CANONICAL-FULL-SUITE",
+      "type": "ci-canonical-full-suite-screenshot",
+      "description": "Real GitHub Actions run for the complete canonical FR-04 suite, showing repository, workflow, commit, failed status, and full-suite execution context",
+      "path": "fr04/evidence/EVID-CI-FR04-CANONICAL-FULL-SUITE.png",
+      "sha256": "93523c64edf30ad11377ff92555517d5221a1c353395bd05275641a41b96c722",
+      "capturedAt": "2026-08-23T04:49:05.104Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832/job/97143508037",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832/job/97143508037",
+      "pageTitle": "ci(hw06): integrate canonical FR04 full suite · BuhDuy256/automation-testing-hw04@f34b71b · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 80484,
+        "width": 1600,
+        "height": 1145
+      },
+      "githubActionsRunId": 32618732832,
+      "commitSha": "f34b71b24f368c819140fa077ce8942b76893470",
+      "ciPurpose": "canonical-full-suite",
+      "mappedRequirement": "HW06 CI/CD integration of the complete canonical FR-04 API suite",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T05:01:30.133Z"
+    },
+    {
+      "id": "EVID-FR08-RUN-SUMMARY",
+      "type": "bug-runtime-report",
+      "description": "Newman dashboard of the canonical FR-08 run RUN-20260823080014785-fr08-canonical-full-suite showing 56 iterations, 422 assertions and 19 failed tests, with the collection file information used for run traceability.",
+      "path": "fr08/evidence/EVID-FR08-RUN-SUMMARY.png",
+      "sha256": "2402566a73ea35e0a415aef2c8b4573c4af342ee4f6962dbdfa1da0001e90298",
+      "capturedAt": "2026-08-23T08:11:38.133Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39093/fr08/newman/FR08-canonical-full-suite.html",
+      "finalUrl": "http://127.0.0.1:39093/fr08/newman/FR08-canonical-full-suite.html",
+      "pageTitle": "Newman Summary Report",
+      "mode": "viewport",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1100
+      },
+      "image": {
+        "bytes": 119692,
+        "width": 1600,
+        "height": 1100
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:28.961Z"
+    },
+    {
+      "id": "EVID-FR08-CLIENT-TOTAL",
+      "type": "bug-runtime-report",
+      "description": "Canonical FR-08 run, iteration 2 (FR08-AI-002). Shows the checkout request body carrying the forged client total_amount 1000, the 200 'Checkout successful' response, the order history response persisting total_amount 1000, and the failed assertion 'persisted total equals the server-derived cart total (200000)' with 'expected 1000 to equal 200000'. X-Student-Id 23127179 is visible in the request headers.",
+      "path": "fr08/evidence/EVID-FR08-CLIENT-TOTAL.png",
+      "sha256": "97d8bc900c339259e7004015a84ecb257e48a5203e765783b00461d8e5f2097b",
+      "capturedAt": "2026-08-23T08:18:30.239Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via provenance/README.md against the unmodified newman-report.html served read-only at http://127.0.0.1:39093; the script performs only the clicks a human reviewer performs (open the Total Requests tab, select the iteration, expand the two request cards) and clips the two real cards.",
+      "sourceUrl": "http://127.0.0.1:39093/fr08/newman/FR08-canonical-full-suite.html",
+      "image": {
+        "bytes": 241692,
+        "width": 1046,
+        "height": 5062
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:29.555Z"
+    },
+    {
+      "id": "EVID-FR08-CART-NOT-CLEARED",
+      "type": "bug-runtime-report",
+      "description": "Canonical FR-08 run, iteration 30 (FR08-AI-031). Top card: POST /api/checkout returns 200 {\"message\":\"Checkout successful\",\"orderId\":27}. Bottom card: the post-checkout GET /api/cart read-back still returns [{\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}], and the test table shows the failed assertion 'FR08-AI-031 cart is cleared after a successful checkout (FR-08)' with 'expected 1 to equal +0'. Note for the reader: htmlextra attributes pm.sendRequest helper calls to the enclosing item, which is why the Verify card displays the helper cart read-back rather than the order-history call. X-Student-Id 23127179 is visible in the request headers.",
+      "path": "fr08/evidence/EVID-FR08-CART-NOT-CLEARED.png",
+      "sha256": "7348970f870fd93ad468df4b51f97fb6c39c1947cf7721a83797349dc25be0fd",
+      "capturedAt": "2026-08-23T08:21:11.145Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via provenance/README.md against the unmodified newman-report.html served read-only at http://127.0.0.1:39093; the script performs only the clicks a human reviewer performs (open the Total Requests tab, select the iteration, expand the request cards) and clips the two real cards.",
+      "sourceUrl": "http://127.0.0.1:39093/fr08/newman/FR08-canonical-full-suite.html",
+      "image": {
+        "bytes": 239565,
+        "width": 1046,
+        "height": 5069
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:27:30.165Z"
+    },
+    {
+      "id": "EVID-FR08-CLIENT-TOTAL-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #15 for BUG-CANDIDATE-FR08-CLIENT-TOTAL, showing the public title, the canonical bug ID, the linked FR-08 case IDs, the canonical run reference, and the embedded evidence images.",
+      "path": "fr08/evidence/EVID-FR08-CLIENT-TOTAL-ISSUE.png",
+      "sha256": "422ac8a81c42d3dcca5ba2675d73690098aff65d7c2916c274b33919b456ec4f",
+      "capturedAt": "2026-08-23T08:35:57.158Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+      "pageTitle": "[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart · Issue #15 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 847762,
+        "width": 1600,
+        "height": 7709
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:40:10.138Z"
+    },
+    {
+      "id": "EVID-FR08-CART-NOT-CLEARED-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #16 for BUG-CANDIDATE-FR08-CART-NOT-CLEARED, showing the public title, the canonical bug ID, the linked case FR08-AI-031, the canonical run reference, and the embedded evidence images.",
+      "path": "fr08/evidence/EVID-FR08-CART-NOT-CLEARED-ISSUE.png",
+      "sha256": "2350023669b7a48ac1c61c82274630fdccede72186dc887f94b750d2414fe899",
+      "capturedAt": "2026-08-23T08:36:07.405Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+      "pageTitle": "[HW06][FR-08] The cart is not cleared after a successful checkout · Issue #16 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 794262,
+        "width": 1600,
+        "height": 7512
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:40:10.758Z"
+    },
+    {
+      "id": "EVID-CI-FR08-ALL-PASS",
+      "type": "github-actions-run",
+      "description": "GitHub Actions run 32629097098 of the HW06 FR-08 Newman CI Sample workflow at commit a1f2188, concluding success with every assertion passing for canonical case FR08-AI-019.",
+      "path": "fr08/evidence/EVID-CI-FR08-ALL-PASS.png",
+      "sha256": "d94925d3ae13460d491b45f698c04a8d67bdb024ff134f6648398e0fdc23612e",
+      "capturedAt": "2026-08-23T08:46:20.151Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629097098",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629097098",
+      "pageTitle": "feat(hw06): add FR-08 CI workflow and attest issue-page evidence · BuhDuy256/automation-testing-hw04@a1f2188 · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 108719,
+        "width": 1600,
+        "height": 1141
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:51:31.730Z"
+    },
+    {
+      "id": "EVID-CI-FR08-SINGLE-FAILURE",
+      "type": "github-actions-run",
+      "description": "GitHub Actions run 32629191161 of the HW06 FR-08 Newman CI Sample workflow at commit 87054fd, concluding failure because the CI demonstration flag intentionalFailure was set to true, producing exactly one failed test case while the real FR08-AI-019 oracle still passed.",
+      "path": "fr08/evidence/EVID-CI-FR08-SINGLE-FAILURE.png",
+      "sha256": "fafc05e7f977395f77ccf451e31ec93a63e67e77404daefb8df13aeffdf3245c",
+      "capturedAt": "2026-08-23T08:48:01.378Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "pageTitle": "test(hw06): trigger the FR-08 intentional single-failure CI demonstra… · BuhDuy256/automation-testing-hw04@87054fd · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 114144,
+        "width": 1600,
+        "height": 1206
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T08:51:32.347Z"
+    },
+    {
+      "id": "EVID-FR08-POSTMAN-COLLECTION",
+      "type": "postman-desktop",
+      "description": "Postman Desktop sidebar after the student imported the FR-08 manual-import package: collection 'HW06 FR-08 Checkout - POST /api/checkout' expanded showing all eight requests in run order, with the environment 'HW06 FR-08 Local - localhost:3000' selected.",
+      "path": "fr08/evidence/EVID-FR08-POSTMAN-COLLECTION.png",
+      "sha256": "6c62c16629ce2e3b80331c66d6900d1d3ac63660107bae5ae0b4599fea90554b",
+      "capturedAt": "2026-08-23T09:29:14.570Z",
+      "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 85001,
+        "width": 484,
+        "height": 960
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:33.808Z"
+    },
+    {
+      "id": "EVID-FR08-POSTMAN-CONSOLE",
+      "type": "postman-desktop",
+      "description": "Postman Console entry for POST http://localhost:3000/api/checkout during the manual Collection Runner run, showing the request headers including X-Student-Id: 23127179 and a 200 response in 14 ms.",
+      "path": "fr08/evidence/EVID-FR08-POSTMAN-CONSOLE.png",
+      "sha256": "08ea550c200b97a30ec9efade8c8aa3521d66b5bb97e9027ad03f8e8073f6f3f",
+      "capturedAt": "2026-08-23T09:29:16.324Z",
+      "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 58232,
+        "width": 1434,
+        "height": 428
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:34.734Z"
+    },
+    {
+      "id": "EVID-FR08-POSTMAN-RUNNER",
+      "type": "postman-desktop",
+      "description": "Postman Collection Runner results for the manual FR-08 run driven by FR08-cases.postman_data.json: environment 'HW06 FR-08 Local', one iteration, seven tests passed, test names carrying the canonical case id FR08-AI-001, and the console showing the server-observed cart, the derived expected total 200000, the checkout 200 response with orderId 55, and the persisted order at total_amount 200000.",
+      "path": "fr08/evidence/EVID-FR08-POSTMAN-RUNNER.png",
+      "sha256": "0053ac4c6963d69cfa785e98c59a685a82afc75bb8d6ecdef1fd079bae64b7e9",
+      "capturedAt": "2026-08-23T09:29:17.935Z",
+      "captureMethod": "manual fallback: manual screen capture by the student in Postman Desktop",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 288579,
+        "width": 1919,
+        "height": 1027
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:35.534Z"
+    },
+    {
+      "id": "EVID-FR15-RUN-SUMMARY",
+      "type": "bug-runtime-report",
+      "description": "Newman dashboard of the canonical FR-15 run RUN-20260823102155874-fr15-canonical-full-suite showing all 59 iterations and the preserved canonical assertion totals for run traceability.",
+      "path": "fr15/evidence/EVID-FR15-RUN-SUMMARY.png",
+      "sha256": "d39c6a741f7792098fe6822420bdab6996aed09e8f1e0eba601046241507f28b",
+      "capturedAt": "2026-08-23T10:43:46.981Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39094/fr15/newman/FR15-canonical-full-suite.html",
+      "finalUrl": "http://127.0.0.1:39094/fr15/newman/FR15-canonical-full-suite.html",
+      "pageTitle": "Newman Summary Report",
+      "mode": "viewport",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1100
+      },
+      "image": {
+        "bytes": 97399,
+        "width": 1600,
+        "height": 1100
+      },
+      "humanAttestation": true,
+      "sourceRunIds": [
+        "RUN-20260823102155874-fr15-canonical-full-suite"
+      ],
+      "caseIds": [],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-AUTHORIZATION",
+        "BUG-CANDIDATE-FR15-VALIDATION"
+      ],
+      "provenanceNote": "Viewport capture of the unmodified real canonical Newman HTML dashboard. Newman reports 30 failed assertions, while the canonical registry supplies the reviewed mutually exclusive case classification of 16 PASS, 28 FAIL, and 15 SPEC-GAP observations.",
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T10:54:35.077Z"
+    },
+    {
+      "id": "EVID-FR15-AUTHORIZATION",
+      "type": "bug-runtime-report",
+      "description": "Targeted FR-15 authorization reproduction, iteration 2 (FR15-AI-028): an ordinary-user JWT request creates a persistent product and the read-back persistence oracle fails; request headers include X-Student-Id 23127179.",
+      "path": "fr15/evidence/EVID-FR15-AUTHORIZATION.png",
+      "sha256": "0e128b82d61a51a805040db0bbdccf2447cc0d604ed41abf4f3e303a707c84c5",
+      "capturedAt": "2026-08-23T10:44:14.415Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via provenance/README.md against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+      "sourceUrl": "http://127.0.0.1:39094/fr15/newman/FR15-authorization-reproduction.html",
+      "image": {
+        "bytes": 245952,
+        "width": 1046,
+        "height": 5089
+      },
+      "humanAttestation": true,
+      "sourceRunIds": [
+        "RUN-20260823102829114-fr15-auth-reproduction"
+      ],
+      "caseIds": [
+        "FR15-AI-028"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-AUTHORIZATION"
+      ],
+      "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The request body, ordinary-user bearer token fixture, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence.",
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T10:54:36.414Z"
+    },
+    {
+      "id": "EVID-FR15-VALIDATION",
+      "type": "bug-runtime-report",
+      "description": "Targeted FR-15 validation reproduction, iteration 2 (FR15-AI-009): price zero is submitted, a persistent product is created, and the FR-15 persistence oracle fails; request headers include X-Student-Id 23127179.",
+      "path": "fr15/evidence/EVID-FR15-VALIDATION.png",
+      "sha256": "880712809f90640e7e49fcd46cebfed7355650eac3495a252883c0af01fcce78",
+      "capturedAt": "2026-08-23T10:44:14.816Z",
+      "captureMethod": "manual fallback: Playwright headless Edge via provenance/README.md against the unmodified targeted Newman HTML report; the helper opens the Total Requests tab, selects iteration 2, expands Execute and Verify, and clips the real cards",
+      "sourceUrl": "http://127.0.0.1:39094/fr15/newman/FR15-validation-reproduction.html",
+      "image": {
+        "bytes": 246357,
+        "width": 1046,
+        "height": 5089
+      },
+      "humanAttestation": true,
+      "sourceRunIds": [
+        "RUN-20260823102841701-fr15-validation-reproduction"
+      ],
+      "caseIds": [
+        "FR15-AI-009"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR15-VALIDATION"
+      ],
+      "provenanceNote": "Interactive Execute-and-Verify card capture from the unmodified real targeted Newman report. The price=0 request, response, persistent product read-back, failed oracle, and X-Student-Id header remain visible in the report evidence.",
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T10:54:37.758Z"
+    },
+    {
+      "id": "EVID-FR15-AUTHORIZATION-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #17 for BUG-CANDIDATE-FR15-AUTHORIZATION, showing the public title, canonical bug ID, linked FR-15 case IDs, targeted run reference, and embedded evidence images.",
+      "path": "fr15/evidence/EVID-FR15-AUTHORIZATION-ISSUE.png",
+      "sha256": "75e84499245a4c5aa7b642b2ae83a974175332843bb131a69d327ac519240826",
+      "capturedAt": "2026-08-23T11:01:24.827Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "pageTitle": "[HW06][FR-15][SEC-02/SEC-03] POST /api/products permits creation without a valid admin authorization context · Issue #17 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 775857,
+        "width": 1600,
+        "height": 7668
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:03:37.857Z"
+    },
+    {
+      "id": "EVID-FR15-VALIDATION-ISSUE",
+      "type": "github-issue-page",
+      "description": "Published GitHub Issue #18 for BUG-CANDIDATE-FR15-VALIDATION, showing the public title, canonical bug ID, linked FR-15 case IDs, targeted run reference, and embedded evidence images.",
+      "path": "fr15/evidence/EVID-FR15-VALIDATION-ISSUE.png",
+      "sha256": "a793857d9a25816e115e6a8111796450a4fd5a3c4834022806eeeee66acb3140",
+      "capturedAt": "2026-08-23T11:01:45.977Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "pageTitle": "[HW06][FR-15] POST /api/products persists products that violate documented name, price, and category rules · Issue #18 · BuhDuy256/automation-testing-hw04",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 768396,
+        "width": 1600,
+        "height": 7605
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:03:40.110Z"
+    },
+    {
+      "id": "EVID-CI-FR15-ALL-PASS",
+      "type": "github-actions-run",
+      "description": "Completed FR-15 CI all-pass GitHub Actions run 32636054520 for FR15-AI-001, showing the real successful workflow state and commit.",
+      "path": "fr15/evidence/EVID-CI-FR15-ALL-PASS.png",
+      "sha256": "6c273dd2c4f9fa624fcfd6eb56ea8379bd03ac5b94d812eb0b4a9c0299424ffa",
+      "capturedAt": "2026-08-23T11:16:43.897Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+      "pageTitle": "feat(hw06): add FR15 all-pass CI sample · BuhDuy256/automation-testing-hw04@6063907 · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 105563,
+        "width": 1600,
+        "height": 1141
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:22:01.048Z"
+    },
+    {
+      "id": "EVID-CI-FR15-SINGLE-FAILURE",
+      "type": "github-actions-run",
+      "description": "Completed FR-15 intentional-single-failure GitHub Actions run 32636132200 for FR15-AI-001, showing the real failed workflow state and commit.",
+      "path": "fr15/evidence/EVID-CI-FR15-SINGLE-FAILURE.png",
+      "sha256": "8e11caaf547c42671fc02c2edea37a527d8debdc2d5c4e482d5fa8d75e7027e1",
+      "capturedAt": "2026-08-23T11:18:46.584Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+      "pageTitle": "test(hw06): demonstrate one FR15 CI failure · BuhDuy256/automation-testing-hw04@50fb451 · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 111946,
+        "width": 1600,
+        "height": 1206
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:22:01.736Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-CONSOLE",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Console request-header view showing X-Student-Id: 23127179, Postman Runtime, and localhost:3000 for the FR-15 manual run.",
+      "path": "fr15/evidence/EVID-FR15-POSTMAN-CONSOLE.png",
+      "sha256": "246058512727e9d97255249059ec0ad25dbcc8862aac0086df4e65fca1e57618",
+      "capturedAt": "2026-08-23T11:30:45.527Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 54757,
+        "width": 1442,
+        "height": 430
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:54.255Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-RUNNER",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Collection Runner results for FR15-AI-001, showing the FR-15 environment, one iteration, 8/8 tests passed, persisted-field assertions, request console output, and cleanup requests.",
+      "path": "fr15/evidence/EVID-FR15-POSTMAN-RUNNER.png",
+      "sha256": "8614a529578106c75f7471fc46a396bce630a71ad4bf04c4361b0cfe35fddc56",
+      "capturedAt": "2026-08-23T11:30:46.196Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 293922,
+        "width": 1920,
+        "height": 1033
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:56.518Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-COLLECTION",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Desktop sidebar showing the imported HW06 FR-15 Product Management collection expanded with its request flow and the HW06 FR-15 Product Environment selected.",
+      "path": "fr15/evidence/EVID-FR15-POSTMAN-COLLECTION.png",
+      "sha256": "09f79b428b0279962ee6538cdbf142af2c6fe25ed17d12e10bb52d4750cc23b9",
+      "capturedAt": "2026-08-23T11:30:46.867Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 101788,
+        "width": 493,
+        "height": 987
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:52.042Z"
+    },
+    {
+      "id": "EVID-SUBMISSION-STUDENT-HEADER",
+      "type": "student-header-console-screenshot",
+      "description": "Submission-facing copy of the student-attested Postman Console screenshot proving X-Student-Id: 23127179 on a real localhost request.",
+      "path": "fr04/evidence/EVID-FR04-POSTMAN-CONSOLE.png",
+      "sha256": "7b6256dec9a0114e780faca0c8a08f8b9a5d6a1884c37b591df02a6935014226",
+      "capturedAt": "2026-08-23T03:10:18.627Z",
+      "captureMethod": "submission promotion of student-attested Postman Desktop screenshot",
+      "image": {
+        "bytes": 47951,
+        "width": 1437,
+        "height": 388
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:10:19.082Z"
+    },
+    {
+      "id": "EVID-SUBMISSION-NEWMAN-RAW",
+      "type": "newman-raw-output",
+      "description": "Submission-facing raw Newman JSON from the immutable FR-04 canonical input run.",
+      "path": "fr04/newman/FR04-canonical-input.json",
+      "capturedAt": "2026-08-23T04:02:47.212Z",
+      "captureMethod": "official Newman execution harness",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy"
+    },
+    {
+      "id": "EVID-SUBMISSION-NEWMAN-HTML",
+      "type": "newman-html-report",
+      "description": "Submission-facing Newman HTML report from the immutable FR-04 canonical input run.",
+      "path": "fr04/newman/FR04-canonical-input.html",
+      "capturedAt": "2026-08-23T04:02:47.212Z",
+      "captureMethod": "official Newman execution harness with htmlextra reporter",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy"
+    }
+  ]
+}

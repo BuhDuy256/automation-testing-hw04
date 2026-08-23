@@ -3,11 +3,13 @@
   "features": [
     {
       "name": "Postman collections",
-      "usage": "Used canonical Postman collections for FR-04 and FR-15, including data-driven requests and optional multi-request state phases while retaining canonical case IDs in execution.",
+      "usage": "Used canonical Postman collections for FR-04, FR-08, and FR-15, including data-driven requests and optional multi-request state phases while retaining canonical case IDs in execution.",
       "evidencePaths": [
         "work/postman/fr04/FR04-profile.postman_collection.json",
         "work/postman/fr04/FR04-profile-stateful.postman_collection.json",
         "work/postman/fr15/FR15-products.postman_collection.json",
+        "work/postman/fr08/manual-import/FR08-checkout.postman_collection.json",
+        "work/evidence/screenshots/EVID-FR08-POSTMAN-COLLECTION.png",
         "work/evidence/screenshots/EVID-FR15-POSTMAN-COLLECTION.png"
       ]
     },

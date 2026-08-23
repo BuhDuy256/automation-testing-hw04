@@ -1,6 +1,6 @@
 # FR-08 Test Summary (Derived)
 
-> Generated from `work/registry/*.json` by `npm run hw06:derive`. Raw Newman evidence outranks this file.
+> Generated from `provenance/README.md*.json` by `npm run hw06:derive`. Raw Newman evidence outranks this file.
 
 - Selected API: POST /api/checkout
 - AI-generated cases: 57

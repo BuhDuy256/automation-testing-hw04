@@ -1,33 +1,15 @@
-# FR-15 Postman implementation — `POST /api/products`
+# FR-15 Postman submission package
 
-Working inputs for `ACT-PM-01`. The suite contains all 54 reviewed-usable AI-origin cases and the five
-student-selected HUMAN extensions, for 59 executable cases.
+This folder contains the final executable inputs for all 59 reviewed FR-15 cases.
 
 | File | Purpose |
 |---|---|
 | `FR15-products.postman_collection.json` | Canonical Postman v2.1 collection with data-driven and optional stateful phases. |
-| `FR15-products.postman_environment.json` | Base URL, student id, accounts, synthetic expired-admin and missing-role JWT fixtures, and runtime slots. |
+| `FR15-products.postman_environment.json` | Base URL, student ID, test accounts, synthetic JWT fixtures, and runtime slots. |
 | `FR15-products.postman_data.json` | One row per reviewed-usable canonical case. |
-| `FR15-target-authorization.postman_data.json` | Five representative authorization cases for clean reproduction. |
-| `FR15-target-validation.postman_data.json` | Six representative validation cases for clean reproduction. |
-| `build.mjs` | Validates registry/config parity and regenerates the three Postman artifacts. |
+| `FR15-target-authorization.postman_data.json` | Representative authorization cases for clean reproduction. |
+| `FR15-target-validation.postman_data.json` | Representative validation cases for clean reproduction. |
 
-Every direct request receives `X-Student-Id: 23127179` through the collection pre-request script.
-Every asynchronous cleanup helper carries the same header explicitly. The two synthetic JWTs are
-test-input fixtures only; no product oracle is derived from implementation code.
+Every direct request receives `X-Student-Id: 23127179` through the collection pre-request script, and asynchronous cleanup helpers carry the same header explicitly. The collection asserts documented persistence and authorization invariants, records unspecified behavior as `SPEC GAP`, keeps SEC-04 display evidence separate, and does not claim that black-box behavior proves SEC-05 internals.
 
-The collection never asserts an undocumented status or response schema for `POST /api/products`.
-It asserts documented persistence and authorization invariants, logs pure observations as `SPEC GAP`,
-keeps SEC-04 UI evidence separate, and states that black-box behavior cannot prove SEC-05 internals.
-
-`FR15-AI-043`, `FR15-AI-044`, `FR15-H-003`, and `FR15-H-004` activate optional multi-step phases.
-All other rows use the same baseline, selected request, authoritative read-back, and cleanup flow.
-Created products are removed after each iteration; changed baseline rows are restored and verified.
-
-Rebuild:
-
-```bash
-node work/postman/fr15/build.mjs
-```
-
-Official execution must use `scripts/hw06/run-newman.mjs` after this implementation is committed.
+The repository builder and official execution harness are available in the [public HW06 branch](https://github.com/BuhDuy256/automation-testing-hw04/tree/hw06-api-testing); they are not required to inspect or import this standalone final package.

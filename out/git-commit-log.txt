@@ -1,0 +1,50 @@
+HW06 Meaningful Git Workflow Evidence
+Branch: hw06-api-testing
+Repository: https://github.com/BuhDuy256/automation-testing-hw04
+
+This is a curated, stage-oriented history rather than an indiscriminate dump of every repository commit.
+Every hash and subject below is copied from the real Git history.
+
+SPECIFICATION / SELECTION
+83c08aad8ea25b997687179084912822dd739a6f | 2026-08-22T11:10:21+07:00 | feat(hw06): confirm API selection and spec handoff
+5b667939757d53ceeb2f2f1e514291ef3f2fdd2e | 2026-08-22T11:25:14+07:00 | feat(hw06): verify scoped API specifications
+
+FR-04 — AI GENERATION / HUMAN REVIEW / HUMAN EXTENSION
+658aeecaa3ffcb512f94f9821dc0b6c2e662592a | 2026-08-22T11:50:05+07:00 | feat(hw06): generate FR-04 AI test candidates
+7540b8c52cbfb814dc03f045867592558266ca9a | 2026-08-22T12:13:01+07:00 | test(hw06): record human review for FR-04 AI cases
+2a43f8d5709d7a1f7ae32b0b83fbbba9e6c95f8d | 2026-08-22T12:25:54+07:00 | test(hw06): extend reviewed FR-04 coverage
+
+FR-04 — POSTMAN / EXECUTION / BUGS / CI
+cb76a7104b433f44f9152fb175dec1e2193ea8a9 | 2026-08-22T12:48:27+07:00 | feat(hw06): build FR-04 Postman suite
+9066a735f44b5defa544a890fb9acbc8bad06f2f | 2026-08-22T13:44:34+07:00 | test(hw06): capture FR-04 Newman execution
+8b16af7de411efb83a59fff59e6b8699db785957 | 2026-08-23T10:45:44+07:00 | docs(hw06): publish FR04 bug issues and capture page evidence
+d8670c47fd18ede663f4da11410d46ed598de891 | 2026-08-23T11:10:08+07:00 | ci(hw06): add all-pass FR04 Newman sample
+84f837f95c44f928add2d719d0a5669688d45350 | 2026-08-23T11:13:09+07:00 | ci(hw06): demonstrate one intentional FR04 failure
+f34b71b24f368c819140fa077ce8942b76893470 | 2026-08-23T11:47:26+07:00 | ci(hw06): integrate canonical FR04 full suite
+48c40de5f4e1ea1694d9b519df064033ad10412f | 2026-08-23T11:52:11+07:00 | test(hw06): capture canonical FR04 CI evidence
+
+GENERATOR / ORCHESTRATION
+114f1eeb18da05bfeb00d5f71841a6c2bdd24245 | 2026-08-23T13:12:48+07:00 | feat(hw06): separate orchestration SOP and API generator
+
+FR-08 — GENERATION / REVIEW / EXTENSION / IMPLEMENTATION / EXECUTION
+42eb5f0f168846773c8fcfe3ba097ab6a4b74535 | 2026-08-23T14:00:01+07:00 | feat(hw06): generate FR-08 checkout AI test candidates
+4e48655a4ad6c0e7907e4cd940793d64743e8f9b | 2026-08-23T14:21:54+07:00 | fix(hw06): repair FR-08 generation and review after student rejection
+732f16a2441c0b0eb5d08eac6867d12c2941fc24 | 2026-08-23T14:44:26+07:00 | feat(hw06): record FR-08 human audit and five student-selected extensions
+ec6db5dcef526318d080ad1a12de00932388540a | 2026-08-23T14:56:45+07:00 | feat(hw06): build FR-08 Postman implementation for all 56 executable cases
+d52736a4eed9601a5b7b9185a35b421f1b86b83c | 2026-08-23T15:04:34+07:00 | feat(hw06): execute FR-08 suite and register two bug candidates
+b23657ce4e577d793d86eaff6cfd0a57e2bdc3a9 | 2026-08-23T15:35:10+07:00 | feat(hw06): publish the two confirmed FR-08 bugs as GitHub Issues
+2945fb574a53cbee3c91fff48845a9620ff4d68e | 2026-08-23T15:48:56+07:00 | feat(hw06): capture both FR-08 CI demonstration runs and restore the green default
+57f1c819e62fc67a28d24fdb642b5bf8ca77d39e | 2026-08-23T16:39:29+07:00 | feat(hw06): attest the manual Postman evidence and freeze FR-08
+
+FR-15 — GENERATION / REVIEW / EXTENSION / IMPLEMENTATION / EXECUTION
+785f5de7bc759945dda704bdb3d538fe3ad3bb05 | 2026-08-23T16:02:14+07:00 | feat(hw06): generate FR-15 product-creation AI test candidates
+8abb7b4ab9d1cb2899ab0c8f646abc9a1009fa2b | 2026-08-23T17:11:43+07:00 | test(hw06): review and extend FR15 cases
+316c847bee60e41d718eb5bfdcad3e62cb2c594d | 2026-08-23T17:21:03+07:00 | test(hw06): implement FR15 Postman suite
+9c62e113c9d209d811325c78689963fab745a3bb | 2026-08-23T17:28:10+07:00 | test(hw06): capture and triage FR15 canonical run
+bbd76c08a198a227c1264106c424f2c1e527996e | 2026-08-23T17:32:02+07:00 | test(hw06): reproduce FR15 bug candidates
+ade670fc75e433e9d27370447e92255c6e3cae74 | 2026-08-23T18:06:27+07:00 | docs(hw06): publish FR15 bugs and attest issue evidence
+60639072dc11d2ea4085df7e6bcacdc644c968cb | 2026-08-23T18:15:49+07:00 | feat(hw06): add FR15 all-pass CI sample
+50fb45139427fb6981c9c41cfecd530dccb643df | 2026-08-23T18:17:33+07:00 | test(hw06): demonstrate one FR15 CI failure
+3d9c2e19b932a3ee8d6a05350d44d8953954e4c6 | 2026-08-23T18:24:08+07:00 | test(hw06): capture and attest FR15 CI evidence
+8b2eb095edbe04fcf51fee860f3b3da886dbc9d6 | 2026-08-23T18:38:38+07:00 | docs(hw06): curate FR15 Postman evidence and final artifacts
+3c9d8d3f61c382ada90ab499c51154c0e5b2b942 | 2026-08-23T18:54:38+07:00 | docs(hw06): freeze FR15 and hand off final submission

@@ -1,0 +1,4 @@
+interface:
+  display_name: "HW06 API Test Generator"
+  short_description: "Generate source-grounded API test candidates"
+  default_prompt: "Generate API test candidates from the selected API specification and requirements."

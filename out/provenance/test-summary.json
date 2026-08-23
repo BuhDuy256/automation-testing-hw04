@@ -1,0 +1,63 @@
+{
+  "generatedAtUtc": "2026-08-23T12:48:57.933Z",
+  "selectedApiCount": 3,
+  "apis": [
+    {
+      "id": "HW06-A-FR04-PUT-USERS-ME",
+      "pool": "A",
+      "feature": "FR-04",
+      "endpoint": "PUT /api/users/me",
+      "aiGenerated": 47,
+      "humanAdded": 7,
+      "audited": 47,
+      "executable": 44,
+      "executed": 44,
+      "passed": 35,
+      "failed": 9,
+      "knownBugFailures": 8,
+      "otherFailures": 1
+    },
+    {
+      "id": "HW06-B-FR08-POST-CHECKOUT",
+      "pool": "B",
+      "feature": "FR-08",
+      "endpoint": "POST /api/checkout",
+      "aiGenerated": 57,
+      "humanAdded": 5,
+      "audited": 57,
+      "executable": 56,
+      "executed": 56,
+      "passed": 37,
+      "failed": 19,
+      "knownBugFailures": 19,
+      "otherFailures": 0
+    },
+    {
+      "id": "HW06-C-FR15-POST-PRODUCTS",
+      "pool": "C",
+      "feature": "FR-15",
+      "endpoint": "POST /api/products",
+      "aiGenerated": 59,
+      "humanAdded": 5,
+      "audited": 59,
+      "executable": 59,
+      "executed": 59,
+      "passed": 31,
+      "failed": 28,
+      "knownBugFailures": 28,
+      "otherFailures": 0
+    }
+  ],
+  "totals": {
+    "aiGenerated": 163,
+    "humanAdded": 17,
+    "audited": 163,
+    "executable": 159,
+    "executed": 159,
+    "passed": 103,
+    "failed": 56,
+    "knownBugFailures": 55,
+    "otherFailures": 1
+  },
+  "bugCount": 6
+}

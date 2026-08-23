@@ -157,6 +157,20 @@ const bugLines = [
     '',
   ]),
 ];
+const issuePageEvidence = evidence.filter((item) => item.type === 'github-issue-page');
+if (issuePageEvidence.length > 0) {
+  bugLines.push(
+    '## GitHub Issue page screenshots',
+    '',
+    'Every published Issue has an attested screenshot of its GitHub Issue page. Paths are relative to this submission folder.',
+    '',
+    '| Evidence ID | Screenshot | Human attestation |',
+    '|---|---|---|',
+    ...issuePageEvidence.map((item) => `| ${item.id} | ${item.path} | ${item.humanAttestation === true ? 'complete' : 'pending'} |`),
+    '',
+  );
+}
+
 writeText('work/generated/bug-report.md', `${bugLines.join('\n')}\n`);
 writeText('out/bug-report.md', bugLines.join('\n'));
 
@@ -253,6 +267,21 @@ ciLines.push(
   'The intentional sample adds one transparent assertion named `FR04-AI-001 [CI-DEMO] intentional single failure`; it is not classified as an SUT bug. These two smoke runs demonstrate green/red CI behavior only and do not replace the complete canonical suite or prove that all 44 FR-04 cases pass.',
   '',
 );
+const evidenceById = new Map(evidence.map((item) => [item.id, item]));
+ciLines.push(
+  '## All recorded CI runs and screenshots',
+  '',
+  'This table covers every recorded CI run across the three selected APIs, including the FR-08 and FR-15 demonstrations. Paths are relative to this submission folder.',
+  '',
+  '| Run ID | Purpose | Commit | Conclusion | GitHub Actions run | Screenshot | Human attestation |',
+  '|---|---|---|---|---|---|---|',
+  ...ciRuns.map((run) => {
+    const shot = evidenceById.get(run.screenshotEvidenceId);
+    return `| ${run.id} | ${run.purpose} | ${run.commitSha} | ${run.conclusion} | ${run.url} | ${shot?.path ?? 'not registered'} | ${shot?.humanAttestation === true ? 'complete' : 'pending'} |`;
+  }),
+  '',
+);
+
 writeText('work/generated/ci-cd-report.md', `${ciLines.join('\n')}\n`);
 writeText('out/ci-cd-report.md', ciLines.join('\n'));
 

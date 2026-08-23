@@ -1,6 +1,6 @@
 # FR-04 Test Summary (Derived)
 
-> Generated from the latest canonical per-case results in `work/registry/runs.json`.
+> Generated from the latest canonical per-case results in `provenance/README.md`.
 
 - AI-generated cases: 47
 - Human-added cases: 7

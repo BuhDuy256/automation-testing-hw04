@@ -1819,3 +1819,66 @@ At this checkpoint, normal derive/validation and `git diff --check` pass. Strict
 expected to remain at 14 errors because final-submission artifacts are intentionally deferred. Never
 create placeholders or weaken validation to hide those errors. The runtime-only
 `eshop-sut/backend/database.sqlite` remains excluded from commits.
+
+## 51. Final-submission curation complete except genuine student-only inputs
+
+The authoritative HW06 requirements were re-read directly and every required submission item was
+audited against the repository and `out/`. FR-04, FR-08, and FR-15 remained frozen; no test case,
+Postman suite, Newman execution, bug, Issue, or CI run was restarted or rewritten.
+
+Created or finalized under `out/`:
+
+- `main-report.md` and `main-report.pdf`;
+- `test-cases.xlsx` with Summary and Test Cases worksheets;
+- `ai-critique.md` at 260 whitespace-delimited words including its heading;
+- `git-commit-log.txt` with selected real HW06 workflow commits;
+- `README.md` as the grader entry point;
+- `submission-checklist.md` with official point values and a conservative 090/100 self-assessment;
+- `generator/pseudocode.md` and the packaged reusable Agent Skill;
+- `github-repo-link.txt`;
+- `sources/` and `provenance/` needed to make the submission standalone;
+- `validation-report.txt`;
+- the final AI Audit update, now 190 rows: 132 VALID, 21 INVALID, and 37 INCOMPLETE;
+- `ai-audit-report.pdf`.
+
+Submission-facing paths were normalized after derivation. Accidental local-machine prefixes and
+development-only path dependencies were removed from the curated copies without changing runtime
+results, localhost hostnames, assertions, case classifications, or canonical registries. Exact CI
+workflow configurations remain linked through the public repository instead of carrying incomplete
+standalone workflow snapshots. The runtime database is excluded.
+
+Final deterministic state before commit:
+
+```text
+npm run hw06:derive              PASS
+npm run hw06:validate            PASS (0 errors, 0 warnings)
+npm run hw06:validate:out        PASS (0 errors, 0 warnings)
+git diff --check                 PASS
+XLSX structural parse            PASS (Summary + Test Cases)
+AI Audit arithmetic              PASS (190 = 132 + 21 + 37)
+npm run hw06:validate:submission FAIL (2 errors, 0 warnings)
+```
+
+Both strict errors are the same genuine blocker:
+
+```text
+self-drawn-generator-diagram evidence type missing
+generator-diagram artifact missing that evidence type
+```
+
+No ZIP was built because the strict validator correctly blocks it. The evidence registry now
+truthfully registers the already-existing student-header screenshot, Newman raw output, and Newman
+HTML report under their submission-required evidence types; it does not register a fake diagram.
+
+Human-only items:
+
+1. Supply a genuine student-designed/self-drawn generator diagram (PNG or Mermaid source) for
+   `out/generator/`, then register/validate it.
+2. Confirm externally that the selected three-API combination is not duplicated by another group
+   member; no group allocation source exists in the repository.
+3. Paste the optional YouTube demonstration URL into the single field in `out/README.md`.
+
+The intended ZIP name after the mandatory diagram is supplied is
+`23127179_HW06_AI_API_090.zip`. Build it only after strict validation passes; do not bypass the
+diagram requirement. The modified runtime-only `eshop-sut/backend/database.sqlite` remains excluded
+from commits.

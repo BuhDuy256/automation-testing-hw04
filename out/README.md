@@ -1,54 +1,60 @@
-# HW06 Submission Workspace
+# HW06-AI API Testing Submission
 
-This directory is reserved for reviewed, submission-ready HW06 artefacts only.
+Student: Nguyen Bao Duy
 
-Expected final contents include the Postman collection and environment/data files, Newman HTML
-reports and real execution evidence, Excel test cases and summary, bug-report evidence, CI/CD
-report and real pass/fail run evidence, the AI Audit Report, AI Critique, generator diagram and
-pseudocode, main report (Markdown and PDF), Git commit log, README self-assessment, and final ZIP.
+Student ID: 23127179
 
-The following APIs are human-confirmed for HW06:
+Class: 23KTPM2
+
+Self-assessed grade: **090/100**
+
+Public repository: <https://github.com/BuhDuy256/automation-testing-hw04>
+
+This directory is the standalone submission entry point. The three selected operations are:
 
 - Pool A / FR-04: `PUT /api/users/me`
 - Pool B / FR-08: `POST /api/checkout`
 - Pool C / FR-15: `POST /api/products`
 
-FR-04 generation, human audit and extension, canonical execution, published bug reporting, Postman
-feature evidence, and CI integration are curated under `out/fr04/` and the root factual reports,
-including the attested canonical-full-suite CI screenshot. The strict CI wording requiring an
-all-API-test green run remains a documented limitation because the authoritative suite retains
-confirmed SUT defects.
+## Result summary
 
-FR-08 is curated under `out/fr08/`: the reviewed Postman collection, environment and data file, the
-Postman Desktop manual-import copies, the canonical Newman run with its original exit code, the CI
-workflow, and the attested evidence. Its accounting is 57 AI-generated candidates, 5 student-selected
-extensions, 56 executable and executed cases, 37 passed and 19 failed, with every failure mapped to
-the two published GitHub Issues #15 and #16. The passed count must not be read as proof that checkout
-recalculates the total; that limitation is recorded in `out/fr08/test-summary.md`. Its three manual
-Postman Desktop screenshots carry explicit student attestation.
+| API | AI generated | Human added | Executed | Pass | Fail | Spec-gap observations | Published bugs |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| FR-04 | 47 | 7 | 44 | 35 | 9 | 1 of the nine failures | 2 |
+| FR-08 | 57 | 5 | 56 | 37 | 19 | Passing total-match cases have a documented evidence limitation | 2 |
+| FR-15 | 59 | 5 | 59 | 16 authoritative | 28 | 15 PASS-shaped observations | 2 |
+| **Total** | **163** | **17** | **159** | **88 authoritative plus 15 FR-15 observations** | **56** | **See feature summaries** | **6** |
 
-FR-15 is curated under `out/fr15/`: the reviewed Postman collection, environment and data files,
-three real Newman runs, the CI workflow, and ten student-attested screenshots covering Postman
-Desktop, canonical execution, confirmed bugs, published Issues, and CI. Its canonical accounting is
-59 AI-generated artifacts, 5 human-added cases, and 59 executable cases: 16 authoritative PASS,
-28 authoritative FAIL, and 15 PASS-shaped SPEC-GAP observations. Every failure maps to published
-GitHub Issues #17 or #18, and all 485 executed requests carry `X-Student-Id: 23127179`.
+FR-04 is in [fr04/](fr04/), FR-08 is in [fr08/](fr08/), and FR-15 is in [fr15/](fr15/). Each folder contains its Postman inputs, real Newman evidence, screenshots, CI run evidence, and a feature summary. The exact workflow configurations remain verifiable through public GitHub links in the CI/CD report.
 
-The final submission ZIP, main report, Excel export, PDF outputs, AI critique, generator deliverables,
-and final Git log must not be claimed complete yet. The AI Audit Report remains human-triggered under
-the repository policy.
+## Deliverable index
 
-Expected stable names used by the submission validator:
+- Main report: [main-report.md](main-report.md) and [main-report.pdf](main-report.pdf)
+- Excel test cases and summary: [test-cases.xlsx](test-cases.xlsx)
+- Requirement self-assessment: [submission-checklist.md](submission-checklist.md)
+- Bug report and Issue links: [bug-report.md](bug-report.md)
+- CI/CD report and run links: [ci-cd-report.md](ci-cd-report.md)
+- Postman features used: [postman-features.md](postman-features.md)
+- AI generator package and pseudocode: [generator/](generator/)
+- AI Audit Report: [ai-audit-report.md](ai-audit-report.md) and [ai-audit-report.pdf](ai-audit-report.pdf)
+- AI Critique: [ai-critique.md](ai-critique.md) and [ai-critique.pdf](ai-critique.pdf)
+- Selected Git workflow evidence: [git-commit-log.txt](git-commit-log.txt)
+- Deterministic validation record: [validation-report.txt](validation-report.txt)
+- Public repository pointer: [github-repo-link.txt](github-repo-link.txt)
+- Canonical audit provenance: [provenance/](provenance/)
+- Authoritative source snapshots: [sources/](sources/)
 
-- `main-report.md` and `main-report.pdf`
-- `test-cases.xlsx`
-- `postman-features.md`
-- `ci-cd-report.md`
-- `bug-report.md`
-- `generator/pseudocode.md`
-- `ai-audit-report.md` and `ai-audit-report.pdf`
-- `ai-critique.md`
-- `git-commit-log.txt`
-- `github-repo-link.txt`
+## Bugs and CI/CD
 
-The final ZIP is created only after strict validation succeeds.
+Six genuine defects were confirmed and published as GitHub Issues [#13](https://github.com/BuhDuy256/automation-testing-hw04/issues/13), [#14](https://github.com/BuhDuy256/automation-testing-hw04/issues/14), [#15](https://github.com/BuhDuy256/automation-testing-hw04/issues/15), [#16](https://github.com/BuhDuy256/automation-testing-hw04/issues/16), [#17](https://github.com/BuhDuy256/automation-testing-hw04/issues/17), and [#18](https://github.com/BuhDuy256/automation-testing-hw04/issues/18).
+
+Real all-pass and intentional-single-failure CI demonstrations are documented with commit hashes, GitHub Actions links, and screenshots in [ci-cd-report.md](ci-cd-report.md). The canonical FR-04 suite is also integrated without suppressing genuine defect failures, so its real full-suite run remains red by design.
+
+## Submission integrity
+
+The Newman files are genuine execution artifacts. Submission copies remove only accidental local-machine path prefixes where necessary; request/response results, assertion outcomes, localhost hostnames, and evidence identities remain unchanged. No runtime `database.sqlite` file is included.
+
+The required generator diagram is not present because it must be designed and drawn by the student; this is recorded as `HUMAN-ONLY PENDING` instead of being fabricated. Group-level non-duplication also requires student confirmation outside this repository.
+
+YouTube demonstration video:
+[TO BE FILLED BY STUDENT]

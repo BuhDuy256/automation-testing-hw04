@@ -749,6 +749,43 @@
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T11:31:52.042Z"
+    },
+    {
+      "id": "EVID-SUBMISSION-STUDENT-HEADER",
+      "type": "student-header-console-screenshot",
+      "description": "Submission-facing copy of the student-attested Postman Console screenshot proving X-Student-Id: 23127179 on a real localhost request.",
+      "path": "out/fr04/evidence/EVID-FR04-POSTMAN-CONSOLE.png",
+      "sha256": "7b6256dec9a0114e780faca0c8a08f8b9a5d6a1884c37b591df02a6935014226",
+      "capturedAt": "2026-08-23T03:10:18.627Z",
+      "captureMethod": "submission promotion of student-attested Postman Desktop screenshot",
+      "image": {
+        "bytes": 47951,
+        "width": 1437,
+        "height": 388
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:10:19.082Z"
+    },
+    {
+      "id": "EVID-SUBMISSION-NEWMAN-RAW",
+      "type": "newman-raw-output",
+      "description": "Submission-facing raw Newman JSON from the immutable FR-04 canonical input run.",
+      "path": "out/fr04/newman/FR04-canonical-input.json",
+      "capturedAt": "2026-08-23T04:02:47.212Z",
+      "captureMethod": "official Newman execution harness",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy"
+    },
+    {
+      "id": "EVID-SUBMISSION-NEWMAN-HTML",
+      "type": "newman-html-report",
+      "description": "Submission-facing Newman HTML report from the immutable FR-04 canonical input run.",
+      "path": "out/fr04/newman/FR04-canonical-input.html",
+      "capturedAt": "2026-08-23T04:02:47.212Z",
+      "captureMethod": "official Newman execution harness with htmlextra reporter",
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy"
     }
   ]
 }

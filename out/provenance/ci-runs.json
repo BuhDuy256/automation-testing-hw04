@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "id": "CI-32617199599-all-pass",
+      "purpose": "all-pass",
+      "commitSha": "d8670c47fd18ede663f4da11410d46ed598de891",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599",
+      "status": "completed",
+      "conclusion": "success",
+      "workflowName": "HW06 FR-04 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T04:10:15Z",
+      "capturedAtUtc": "2026-08-23T04:12:28.972Z",
+      "failedTests": 0,
+      "failedAssertions": 0,
+      "newmanReportPath": "provenance/ci-index.md (CI-32617199599-all-pass)",
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32617199599-all-pass)",
+      "evidencePaths": [
+        "fr04/evidence/EVID-CI-FR04-ALL-PASS.png",
+        "provenance/ci-index.md (CI-32617199599-all-pass)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR04-ALL-PASS",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32617321761-intentional-single-failure",
+      "purpose": "intentional-single-failure",
+      "commitSha": "84f837f95c44f928add2d719d0a5669688d45350",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-04 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T04:13:13Z",
+      "capturedAtUtc": "2026-08-23T04:20:16.379Z",
+      "failedTests": 1,
+      "failedAssertions": 1,
+      "newmanReportPath": "provenance/ci-index.md (CI-32617321761-intentional-single-failure)",
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32617321761-intentional-single-failure)",
+      "evidencePaths": [
+        "fr04/evidence/EVID-CI-FR04-INTENTIONAL-FAILURE.png",
+        "provenance/ci-index.md (CI-32617321761-intentional-single-failure)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR04-INTENTIONAL-FAILURE",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32618732832-canonical-full-suite",
+      "purpose": "canonical-full-suite",
+      "commitSha": "f34b71b24f368c819140fa077ce8942b76893470",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32618732832",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-04 Canonical Full Suite",
+      "startedAtUtc": "2026-08-23T04:47:31Z",
+      "capturedAtUtc": "2026-08-23T04:51:40.881Z",
+      "failedTests": 9,
+      "failedAssertions": 14,
+      "newmanReportPath": "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+      "newmanReportPaths": [
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)"
+      ],
+      "canonicalSummaryPath": "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+      "counts": {
+        "executable": 44,
+        "executed": 44,
+        "passed": 35,
+        "failed": 9,
+        "knownBugFailures": 8,
+        "otherFailures": 1
+      },
+      "failedCaseIds": [
+        "FR04-AI-013",
+        "FR04-AI-014",
+        "FR04-AI-015",
+        "FR04-AI-016",
+        "FR04-AI-017",
+        "FR04-AI-026",
+        "FR04-AI-027",
+        "FR04-H-004",
+        "FR04-H-007"
+      ],
+      "knownBugFailureCaseIds": [
+        "FR04-AI-013",
+        "FR04-AI-014",
+        "FR04-AI-015",
+        "FR04-AI-016",
+        "FR04-AI-017",
+        "FR04-AI-026",
+        "FR04-AI-027",
+        "FR04-H-004"
+      ],
+      "otherFailureCaseIds": [
+        "FR04-H-007"
+      ],
+      "runtimeHeaderCoverage": {
+        "requests": 305,
+        "studentHeaderRequests": 305
+      },
+      "identities": {
+        "mainCollectionSha256": "35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f",
+        "statefulCollectionSha256": "a121d17a1ebb8aaa8c682b8ab846352b84653ed52b82a156e074f69d51aeb9af",
+        "environmentSha256": "c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a",
+        "mainDataSha256": "905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14",
+        "closureDataSha256": "b228739986fb1028567455a9035a92fa3948b0b6611356b22e7da79c67b5fce3",
+        "ai027DataSha256": "006542d3139bf477528dae95908c41feb1098c79d63654fab4c32da6ca5351da"
+      },
+      "matchesCanonicalLocalResults": true,
+      "limitationStatus": "PARTIAL / documented limitation due to confirmed SUT defects",
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+      "evidencePaths": [
+        "fr04/evidence/EVID-CI-FR04-CANONICAL-FULL-SUITE.png",
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)",
+        "provenance/ci-index.md (CI-32618732832-canonical-full-suite)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR04-CANONICAL-FULL-SUITE",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32629097098-all-pass",
+      "purpose": "all-pass",
+      "commitSha": "a1f21880889d326ce506a3621c63699996c25099",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629097098",
+      "status": "completed",
+      "conclusion": "success",
+      "workflowName": "HW06 FR-08 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T08:45:03Z",
+      "capturedAtUtc": "2026-08-23T08:46:25.425Z",
+      "failedTests": 0,
+      "failedAssertions": 0,
+      "newmanReportPath": "provenance/ci-index.md (CI-32629097098-all-pass)",
+      "newmanReportPaths": [
+        "provenance/ci-index.md (CI-32629097098-all-pass)"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32629097098-all-pass)",
+      "evidencePaths": [
+        "fr08/evidence/EVID-CI-FR08-ALL-PASS.png",
+        "provenance/ci-index.md (CI-32629097098-all-pass)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR08-ALL-PASS",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32629191161-intentional-single-failure",
+      "purpose": "intentional-single-failure",
+      "commitSha": "87054fd9cfe88caf3cb06212caf3eb3005d3d545",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-08 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T08:47:06Z",
+      "capturedAtUtc": "2026-08-23T08:48:06.574Z",
+      "failedTests": 1,
+      "failedAssertions": 1,
+      "newmanReportPath": "provenance/ci-index.md (CI-32629191161-intentional-single-failure)",
+      "newmanReportPaths": [
+        "provenance/ci-index.md (CI-32629191161-intentional-single-failure)"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32629191161-intentional-single-failure)",
+      "evidencePaths": [
+        "fr08/evidence/EVID-CI-FR08-SINGLE-FAILURE.png",
+        "provenance/ci-index.md (CI-32629191161-intentional-single-failure)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR08-SINGLE-FAILURE",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32636054520-all-pass",
+      "purpose": "all-pass",
+      "commitSha": "60639072dc11d2ea4085df7e6bcacdc644c968cb",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636054520",
+      "status": "completed",
+      "conclusion": "success",
+      "workflowName": "HW06 FR-15 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T11:15:54Z",
+      "capturedAtUtc": "2026-08-23T11:16:56.535Z",
+      "failedTests": 0,
+      "failedAssertions": 0,
+      "newmanReportPath": "provenance/ci-index.md (CI-32636054520-all-pass)",
+      "newmanReportPaths": [
+        "provenance/ci-index.md (CI-32636054520-all-pass)"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32636054520-all-pass)",
+      "evidencePaths": [
+        "fr15/evidence/EVID-CI-FR15-ALL-PASS.png",
+        "provenance/ci-index.md (CI-32636054520-all-pass)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR15-ALL-PASS",
+      "screenshotHumanAttestation": true
+    },
+    {
+      "id": "CI-32636132200-intentional-single-failure",
+      "purpose": "intentional-single-failure",
+      "commitSha": "50fb45139427fb6981c9c41cfecd530dccb643df",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32636132200",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-15 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T11:17:40Z",
+      "capturedAtUtc": "2026-08-23T11:18:58.046Z",
+      "failedTests": 1,
+      "failedAssertions": 1,
+      "newmanReportPath": "provenance/ci-index.md (CI-32636132200-intentional-single-failure)",
+      "newmanReportPaths": [
+        "provenance/ci-index.md (CI-32636132200-intentional-single-failure)"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "provenance/ci-index.md (CI-32636132200-intentional-single-failure)",
+      "evidencePaths": [
+        "fr15/evidence/EVID-CI-FR15-SINGLE-FAILURE.png",
+        "provenance/ci-index.md (CI-32636132200-intentional-single-failure)"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR15-SINGLE-FAILURE",
+      "screenshotHumanAttestation": true
+    }
+  ]
+}

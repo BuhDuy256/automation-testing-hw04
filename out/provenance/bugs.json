@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "bugs": [
+    {
+      "id": "BUG-CANDIDATE-FR04-PHONE-FORMAT",
+      "status": "published",
+      "title": "[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format",
+      "caseIds": [
+        "FR04-AI-013",
+        "FR04-AI-014",
+        "FR04-AI-015",
+        "FR04-AI-016",
+        "FR04-AI-017",
+        "FR04-H-004"
+      ],
+      "publicCaseIds": [
+        "FR04-AI-013",
+        "FR04-AI-014",
+        "FR04-AI-015",
+        "FR04-AI-016",
+        "FR04-AI-017",
+        "FR04-H-004"
+      ],
+      "runIds": [
+        "RUN-20260822062948963-fr04-input",
+        "RUN-20260823022316955-fr04-phone-corrected"
+      ],
+      "expected": "A phone must begin with 0 and contain 10-11 digits; an invalid phone must not become the user's valid persisted phone value. Exact status and error schema are unspecified.",
+      "actual": "The invalid values 012345678, 012345678901, 1123456789, 012345678A, +84123456789, and the empty string were observed as persisted phone values instead of remaining at the captured baseline.",
+      "reproduction": "Authenticate as test@eshop.com, capture the profile baseline, PUT /api/users/me with one listed invalid phone and otherwise valid editable fields, then GET /api/users/me. Newman raw report records the assertion failures and repeated reproduction in the data-driven run.",
+      "evidencePaths": [
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)"
+      ],
+      "publicEvidencePaths": [
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)",
+        "provenance/run-index.md (RUN-20260823022316955-fr04-phone-corrected)"
+      ],
+      "screenshotPaths": [
+        "fr04/evidence/EVID-FR04-PHONE-FAILURE.png",
+        "fr04/evidence/EVID-FR04-PHONE-REPORT.png",
+        "fr04/evidence/EVID-FR04-PHONE-ISSUE.png"
+      ],
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23",
+      "confirmationStatement": "Human confirmed the phone-format defect after reviewing the original failed partitions and clean targeted reproduction, including FR04-AI-013 and FR04-H-004.",
+      "note": "Published human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Original and GitHub Issue-page screenshot evidence is human-attested.",
+      "githubIssueNumber": 13,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/13",
+      "publishedAt": "2026-08-23T03:42:51.399Z",
+      "publishedCommitSha": "88551320e389089c21aa28fa95b4c772a8981c72"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR04-ROLE-TAMPERING",
+      "status": "published",
+      "title": "[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin",
+      "caseIds": [
+        "FR04-AI-026",
+        "FR04-AI-027"
+      ],
+      "publicCaseIds": [
+        "FR04-AI-026"
+      ],
+      "runIds": [
+        "RUN-20260822062948963-fr04-input",
+        "RUN-20260823022329715-fr04-role-corrected",
+        "RUN-20260823022342040-fr04-ai027-corrected"
+      ],
+      "expected": "FR-04/SEC-06 require the authenticated ordinary user's protected role to remain user when the client submits role=admin.",
+      "actual": "The clean FR04-AI-026 execution started from role=user, submitted role=admin, and read back the persisted role as admin.",
+      "reproduction": "Authenticate as test@eshop.com, capture the ordinary-user baseline role=user, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. The clean Newman run records the persisted role mutation.",
+      "evidencePaths": [
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260822062948963-fr04-input)",
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+        "fr04/newman/FR04-ai027-corrected.json",
+        "fr04/newman/FR04-ai027-corrected.html",
+        "fr04/newman/FR04-ai027-corrected.stdout.log"
+      ],
+      "publicEvidencePaths": [
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)",
+        "provenance/run-index.md (RUN-20260823022329715-fr04-role-corrected)"
+      ],
+      "screenshotPaths": [
+        "fr04/evidence/EVID-FR04-ROLE-TAMPERING.png",
+        "fr04/evidence/EVID-FR04-ROLE-REPORT.png",
+        "fr04/evidence/EVID-FR04-ROLE-ISSUE.png"
+      ],
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23",
+      "confirmationStatement": "Human confirmed the protected-field tampering defect after reviewing the clean FR04-AI-026 reproduction and independent clean FR04-AI-027 rerun.",
+      "note": "Published human-confirmed genuine bug covering only the protected role mutation. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin. AI-027 and its email observation remain internal supporting records and are not part of the public finding. Original and GitHub Issue-page screenshot evidence is human-attested.",
+      "githubIssueNumber": 14,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
+      "publishedAt": "2026-08-23T03:42:55.158Z",
+      "publishedCommitSha": "88551320e389089c21aa28fa95b4c772a8981c72"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR08-CLIENT-TOTAL",
+      "status": "published",
+      "title": "[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart",
+      "caseIds": [
+        "FR08-AI-002",
+        "FR08-AI-003",
+        "FR08-AI-004",
+        "FR08-AI-005",
+        "FR08-AI-006",
+        "FR08-AI-007",
+        "FR08-AI-009",
+        "FR08-AI-010",
+        "FR08-AI-011",
+        "FR08-AI-030",
+        "FR08-AI-035",
+        "FR08-AI-041",
+        "FR08-AI-042",
+        "FR08-AI-044",
+        "FR08-AI-046",
+        "FR08-H-001",
+        "FR08-AI-040",
+        "FR08-H-005"
+      ],
+      "publicCaseIds": [
+        "FR08-AI-002",
+        "FR08-AI-003",
+        "FR08-AI-004",
+        "FR08-AI-005",
+        "FR08-AI-035",
+        "FR08-H-001"
+      ],
+      "runIds": [
+        "RUN-20260823080014785-fr08-canonical-full-suite"
+      ],
+      "expected": "README FR-08 states that the checkout total is calculated automatically from the cart and that the backend must recalculate it and must not accept the client-supplied total_amount. The persisted order total must therefore equal the total derived from the cart state the server itself reports immediately before checkout. The exact status code and error schema are undocumented and are not claimed.",
+      "actual": "The persisted order total equalled the client-supplied value in every observed variation: 1000 and 9999000 against a 200000 cart, 0, -200000, 199999.99, 999999999999, and 200000 against an empty cart (server-derived 0). Non-numeric and absent client values were persisted as NULL or NaN rather than the derived total, and the boolean true was persisted as 1. FR08-H-001 shows the same behaviour with a stale client total of 200000 against a cart the server itself reported as 250000.",
+      "reproduction": "Register a fresh user, log in, POST /api/cart {\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}, confirm GET /api/cart reports that single line, then POST /api/checkout with a total_amount that differs from the cart-derived 200000, and read the order back with GET /api/orders/my-orders. The persisted total_amount matches the submitted value rather than the cart. The Newman raw report records each variation as its own iteration.",
+      "evidencePaths": [
+        "fr08/newman/FR08-canonical-full-suite.json",
+        "fr08/newman/FR08-canonical-full-suite.html",
+        "fr08/newman/FR08-canonical-full-suite.stdout.log",
+        "fr08/newman/FR08-canonical-full-suite.metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "fr08/newman/FR08-canonical-full-suite.html"
+      ],
+      "screenshotPaths": [
+        "fr08/evidence/EVID-FR08-CLIENT-TOTAL.png",
+        "fr08/evidence/EVID-FR08-RUN-SUMMARY.png"
+      ],
+      "note": "HUMAN-CONFIRMED genuine bug. No GitHub Issue has been created yet and no screenshot has been attested yet; external publication needs separate explicit approval. 16 cases fail on this root cause directly; FR08-AI-040 and FR08-H-005 fail on a combination of this and BUG-CANDIDATE-FR08-CART-NOT-CLEARED. Evidence limitation: because no derivation happens at all, the cases whose client value happens to equal the cart-derived total (for example FR08-AI-001, FR08-AI-033, FR08-AI-034, FR08-AI-051, FR08-H-002) pass without proving that the server derives anything.",
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23T08:21:39.033Z",
+      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: the backend must calculate the total from cart state and must not trust the client-supplied total_amount, and the canonical run shows client-controlled values becoming or controlling the persisted checkout total. The student directed that all failing partitions stay grouped under this single root-defect record.",
+      "githubIssueNumber": 15,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/15",
+      "publishedAt": "2026-08-23T08:34:18.692Z",
+      "publishedCommitSha": "713bad65fb85966e9eb9febf2627a0d228bd8d11"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR08-CART-NOT-CLEARED",
+      "status": "published",
+      "title": "[HW06][FR-08] The cart is not cleared after a successful checkout",
+      "caseIds": [
+        "FR08-AI-031",
+        "FR08-AI-040",
+        "FR08-H-005"
+      ],
+      "publicCaseIds": [
+        "FR08-AI-031"
+      ],
+      "runIds": [
+        "RUN-20260823080014785-fr08-canonical-full-suite"
+      ],
+      "expected": "README FR-08 states that after a successful checkout the cart is cleared, so GET /api/cart must report no lines for that user once checkout succeeds. The exact empty-cart response shape is undocumented and is not claimed.",
+      "actual": "After a successful checkout returning {\"message\":\"Checkout successful\",\"orderId\":N}, GET /api/cart still reported the purchased line, so the cart retained 1 line where 0 were expected. The stale line then polluted the next checkout: in FR08-AI-040 and FR08-H-005 the server-observed cart before the second checkout was 250000 because the already-purchased 200000 line was still present.",
+      "reproduction": "Register a fresh user, log in, POST /api/cart {\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}, POST /api/checkout with the matching body, then GET /api/cart. The purchased line is still returned.",
+      "evidencePaths": [
+        "fr08/newman/FR08-canonical-full-suite.json",
+        "fr08/newman/FR08-canonical-full-suite.html",
+        "fr08/newman/FR08-canonical-full-suite.stdout.log",
+        "fr08/newman/FR08-canonical-full-suite.metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "fr08/newman/FR08-canonical-full-suite.html"
+      ],
+      "screenshotPaths": [
+        "fr08/evidence/EVID-FR08-CART-NOT-CLEARED.png",
+        "fr08/evidence/EVID-FR08-RUN-SUMMARY.png"
+      ],
+      "note": "HUMAN-CONFIRMED genuine bug. No GitHub Issue has been created yet and no screenshot has been attested yet; external publication needs separate explicit approval. FR08-AI-040 and FR08-H-005 are shared with BUG-CANDIDATE-FR08-CLIENT-TOTAL because their failures need both defects to explain them.",
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23T08:21:39.033Z",
+      "confirmationStatement": "Student explicitly confirmed this is a genuine product bug at the HG-FR08-BUG-02 gate: FR-08 requires the cart to be cleared after a successful checkout, and the canonical run shows purchased cart lines remaining and contaminating subsequent checkout state. The student directed that secondary failures caused by this defect stay grouped under this single record.",
+      "githubIssueNumber": 16,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/16",
+      "publishedAt": "2026-08-23T08:34:32.340Z",
+      "publishedCommitSha": "713bad65fb85966e9eb9febf2627a0d228bd8d11"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR15-AUTHORIZATION",
+      "status": "published",
+      "title": "[HW06][FR-15][SEC-02/SEC-03] POST /api/products permits creation without a valid admin authorization context",
+      "caseIds": [
+        "FR15-AI-027",
+        "FR15-AI-028",
+        "FR15-AI-029",
+        "FR15-AI-030",
+        "FR15-AI-031",
+        "FR15-AI-032",
+        "FR15-AI-033",
+        "FR15-AI-037",
+        "FR15-H-002",
+        "FR15-H-004"
+      ],
+      "runIds": [
+        "RUN-20260823102155874-fr15-canonical-full-suite",
+        "RUN-20260823102829114-fr15-auth-reproduction"
+      ],
+      "expected": "README FR-12, SEC-02, and SEC-03 require a valid JWT carrying role=admin for product data changes. Requests without that authorization context must not create a persistent product. Exact rejection status and error schema are unspecified.",
+      "actual": "The canonical run observed a newly persisted product after every tested invalid authorization context: no Authorization header, ordinary-user JWT, non-Bearer scheme, malformed token, deterministically tampered signature, validly signed expired admin token, body-borne role claim with a user token, validly signed unexpired token with no role claim, and the refused-attempt phases of the authorization state cases. Representative selected requests returned HTTP 200 with {\"message\":\"Product created\",\"id\":N}; the HTTP code is observation only, while persistence caused the oracle failures.",
+      "reproduction": "Start from a clean seeded SUT, capture GET /api/products, submit an otherwise valid POST /api/products using one listed invalid authorization context, then GET /api/products again with a genuine admin token. The run-unique product appears as a new persistent row. Cleanup deletes the created row and verifies the baseline.",
+      "evidencePaths": [
+        "fr15/newman/FR15-canonical-full-suite.json",
+        "fr15/newman/FR15-canonical-full-suite.html",
+        "fr15/newman/FR15-canonical-full-suite.stdout.log",
+        "fr15/newman/FR15-canonical-full-suite.metadata.json",
+        "fr15/newman/FR15-authorization-reproduction.json",
+        "fr15/newman/FR15-authorization-reproduction.html",
+        "fr15/newman/FR15-authorization-reproduction.stdout.log",
+        "fr15/newman/FR15-authorization-reproduction.metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "fr15/newman/FR15-authorization-reproduction.html"
+      ],
+      "screenshotPaths": [
+        "fr15/evidence/EVID-FR15-AUTHORIZATION.png",
+        "fr15/evidence/EVID-FR15-RUN-SUMMARY.png"
+      ],
+      "note": "HUMAN-CONFIRMED genuine root defect. Five representative authorization cases reproduced cleanly in the targeted run with five failed persistence oracles, 40/40 student-header requests, and no harness/setup failure. The defect is unauthorized persistent state, not a particular HTTP response code. The affected partitions remain grouped under this single root defect. No GitHub Issue has been created; external publication requires separate explicit authorization.",
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23T10:40:24.2861323Z",
+      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-AUTHORIZATION as a genuine bug at HG-FR15-BUG-02: POST /api/products permits persistent product creation without a valid admin authorization context, contrary to FR-12, SEC-02, and SEC-03. The student required the existing affected-case mapping and 5/5 targeted reproduction to remain grouped under one root defect and prohibited invention of an HTTP-status requirement.",
+      "githubIssueNumber": 17,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/17",
+      "publishedAt": "2026-08-23T10:59:45.638Z",
+      "publishedCommitSha": "b5f18eff3c2a4cfbe71b1695395786fcd7b20737"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR15-VALIDATION",
+      "status": "published",
+      "title": "[HW06][FR-15] POST /api/products persists products that violate documented name, price, and category rules",
+      "caseIds": [
+        "FR15-AI-003",
+        "FR15-AI-005",
+        "FR15-AI-007",
+        "FR15-AI-009",
+        "FR15-AI-010",
+        "FR15-AI-014",
+        "FR15-AI-015",
+        "FR15-AI-016",
+        "FR15-AI-017",
+        "FR15-AI-018",
+        "FR15-AI-019",
+        "FR15-AI-036",
+        "FR15-AI-044",
+        "FR15-AI-047",
+        "FR15-AI-048",
+        "FR15-AI-059",
+        "FR15-H-003",
+        "FR15-H-005"
+      ],
+      "runIds": [
+        "RUN-20260823102155874-fr15-canonical-full-suite",
+        "RUN-20260823102841701-fr15-validation-reproduction"
+      ],
+      "expected": "README FR-15 requires a non-empty name of at most 255 characters, a positive numeric price, and an existing category. Invalid data must not become a persistent valid product. Exact rejection status and error schema are unspecified.",
+      "actual": "The canonical run observed new persistent rows for overlong, empty, omitted, and null names; zero, negative, non-numeric, omitted, and null prices; nonexistent, omitted, non-numeric, null, SQL-like, and previously deleted category references; and no-body or empty-object requests. Representative selected requests returned HTTP 200 and a created id; persistence, not the response code, caused the oracle failures.",
+      "reproduction": "Start from a clean seeded SUT, capture GET /api/products, submit one diagnostically isolated invalid POST /api/products request, then read the product list again. A new row appears despite the documented invalid condition. For the stale-category case, create a temporary category, confirm it, delete it, confirm absence, then reference its deleted id. Cleanup deletes accidental products and verifies the baseline.",
+      "evidencePaths": [
+        "fr15/newman/FR15-canonical-full-suite.json",
+        "fr15/newman/FR15-canonical-full-suite.html",
+        "fr15/newman/FR15-canonical-full-suite.stdout.log",
+        "fr15/newman/FR15-canonical-full-suite.metadata.json",
+        "fr15/newman/FR15-validation-reproduction.json",
+        "fr15/newman/FR15-validation-reproduction.html",
+        "fr15/newman/FR15-validation-reproduction.stdout.log",
+        "fr15/newman/FR15-validation-reproduction.metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "fr15/newman/FR15-validation-reproduction.html"
+      ],
+      "screenshotPaths": [
+        "fr15/evidence/EVID-FR15-VALIDATION.png",
+        "fr15/evidence/EVID-FR15-RUN-SUMMARY.png"
+      ],
+      "note": "HUMAN-CONFIRMED genuine root defect. Six representative validation cases reproduced cleanly in the targeted run with six failed persistence oracles, 52/52 student-header requests, and no harness/setup failure. The defect is invalid data reaching persistent product state; exact rejection status and error schema remain SPEC GAP. Name, price, and category partitions remain grouped under this root defect unless later evidence proves independent root causes. No GitHub Issue has been created; external publication requires separate explicit authorization.",
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23T10:40:24.2861323Z",
+      "confirmationStatement": "Student explicitly confirmed BUG-CANDIDATE-FR15-VALIDATION as a genuine bug at HG-FR15-BUG-02: POST /api/products persists products that violate the documented FR-15 name, price, and category constraints. The student required the existing affected-case mapping and 6/6 targeted reproduction to remain grouped under one root defect and preserved exact HTTP rejection status and error schema as SPEC GAP.",
+      "githubIssueNumber": 18,
+      "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/18",
+      "publishedAt": "2026-08-23T10:59:56.376Z",
+      "publishedCommitSha": "b5f18eff3c2a4cfbe71b1695395786fcd7b20737"
+    }
+  ]
+}
