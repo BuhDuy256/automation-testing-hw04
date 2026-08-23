@@ -24,13 +24,19 @@ Postman Desktop manual-import copies, the canonical Newman run with its original
 workflow, and the attested evidence. Its accounting is 57 AI-generated candidates, 5 student-selected
 extensions, 56 executable and executed cases, 37 passed and 19 failed, with every failure mapped to
 the two published GitHub Issues #15 and #16. The passed count must not be read as proof that checkout
-recalculates the total; that limitation is recorded in `out/fr08/test-summary.md`. Three manual
-Postman Desktop screenshots stay under `work/evidence/` until the student attests them.
+recalculates the total; that limitation is recorded in `out/fr08/test-summary.md`. Its three manual
+Postman Desktop screenshots carry explicit student attestation.
 
-FR-15 generation is complete with 58 AI candidates, but it is paused at its human review gate and no
-FR-15 verdict has been recorded, so no FR-15 artefact is curated here yet. The final submission ZIP,
-main report, Excel export, PDF outputs, AI critique, generator deliverables, and final Git log must
-not be claimed complete yet. The AI Audit Report remains human-triggered under the repository policy.
+FR-15 is curated under `out/fr15/`: the reviewed Postman collection, environment and data files,
+three real Newman runs, the CI workflow, and ten student-attested screenshots covering Postman
+Desktop, canonical execution, confirmed bugs, published Issues, and CI. Its canonical accounting is
+59 AI-generated artifacts, 5 human-added cases, and 59 executable cases: 16 authoritative PASS,
+28 authoritative FAIL, and 15 PASS-shaped SPEC-GAP observations. Every failure maps to published
+GitHub Issues #17 or #18, and all 485 executed requests carry `X-Student-Id: 23127179`.
+
+The final submission ZIP, main report, Excel export, PDF outputs, AI critique, generator deliverables,
+and final Git log must not be claimed complete yet. The AI Audit Report remains human-triggered under
+the repository policy.
 
 Expected stable names used by the submission validator:
 

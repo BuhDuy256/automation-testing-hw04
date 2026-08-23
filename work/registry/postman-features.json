@@ -3,18 +3,22 @@
   "features": [
     {
       "name": "Postman collections",
-      "usage": "Separated the 41 data-driven FR-04 cases from three dedicated stateful multi-request flows while retaining canonical case IDs in request/test execution.",
+      "usage": "Used canonical Postman collections for FR-04 and FR-15, including data-driven requests and optional multi-request state phases while retaining canonical case IDs in execution.",
       "evidencePaths": [
         "work/postman/fr04/FR04-profile.postman_collection.json",
-        "work/postman/fr04/FR04-profile-stateful.postman_collection.json"
+        "work/postman/fr04/FR04-profile-stateful.postman_collection.json",
+        "work/postman/fr15/FR15-products.postman_collection.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-COLLECTION.png"
       ]
     },
     {
       "name": "Postman environment and environment variables",
-      "usage": "Stored the base URL, student ID, credentials, tokens, and baseline state used by the FR-04 collections and Newman runs.",
+      "usage": "Stored the base URL, student ID, credentials, tokens, and baseline state used by the FR-04 and FR-15 collections, Postman Desktop runs, and Newman runs.",
       "evidencePaths": [
         "work/postman/fr04/FR04-profile.postman_environment.json",
-        "work/runs/RUN-20260823040227192-fr04-canonical-input/metadata.json"
+        "work/runs/RUN-20260823040227192-fr04-canonical-input/metadata.json",
+        "work/postman/fr15/FR15-products.postman_environment.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-COLLECTION.png"
       ]
     },
     {
@@ -22,7 +26,9 @@
       "usage": "Injected X-Student-Id: 23127179 into every collection request and constructed case-specific request bodies and authentication modes.",
       "evidencePaths": [
         "work/postman/fr04/FR04-profile.postman_collection.json",
-        "work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png"
+        "work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png",
+        "work/postman/fr15/FR15-products.postman_collection.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-CONSOLE.png"
       ]
     },
     {
@@ -31,17 +37,22 @@
       "evidencePaths": [
         "work/postman/fr04/FR04-profile.postman_collection.json",
         "work/postman/fr04/FR04-profile-stateful.postman_collection.json",
-        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json"
+        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json",
+        "work/postman/fr15/FR15-products.postman_collection.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-RUNNER.png"
       ]
     },
     {
       "name": "Data-driven Newman iterations",
-      "usage": "Executed 41 canonical FR-04 input-partition cases from an external JSON data file, with one canonical case ID per iteration.",
+      "usage": "Executed canonical FR-04, FR-08, and FR-15 cases from external JSON data files, with one canonical case ID per iteration and data-controlled optional state phases.",
       "evidencePaths": [
         "work/postman/fr04/FR04-cases.postman_data.json",
         "work/runs/RUN-20260823040227192-fr04-canonical-input/metadata.json",
         "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json",
-        "work/postman/fr08/FR08-checkout.data.json"
+        "work/postman/fr08/FR08-checkout.data.json",
+        "work/postman/fr15/FR15-products.postman_data.json",
+        "work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-RUNNER.png"
       ]
     },
     {
@@ -58,7 +69,9 @@
       "evidencePaths": [
         "work/runs/RUN-20260823040227192-fr04-canonical-input/metadata.json",
         "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.json",
-        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.html"
+        "work/runs/RUN-20260823040227192-fr04-canonical-input/newman-report.html",
+        "work/runs/RUN-20260823102155874-fr15-canonical-full-suite/metadata.json",
+        "work/runs/RUN-20260823102155874-fr15-canonical-full-suite/newman-report.html"
       ]
     },
     {
@@ -66,7 +79,8 @@
       "usage": "Used the Postman Desktop Console to verify a real request carried X-Student-Id: 23127179.",
       "evidencePaths": [
         "work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png",
-        "work/evidence/screenshots/EVID-FR08-POSTMAN-CONSOLE.png"
+        "work/evidence/screenshots/EVID-FR08-POSTMAN-CONSOLE.png",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-CONSOLE.png"
       ]
     },
     {
@@ -79,10 +93,12 @@
     },
     {
       "name": "Postman Desktop Collection Runner with an external data file",
-      "usage": "Imported the FR-08 manual-import package into Postman Desktop and drove the collection from FR08-cases.postman_data.json through the Collection Runner, confirming the canonical case IDs and the student header in the GUI rather than only in Newman.",
+      "usage": "Imported the FR-08 and FR-15 collections into Postman Desktop and drove selected canonical cases through the Collection Runner with external data, confirming canonical case IDs, assertions, cleanup, and the student header in the GUI rather than only in Newman.",
       "evidencePaths": [
         "work/postman/fr08/manual-import/FR08-cases.postman_data.json",
-        "work/evidence/screenshots/EVID-FR08-POSTMAN-RUNNER.png"
+        "work/evidence/screenshots/EVID-FR08-POSTMAN-RUNNER.png",
+        "work/postman/fr15/FR15-products.postman_data.json",
+        "work/evidence/screenshots/EVID-FR15-POSTMAN-RUNNER.png"
       ]
     }
   ]

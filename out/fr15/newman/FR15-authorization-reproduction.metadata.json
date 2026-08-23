@@ -1,0 +1,94 @@
+{
+  "id": "RUN-20260823102829114-fr15-auth-reproduction",
+  "fixture": false,
+  "startedAtUtc": "2026-08-23T10:28:29.114Z",
+  "completedAtUtc": "2026-08-23T10:28:35.359Z",
+  "hostname": "localhost:3000",
+  "command": "C:\\dev_env\\nodejs\\node.exe",
+  "arguments": [
+    "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+    "run",
+    "work/postman/fr15/FR15-products.postman_collection.json",
+    "--reporters",
+    "cli,json,htmlextra",
+    "--reporter-json-export",
+    "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.json",
+    "--reporter-htmlextra-export",
+    "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+    "--environment",
+    "work/postman/fr15/FR15-products.postman_environment.json",
+    "--iteration-data",
+    "work/postman/fr15/FR15-target-authorization.postman_data.json"
+  ],
+  "exitCode": 1,
+  "collectionPath": "work/postman/fr15/FR15-products.postman_collection.json",
+  "collectionSha256": "32216e5f0740e8b4bd2dee1156f879274e562d81e080f232a182f3117671ca6c",
+  "environmentPath": "work/postman/fr15/FR15-products.postman_environment.json",
+  "environmentSha256": "932cab373654bde979273f95244a5fa6cb65756020b0852a45c30ec2dea6dc30",
+  "dataPath": "work/postman/fr15/FR15-target-authorization.postman_data.json",
+  "dataSha256": "9e0d19bd44605deb615530febdbf62ae1594b902ac7a862bd6565af73007d714",
+  "rawJsonPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.json",
+  "htmlReportPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+  "consoleLogPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/stdout.log",
+  "stderrPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/stderr.log",
+  "metadataPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/metadata.json",
+  "reporters": [
+    "cli",
+    "json",
+    "htmlextra"
+  ],
+  "actualHostnames": [
+    "localhost:3000"
+  ],
+  "summaryStats": {
+    "iterations": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 70,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 145,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 70,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 40,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 30,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 35,
+      "pending": 0,
+      "failed": 5
+    },
+    "testScripts": {
+      "total": 30,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 115,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "executionCount": 40,
+  "studentHeaderRequests": 40,
+  "caseResults": [],
+  "resultImportStatus": "pending-human-checked-mapping"
+}

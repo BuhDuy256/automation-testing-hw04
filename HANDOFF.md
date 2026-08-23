@@ -1658,3 +1658,46 @@ default CI state restored and verified by successful run 32636274089
 The next work is final FR-15 curation into `out/` and then assignment-wide final curation. Strict
 submission validation must continue to fail if required real evidence or student-authored generator
 design inputs are still missing. Do not fabricate or silently substitute those artifacts.
+
+## 49. Checkpoint — FR-15 Postman Desktop evidence attested and final artifacts curated
+
+The student supplied and explicitly attested three genuine Postman Desktop screenshots. The original
+GUID filenames were replaced with stable evidence IDs only after byte-identical SHA-256 comparison:
+
+```text
+EVID-FR15-POSTMAN-COLLECTION  imported FR-15 collection and selected environment
+EVID-FR15-POSTMAN-CONSOLE     X-Student-Id: 23127179 in the real request headers
+EVID-FR15-POSTMAN-RUNNER      FR15-AI-001, one iteration, 8/8 assertions passed
+```
+
+All three records are attributed to `Nguyen Bao Duy`, carry `humanAttestation=true`, and retain their
+original PNG bytes. `work/registry/postman-features.json` now links the FR-15 collection, environment,
+data-driven iteration, pre-request scripts, test assertions, Newman reports, Console, and Desktop
+Runner evidence. The derived root `out/postman-features.md` reflects the same canonical registry.
+
+`npm run hw06:derive` now promotes FR-15 into `out/fr15/` with:
+
+```text
+Postman collection, environment, canonical data, and two targeted reproduction data files
+canonical, authorization-reproduction, and validation-reproduction Newman JSON/HTML/log/metadata
+FR-15 GitHub Actions workflow
+10 student-attested screenshots: 3 runtime, 2 Issue-page, 2 CI, and 3 Postman Desktop
+derived test summary and integrity manifest
+```
+
+The canonical three-way accounting is preserved exactly:
+
+```text
+59 executable and executed cases = 16 authoritative PASS + 28 authoritative FAIL
+                               + 15 PASS-shaped SPEC-GAP observations
+485/485 executed requests carry X-Student-Id: 23127179
+28/28 failures map to published GitHub Issues #17 and #18
+```
+
+Workspace derivation and validation both pass; validation reports 0 errors and 0 warnings. The
+runtime-only `eshop-sut/backend/database.sqlite` remains excluded. The AI Audit Report was not changed
+because no explicit audit-update request was made.
+
+FR-15 curation is complete. The next work is assignment-wide final curation: create the still-missing
+student-authored/final submission outputs, run strict validation, and build the ZIP only after every
+required real artifact exists.

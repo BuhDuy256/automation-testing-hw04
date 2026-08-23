@@ -1,0 +1,18 @@
+{
+  "id": "EVID-FR15-POSTMAN-CONSOLE",
+  "type": "postman-desktop",
+  "description": "Student-captured Postman Console request-header view showing X-Student-Id: 23127179, Postman Runtime, and localhost:3000 for the FR-15 manual run.",
+  "path": "work/evidence/screenshots/EVID-FR15-POSTMAN-CONSOLE.png",
+  "sha256": "246058512727e9d97255249059ec0ad25dbcc8862aac0086df4e65fca1e57618",
+  "capturedAt": "2026-08-23T11:30:45.527Z",
+  "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+  "sourceUrl": null,
+  "image": {
+    "bytes": 54757,
+    "width": 1442,
+    "height": 430
+  },
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T11:31:54.255Z"
+}

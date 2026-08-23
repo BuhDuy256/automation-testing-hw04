@@ -1,0 +1,18 @@
+{
+  "id": "EVID-FR15-POSTMAN-COLLECTION",
+  "type": "postman-desktop",
+  "description": "Student-captured Postman Desktop sidebar showing the imported HW06 FR-15 Product Management collection expanded with its request flow and the HW06 FR-15 Product Environment selected.",
+  "path": "work/evidence/screenshots/EVID-FR15-POSTMAN-COLLECTION.png",
+  "sha256": "09f79b428b0279962ee6538cdbf142af2c6fe25ed17d12e10bb52d4750cc23b9",
+  "capturedAt": "2026-08-23T11:30:46.867Z",
+  "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+  "sourceUrl": null,
+  "image": {
+    "bytes": 101788,
+    "width": 493,
+    "height": 987
+  },
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T11:31:52.042Z"
+}

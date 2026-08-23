@@ -695,6 +695,60 @@
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T11:22:01.736Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-CONSOLE",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Console request-header view showing X-Student-Id: 23127179, Postman Runtime, and localhost:3000 for the FR-15 manual run.",
+      "path": "work/evidence/screenshots/EVID-FR15-POSTMAN-CONSOLE.png",
+      "sha256": "246058512727e9d97255249059ec0ad25dbcc8862aac0086df4e65fca1e57618",
+      "capturedAt": "2026-08-23T11:30:45.527Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 54757,
+        "width": 1442,
+        "height": 430
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:54.255Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-RUNNER",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Collection Runner results for FR15-AI-001, showing the FR-15 environment, one iteration, 8/8 tests passed, persisted-field assertions, request console output, and cleanup requests.",
+      "path": "work/evidence/screenshots/EVID-FR15-POSTMAN-RUNNER.png",
+      "sha256": "8614a529578106c75f7471fc46a396bce630a71ad4bf04c4361b0cfe35fddc56",
+      "capturedAt": "2026-08-23T11:30:46.196Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 293922,
+        "width": 1920,
+        "height": 1033
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:56.518Z"
+    },
+    {
+      "id": "EVID-FR15-POSTMAN-COLLECTION",
+      "type": "postman-desktop",
+      "description": "Student-captured Postman Desktop sidebar showing the imported HW06 FR-15 Product Management collection expanded with its request flow and the HW06 FR-15 Product Environment selected.",
+      "path": "work/evidence/screenshots/EVID-FR15-POSTMAN-COLLECTION.png",
+      "sha256": "09f79b428b0279962ee6538cdbf142af2c6fe25ed17d12e10bb52d4750cc23b9",
+      "capturedAt": "2026-08-23T11:30:46.867Z",
+      "captureMethod": "manual fallback: student-captured Postman Desktop screenshot",
+      "sourceUrl": null,
+      "image": {
+        "bytes": 101788,
+        "width": 493,
+        "height": 987
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T11:31:52.042Z"
     }
   ]
 }

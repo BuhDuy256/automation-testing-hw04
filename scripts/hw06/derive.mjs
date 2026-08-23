@@ -425,6 +425,110 @@ if (fr08Config && fr08Summary && fr08Summary.executed > 0) {
   writeText('out/fr08/README.md', fr08ManifestLines.join('\n'));
 }
 
+const fr15Config = project.postmanFr15;
+const fr15Summary = apiRows.find((row) => row.feature === 'FR-15');
+if (fr15Config && fr15Summary && fr15Summary.executed > 0) {
+  const fr15Runs = (fr15Config.officialRunIds ?? []).map((id) => {
+    const run = runs.find((candidate) => candidate.id === id);
+    if (!run) throw new Error(`Unknown official FR-15 run: ${id}`);
+    return run;
+  });
+  const fr15Primary = fr15Runs.find((run) => run.id === fr15Config.officialPrimaryRunId);
+  if (!fr15Primary) throw new Error('Official FR-15 primary run is not in officialRunIds');
+  const fr15SpecGap = (fr15Primary.caseResults ?? []).filter(
+    (result) => result.classification === 'SPEC-GAP-OBSERVATION',
+  ).length;
+  const fr15AuthoritativePass = fr15Summary.passed - fr15SpecGap;
+  if (fr15AuthoritativePass + fr15Summary.failed + fr15SpecGap !== fr15Summary.executed) {
+    throw new Error('FR-15 PASS/FAIL/SPEC-GAP accounting does not reconcile');
+  }
+
+  const fr15SummaryLines = [
+    '# FR-15 Test Summary (Derived)',
+    '',
+    '> Generated from `work/registry/*.json` by `npm run hw06:derive`. Raw Newman evidence outranks this file.',
+    '',
+    `- Selected API: ${fr15Summary.endpoint}`,
+    `- AI-generated cases: ${fr15Summary.aiGenerated}`,
+    `- Human-added cases: ${fr15Summary.humanAdded}`,
+    `- Executable and executed cases: ${fr15Summary.executed}`,
+    `- Authoritative PASS cases: ${fr15AuthoritativePass}`,
+    `- Authoritative FAIL cases: ${fr15Summary.failed}`,
+    `- PASS-shaped SPEC-GAP observations: ${fr15SpecGap}`,
+    `- Known-bug-related failures: ${fr15Summary.knownBugFailures}`,
+    `- Other failures: ${fr15Summary.otherFailures}`,
+    '',
+    `Three-way arithmetic check: ${fr15AuthoritativePass} + ${fr15Summary.failed} + ${fr15SpecGap} = ${fr15Summary.executed}.`,
+    '',
+    'SPEC-GAP observations preserve real runtime results but do not claim undocumented status codes, response schemas, UI escaping, or internal SQL implementation details. They are reported separately from authoritative PASS and FAIL cases.',
+    '',
+  ];
+  writeText('out/fr15/test-summary.md', fr15SummaryLines.join('\n'));
+
+  const fr15RunNames = new Map([
+    ['RUN-20260823102155874-fr15-canonical-full-suite', 'FR15-canonical-full-suite'],
+    ['RUN-20260823102829114-fr15-auth-reproduction', 'FR15-authorization-reproduction'],
+    ['RUN-20260823102841701-fr15-validation-reproduction', 'FR15-validation-reproduction'],
+  ]);
+  const fr15Pairs = [
+    [fr15Config.collectionPath, 'out/fr15/postman/FR15-products.postman_collection.json'],
+    [fr15Config.environmentPath, 'out/fr15/postman/FR15-products.postman_environment.json'],
+    [fr15Config.dataFiles[0], 'out/fr15/postman/FR15-products.postman_data.json'],
+    ['work/postman/fr15/FR15-target-authorization.postman_data.json', 'out/fr15/postman/FR15-target-authorization.postman_data.json'],
+    ['work/postman/fr15/FR15-target-validation.postman_data.json', 'out/fr15/postman/FR15-target-validation.postman_data.json'],
+    ['work/postman/fr15/README.md', 'out/fr15/postman/README.md'],
+    ['work/postman/fr15/build.mjs', 'out/fr15/postman/build.mjs'],
+  ];
+  for (const run of fr15Runs) {
+    const name = fr15RunNames.get(run.id);
+    if (!name) throw new Error(`No curated FR-15 name for run: ${run.id}`);
+    fr15Pairs.push(
+      [run.rawJsonPath, `out/fr15/newman/${name}.json`],
+      [run.htmlReportPath, `out/fr15/newman/${name}.html`],
+      [run.consoleLogPath, `out/fr15/newman/${name}.stdout.log`],
+      [run.metadataPath, `out/fr15/newman/${name}.metadata.json`],
+    );
+  }
+  for (const item of fr15Config.ciWorkflowPaths ?? []) {
+    fr15Pairs.push([item, `out/fr15/ci/${path.basename(item)}`]);
+  }
+  const fr15EvidencePrefixes = ['EVID-FR15-', 'EVID-CI-FR15-'];
+  const promotedFr15Evidence = evidence.filter((item) =>
+    fr15EvidencePrefixes.some((prefix) => item.id.startsWith(prefix)) && item.humanAttestation === true);
+  for (const item of promotedFr15Evidence) fr15Pairs.push([item.path, `out/fr15/evidence/${item.id}.png`]);
+  for (const [source, target] of fr15Pairs) copyArtifact(source, target);
+
+  const pendingFr15Evidence = evidence.filter((item) =>
+    fr15EvidencePrefixes.some((prefix) => item.id.startsWith(prefix)) && item.humanAttestation !== true);
+  const fr15Bugs = bugs.filter((bug) => (bug.caseIds ?? []).some((id) => id.startsWith('FR15-')));
+  const fr15CiRuns = ciRuns.filter((run) => run.screenshotEvidenceId?.startsWith('EVID-CI-FR15-'));
+  const fr15ManifestLines = [
+    '# FR-15 Finalized Artifacts',
+    '',
+    '> Promoted from canonical registries and immutable execution evidence by `npm run hw06:derive`.',
+    '',
+    `- Primary run: ${fr15Primary.id}`,
+    `- Collection SHA-256: ${fr15Primary.collectionSha256}`,
+    `- Environment SHA-256: ${fr15Primary.environmentSha256}`,
+    `- Data SHA-256: ${fr15Primary.dataSha256}`,
+    `- Newman exit code preserved: ${fr15Primary.exitCode}`,
+    `- Runtime student-header coverage: ${fr15Primary.studentHeaderRequests}/${fr15Primary.executionCount} executed requests`,
+    '- Primary Newman HTML: out/fr15/newman/FR15-canonical-full-suite.html',
+    '- Targeted bug reproductions: out/fr15/newman/FR15-authorization-reproduction.html and out/fr15/newman/FR15-validation-reproduction.html',
+    `- CI workflow configuration: ${(fr15Config.ciWorkflowPaths ?? []).map((item) => `out/fr15/ci/${path.basename(item)}`).join(', ')}`,
+    `- CI evidence: ${fr15CiRuns.map((run) => `${run.purpose} ${run.url}`).join('; ')}`,
+    `- Published bugs: ${fr15Bugs.filter((bug) => bug.status === 'published').map((bug) => `${bug.id} (#${bug.githubIssueNumber})`).join(', ') || 'none'}`,
+    `- Promoted attested evidence (${promotedFr15Evidence.length}): ${promotedFr15Evidence.map((item) => item.id).join(', ') || 'none'}`,
+    pendingFr15Evidence.length
+      ? `- Pending student attestation, still under work/evidence: ${pendingFr15Evidence.map((item) => item.id).join(', ')}`
+      : '- All FR-15 evidence carries explicit student attestation.',
+    '',
+    'The canonical run preserves all genuine failures and its original non-zero exit code. The 28 failures map to the two published root bugs; 15 PASS-shaped observations remain explicitly classified as SPEC-GAP instead of being promoted to authoritative PASS.',
+    '',
+  ];
+  writeText('out/fr15/README.md', fr15ManifestLines.join('\n'));
+}
+
 for (const bug of bugs.filter((item) => item.status !== 'candidate')) {
   const issueBody = [
     `# ${bug.id}: ${bug.title}`,

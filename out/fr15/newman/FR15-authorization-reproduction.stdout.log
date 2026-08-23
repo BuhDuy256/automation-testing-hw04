@@ -1,0 +1,340 @@
+newman
+
+HW06 FR-15 Product Management - POST /api/products
+
+Iteration 1/5
+
+→ Setup admin login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 640B, 101ms]
+  √  admin supporting login returns 200
+
+→ Setup ordinary-user login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 635B, 12ms]
+  √  user supporting login returns 200
+
+→ Capture product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 10ms]
+  √  product baseline is readable
+  ┌
+  │ 'FR15-AI-027 baseline product count=5'
+  └
+
+→ FR15-H-003 setup - create temporary category
+
+→ FR15-H-003 setup - confirm temporary category exists
+
+→ FR15-H-003 setup - delete temporary category
+
+→ FR15-H-003 setup - confirm temporary category is absent
+
+→ Execute {{caseId}} phase 1 - POST /api/products
+  ┌
+  │ 'FR15-AI-027 phase1 auth=none body={"name":"FR15-AI-02
+  │ 7-0-1787480911007","price":100000,"description":"FR15 
+  │ product test","imageUrl":"https://placehold.co/300x300
+  │ /png","category_id":1}'
+  └
+  POST http://localhost:3000/api/products [200 OK, 303B, 17ms]
+  √  FR15-AI-027 selected request carries X-Student-Id
+  √  FR15-AI-027 phase 1 produced an HTTP response
+  ┌
+  │ 'FR15-AI-027 SPEC GAP response phase1 status=200 body=
+  │ {"message":"Product created","id":6}'
+  └
+
+→ Verify {{caseId}} phase 1 state before phase 2
+
+→ Execute {{caseId}} phase 2 - POST /api/products
+
+→ Verify {{caseId}} final product state
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 6ms]
+  1. FR15-AI-027 forbidden or invalid input creates no product
+
+→ FR15-AI-039 detail read-back
+
+→ FR15-AI-042 documented name-search read-back
+
+→ Cleanup and verify exact product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 6ms]
+  DELETE http://localhost:3000/api/products/6 [200 OK, 296B, 15ms]
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 6ms]
+  √  FR15-AI-027 cleanup restores exact product baseline
+
+Iteration 2/5
+
+→ Setup admin login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 640B, 9ms]
+  √  admin supporting login returns 200
+
+→ Setup ordinary-user login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 635B, 8ms]
+  √  user supporting login returns 200
+
+→ Capture product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 4ms]
+  √  product baseline is readable
+  ┌
+  │ 'FR15-AI-028 baseline product count=5'
+  └
+
+→ FR15-H-003 setup - create temporary category
+
+→ FR15-H-003 setup - confirm temporary category exists
+
+→ FR15-H-003 setup - delete temporary category
+
+→ FR15-H-003 setup - confirm temporary category is absent
+
+→ Execute {{caseId}} phase 1 - POST /api/products
+  ┌
+  │ 'FR15-AI-028 phase1 auth=user body={"name":"FR15-AI-02
+  │ 8-1-1787480911795","price":100000,"description":"FR15 
+  │ product test","imageUrl":"https://placehold.co/300x300
+  │ /png","category_id":1}'
+  └
+  POST http://localhost:3000/api/products [200 OK, 303B, 24ms]
+  √  FR15-AI-028 selected request carries X-Student-Id
+  √  FR15-AI-028 phase 1 produced an HTTP response
+  ┌
+  │ 'FR15-AI-028 SPEC GAP response phase1 status=200 body=
+  │ {"message":"Product created","id":7}'
+  └
+
+→ Verify {{caseId}} phase 1 state before phase 2
+
+→ Execute {{caseId}} phase 2 - POST /api/products
+
+→ Verify {{caseId}} final product state
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 7ms]
+  2. FR15-AI-028 forbidden or invalid input creates no product
+
+→ FR15-AI-039 detail read-back
+
+→ FR15-AI-042 documented name-search read-back
+
+→ Cleanup and verify exact product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 4ms]
+  DELETE http://localhost:3000/api/products/7 [200 OK, 296B, 16ms]
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 6ms]
+  √  FR15-AI-028 cleanup restores exact product baseline
+
+Iteration 3/5
+
+→ Setup admin login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 640B, 8ms]
+  √  admin supporting login returns 200
+
+→ Setup ordinary-user login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 635B, 9ms]
+  √  user supporting login returns 200
+
+→ Capture product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 4ms]
+  √  product baseline is readable
+  ┌
+  │ 'FR15-AI-031 baseline product count=5'
+  └
+
+→ FR15-H-003 setup - create temporary category
+
+→ FR15-H-003 setup - confirm temporary category exists
+
+→ FR15-H-003 setup - delete temporary category
+
+→ FR15-H-003 setup - confirm temporary category is absent
+
+→ Execute {{caseId}} phase 1 - POST /api/products
+  ┌
+  │ 'FR15-AI-031 phase1 auth=tampered body={"name":"FR15-A
+  │ I-031-2-1787480912591","price":100000,"description":"F
+  │ R15 product test","imageUrl":"https://placehold.co/300
+  │ x300/png","category_id":1}'
+  └
+  POST http://localhost:3000/api/products [200 OK, 303B, 17ms]
+  √  FR15-AI-031 selected request carries X-Student-Id
+  √  FR15-AI-031 phase 1 produced an HTTP response
+  ┌
+  │ 'FR15-AI-031 SPEC GAP response phase1 status=200 body=
+  │ {"message":"Product created","id":8}'
+  └
+
+→ Verify {{caseId}} phase 1 state before phase 2
+
+→ Execute {{caseId}} phase 2 - POST /api/products
+
+→ Verify {{caseId}} final product state
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 6ms]
+  3. FR15-AI-031 forbidden or invalid input creates no product
+
+→ FR15-AI-039 detail read-back
+
+→ FR15-AI-042 documented name-search read-back
+
+→ Cleanup and verify exact product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 6ms]
+  DELETE http://localhost:3000/api/products/8 [200 OK, 296B, 19ms]
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 5ms]
+  √  FR15-AI-031 cleanup restores exact product baseline
+
+Iteration 4/5
+
+→ Setup admin login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 640B, 8ms]
+  √  admin supporting login returns 200
+
+→ Setup ordinary-user login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 635B, 7ms]
+  √  user supporting login returns 200
+
+→ Capture product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 6ms]
+  √  product baseline is readable
+  ┌
+  │ 'FR15-AI-032 baseline product count=5'
+  └
+
+→ FR15-H-003 setup - create temporary category
+
+→ FR15-H-003 setup - confirm temporary category exists
+
+→ FR15-H-003 setup - delete temporary category
+
+→ FR15-H-003 setup - confirm temporary category is absent
+
+→ Execute {{caseId}} phase 1 - POST /api/products
+  ┌
+  │ 'FR15-AI-032 phase1 auth=expiredAdmin body={"name":"FR
+  │ 15-AI-032-3-1787480913492","price":100000,"description
+  │ ":"FR15 product test","imageUrl":"https://placehold.co
+  │ /300x300/png","category_id":1}'
+  └
+  POST http://localhost:3000/api/products [200 OK, 303B, 18ms]
+  √  FR15-AI-032 selected request carries X-Student-Id
+  √  FR15-AI-032 phase 1 produced an HTTP response
+  ┌
+  │ 'FR15-AI-032 SPEC GAP response phase1 status=200 body=
+  │ {"message":"Product created","id":9}'
+  └
+
+→ Verify {{caseId}} phase 1 state before phase 2
+
+→ Execute {{caseId}} phase 2 - POST /api/products
+
+→ Verify {{caseId}} final product state
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 3ms]
+  4. FR15-AI-032 forbidden or invalid input creates no product
+
+→ FR15-AI-039 detail read-back
+
+→ FR15-AI-042 documented name-search read-back
+
+→ Cleanup and verify exact product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 6ms]
+  DELETE http://localhost:3000/api/products/9 [200 OK, 296B, 15ms]
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 4ms]
+  √  FR15-AI-032 cleanup restores exact product baseline
+
+Iteration 5/5
+
+→ Setup admin login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 640B, 8ms]
+  √  admin supporting login returns 200
+
+→ Setup ordinary-user login for {{caseId}}
+  POST http://localhost:3000/api/login [200 OK, 635B, 7ms]
+  √  user supporting login returns 200
+
+→ Capture product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 6ms]
+  √  product baseline is readable
+  ┌
+  │ 'FR15-H-002 baseline product count=5'
+  └
+
+→ FR15-H-003 setup - create temporary category
+
+→ FR15-H-003 setup - confirm temporary category exists
+
+→ FR15-H-003 setup - delete temporary category
+
+→ FR15-H-003 setup - confirm temporary category is absent
+
+→ Execute {{caseId}} phase 1 - POST /api/products
+  ┌
+  │ 'FR15-H-002 phase1 auth=missingRole body={"name":"FR15
+  │ -H-002-4-1787480914415","price":100000,"description":"
+  │ FR15 product test","imageUrl":"https://placehold.co/30
+  │ 0x300/png","category_id":1}'
+  └
+  POST http://localhost:3000/api/products [200 OK, 304B, 10ms]
+  √  FR15-H-002 selected request carries X-Student-Id
+  √  FR15-H-002 phase 1 produced an HTTP response
+  ┌
+  │ 'FR15-H-002 SPEC GAP response phase1 status=200 body={
+  │ "message":"Product created","id":10}'
+  └
+
+→ Verify {{caseId}} phase 1 state before phase 2
+
+→ Execute {{caseId}} phase 2 - POST /api/products
+
+→ Verify {{caseId}} final product state
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 4ms]
+  5. FR15-H-002 forbidden or invalid input creates no product
+
+→ FR15-AI-039 detail read-back
+
+→ FR15-AI-042 documented name-search read-back
+
+→ Cleanup and verify exact product baseline for {{caseId}}
+  GET http://localhost:3000/api/products [200 OK, 1.4kB, 5ms]
+  DELETE http://localhost:3000/api/products/10 [200 OK, 296B, 11ms]
+  GET http://localhost:3000/api/products [200 OK, 1.24kB, 3ms]
+  √  FR15-H-002 cleanup restores exact product baseline
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 5 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                40 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                30 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │               115 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                35 │                5 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 4.1s                                       │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 24.96kB (approx)                          │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 11ms [min: 3ms, max: 101ms, s.d.: 15ms] │
+└────────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                    [39m
+[90m    [39m[90m                [39m[90m                                                           [39m
+ 1.  AssertionError  FR15-AI-027 forbidden or invalid input creates no product 
+     iteration: 1    expected 1 to deeply equal +0                             
+                     at assertion:0 in test-script                             
+                     inside "Verify {{caseId}} final product state"            
+[90m    [39m[90m                [39m[90m                                                           [39m
+ 2.  AssertionError  FR15-AI-028 forbidden or invalid input creates no product 
+     iteration: 2    expected 1 to deeply equal +0                             
+                     at assertion:0 in test-script                             
+                     inside "Verify {{caseId}} final product state"            
+[90m    [39m[90m                [39m[90m                                                           [39m
+ 3.  AssertionError  FR15-AI-031 forbidden or invalid input creates no product 
+     iteration: 3    expected 1 to deeply equal +0                             
+                     at assertion:0 in test-script                             
+                     inside "Verify {{caseId}} final product state"            
+[90m    [39m[90m                [39m[90m                                                           [39m
+ 4.  AssertionError  FR15-AI-032 forbidden or invalid input creates no product 
+     iteration: 4    expected 1 to deeply equal +0                             
+                     at assertion:0 in test-script                             
+                     inside "Verify {{caseId}} final product state"            
+[90m    [39m[90m                [39m[90m                                                           [39m
+ 5.  AssertionError  FR15-H-002 forbidden or invalid input creates no product  
+     iteration: 5    expected 1 to deeply equal +0                             
+                     at assertion:0 in test-script                             
+                     inside "Verify {{caseId}} final product state"            
