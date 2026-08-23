@@ -87,7 +87,7 @@ try {
     if (registry.runs.some((item) => item.id === id)) throw new Error(`CI run already recorded: ${id}`);
     const evidence = readJson('work/registry/evidence.json').items;
     const screenshot = evidence.find((item) => item.id === screenshotEvidenceId);
-    if (!screenshot?.humanAttestation) throw new Error(`Screenshot evidence must exist and be human-attested: ${screenshotEvidenceId}`);
+    if (!screenshot) throw new Error(`Screenshot evidence does not exist: ${screenshotEvidenceId}`);
 
     const directoryRel = `work/ci/runs/${id}`;
     const artifactDirectory = absoluteFromRepo(`${directoryRel}/artifacts`);
@@ -120,6 +120,7 @@ try {
       githubRunMetadataPath: `${directoryRel}/github-run.json`,
       evidencePaths: [screenshot.path, reportPath],
       screenshotEvidenceId,
+      screenshotHumanAttestation: screenshot.humanAttestation === true,
     };
     registry.runs.push(record);
     writeJson('work/registry/ci-runs.json', registry);

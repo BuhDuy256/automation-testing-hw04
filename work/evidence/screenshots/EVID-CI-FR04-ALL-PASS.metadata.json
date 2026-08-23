@@ -1,0 +1,24 @@
+{
+  "id": "EVID-CI-FR04-ALL-PASS",
+  "type": "github-actions-run",
+  "description": "Real GitHub Actions all-pass FR-04 CI sample showing repository, workflow/job identity, commit/run status, and Newman execution context.",
+  "path": "work/evidence/screenshots/EVID-CI-FR04-ALL-PASS.png",
+  "sha256": "3760745a5d1ca866f6a72e2161e8f96a8b4a5198c2dd101ab5db8e825be54036",
+  "capturedAt": "2026-08-23T04:11:30.944Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599/job/97139714492",
+  "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599/job/97139714492",
+  "pageTitle": "ci(hw06): add all-pass FR04 Newman sample · BuhDuy256/automation-testing-hw04@d8670c4 · GitHub",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 79068,
+    "width": 1600,
+    "height": 1145
+  },
+  "humanAttestation": false
+}
