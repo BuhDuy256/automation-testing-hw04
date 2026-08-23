@@ -48,3 +48,6 @@ ade670fc75e433e9d27370447e92255c6e3cae74 | 2026-08-23T18:06:27+07:00 | docs(hw06
 3d9c2e19b932a3ee8d6a05350d44d8953954e4c6 | 2026-08-23T18:24:08+07:00 | test(hw06): capture and attest FR15 CI evidence
 8b2eb095edbe04fcf51fee860f3b3da886dbc9d6 | 2026-08-23T18:38:38+07:00 | docs(hw06): curate FR15 Postman evidence and final artifacts
 3c9d8d3f61c382ada90ab499c51154c0e5b2b942 | 2026-08-23T18:54:38+07:00 | docs(hw06): freeze FR15 and hand off final submission
+
+FINAL SUBMISSION — CURATION / RECOVERY
+ec5c9139485eac8fbce683aad6f7878b8a76d1da | 2026-08-23T19:50:04+07:00 | feat(hw06): finalize submission and recover curation defects

@@ -1,6 +1,12 @@
 HW06 Final Submission Validation Record
 Date: 2026-08-23
 
+npm run hw06:finalize
+PASS — runs derive, curate-out, render-pdf, validate and validate:out in the one
+order that is correct. Derivation must precede curation: derive re-emits raw
+development-workspace paths into out/, so running it last would leave the
+submission folder un-normalized.
+
 npm run hw06:derive
 PASS — factual summaries regenerated from canonical registries.
 
@@ -13,6 +19,16 @@ Checks include Markdown links, local path escape patterns, required reports/imag
 forbidden databases, token/private-key signatures, canonical counts, Issue records,
 Git hashes, CI commit/link records, and PDF/XLSX signatures.
 
+Evidence reachability
+PASS — all 30 attested evidence screenshots are referenced from a submission
+document, not only present as files. The six GitHub Issue page screenshots are
+listed in bug-report.md and all seven recorded CI runs in ci-cd-report.md.
+
+Curation idempotence
+PASS — two consecutive curation runs produce a byte-identical out/. This was a
+real defect: the workflow-path rewrite embedded its own search string, so
+repeated runs tripled eight blob URLs in ai-audit-report.md. Fixed and verified.
+
 npm run hw06:validate:submission
 FAIL — 2 errors, 0 warnings.
 Both errors have one genuine human-only cause:
@@ -20,13 +36,17 @@ Both errors have one genuine human-only cause:
 - generator-diagram artifact lacks that evidence type
 
 git diff --check
-PASS — no whitespace errors after final artifact repair.
+PASS — no whitespace errors.
 
 XLSX structural validation
 PASS — Open XML ZIP contains valid workbook XML plus Summary and Test Cases worksheets.
 
 AI Audit row reconciliation
-PASS — 190 rows = 132 VALID + 21 INVALID + 37 INCOMPLETE.
+PASS — 191 rows = 132 VALID + 21 INVALID + 38 INCOMPLETE.
+Section 3W was re-verdicted from VALID to INCOMPLETE after the curation
+idempotence defect was found; it is corrected in place, not double-counted.
 
 Packaging
-NOT BUILT — strict validation correctly blocks the ZIP until a genuine student-designed/self-drawn diagram is supplied and registered. No validator was weakened.
+NOT BUILT — strict validation correctly blocks the ZIP until a genuine
+student-designed/self-drawn diagram is supplied and registered. No validator was
+weakened to make this pass.

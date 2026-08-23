@@ -1882,3 +1882,71 @@ The intended ZIP name after the mandatory diagram is supplied is
 `23127179_HW06_AI_API_090.zip`. Build it only after strict validation passes; do not bypass the
 diagram requirement. The modified runtime-only `eshop-sut/backend/database.sqlite` remains excluded
 from commits.
+
+## 52. Checkpoint — takeover recovery complete; submission ready except the student diagram
+
+The final-submission pass was resumed after the previous tool stopped at its usage limit. No
+FR-04, FR-08, or FR-15 artifact was restarted, rerun, or re-verdicted. The in-progress uncommitted
+work was preserved and continued rather than rebuilt.
+
+### Defects recovered
+
+```text
+curate-out.mjs workflow-path rewrite was not idempotent
+  the replacement embedded its own search string, so each repeated curation run re-prefixed
+  an already-rewritten URL; three runs had tripled eight blob URLs in out/ai-audit-report.md
+  fixed with a negative-lookbehind guard plus a collapse pass; links repaired
+
+pipeline ordering was unguarded
+  derive re-emits raw development-workspace paths into out/, so running it after curate-out
+  silently breaks self-containment; added npm run hw06:finalize to fix the order
+```
+
+### Submission completeness added
+
+```text
+out/ai-critique.pdf                 section 14 requires Markdown + PDF for critique and audit
+bug-report.md                       all six attested GitHub Issue page screenshots now listed
+ci-cd-report.md                     all seven recorded CI runs with screenshot paths now listed
+postman-features.json               attested FR-08 collection screenshot and manual-import package registered
+```
+
+All 30 attested evidence screenshots are now reachable from a submission document instead of
+existing only as files in a folder. Previously nine were unreferenced.
+
+### AI Audit Report
+
+Section 3X records this takeover pass with real provenance. Section 3W was re-verdicted from
+VALID to INCOMPLETE in place, because the idempotence defect was a genuine fault in that tooling;
+it is corrected rather than double-counted. Totals are now:
+
+```text
+191 rows = 132 VALID + 21 INVALID + 38 INCOMPLETE
+```
+
+### Deterministic state
+
+```text
+npm run hw06:finalize            PASS
+npm run hw06:validate            PASS (0 errors, 0 warnings)
+npm run hw06:validate:out        PASS (0 errors, 0 warnings)
+curation idempotence             PASS (121 files byte-identical across consecutive runs)
+git diff --check                 PASS
+npm run hw06:validate:submission FAIL (2 errors, 0 warnings)
+```
+
+Both strict errors remain the same single genuine blocker: the student-designed/self-drawn
+generator diagram is missing. No validator was weakened and no diagram was fabricated.
+
+### Remaining human-only items
+
+1. Draw the generator architecture/flow diagram yourself, save it into `out/generator/`
+   as PNG or Mermaid source, and register it under evidence type
+   `self-drawn-generator-diagram`. This is the only item blocking strict validation.
+2. Optionally paste the demonstration video URL into the single field at the end of
+   `out/README.md`.
+3. Confirm externally that the three-API combination is not duplicated by another group member.
+
+The ZIP name after the diagram is supplied is `23127179_HW06_AI_API_090.zip`. Build it only after
+strict validation passes. The runtime-only `eshop-sut/backend/database.sqlite` remains excluded
+from commits.
