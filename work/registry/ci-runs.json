@@ -116,7 +116,7 @@
         "work/ci/runs/CI-32618732832-canonical-full-suite/artifacts/canonical-summary.json"
       ],
       "screenshotEvidenceId": "EVID-CI-FR04-CANONICAL-FULL-SUITE",
-      "screenshotHumanAttestation": false
+      "screenshotHumanAttestation": true
     }
   ]
 }

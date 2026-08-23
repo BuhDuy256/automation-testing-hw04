@@ -24,5 +24,7 @@
   "commitSha": "f34b71b24f368c819140fa077ce8942b76893470",
   "ciPurpose": "canonical-full-suite",
   "mappedRequirement": "HW06 CI/CD integration of the complete canonical FR-04 API suite",
-  "humanAttestation": false
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T05:01:30.133Z"
 }

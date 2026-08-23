@@ -23,7 +23,7 @@
 - Main collection SHA-256: 35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f
 - Main data SHA-256: 905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14
 - Canonical summary: work/ci/runs/CI-32618732832-canonical-full-suite/artifacts/canonical-summary.json
-- Screenshot: EVID-CI-FR04-CANONICAL-FULL-SUITE (work/evidence/screenshots/EVID-CI-FR04-CANONICAL-FULL-SUITE.png; human attestation pending)
+- Screenshot: EVID-CI-FR04-CANONICAL-FULL-SUITE (work/evidence/screenshots/EVID-CI-FR04-CANONICAL-FULL-SUITE.png; human attestation complete)
 
 The complete canonical FR-04 suite is retained as the authoritative API test suite and is executed in CI without weakening its test oracles. Because the suite currently exposes confirmed SUT defects, its real full-suite CI execution is expected to fail. Changing the expected results, suppressing the confirmed bug cases, or modifying the SUT solely to obtain a green pipeline would invalidate the testing evidence. Therefore, the separate stable-case runs are retained only to demonstrate an all-pass CI state and an intentional single-failure state, while the canonical full-suite CI run demonstrates that the complete FR-04 suite is genuinely integrated into the pipeline.
 

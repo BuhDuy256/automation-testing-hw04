@@ -289,11 +289,12 @@ if (officialRuns.length > 0) {
   for (const item of evidence.filter((candidate) => candidate.id.startsWith('EVID-FR04-') && candidate.humanAttestation === true)) {
     promotionPairs.push([item.path, `out/fr04/evidence/${item.id}.png`]);
   }
-  const finalizedCiDemoEvidenceIds = new Set([
+  const finalizedCiEvidenceIds = new Set([
     'EVID-CI-FR04-ALL-PASS',
     'EVID-CI-FR04-INTENTIONAL-FAILURE',
+    'EVID-CI-FR04-CANONICAL-FULL-SUITE',
   ]);
-  for (const item of evidence.filter((candidate) => finalizedCiDemoEvidenceIds.has(candidate.id) && candidate.humanAttestation === true)) {
+  for (const item of evidence.filter((candidate) => finalizedCiEvidenceIds.has(candidate.id) && candidate.humanAttestation === true)) {
     promotionPairs.push([item.path, `out/fr04/evidence/${item.id}.png`]);
   }
   const statefulRun = officialRuns.find((run) => run.id.includes('final-stateful'));
@@ -331,7 +332,9 @@ if (officialRuns.length > 0) {
     `- Supporting official runs: ${officialRuns.filter((run) => run.id !== primaryRun.id).map((run) => run.id).join(', ')}`,
     '- Finalized CI demo screenshots: out/fr04/evidence/EVID-CI-FR04-ALL-PASS.png and out/fr04/evidence/EVID-CI-FR04-INTENTIONAL-FAILURE.png',
     '- CI workflow configurations: out/fr04/ci/hw06-fr04-ci.yml and out/fr04/ci/hw06-fr04-canonical-full-suite.yml',
-    '- Canonical full-suite CI screenshot remains under work/evidence until explicit human attestation.',
+    evidence.find((item) => item.id === 'EVID-CI-FR04-CANONICAL-FULL-SUITE' && item.humanAttestation === true)
+      ? '- Finalized canonical full-suite CI screenshot: out/fr04/evidence/EVID-CI-FR04-CANONICAL-FULL-SUITE.png'
+      : '- Canonical full-suite CI screenshot remains under work/evidence until explicit human attestation.',
     '',
     'The primary run preserves genuine bug-revealing failures. Latest canonical per-case results across the listed official runs are summarized in `work/generated/test-summary.md`.',
     '',

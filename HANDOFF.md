@@ -603,3 +603,68 @@ NEW FULL-SUITE CI SCREENSHOT       WAITING FOR HUMAN ATTESTATION
 ```
 
 FR-04 is still not CLOSED. After the new CI screenshot gate, `FR04-AI-024` still requires real SEC-04 UI/display-boundary evidence. `FR04-H-007` remains a documented non-bug specification-gap observation and needs explicit disposition only if closure policy requires a separate human decision. FR-08 and Agent Skill/generator work remain not started.
+
+## 27. Clean checkpoint — canonical full-suite CI evidence attested
+
+Repository state at this checkpoint:
+
+- Active branch: `hw06-api-testing`.
+- Latest completed implementation/report commit entering this checkpoint: `86e750c178c0a155588deaefa17fcdd8262191a4` (`docs(hw06): finalize honest FR04 CI curation`).
+- The closure/handoff checkpoint itself is the current branch `HEAD` containing this section; verify it with `git log -1` in a new session.
+- The checkpoint procedure requires local `HEAD` and `origin/hw06-api-testing` to match after the normal push.
+- `eshop-sut/backend/database.sqlite` remains a runtime-only local modification and must not be committed.
+
+The student explicitly inspected and attested `EVID-CI-FR04-CANONICAL-FULL-SUITE` under the existing identity `Nguyen Bao Duy`. Its canonical evidence record and metadata contain the real attestation timestamp and provenance. The corresponding CI registry record now also reports completed screenshot attestation. Derivation promotes the human-attested screenshot to `out/fr04/evidence/EVID-CI-FR04-CANONICAL-FULL-SUITE.png` while retaining the canonical source and provenance under `work/evidence/` and `work/ci/runs/`.
+
+Verified FR-04 state remains:
+
+- 47 AI-generated cases and 7 human-added cases.
+- 44 executable cases; 44 executed; 35 PASS; 9 FAIL.
+- 8 failures map to the two genuine bugs published as GitHub Issues.
+- 1 failure, `FR04-H-007`, remains a specification-gap observation.
+- The canonical local and canonical GitHub Actions executions reconcile case-for-case.
+- Postman Console/header evidence, bug screenshots, GitHub Issue-page screenshots, both smoke CI screenshots, and the canonical full-suite CI screenshot are human-attested.
+- Finalized FR-04 Postman inputs, official Newman reports, reports, workflows, and attested screenshots are curated under `out/`; canonical registries and raw provenance remain under `work/`.
+
+Status at this checkpoint:
+
+```text
+FR-04 GENERATE/AUDIT/EXTEND       COMPLETE
+FR-04 CANONICAL EXECUTION          COMPLETE
+FR-04 BUG REPORTING                COMPLETE
+POSTMAN FEATURES                   COMPLETE
+CI SMOKE BEHAVIOR EVIDENCE         COMPLETE
+CI FULL-SUITE INTEGRATION          IMPLEMENTED AND VERIFIED
+CI EVIDENCE ATTESTATION            COMPLETE
+STRICT ALL-API-TESTS GREEN RUN     PARTIAL — DOCUMENTED LIMITATION DUE TO CONFIRMED SUT DEFECTS
+FR-04 OVERALL                      NOT CLOSED
+```
+
+The CI limitation is unchanged by screenshot attestation. The complete canonical suite genuinely runs all 44 executable cases in GitHub Actions and remains red because its unchanged oracles expose confirmed SUT defects plus the documented specification-gap observation. The separate green and intentional-one-failure `FR04-AI-001` smoke runs demonstrate CI behavior only; they do not prove that all 44 canonical cases pass.
+
+Unresolved or intentionally deferred FR-04 items:
+
+- `FR04-AI-024`: SEC-04 UI/display-boundary verification remains pending and must not be inferred from its API-side result.
+- `FR04-H-007`: the non-bug specification-gap observation still needs final disposition only if closure policy requires one.
+- Strict CI wording “all API test cases passing”: `PARTIAL / documented limitation due to confirmed SUT defects`; do not manufacture compliance by weakening tests, deleting bug cases, suppressing failures, or changing the SUT solely for a green run.
+
+Authoritative locations for the next session:
+
+- Project contract: `AGENTS.md`.
+- Assignment: `docs/hw06-req/2026.HW06.API Testing_En.md`.
+- Standard procedures: `docs/hw06-standard-actions.md`.
+- Canonical state: `work/registry/*.json` and `work/registry/runs/`.
+- Canonical/raw execution and CI provenance: `work/runs/`, `work/ci/runs/`, and `work/evidence/`.
+- Finalized FR-04 bundle: `out/fr04/`.
+- Final reports: `out/ci-cd-report.md`, `out/bug-report.md`, and `out/postman-features.md`.
+- CI workflows: `.github/workflows/hw06-fr04-ci.yml` and `.github/workflows/hw06-fr04-canonical-full-suite.yml`.
+
+Next-phase intent for a new Codex chat:
+
+- Do not immediately implement FR-08.
+- First design a reusable HW06 agent/orchestration system learned from FR-04, with `Main Codex = orchestrator`.
+- Consider specialized sub-agents/skills for requirement analysis, test generation, AI review, adversarial verification, execution/evidence verification, reporting/curation, and human-gate preparation.
+- The intended pre-review loop is `generate → review → adversarially verify → repair → validate`, ending in a compact human-review packet and using human gates only where genuinely required.
+- Sub-agents may independently review and recommend approval, but AI review must remain distinct from real student attestation.
+- Only the student's explicit approval may set `humanAttestation=true`, `HUMAN-APPROVED`, or an equivalent canonical human-verification state.
+- Design this system before using FR-08 as its first real reuse/validation case. Do not implement the architecture as part of this checkpoint.
