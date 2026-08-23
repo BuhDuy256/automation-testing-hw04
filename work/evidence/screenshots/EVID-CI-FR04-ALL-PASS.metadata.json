@@ -24,5 +24,7 @@
   "commitSha": "d8670c47fd18ede663f4da11410d46ed598de891",
   "ciPurpose": "all-pass",
   "mappedRequirement": "HW06 CI/CD all-pass API-test sample",
-  "humanAttestation": false
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T04:41:39.163Z"
 }

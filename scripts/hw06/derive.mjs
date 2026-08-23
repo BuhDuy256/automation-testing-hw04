@@ -254,6 +254,13 @@ if (officialRuns.length > 0) {
   for (const item of evidence.filter((candidate) => candidate.id.startsWith('EVID-FR04-') && candidate.humanAttestation === true)) {
     promotionPairs.push([item.path, `out/fr04/evidence/${item.id}.png`]);
   }
+  const finalizedCiDemoEvidenceIds = new Set([
+    'EVID-CI-FR04-ALL-PASS',
+    'EVID-CI-FR04-INTENTIONAL-FAILURE',
+  ]);
+  for (const item of evidence.filter((candidate) => finalizedCiDemoEvidenceIds.has(candidate.id) && candidate.humanAttestation === true)) {
+    promotionPairs.push([item.path, `out/fr04/evidence/${item.id}.png`]);
+  }
   const statefulRun = officialRuns.find((run) => run.id.includes('final-stateful'));
   if (statefulRun) promotionPairs.push(
     [statefulRun.rawJsonPath, 'out/fr04/newman/FR04-final-stateful.json'],

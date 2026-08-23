@@ -217,7 +217,9 @@
       "commitSha": "d8670c47fd18ede663f4da11410d46ed598de891",
       "ciPurpose": "all-pass",
       "mappedRequirement": "HW06 CI/CD all-pass API-test sample",
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T04:41:39.163Z"
     },
     {
       "id": "EVID-CI-FR04-INTENTIONAL-FAILURE",
@@ -245,7 +247,9 @@
       "commitSha": "84f837f95c44f928add2d719d0a5669688d45350",
       "ciPurpose": "intentional-single-failure",
       "mappedRequirement": "HW06 CI/CD sample with exactly one intentional test failure",
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T04:41:39.767Z"
     }
   ]
 }

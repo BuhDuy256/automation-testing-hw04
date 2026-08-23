@@ -19,7 +19,7 @@
 - Assertions: 6 total, 0 failed
 - Failed logical test cases: 0
 - Newman JSON: work/ci/runs/CI-32617199599-all-pass/artifacts/ci-artifacts/newman-report.json
-- Screenshot: EVID-CI-FR04-ALL-PASS (work/evidence/screenshots/EVID-CI-FR04-ALL-PASS.png; human attestation pending)
+- Screenshot: EVID-CI-FR04-ALL-PASS (work/evidence/screenshots/EVID-CI-FR04-ALL-PASS.png; human attestation complete)
 
 ## Intentional single-failure sample
 
@@ -30,7 +30,7 @@
 - Assertions: 6 total, 1 failed
 - Failed logical test cases: 1
 - Newman JSON: work/ci/runs/CI-32617321761-intentional-single-failure/artifacts/ci-artifacts/newman-report.json
-- Screenshot: EVID-CI-FR04-INTENTIONAL-FAILURE (work/evidence/screenshots/EVID-CI-FR04-INTENTIONAL-FAILURE.png; human attestation pending)
+- Screenshot: EVID-CI-FR04-INTENTIONAL-FAILURE (work/evidence/screenshots/EVID-CI-FR04-INTENTIONAL-FAILURE.png; human attestation complete)
 
 ## Integrity note
 
