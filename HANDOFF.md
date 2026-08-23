@@ -418,3 +418,39 @@ BUG CONFIRMATION   WAITING FOR HUMAN
 ```
 
 Do not publish GitHub Issues, create CI evidence, start FR-08/FR-15, or update `out/ai-audit-report.md` until the student makes the next explicit decision.
+
+## 19. Latest checkpoint — FR-04 human bug confirmation
+
+The student explicitly confirmed both existing FR-04 bug candidates after reviewing the original and targeted Newman evidence. No historical run was rewritten, no duplicate bug was created, and the official AI Audit Report was not updated.
+
+Confirmed canonical bug records:
+
+| Bug ID | Registry status | Scope | Human confirmation |
+|---|---|---|---|
+| `BUG-CANDIDATE-FR04-PHONE-FORMAT` | `human-confirmed` | One phone-validation defect covering AI-013, AI-014, AI-015, AI-016, AI-017, and H-004 | Explicit chat confirmation after clean AI-013/H-004 reproduction |
+| `BUG-CANDIDATE-FR04-ROLE-TAMPERING` | `human-confirmed` | One protected-account-field mutation defect covering AI-026 role mutation and independent AI-027 email/role mutation | Explicit chat confirmation after clean AI-026 and AI-027 evidence |
+
+The existing Newman JSON/HTML/stdout evidence paths remain attached in `work/registry/bugs.json`, including the original `RUN-20260822062948963-fr04-input` evidence and targeted runs `RUN-20260823022316955-fr04-phone-corrected`, `RUN-20260823022329715-fr04-role-corrected`, and `RUN-20260823022342040-fr04-ai027-corrected`. No screenshot, GitHub Issue URL, issue number, or publication timestamp is claimed.
+
+Remaining reviewed distinctions are preserved:
+
+- `FR04-H-002` and `FR04-H-003` remain exploratory wrong-type observations, not confirmed bugs.
+- `FR04-H-007` remains `SPEC-GAP / IMPLEMENTATION OBSERVATION`.
+- `FR04-AI-024` has an API-side result, but SEC-04 UI/display-boundary verification still needs real manual evidence.
+- `FR04-AI-009` retains its validly signed and expired JWT provenance evidence.
+
+Current status:
+
+```text
+FR-04
+
+AI GENERATE        COMPLETE
+HUMAN REVIEW       COMPLETE
+HUMAN EXTEND       COMPLETE
+POSTMAN BUILD      COMPLETE
+EXECUTE            COMPLETE
+BUG REVIEW         COMPLETE
+BUG CONFIRMATION   COMPLETE
+```
+
+The next permitted FR-04 action is ACT-EVID-01 screenshot capture/attestation for the confirmed bugs, followed by ACT-BUG-03 preview/publication only after a separate explicit external-publication instruction. Do not begin FR-08, FR-15, CI/CD, final submission curation, or AI Audit Report updates from this checkpoint.

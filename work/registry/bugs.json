@@ -3,7 +3,7 @@
   "bugs": [
     {
       "id": "BUG-CANDIDATE-FR04-PHONE-FORMAT",
-      "status": "candidate",
+      "status": "human-confirmed",
       "title": "PUT /api/users/me persists phone values outside the documented format",
       "caseIds": ["FR04-AI-013", "FR04-AI-014", "FR04-AI-015", "FR04-AI-016", "FR04-AI-017", "FR04-H-004"],
       "runIds": ["RUN-20260822062948963-fr04-input", "RUN-20260823022316955-fr04-phone-corrected"],
@@ -18,17 +18,20 @@
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/stdout.log"
       ],
-      "note": "READY FOR HUMAN CONFIRMATION after clean-state targeted reproduction. FR04-AI-013 and FR04-H-004 reproduced from a freshly reseeded SUT; baseline phone was null, the exact invalid values were submitted, and authenticated GET read-back returned the invalid values. The exact HTTP status remains unspecified. H-001/H-002 were corrected and are excluded from this bug candidate."
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23",
+      "confirmationStatement": "Human confirmed the phone-format defect after reviewing the original failed partitions and clean targeted reproduction, including FR04-AI-013 and FR04-H-004.",
+      "note": "Human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Screenshot evidence and external publication are still pending; no GitHub Issue has been created."
     },
     {
       "id": "BUG-CANDIDATE-FR04-ROLE-TAMPERING",
-      "status": "candidate",
-      "title": "PUT /api/users/me accepts a client-supplied role change",
+      "status": "human-confirmed",
+      "title": "PUT /api/users/me accepts client-supplied protected account field changes",
       "caseIds": ["FR04-AI-026", "FR04-AI-027"],
       "runIds": ["RUN-20260822062948963-fr04-input", "RUN-20260823022329715-fr04-role-corrected", "RUN-20260823022342040-fr04-ai027-corrected"],
-      "expected": "The persisted role must remain unchanged under SEC-06 when the client submits role=admin.",
-      "actual": "The authenticated user role changed from user to admin. The protected-field assertion and exact cleanup assertion both failed.",
-      "reproduction": "Authenticate as test@eshop.com, capture the baseline role user, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. Newman raw report records the observed role admin and cleanup failure.",
+      "expected": "Protected account fields must remain unchanged under FR-04/SEC-06 when the client submits attempted email or role changes.",
+      "actual": "FR04-AI-026 changed the authenticated user's persisted role from user to admin. Independent clean FR04-AI-027 changed the persisted email and role from their ordinary-user baselines. Protected-field assertions and exact cleanup assertions failed.",
+      "reproduction": "Authenticate as test@eshop.com and capture the ordinary-user baseline. For FR04-AI-026, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. For independently reseeded FR04-AI-027, PUT changed email and role values, then GET /api/users/me. Newman raw reports record the persisted protected-field mutations and cleanup failures.",
       "evidencePaths": [
         "work/runs/RUN-20260822062948963-fr04-input/newman-report.json",
         "work/runs/RUN-20260822062948963-fr04-input/newman-report.html",
@@ -40,7 +43,10 @@
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/newman-report.html",
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/stdout.log"
       ],
-      "note": "READY FOR HUMAN CONFIRMATION after clean-state targeted reproduction. A freshly reseeded SUT returned baseline role=user; submitting role=admin persisted role=admin for both FR04-AI-026 and the independently reseeded FR04-AI-027 run. API cleanup cannot restore the protected role, so the next test group must begin from a fresh reseed."
+      "confirmedBy": "Human (explicit confirmation in chat)",
+      "confirmedAt": "2026-08-23",
+      "confirmationStatement": "Human confirmed the protected-field tampering defect after reviewing the clean FR04-AI-026 reproduction and independent clean FR04-AI-027 rerun.",
+      "note": "Human-confirmed genuine bug covering the single protected-field mutation defect exposed by role and combined email/role cases. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin, and independent AI-027 also changed email. API cleanup cannot restore protected fields. Screenshot evidence and external publication are still pending; no GitHub Issue has been created."
     }
   ]
 }
