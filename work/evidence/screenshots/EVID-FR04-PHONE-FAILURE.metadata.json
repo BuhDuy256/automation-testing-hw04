@@ -1,0 +1,21 @@
+{
+  "id": "EVID-FR04-PHONE-FAILURE",
+  "type": "bug-runtime-report",
+  "description": "Real Newman failure tab for FR04-AI-013: submitted invalid phone 012345678 and assertion that the persisted value was not the captured baseline.",
+  "path": "work/evidence/screenshots/EVID-FR04-PHONE-FAILURE.png",
+  "sha256": "3b22e8beddf4e21c8aecf64dcde883042e6f592d83dbe45f70cdaa3617e51c44",
+  "capturedAt": "2026-08-23T02:46:55.192Z",
+  "captureMethod": "Playwright headless Chromium from real Newman HTML failure tab",
+  "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+  "image": {
+    "bytes": 60040,
+    "width": 1600,
+    "height": 1000
+  },
+  "humanAttestation": false,
+  "sourceRunIds": ["RUN-20260823022316955-fr04-phone-corrected"],
+  "caseIds": ["FR04-AI-013", "FR04-H-004"],
+  "bugIds": ["BUG-CANDIDATE-FR04-PHONE-FORMAT"],
+  "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
+  "humanManualCaptureRequired": false
+}

@@ -454,3 +454,15 @@ BUG CONFIRMATION   COMPLETE
 ```
 
 The next permitted FR-04 action is ACT-EVID-01 screenshot capture/attestation for the confirmed bugs, followed by ACT-BUG-03 preview/publication only after a separate explicit external-publication instruction. Do not begin FR-08, FR-15, CI/CD, final submission curation, or AI Audit Report updates from this checkpoint.
+
+## 20. Latest checkpoint — ACT-EVID-01 partial
+
+Real screenshot evidence was prepared from the existing Newman HTML reports without rerunning the SUT or changing test outcomes:
+
+- `work/evidence/screenshots/EVID-FR04-PHONE-FAILURE.png` — expanded real Newman failure tab for `FR04-AI-013` and `FR04-H-004`, sourced from `RUN-20260823022316955-fr04-phone-corrected`.
+- `work/evidence/screenshots/EVID-FR04-ROLE-TAMPERING.png` — expanded real Newman failure tab for `FR04-AI-026`, with `FR04-AI-027` retained as supporting evidence, sourced from `RUN-20260823022329715-fr04-role-corrected` and `RUN-20260823022342040-fr04-ai027-corrected`.
+- `EVID-FR04-PHONE-REPORT.png` and `EVID-FR04-ROLE-REPORT.png` — real Newman summary views retained as supplementary run-level screenshots.
+
+The canonical evidence registry is `work/registry/evidence.json`; screenshot metadata includes source run IDs, canonical case IDs, confirmed bug IDs, hashes, capture method, and the explicit `humanAttestation=false` state. The two bug screenshots have been visually inspected by the agent but are not yet human-attested.
+
+ACT-EVID-01 remains **PARTIAL** because the required real Postman Console screenshot showing `X-Student-Id: 23127179` is not available in this environment. No mock, generated, or Newman screenshot is being substituted for that Postman-specific requirement. Human capture and attestation remain pending. No GitHub Issue, publication URL, or AI Audit Report update was created.

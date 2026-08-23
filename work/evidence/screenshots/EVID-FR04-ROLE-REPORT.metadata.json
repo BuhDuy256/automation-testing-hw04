@@ -1,0 +1,24 @@
+{
+  "id": "EVID-FR04-ROLE-REPORT",
+  "type": "bug-runtime-report",
+  "description": "Real Newman HTML report for the corrected FR04-AI-026 role-tampering reproduction, including baseline-protection failure and persisted role evidence.",
+  "path": "work/evidence/screenshots/EVID-FR04-ROLE-REPORT.png",
+  "sha256": "800ea72b9fbb3f3de8e0b15447dc71286d0541ed1f378a733767020b528e39f7",
+  "capturedAt": "2026-08-23T02:44:45.475Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+  "finalUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+  "pageTitle": "Newman Summary Report",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 97227,
+    "width": 1600,
+    "height": 1337
+  },
+  "humanAttestation": false
+}

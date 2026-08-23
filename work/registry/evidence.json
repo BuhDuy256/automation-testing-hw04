@@ -1,4 +1,95 @@
 {
   "schemaVersion": 1,
-  "items": []
+  "items": [
+    {
+      "id": "EVID-FR04-PHONE-REPORT",
+      "type": "bug-runtime-report",
+      "description": "Real Newman HTML report for the corrected FR04 phone-format reproduction, including the failed persisted-phone assertion and captured request evidence.",
+      "path": "work/evidence/screenshots/EVID-FR04-PHONE-REPORT.png",
+      "sha256": "cffa72d03e90a6f18cecd08d985be996751c645a925854299b25dee55b819ce9",
+      "capturedAt": "2026-08-23T02:44:26.825Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+      "finalUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+      "pageTitle": "Newman Summary Report",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 97845,
+        "width": 1600,
+        "height": 1337
+      },
+      "humanAttestation": false
+    },
+    {
+      "id": "EVID-FR04-ROLE-REPORT",
+      "type": "bug-runtime-report",
+      "description": "Real Newman HTML report for the corrected FR04-AI-026 role-tampering reproduction, including baseline-protection failure and persisted role evidence.",
+      "path": "work/evidence/screenshots/EVID-FR04-ROLE-REPORT.png",
+      "sha256": "800ea72b9fbb3f3de8e0b15447dc71286d0541ed1f378a733767020b528e39f7",
+      "capturedAt": "2026-08-23T02:44:45.475Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+      "finalUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+      "pageTitle": "Newman Summary Report",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 97227,
+        "width": 1600,
+        "height": 1337
+      },
+      "humanAttestation": false
+    },
+    {
+      "id": "EVID-FR04-PHONE-FAILURE",
+      "type": "bug-runtime-report",
+      "description": "Real Newman failure tab for FR04-AI-013: submitted invalid phone 012345678 and assertion that the persisted value was not the captured baseline.",
+      "path": "work/evidence/screenshots/EVID-FR04-PHONE-FAILURE.png",
+      "sha256": "3b22e8beddf4e21c8aecf64dcde883042e6f592d83dbe45f70cdaa3617e51c44",
+      "capturedAt": "2026-08-23T02:46:55.192Z",
+      "captureMethod": "Playwright headless Chromium from real Newman HTML failure tab",
+      "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+      "image": {
+        "bytes": 60040,
+        "width": 1600,
+        "height": 1000
+      },
+      "humanAttestation": false,
+      "sourceRunIds": ["RUN-20260823022316955-fr04-phone-corrected"],
+      "caseIds": ["FR04-AI-013", "FR04-H-004"],
+      "bugIds": ["BUG-CANDIDATE-FR04-PHONE-FORMAT"],
+      "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
+      "humanManualCaptureRequired": false
+    },
+    {
+      "id": "EVID-FR04-ROLE-TAMPERING",
+      "type": "bug-runtime-report",
+      "description": "Real Newman failure tab for FR04-AI-026: protected-field assertion observed persisted role admin instead of baseline role user.",
+      "path": "work/evidence/screenshots/EVID-FR04-ROLE-TAMPERING.png",
+      "sha256": "7cb1a1c3a83c88706c39a4e6436cd8b2b547b76a902ce1b2f89a37c289a2cc59",
+      "capturedAt": "2026-08-23T02:47:31.480Z",
+      "captureMethod": "Playwright headless Chromium from real Newman HTML failure tab",
+      "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+      "image": {
+        "bytes": 78674,
+        "width": 1600,
+        "height": 1025
+      },
+      "humanAttestation": false,
+      "sourceRunIds": ["RUN-20260823022329715-fr04-role-corrected", "RUN-20260823022342040-fr04-ai027-corrected"],
+      "caseIds": ["FR04-AI-026", "FR04-AI-027"],
+      "bugIds": ["BUG-CANDIDATE-FR04-ROLE-TAMPERING"],
+      "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; the independent AI-027 run is preserved as supporting evidence in the bug registry.",
+      "humanManualCaptureRequired": false
+    }
+  ]
 }

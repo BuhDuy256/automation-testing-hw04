@@ -1,0 +1,24 @@
+{
+  "id": "EVID-FR04-PHONE-REPORT",
+  "type": "bug-runtime-report",
+  "description": "Real Newman HTML report for the corrected FR04 phone-format reproduction, including the failed persisted-phone assertion and captured request evidence.",
+  "path": "work/evidence/screenshots/EVID-FR04-PHONE-REPORT.png",
+  "sha256": "cffa72d03e90a6f18cecd08d985be996751c645a925854299b25dee55b819ce9",
+  "capturedAt": "2026-08-23T02:44:26.825Z",
+  "captureMethod": "Playwright headless Chromium",
+  "sourceUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+  "finalUrl": "http://127.0.0.1:39092/work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+  "pageTitle": "Newman Summary Report",
+  "mode": "full-page",
+  "selector": null,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "image": {
+    "bytes": 97845,
+    "width": 1600,
+    "height": 1337
+  },
+  "humanAttestation": false
+}
