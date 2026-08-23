@@ -64,9 +64,16 @@
         "height": 1000
       },
       "humanAttestation": false,
-      "sourceRunIds": ["RUN-20260823022316955-fr04-phone-corrected"],
-      "caseIds": ["FR04-AI-013", "FR04-H-004"],
-      "bugIds": ["BUG-CANDIDATE-FR04-PHONE-FORMAT"],
+      "sourceRunIds": [
+        "RUN-20260823022316955-fr04-phone-corrected"
+      ],
+      "caseIds": [
+        "FR04-AI-013",
+        "FR04-H-004"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR04-PHONE-FORMAT"
+      ],
       "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; raw request/response evidence remains in the linked run artifacts.",
       "humanManualCaptureRequired": false
     },
@@ -85,11 +92,44 @@
         "height": 1025
       },
       "humanAttestation": false,
-      "sourceRunIds": ["RUN-20260823022329715-fr04-role-corrected", "RUN-20260823022342040-fr04-ai027-corrected"],
-      "caseIds": ["FR04-AI-026", "FR04-AI-027"],
-      "bugIds": ["BUG-CANDIDATE-FR04-ROLE-TAMPERING"],
+      "sourceRunIds": [
+        "RUN-20260823022329715-fr04-role-corrected",
+        "RUN-20260823022342040-fr04-ai027-corrected"
+      ],
+      "caseIds": [
+        "FR04-AI-026",
+        "FR04-AI-027"
+      ],
+      "bugIds": [
+        "BUG-CANDIDATE-FR04-ROLE-TAMPERING"
+      ],
       "provenanceNote": "Interactive failure-tab view of the real Newman HTML report; the independent AI-027 run is preserved as supporting evidence in the bug registry.",
       "humanManualCaptureRequired": false
+    },
+    {
+      "id": "EVID-FR04-POSTMAN-CONSOLE",
+      "type": "postman-console-header",
+      "description": "Manual Postman Console screenshot of the real Login user A request showing X-Student-Id: 23127179.",
+      "path": "work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png",
+      "sha256": "7b6256dec9a0114e780faca0c8a08f8b9a5d6a1884c37b591df02a6935014226",
+      "capturedAt": "2026-08-23T03:10:18.627Z",
+      "captureMethod": "manual Postman Desktop Console capture",
+      "sourceUrl": "http://localhost:3000/api/login",
+      "image": {
+        "bytes": 47951,
+        "width": 1437,
+        "height": 388
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T03:10:19.082Z",
+      "sourceRunIds": [],
+      "caseIds": [],
+      "bugIds": [],
+      "supportingRequest": "Login user A — POST /api/login",
+      "requirement": "Every request includes X-Student-Id: 23127179",
+      "provenanceNote": "Manual screenshot captured from the real Postman Desktop Console after a real request; no Newman run is claimed.",
+      "humanManualCaptureRequired": true
     }
   ]
 }

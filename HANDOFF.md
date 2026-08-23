@@ -466,3 +466,15 @@ Real screenshot evidence was prepared from the existing Newman HTML reports with
 The canonical evidence registry is `work/registry/evidence.json`; screenshot metadata includes source run IDs, canonical case IDs, confirmed bug IDs, hashes, capture method, and the explicit `humanAttestation=false` state. The two bug screenshots have been visually inspected by the agent but are not yet human-attested.
 
 ACT-EVID-01 remains **PARTIAL** because the required real Postman Console screenshot showing `X-Student-Id: 23127179` is not available in this environment. No mock, generated, or Newman screenshot is being substituted for that Postman-specific requirement. Human capture and attestation remain pending. No GitHub Issue, publication URL, or AI Audit Report update was created.
+
+## 21. Latest checkpoint — Postman Console evidence captured
+
+The student manually captured and supplied the real Postman Desktop Console screenshot:
+
+- `work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png`
+- Supporting request: `Login user A` — `POST /api/login`
+- Visible proof: `200` response and `X-Student-Id: 23127179` under `Request Headers`.
+- Capture method: manual Postman Desktop Console capture.
+- Human attestation: recorded for `Nguyen Bao Duy`.
+
+The evidence registry and screenshot metadata now contain the manual-capture provenance and requirement mapping. ACT-EVID-01 remains **PARTIAL** only because the previously created Newman bug screenshots have not yet received explicit human attestation. No API rerun, collection change, GitHub Issue, or AI Audit Report update was made in this step.

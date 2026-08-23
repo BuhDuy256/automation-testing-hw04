@@ -1,0 +1,25 @@
+{
+  "id": "EVID-FR04-POSTMAN-CONSOLE",
+  "type": "postman-console-header",
+  "description": "Manual Postman Console screenshot of the real Login user A request showing X-Student-Id: 23127179.",
+  "path": "work/evidence/screenshots/EVID-FR04-POSTMAN-CONSOLE.png",
+  "sha256": "7b6256dec9a0114e780faca0c8a08f8b9a5d6a1884c37b591df02a6935014226",
+  "capturedAt": "2026-08-23T03:10:18.627Z",
+  "captureMethod": "manual Postman Desktop Console capture",
+  "sourceUrl": "http://localhost:3000/api/login",
+  "image": {
+    "bytes": 47951,
+    "width": 1437,
+    "height": 388
+  },
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T03:10:19.082Z",
+  "sourceRunIds": [],
+  "caseIds": [],
+  "bugIds": [],
+  "supportingRequest": "Login user A — POST /api/login",
+  "requirement": "Every request includes X-Student-Id: 23127179",
+  "provenanceNote": "Manual screenshot captured from the real Postman Desktop Console after a real request; no Newman run is claimed.",
+  "humanManualCaptureRequired": true
+}
