@@ -87,7 +87,9 @@
       "work/postman/fr15/FR15-products.postman_data.json"
     ],
     "officialRunIds": [
-      "RUN-20260823102155874-fr15-canonical-full-suite"
+      "RUN-20260823102155874-fr15-canonical-full-suite",
+      "RUN-20260823102829114-fr15-auth-reproduction",
+      "RUN-20260823102841701-fr15-validation-reproduction"
     ],
     "officialPrimaryRunId": "RUN-20260823102155874-fr15-canonical-full-suite"
   }

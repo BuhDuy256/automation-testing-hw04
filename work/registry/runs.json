@@ -460,292 +460,8 @@
       },
       "executionCount": 20,
       "studentHeaderRequests": 20,
-      "caseResults": [
-        {
-          "caseId": "FR15-AI-001",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-002",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-003",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-004",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-005",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-006",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-007",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-008",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-009",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-010",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-011",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-012",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-013",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-014",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-015",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-016",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-017",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-018",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-019",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-020",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-021",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-022",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-023",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-024",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-025",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-026",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-027",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-028",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-029",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-030",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-031",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-032",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-033",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-034",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION",
-          "manualVerification": "PENDING_UI_SEC-04"
-        },
-        {
-          "caseId": "FR15-AI-035",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-036",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-037",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-AI-039",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-040",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-041",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-042",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-043",
-          "result": "PASS",
-          "classification": "PASS-WITH-SPEC-GAP-DUPLICATE-BEHAVIOR"
-        },
-        {
-          "caseId": "FR15-AI-044",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-047",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-048",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-AI-049",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-050",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-051",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-052",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-053",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-054",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-057",
-          "result": "PASS"
-        },
-        {
-          "caseId": "FR15-AI-058",
-          "result": "PASS",
-          "classification": "SPEC-GAP-OBSERVATION"
-        },
-        {
-          "caseId": "FR15-AI-059",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-H-001",
-          "result": "PASS",
-          "classification": "VERIFIED-STATE-INVARIANT-WITH-SPEC-GAP-ADDITIONAL-PROPERTY"
-        },
-        {
-          "caseId": "FR15-H-002",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-H-003",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        },
-        {
-          "caseId": "FR15-H-004",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-AUTHORIZATION"
-        },
-        {
-          "caseId": "FR15-H-005",
-          "result": "FAIL",
-          "classification": "BUG-CANDIDATE-VALIDATION"
-        }
-      ],
-      "resultImportStatus": "mapped-from-raw-json-with-spec-gap-overlay",
-      "mappingNote": "All 59 iteration indexes map one-to-one to the committed data rows. Raw JSON contains 30 failed assertions across 28 cases, no script/request/cleanup failure, and no unmapped failure. Fifteen assertion-clean observational cases are classified SPEC-GAP-OBSERVATION without converting their unspecified behavior into failures."
+      "caseResults": [],
+      "resultImportStatus": "pending-human-checked-mapping"
     },
     {
       "mode": "local",
@@ -2637,8 +2353,541 @@
       },
       "executionCount": 485,
       "studentHeaderRequests": 485,
-      "caseResults": [],
-      "resultImportStatus": "pending-human-checked-mapping"
+      "caseResults": [
+        {
+          "caseId": "FR15-AI-001",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-002",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-003",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-004",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-005",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-006",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-007",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-008",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-009",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-010",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-011",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-012",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-013",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-014",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-015",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-016",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-017",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-018",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-019",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-020",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-021",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-022",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-023",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-024",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-025",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-026",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-027",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-028",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-029",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-030",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-031",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-032",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-033",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-034",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION",
+          "manualVerification": "PENDING_UI_SEC-04"
+        },
+        {
+          "caseId": "FR15-AI-035",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-036",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-037",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-039",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-040",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-041",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-042",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-043",
+          "result": "PASS",
+          "classification": "PASS-WITH-SPEC-GAP-DUPLICATE-BEHAVIOR"
+        },
+        {
+          "caseId": "FR15-AI-044",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-047",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-048",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-049",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-050",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-051",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-052",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-053",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-054",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-057",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR15-AI-058",
+          "result": "PASS",
+          "classification": "SPEC-GAP-OBSERVATION"
+        },
+        {
+          "caseId": "FR15-AI-059",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-H-001",
+          "result": "PASS",
+          "classification": "VERIFIED-STATE-INVARIANT-WITH-SPEC-GAP-ADDITIONAL-PROPERTY"
+        },
+        {
+          "caseId": "FR15-H-002",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-H-003",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-H-004",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-H-005",
+          "result": "FAIL",
+          "classification": "BUG-CANDIDATE-VALIDATION"
+        }
+      ],
+      "resultImportStatus": "mapped-from-raw-json-with-spec-gap-overlay",
+      "mappingNote": "All 59 iteration indexes map one-to-one to the committed data rows. Raw JSON contains 30 failed assertions across 28 cases, no script/request/cleanup failure, and no unmapped failure. Fifteen assertion-clean observational cases are classified SPEC-GAP-OBSERVATION without converting their unspecified behavior into failures."
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823102829114-fr15-auth-reproduction",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T10:28:29.114Z",
+      "completedAtUtc": "2026-08-23T10:28:35.359Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr15/FR15-products.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+        "--environment",
+        "work/postman/fr15/FR15-products.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr15/FR15-target-authorization.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr15/FR15-products.postman_collection.json",
+      "collectionSha256": "32216e5f0740e8b4bd2dee1156f879274e562d81e080f232a182f3117671ca6c",
+      "environmentPath": "work/postman/fr15/FR15-products.postman_environment.json",
+      "environmentSha256": "932cab373654bde979273f95244a5fa6cb65756020b0852a45c30ec2dea6dc30",
+      "dataPath": "work/postman/fr15/FR15-target-authorization.postman_data.json",
+      "dataSha256": "9e0d19bd44605deb615530febdbf62ae1594b902ac7a862bd6565af73007d714",
+      "rawJsonPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823102829114-fr15-auth-reproduction/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 5,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 70,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 145,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 70,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 40,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 30,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 35,
+          "pending": 0,
+          "failed": 5
+        },
+        "testScripts": {
+          "total": 30,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 115,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 40,
+      "studentHeaderRequests": 40,
+      "caseResults": [
+        {
+          "caseId": "FR15-AI-027",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-028",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-031",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-AI-032",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-AUTHORIZATION"
+        },
+        {
+          "caseId": "FR15-H-002",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-AUTHORIZATION"
+        }
+      ],
+      "resultImportStatus": "mapped-from-raw-json",
+      "mappingNote": "Five committed targeted data rows map one-to-one to five iterations. Each case reproduced the same persistence-oracle failure; all 40 requests carried the student header and no script, request, setup, cleanup, or unmapped failure occurred."
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823102841701-fr15-validation-reproduction",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T10:28:41.701Z",
+      "completedAtUtc": "2026-08-23T10:28:49.158Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr15/FR15-products.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html",
+        "--environment",
+        "work/postman/fr15/FR15-products.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr15/FR15-target-validation.postman_data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr15/FR15-products.postman_collection.json",
+      "collectionSha256": "32216e5f0740e8b4bd2dee1156f879274e562d81e080f232a182f3117671ca6c",
+      "environmentPath": "work/postman/fr15/FR15-products.postman_environment.json",
+      "environmentSha256": "932cab373654bde979273f95244a5fa6cb65756020b0852a45c30ec2dea6dc30",
+      "dataPath": "work/postman/fr15/FR15-target-validation.postman_data.json",
+      "dataSha256": "a49f7a492d3c67c17c62b1a3ba43add383df6b8593dcec7fef3cb7f505fdc7a1",
+      "rawJsonPath": "work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823102841701-fr15-validation-reproduction/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823102841701-fr15-validation-reproduction/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823102841701-fr15-validation-reproduction/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823102841701-fr15-validation-reproduction/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 6,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 84,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 178,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 84,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 52,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 40,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 46,
+          "pending": 0,
+          "failed": 6
+        },
+        "testScripts": {
+          "total": 40,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 138,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 52,
+      "studentHeaderRequests": 52,
+      "caseResults": [
+        {
+          "caseId": "FR15-AI-003",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-009",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-017",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-AI-047",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-H-003",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        },
+        {
+          "caseId": "FR15-H-005",
+          "result": "FAIL",
+          "classification": "REPRODUCED-BUG-CANDIDATE-VALIDATION"
+        }
+      ],
+      "resultImportStatus": "mapped-from-raw-json",
+      "mappingNote": "Six committed targeted data rows map one-to-one to six iterations. Each case reproduced the same persistence-oracle failure; all 52 requests carried the student header and no script, request, setup, cleanup, or unmapped failure occurred."
     }
   ]
 }
