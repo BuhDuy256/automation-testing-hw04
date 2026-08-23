@@ -1,4 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {
+  absoluteFromRepo,
   fileExists,
   markdownCell,
   readJson,
@@ -98,6 +101,27 @@ const summaryLines = [
   '',
 ];
 writeText('work/generated/test-summary.md', `${summaryLines.join('\n')}\n`);
+const fr04Summary = apiRows.find((row) => row.feature === 'FR-04');
+if (fr04Summary) {
+  const fr04SummaryLines = [
+    '# FR-04 Test Summary (Derived)',
+    '',
+    '> Generated from the latest canonical per-case results in `work/registry/runs.json`.',
+    '',
+    `- AI-generated cases: ${fr04Summary.aiGenerated}`,
+    `- Human-added cases: ${fr04Summary.humanAdded}`,
+    `- Executable cases: ${fr04Summary.executable}`,
+    `- Executed cases: ${fr04Summary.executed}`,
+    `- Passed cases: ${fr04Summary.passed}`,
+    `- Failed cases: ${fr04Summary.failed}`,
+    `- Known-bug-related failures: ${fr04Summary.knownBugFailures}`,
+    `- Other failures: ${fr04Summary.otherFailures}`,
+    '',
+    `Arithmetic check: ${fr04Summary.passed} + ${fr04Summary.failed} = ${fr04Summary.executed}.`,
+    '',
+  ];
+  writeText('out/fr04/test-summary.md', fr04SummaryLines.join('\n'));
+}
 
 const traceabilityLines = [
   '# HW06 Traceability Matrix (Derived)',
@@ -114,17 +138,27 @@ const traceabilityLines = [
 ];
 writeText('work/generated/traceability.md', `${traceabilityLines.join('\n')}\n`);
 
+const reportableBugs = bugs.filter((bug) => bug.status !== 'candidate');
 const bugLines = [
   '# HW06 Bug Report (Derived)',
   '',
-  '> Candidate records are not claims of genuine bugs. Only human-confirmed or published records are reportable.',
+  '> Generated from published, human-confirmed records in `work/registry/bugs.json`.',
   '',
-  '| Bug | Status | Cases | Expected | Actual | GitHub Issue |',
-  '|---|---|---|---|---|---|',
-  ...bugs.map((bug) => `| ${markdownCell(bug.id)} | ${markdownCell(bug.status)} | ${markdownCell((bug.caseIds ?? []).join(', '))} | ${markdownCell(bug.expected ?? '')} | ${markdownCell(bug.actual ?? '')} | ${markdownCell(bug.githubIssueUrl ?? '')} |`),
-  '',
+  ...reportableBugs.flatMap((bug) => [
+    `## Issue #${bug.githubIssueNumber}: ${bug.title}`,
+    '',
+    `- Status: ${bug.status}`,
+    `- Canonical cases supporting the public finding: ${(bug.publicCaseIds ?? bug.caseIds ?? []).join(', ')}`,
+    `- Expected: ${bug.expected}`,
+    `- Actual: ${bug.actual}`,
+    `- GitHub Issue: ${bug.githubIssueUrl}`,
+    `- Runtime evidence: ${(bug.publicEvidencePaths ?? bug.evidencePaths ?? []).join(', ')}`,
+    `- Screenshot evidence: ${(bug.screenshotPaths ?? []).join(', ')}`,
+    '',
+  ]),
 ];
 writeText('work/generated/bug-report.md', `${bugLines.join('\n')}\n`);
+writeText('out/bug-report.md', bugLines.join('\n'));
 
 const postmanFeatureLines = [
   '# HW06 Postman Features (Derived)',
@@ -137,14 +171,120 @@ const postmanFeatureLines = [
   '',
 ];
 writeText('work/generated/postman-features.md', `${postmanFeatureLines.join('\n')}\n`);
+writeText('out/postman-features.md', postmanFeatureLines.join('\n'));
+
+function ciReportSummary(run) {
+  const report = readJson(run.newmanReportPath);
+  return {
+    executionCount: report.run?.executions?.length ?? 0,
+    assertionsTotal: report.run?.stats?.assertions?.total ?? 0,
+    assertionsFailed: report.run?.stats?.assertions?.failed ?? run.failedAssertions,
+  };
+}
+
+const allPassCiRun = ciRuns.find((run) => run.purpose === 'all-pass');
+const intentionalFailureCiRun = ciRuns.find((run) => run.purpose === 'intentional-single-failure');
+const ciLines = [
+  '# HW06 CI/CD Report (Derived)',
+  '',
+  '> Generated from `work/registry/ci-runs.json` and registered evidence. Screenshot attestation is reported independently from run verification.',
+  '',
+  '## Workflow',
+  '',
+  '- Configuration: `.github/workflows/hw06-fr04-ci.yml`',
+  '- The Ubuntu job installs the locked root and backend dependencies, starts the EShop backend, waits for its health endpoint, and runs Newman.',
+  '- The CI sample is the explicitly identified stable canonical case `FR04-AI-001`; it does not replace the complete 44-case FR-04 execution and does not weaken the confirmed bug-revealing assertions.',
+  '- The CI collection injects `X-Student-Id: 23127179` into every request and Newman determines the job result.',
+  '- Newman JSON, HTML, stdout, and backend logs are uploaded as the `hw06-fr04-ci-newman` artifact.',
+  '',
+];
+for (const [heading, run] of [['All-pass sample', allPassCiRun], ['Intentional single-failure sample', intentionalFailureCiRun]]) {
+  if (!run) continue;
+  const summary = ciReportSummary(run);
+  const screenshot = evidence.find((item) => item.id === run.screenshotEvidenceId);
+  ciLines.push(
+    `## ${heading}`,
+    '',
+    `- Commit: ${run.commitSha}`,
+    `- GitHub Actions run: ${run.url}`,
+    `- Result: ${run.conclusion}`,
+    `- Newman request executions: ${summary.executionCount}`,
+    `- Assertions: ${summary.assertionsTotal} total, ${summary.assertionsFailed} failed`,
+    `- Failed logical test cases: ${run.failedTests}`,
+    `- Newman JSON: ${run.newmanReportPath}`,
+    `- Screenshot: ${run.screenshotEvidenceId} (${screenshot?.path ?? 'missing'}; human attestation ${screenshot?.humanAttestation === true ? 'complete' : 'pending'})`,
+    '',
+  );
+}
+ciLines.push(
+  '## Integrity note',
+  '',
+  'The intentional sample adds one transparent assertion named `FR04-AI-001 [CI-DEMO] intentional single failure`; it is not classified as an SUT bug. The separate complete FR-04 execution retains the genuine phone-format and protected-role failures.',
+  '',
+);
+writeText('work/generated/ci-cd-report.md', `${ciLines.join('\n')}\n`);
+writeText('out/ci-cd-report.md', ciLines.join('\n'));
+
+function copyArtifact(source, target) {
+  if (!fileExists(source)) throw new Error(`Cannot promote missing FR-04 artifact: ${source}`);
+  const targetAbsolute = absoluteFromRepo(target);
+  fs.mkdirSync(path.dirname(targetAbsolute), { recursive: true });
+  fs.copyFileSync(absoluteFromRepo(source), targetAbsolute);
+}
+
+const officialRunIds = project.postman?.officialFr04RunIds ?? [];
+const officialRuns = officialRunIds.map((id) => {
+  const run = runs.find((candidate) => candidate.id === id);
+  if (!run) throw new Error(`Unknown official FR-04 run: ${id}`);
+  return run;
+});
+if (officialRuns.length > 0) {
+  const primaryRun = officialRuns.find((run) => run.id === project.postman.officialFr04PrimaryRunId);
+  if (!primaryRun) throw new Error('Official FR-04 primary run is not in officialFr04RunIds');
+  const promotionPairs = [
+    [project.postman.collectionPath, 'out/fr04/postman/FR04-profile.postman_collection.json'],
+    [project.postman.supportingCollectionPaths[0], 'out/fr04/postman/FR04-profile-stateful.postman_collection.json'],
+    [project.postman.environmentPath, 'out/fr04/postman/FR04-profile.postman_environment.json'],
+    [project.postman.dataFiles[0], 'out/fr04/postman/FR04-cases.postman_data.json'],
+    [primaryRun.rawJsonPath, 'out/fr04/newman/FR04-canonical-input.json'],
+    [primaryRun.htmlReportPath, 'out/fr04/newman/FR04-canonical-input.html'],
+    [primaryRun.consoleLogPath, 'out/fr04/newman/FR04-canonical-input.stdout.log'],
+    [primaryRun.metadataPath, 'out/fr04/newman/FR04-canonical-input.metadata.json'],
+  ];
+  for (const item of evidence.filter((candidate) => candidate.id.startsWith('EVID-FR04-') && candidate.humanAttestation === true)) {
+    promotionPairs.push([item.path, `out/fr04/evidence/${item.id}.png`]);
+  }
+  const statefulRun = officialRuns.find((run) => run.id.includes('final-stateful'));
+  if (statefulRun) promotionPairs.push(
+    [statefulRun.rawJsonPath, 'out/fr04/newman/FR04-final-stateful.json'],
+    [statefulRun.htmlReportPath, 'out/fr04/newman/FR04-final-stateful.html'],
+    [statefulRun.consoleLogPath, 'out/fr04/newman/FR04-final-stateful.stdout.log'],
+    [statefulRun.metadataPath, 'out/fr04/newman/FR04-final-stateful.metadata.json'],
+  );
+  for (const [source, target] of promotionPairs) copyArtifact(source, target);
+  const manifestLines = [
+    '# FR-04 Finalized Artifacts',
+    '',
+    '> Promoted from canonical registries and official raw runs by `npm run hw06:derive`.',
+    '',
+    `- Primary run: ${primaryRun.id}`,
+    `- Collection SHA-256: ${primaryRun.collectionSha256}`,
+    `- Environment SHA-256: ${primaryRun.environmentSha256}`,
+    `- Data SHA-256: ${primaryRun.dataSha256}`,
+    `- Primary Newman HTML: out/fr04/newman/FR04-canonical-input.html`,
+    `- Supporting official runs: ${officialRuns.filter((run) => run.id !== primaryRun.id).map((run) => run.id).join(', ')}`,
+    '',
+    'The primary run preserves genuine bug-revealing failures. Latest canonical per-case results across the listed official runs are summarized in `work/generated/test-summary.md`.',
+    '',
+  ];
+  writeText('out/fr04/README.md', manifestLines.join('\n'));
+}
 
 for (const bug of bugs.filter((item) => item.status !== 'candidate')) {
   const issueBody = [
     `# ${bug.id}: ${bug.title}`,
     '',
-    `Test cases: ${(bug.caseIds ?? []).join(', ')}`,
-    `Confirmed by: ${bug.confirmedBy}`,
-    `Confirmed at: ${bug.confirmedAt ?? 'NOT RECORDED'}`,
+    `Test cases: ${(bug.publicCaseIds ?? bug.caseIds ?? []).join(', ')}`,
     '',
     '## Expected behavior',
     '',
@@ -160,7 +300,7 @@ for (const bug of bugs.filter((item) => item.status !== 'candidate')) {
     '',
     '## Local evidence paths',
     '',
-    ...(bug.evidencePaths ?? []).map((item) => `- ${item}`),
+    ...(bug.publicEvidencePaths ?? bug.evidencePaths ?? []).map((item) => `- ${item}`),
     '',
     '> Attach the required screenshot in GitHub before publishing. A local path is not a public attachment.',
     '',

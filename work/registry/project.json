@@ -48,6 +48,13 @@
     "collectionPath": "work/postman/fr04/FR04-profile.postman_collection.json",
     "supportingCollectionPaths": ["work/postman/fr04/FR04-profile-stateful.postman_collection.json"],
     "environmentPath": "work/postman/fr04/FR04-profile.postman_environment.json",
-    "dataFiles": ["work/postman/fr04/FR04-cases.postman_data.json"]
+    "dataFiles": ["work/postman/fr04/FR04-cases.postman_data.json"],
+    "officialFr04RunIds": [
+      "RUN-20260823040227192-fr04-canonical-input",
+      "RUN-20260823035912444-fr04-final-stateful",
+      "RUN-20260823040119709-fr04-final-closure",
+      "RUN-20260823022342040-fr04-ai027-corrected"
+    ],
+    "officialFr04PrimaryRunId": "RUN-20260823040227192-fr04-canonical-input"
   }
 }

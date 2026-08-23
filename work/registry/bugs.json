@@ -4,8 +4,16 @@
     {
       "id": "BUG-CANDIDATE-FR04-PHONE-FORMAT",
       "status": "published",
-      "title": "PUT /api/users/me persists phone values outside the documented format",
+      "title": "[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format",
       "caseIds": [
+        "FR04-AI-013",
+        "FR04-AI-014",
+        "FR04-AI-015",
+        "FR04-AI-016",
+        "FR04-AI-017",
+        "FR04-H-004"
+      ],
+      "publicCaseIds": [
         "FR04-AI-013",
         "FR04-AI-014",
         "FR04-AI-015",
@@ -28,6 +36,11 @@
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
         "work/runs/RUN-20260823022316955-fr04-phone-corrected/stdout.log"
       ],
+      "publicEvidencePaths": [
+        "work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.json",
+        "work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html",
+        "work/runs/RUN-20260823022316955-fr04-phone-corrected/stdout.log"
+      ],
       "screenshotPaths": [
         "work/evidence/screenshots/EVID-FR04-PHONE-FAILURE.png",
         "work/evidence/screenshots/EVID-FR04-PHONE-REPORT.png",
@@ -36,7 +49,7 @@
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23",
       "confirmationStatement": "Human confirmed the phone-format defect after reviewing the original failed partitions and clean targeted reproduction, including FR04-AI-013 and FR04-H-004.",
-      "note": "Published human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Original evidence is attested; the GitHub Issue page screenshot is captured and awaits human attestation.",
+      "note": "Published human-confirmed genuine bug. The verified phone contract requires a leading 0 and 10-11 digits, while the original and clean targeted executions observed invalid values persisted. The exact HTTP status remains unspecified. H-001/H-002 were corrected and remain outside this bug. Original and GitHub Issue-page screenshot evidence is human-attested.",
       "githubIssueNumber": 13,
       "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/13",
       "publishedAt": "2026-08-23T03:42:51.399Z",
@@ -45,19 +58,22 @@
     {
       "id": "BUG-CANDIDATE-FR04-ROLE-TAMPERING",
       "status": "published",
-      "title": "PUT /api/users/me accepts client-supplied protected account field changes",
+      "title": "[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin",
       "caseIds": [
         "FR04-AI-026",
         "FR04-AI-027"
+      ],
+      "publicCaseIds": [
+        "FR04-AI-026"
       ],
       "runIds": [
         "RUN-20260822062948963-fr04-input",
         "RUN-20260823022329715-fr04-role-corrected",
         "RUN-20260823022342040-fr04-ai027-corrected"
       ],
-      "expected": "Protected account fields must remain unchanged under FR-04/SEC-06 when the client submits attempted email or role changes.",
-      "actual": "FR04-AI-026 changed the authenticated user's persisted role from user to admin. Independent clean FR04-AI-027 changed the persisted email and role from their ordinary-user baselines. Protected-field assertions and exact cleanup assertions failed.",
-      "reproduction": "Authenticate as test@eshop.com and capture the ordinary-user baseline. For FR04-AI-026, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. For independently reseeded FR04-AI-027, PUT changed email and role values, then GET /api/users/me. Newman raw reports record the persisted protected-field mutations and cleanup failures.",
+      "expected": "FR-04/SEC-06 require the authenticated ordinary user's protected role to remain user when the client submits role=admin.",
+      "actual": "The clean FR04-AI-026 execution started from role=user, submitted role=admin, and read back the persisted role as admin.",
+      "reproduction": "Authenticate as test@eshop.com, capture the ordinary-user baseline role=user, PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. The clean Newman run records the persisted role mutation.",
       "evidencePaths": [
         "work/runs/RUN-20260822062948963-fr04-input/newman-report.json",
         "work/runs/RUN-20260822062948963-fr04-input/newman-report.html",
@@ -69,6 +85,11 @@
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/newman-report.html",
         "work/runs/RUN-20260823022342040-fr04-ai027-corrected/stdout.log"
       ],
+      "publicEvidencePaths": [
+        "work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.json",
+        "work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html",
+        "work/runs/RUN-20260823022329715-fr04-role-corrected/stdout.log"
+      ],
       "screenshotPaths": [
         "work/evidence/screenshots/EVID-FR04-ROLE-TAMPERING.png",
         "work/evidence/screenshots/EVID-FR04-ROLE-REPORT.png",
@@ -77,7 +98,7 @@
       "confirmedBy": "Human (explicit confirmation in chat)",
       "confirmedAt": "2026-08-23",
       "confirmationStatement": "Human confirmed the protected-field tampering defect after reviewing the clean FR04-AI-026 reproduction and independent clean FR04-AI-027 rerun.",
-      "note": "Published human-confirmed genuine bug covering the protected role mutation. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin. AI-027 and its email observation remain internal supporting records. Original evidence is attested; the GitHub Issue page screenshot is captured and awaits human attestation.",
+      "note": "Published human-confirmed genuine bug covering only the protected role mutation. A freshly reseeded SUT returned baseline role=user; attempted role=admin persisted admin. AI-027 and its email observation remain internal supporting records and are not part of the public finding. Original and GitHub Issue-page screenshot evidence is human-attested.",
       "githubIssueNumber": 14,
       "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
       "publishedAt": "2026-08-23T03:42:55.158Z",

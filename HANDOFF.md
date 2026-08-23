@@ -524,3 +524,34 @@ The student explicitly inspected and attested the two real published GitHub Issu
 - `EVID-FR04-ROLE-ISSUE`
 
 Their registry and metadata records now have `humanAttestation=true` with real attestation timestamps. `npm run hw06:derive` completed, `npm run hw06:validate` passed with 0 errors and 0 warnings, and `git diff --check` passed. FR-04 bug publication evidence is complete. The next work is the fresh FR-04 closure audit and CI/CD requirement; FR-08 remains not started.
+
+## 25. Latest checkpoint — FR-04 closure audit and real CI runs complete; CI attestation pending
+
+The current collection/run audit did not reuse the stale historical full run. The final official FR-04 primary execution is `RUN-20260823040227192-fr04-canonical-input`, using collection SHA-256 `35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f`, environment SHA-256 `c7709dfbb133ae0d4328e191b8aee9ca8247ee9390f41f5fd5d1a89e29e4a76a`, and data SHA-256 `905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14`. It captured Newman JSON, HTML, stdout, metadata, and `264/264` requests carrying `X-Student-Id`. The official supporting runs are recorded in `project.json`: the clean stateful run, H-006/H-007 closure run, and isolated AI-027 run. Two accidentally overlapping local runs remain preserved but explicitly excluded as harness-concurrency evidence; they contribute no canonical case results.
+
+The derived-summary defect was real. Historical PASS and FAIL observations for the same case were accumulated independently, producing unreconciled totals. `derive.mjs` now selects the latest canonical result per case, while `validate.mjs` independently checks duplicate mappings and `passed + failed = executed`. The reconciled FR-04 totals are:
+
+- 47 AI-generated cases; 7 human-added cases.
+- 44 executable and 44 executed cases.
+- 35 passed and 9 failed cases.
+- 8 failures map to the two published bugs.
+- 1 failure (`FR04-H-007`) remains a `SPEC-GAP-OBSERVATION`; the missing body produced persisted `name=null`, while exact missing-body behavior is undocumented.
+
+Eight genuinely exercised Postman features are registered and derived: collections; environments/environment variables; collection pre-request scripts; test scripts/assertions; data-driven Newman iterations; `pm.sendRequest` helper requests; Newman CLI with JSON/HTML reporters; and Postman Console.
+
+The real CI workflow is `.github/workflows/hw06-fr04-ci.yml`. It runs the explicitly identified stable canonical sample `FR04-AI-001` and does not replace or weaken the complete 44-case suite. It starts the backend on GitHub-hosted Ubuntu, waits for health, runs Newman with the student header, and uploads JSON/HTML/stdout/backend artifacts.
+
+Verified sample runs:
+
+- All-pass commit `d8670c47fd18ede663f4da11410d46ed598de891`; run `32617199599`; https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617199599; success; 5 Newman request executions, 6 assertions, 0 failed assertions.
+- Intentional-failure commit `84f837f95c44f928add2d719d0a5669688d45350`; run `32617321761`; https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32617321761; failure; 5 Newman request executions, 6 assertions, exactly 1 failed assertion named `FR04-AI-001 [CI-DEMO] intentional single failure`.
+- Restore commit `3f520db154443fbf34b126cf8c3cdce4c3698525` returned the branch sample to all-pass mode; its follow-up run `32617663218` succeeded. No required sample commit was rewritten or squashed.
+
+CI evidence is registered with real run IDs, URLs, commit SHAs, Newman artifacts, and screenshots:
+
+- `EVID-CI-FR04-ALL-PASS` — `work/evidence/screenshots/EVID-CI-FR04-ALL-PASS.png`
+- `EVID-CI-FR04-INTENTIONAL-FAILURE` — `work/evidence/screenshots/EVID-CI-FR04-INTENTIONAL-FAILURE.png`
+
+Both CI screenshots intentionally remain `humanAttestation=false`; these two warnings are the next human gate. Derived/finalized reports are `work/generated/ci-cd-report.md`, `out/ci-cd-report.md`, `work/generated/bug-report.md`, `out/bug-report.md`, `work/generated/postman-features.md`, and `out/postman-features.md`. Promoted official FR-04 Postman/Newman artifacts and provenance are under `out/fr04/`.
+
+FR-04 must not yet be labeled CLOSED. Remaining gates are: human visual attestation of the two CI screenshots; real UI/display-boundary verification for `FR04-AI-024` under SEC-04; and explicit disposition of the documented `FR04-H-007` specification-gap observation if closure policy requires more than retaining it as an exploratory non-bug failure. FR-08, Agent Skill/generator work, and unrelated external publication have not started.
