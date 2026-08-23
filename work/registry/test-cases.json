@@ -2644,6 +2644,144 @@
       "generationTool": "Claude Opus 5 (claude-opus-5) via Claude Code",
       "generationPrompt": "# HW06 AI Generation Prompt — HW06-B-FR08-POST-CHECKOUT / FR08-GEN-B6\n\n## Batch identity\n\n- Generation batch ID: `FR08-GEN-B6`\n- Coverage stage: `authorization-closure`\n- The invoking session records the actual tool/model and completion time immediately after the response.\n\n## Task boundary\n\nGenerate candidate API test cases only for the coverage slice stated below. Do not claim execution,\nobserved responses, or product bugs.\n\n## Why this batch exists\n\nAdversarial verification of batch `FR08-GEN-B2` found the `expired` authorization partition named in\nthe verified spec extract uncovered. The earlier assumption that an expired token cannot be produced\nwas checked against the repository and is wrong: the FR-04 suite already carries a reusable\nvalidly-signed-but-expired JWT fixture in\n`work/postman/fr04/FR04-profile.postman_environment.json` (`expiredToken`), whose signature verifies\nagainst the local SUT development secret and whose `exp` claim is `1` (1970-01-01T00:00:01Z).\n\nThe same local fixture mechanism is reused here for the FR-08 ordinary test user. This is a\ntest-input fixture only. No product oracle may be derived from implementation code.\n\n## Authoritative input\n\n- Verified spec extract: `work/selection/HW06-B-FR08-POST-CHECKOUT-verified-spec.md`, Authorization\n  row of `Domain partitions and boundaries` (valid token versus missing, malformed, expired, invalid\n  signature) and the SEC-02 row of `Applicable security requirements`\n- Exact source sections to consult if the extract is insufficient:\n  - `eshop-sut/README.md` SEC-02 and FR-08 logged-in-user rule\n  - `eshop-sut/api_specification.md` §4 Authorization header rule, §4.1 get cart, §4.4 order history\n\n## Existing cases to avoid duplicating\n\n- `FR08-AI-019` missing header, `FR08-AI-020` non-Bearer scheme, `FR08-AI-021` empty credential,\n  `FR08-AI-022` tampered signature, `FR08-AI-023` non-JWT string, `FR08-AI-024` foreign-signed token.\n- The new case must fail for expiry rather than for signature validity, so its token must verify\n  against the same secret the SUT uses to sign genuine logins.\n\n## Coverage slice for this batch\n\n- Required technique/category: the single uncovered `expired` authorization partition.\n- Parameters/states/SEC/schema rules in scope: SEC-02 valid-token requirement, the FR-08 logged-in\n  rule, absence of order creation, and absence of cart mutation.\n- Explicit exclusions: every other authorization partition, all value partitions, all schema faults,\n  and all state transitions already covered by batches `FR08-GEN-B1` through `FR08-GEN-B5`.\n\n## Required candidate fields\n\n- All candidate fields required by `hw06-api-test-generator`, including a stable temporary ID,\n  concrete request, observable oracle, basis, coverage tags, requirement references, exact source\n  anchors, setup/reset, assumptions, and generation context.\n- The oracle must be limited to authoritative security invariants: checkout is not authorized, no new\n  order is created, and protected checkout state is not mutated. The exact rejection status and error\n  schema remain `SPEC GAP`.\n- The candidate must state the exact token string used, so the case is executable and deterministic.\n- Repeat the supplied generation batch ID. The invoking session stamps the actual tool/model,\n  verbatim prompt, and completion time immediately after the response.\n\n## Output rule\n\nReturn candidates only. Do not label them VALID, do not silently correct the specification, and do\nnot invent runtime evidence. State `SPEC GAP` where the authoritative inputs do not define an oracle.\n",
       "generatedAt": "2026-08-23T07:16:05.889Z"
+    },
+    {
+      "id": "FR08-H-001",
+      "apiId": "HW06-B-FR08-POST-CHECKOUT",
+      "origin": "HUMAN",
+      "title": "Stale client total after the cart changes must not control the authoritative total",
+      "preconditions": "Logged-in user test@eshop.com starting from an empty cart; product id 1 price 100000 quantity 2 added so GET /api/cart shows a server-observed total of 200000; the pre-action order count N captured from GET /api/orders/my-orders",
+      "request": "First mutate the cart with POST /api/cart {\"id\": 2, \"name\": \"San pham B\", \"price\": 50000, \"quantity\": 1} so GET /api/cart shows a server-observed total of 250000, then POST /api/checkout with Authorization: Bearer <user JWT> and the stale body {\"total_amount\": 200000, \"shipping_address\": \"123 Le Loi, TP.HCM\"}",
+      "expected": "FR-08 requires the backend to derive the total from cart state, so the persisted order total must equal the server-observed cart total of 250000 captured immediately before checkout, not the stale client value 200000; the exact status and response schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "state_transition",
+        "domain_partition"
+      ],
+      "requirementRefs": [
+        "FR-08",
+        "API-SPEC-4.2",
+        "API-SPEC-4.5"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-08: Tong tien thanh toan duoc tinh tu dong tu gio hang; backend phai tu tinh lai tong tien",
+        "eshop-sut/api_specification.md - 4.2 Them vao gio hang",
+        "eshop-sut/api_specification.md - 4.5 Lay chi tiet mot don hang"
+      ],
+      "setupReset": "Setup: login as test@eshop.com; start from an empty cart by restarting the backend or by using a user that has not added items; POST /api/cart {id:1,name:\"San pham A\",price:100000,quantity:2}; GET /api/cart and record the 200000 baseline; capture N from GET /api/orders/my-orders; then add the second line and GET /api/cart again to record the 250000 pre-checkout state. Read-back: GET /api/orders/:id for the created order, falling back to the newest entry of GET /api/orders/my-orders, and compare the persisted total against the recorded 250000. Reset: record the created order id; restart the backend when a clean database is required.",
+      "assumptions": "If GET /api/cart reports a total different from 250000 immediately before checkout, the recorded server-observed value is authoritative for the comparison rather than the arithmetic expectation.",
+      "humanExtensionRationale": "AI-proposed idea A, reviewed and explicitly selected by the student at the HG-FR08-EXT-01 gate. It closes a time-of-check/time-of-use gap: every AI mismatch case (FR08-AI-002, FR08-AI-003, FR08-AI-010, FR08-AI-011) forges a total against a cart that never moved, and FR08-AI-034 mutates the cart but then submits the matching total, so no AI case exercises the ordering relationship between a cart change and a stale client total."
+    },
+    {
+      "id": "FR08-H-002",
+      "apiId": "HW06-B-FR08-POST-CHECKOUT",
+      "origin": "HUMAN",
+      "title": "One user checkout total must derive from that user own cart, not another user cart",
+      "preconditions": "Two logged-in users: user A is test@eshop.com holding product id 1 price 100000 quantity 2 for a server-observed cart total of 200000, and user B is a second account registered through POST /api/register with a run-unique email holding product id 1 price 100000 quantity 2 plus product id 2 price 50000 quantity 3 for a deliberately different server-observed cart total of 350000; both carts confirmed by GET /api/cart with their own tokens and user A pre-action order count N captured",
+      "request": "POST /api/checkout with Authorization: Bearer <user A JWT> and body {\"total_amount\": 200000, \"shipping_address\": \"123 Le Loi, TP.HCM\"}",
+      "expected": "FR-08 derives the total from cart state and SEC-02 binds the operation to the token identity, so the persisted total of user A order must be exactly 200000, the value derived from user A own cart, and must not be 350000 or any figure derived from user B cart; the exact status and response schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "security",
+        "state_transition"
+      ],
+      "requirementRefs": [
+        "FR-08",
+        "SEC-02",
+        "API-SPEC-4.1",
+        "API-SPEC-4.5"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-08: Tong tien thanh toan duoc tinh tu dong tu gio hang",
+        "eshop-sut/README.md - SEC-02: Cac API co tinh bao mat phai yeu cau JWT Token hop le",
+        "eshop-sut/api_specification.md - 4.1 Lay gio hang",
+        "eshop-sut/api_specification.md - 4.5 Lay chi tiet mot don hang"
+      ],
+      "setupReset": "Setup: login as user A; register user B with POST /api/register using a run-unique email and log in; build both carts and confirm each with GET /api/cart using the matching token; capture N for user A. Read-back: GET /api/orders/:id for the created order using the user A token and compare the persisted total against 200000; also confirm user B cart still reports 350000. Reset: record the created order id; restart the backend when a clean database is required.",
+      "assumptions": "Assumes registration of a second account succeeds; if it does not, the case is reported as blocked rather than silently reduced to a single-user check.",
+      "humanExtensionRationale": "AI-proposed idea B-prime, reviewed and explicitly selected by the student at the HG-FR08-EXT-01 gate. It closes a derivation-isolation gap: FR08-AI-039 proves only that one user checkout does not clear another user cart and FR08-AI-025 proves only that the order does not appear in another user history, so neither asserts which cart the persisted total was actually computed from."
+    },
+    {
+      "id": "FR08-H-003",
+      "apiId": "HW06-B-FR08-POST-CHECKOUT",
+      "origin": "HUMAN",
+      "title": "A rejected checkout attempt must not corrupt the following valid checkout derivation",
+      "preconditions": "Logged-in user test@eshop.com whose cart contains product id 1 price 100000 quantity 2 for a server-observed total of 200000, confirmed by GET /api/cart, with the pre-action order count N captured from GET /api/orders/my-orders",
+      "request": "First POST /api/checkout with no Authorization header and body {\"total_amount\": 200000, \"shipping_address\": \"123 Le Loi, TP.HCM\"} and observe the refusal, then POST /api/checkout with Authorization: Bearer <user JWT> and the same body",
+      "expected": "SEC-02 and the FR-08 login rule require the first attempt to be refused, and FR-08 requires the following authorised checkout to derive its total from the intact cart, so the persisted order total must be exactly 200000 and the order count must become exactly N+1, meaning the refused attempt neither consumed the cart nor created an order; the exact rejection status and response schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "state_transition",
+        "security"
+      ],
+      "requirementRefs": [
+        "FR-08",
+        "SEC-02",
+        "API-SPEC-4.1",
+        "API-SPEC-4.4"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-08: Chi nguoi dung da dang nhap moi tien hanh thanh toan duoc; backend phai tu tinh lai tong tien",
+        "eshop-sut/README.md - SEC-02",
+        "eshop-sut/api_specification.md - 4.1 Lay gio hang",
+        "eshop-sut/api_specification.md - 4.4 Lay lich su don hang ca nhan"
+      ],
+      "setupReset": "Setup: login; start from an empty cart; POST /api/cart {id:1,name:\"San pham A\",price:100000,quantity:2}; GET /api/cart to record the 200000 baseline; capture N. Read-back: after the refused attempt confirm GET /api/cart still reports the same lines, then after the authorised checkout compare the persisted total from GET /api/orders/:id against 200000 and the count from GET /api/orders/my-orders against N+1. Reset: record the created order id; restart the backend when a clean database is required.",
+      "assumptions": "None beyond the documented FR-08 and SEC-02 rules.",
+      "humanExtensionRationale": "AI-proposed idea C, reviewed and explicitly selected by the student at the HG-FR08-EXT-01 gate. It closes a recovery-path gap: FR08-AI-037 stops at the cart read-back after a refused attempt and never performs a subsequent valid checkout, so no AI case can detect a divergence between what GET /api/cart reports and what the checkout derivation actually uses afterwards."
+    },
+    {
+      "id": "FR08-H-004",
+      "apiId": "HW06-B-FR08-POST-CHECKOUT",
+      "origin": "HUMAN",
+      "title": "Checkout of a cart line referencing a product that does not exist in the catalogue",
+      "preconditions": "Logged-in user test@eshop.com starting from an empty cart; GET /api/products/9999 first confirms that product id 9999 does not resolve to a catalogue product; the pre-action order count N captured from GET /api/orders/my-orders",
+      "request": "POST /api/cart {\"id\": 9999, \"name\": \"Ghost Product\", \"price\": 100000, \"quantity\": 1} with the user token, then GET /api/cart to record the server-observed cart state, then POST /api/checkout with Authorization: Bearer <user JWT> and body {\"total_amount\": 100000, \"shipping_address\": \"123 Le Loi, TP.HCM\"}",
+      "expected": "No authoritative source defines whether a cart line for a nonexistent product must be rejected, so the exact behavior of both the cart call and the checkout call is SPEC GAP and is recorded rather than judged; the only asserted invariant is the documented FR-08 rule that any order actually created must carry the total derived from the cart state the server reported immediately before checkout",
+      "basis": "exploratory",
+      "coverage": [
+        "state_transition",
+        "domain_partition"
+      ],
+      "requirementRefs": [
+        "FR-08",
+        "API-SPEC-4.2",
+        "API-SPEC-3.2"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/api_specification.md - 4.2 Them vao gio hang body carries a client-supplied id, name and price",
+        "eshop-sut/api_specification.md - 3.2 Xem chi tiet mot san pham",
+        "eshop-sut/README.md - FR-08 cart-derived total rule"
+      ],
+      "setupReset": "Setup: login; start from an empty cart; call GET /api/products/9999 and record that the product does not exist; add the ghost cart line; GET /api/cart and record exactly what the server reports. Read-back: GET /api/orders/my-orders compared against N, and GET /api/orders/:id when an order is created. Reset: record any created order id; restart the backend when a clean database is required. Execution limitation: if the cart call refuses the nonexistent product so that POST /api/checkout cannot be meaningfully reached with that line, record the limitation honestly and do not change the oracle to manufacture a result.",
+      "assumptions": "Assumes product id 9999 is absent from the seeded catalogue; the case verifies that assumption at run time instead of trusting it.",
+      "humanExtensionRationale": "AI-proposed idea D-prime, reviewed and explicitly selected by the student at the HG-FR08-EXT-01 gate. It closes a referential-validity gap: FR08-AI-053 manipulates only the price of a real product and asks which price the derivation trusts, so no AI case submits a cart line for a product that does not exist at all."
+    },
+    {
+      "id": "FR08-H-005",
+      "apiId": "HW06-B-FR08-POST-CHECKOUT",
+      "origin": "HUMAN",
+      "title": "Two completed orders must persist independently with their own totals and addresses",
+      "preconditions": "Logged-in user test@eshop.com starting from an empty cart; the pre-action order count N captured from GET /api/orders/my-orders",
+      "request": "Checkout one: cart holds product id 1 price 100000 quantity 2 for a server-observed total of 200000, then POST /api/checkout with body {\"total_amount\": 200000, \"shipping_address\": \"111 Nguyen Hue, Quan 1\"} and the created order id captured. Checkout two: after the cart is empty, POST /api/cart {\"id\": 2, \"name\": \"San pham B\", \"price\": 50000, \"quantity\": 1} for a server-observed total of 50000, then POST /api/checkout with body {\"total_amount\": 50000, \"shipping_address\": \"222 Le Duan, Quan 3\"}. Both requests carry Authorization: Bearer <user JWT>",
+      "expected": "Each checkout derives its own total from its own cart state per FR-08 and each order is persisted separately, so re-reading both orders through GET /api/orders/:id after the second checkout must show order one still carrying total 200000 with address 111 Nguyen Hue, Quan 1 and order two carrying total 50000 with address 222 Le Duan, Quan 3, with order one not overwritten, merged, or re-addressed by the later checkout; the exact response schema is SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "state_transition"
+      ],
+      "requirementRefs": [
+        "FR-08",
+        "API-SPEC-4.4",
+        "API-SPEC-4.5"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-08: Tong tien thanh toan duoc tinh tu dong tu gio hang; sau thanh toan thanh cong, gio hang duoc xoa",
+        "eshop-sut/api_specification.md - 4.4 Lay lich su don hang ca nhan",
+        "eshop-sut/api_specification.md - 4.5 Lay chi tiet mot don hang"
+      ],
+      "setupReset": "Setup: login; start from an empty cart; capture N; build cart one, confirm it with GET /api/cart, check out, and capture the first order id; confirm the cart is empty, build cart two, confirm it with GET /api/cart, check out, and capture the second order id. Read-back: GET /api/orders/:id for both ids after the second checkout and compare each persisted total and address against its own submitted values; also confirm the count is N+2. Reset: record both created order ids; restart the backend when a clean database is required.",
+      "assumptions": "Assumes GET /api/orders/:id exposes both the persisted total and the shipping address; if the address is not returned, the address half of the assertion is recorded as an evidence gap rather than dropped silently.",
+      "humanExtensionRationale": "AI-proposed idea E, reviewed and explicitly selected by the student at the HG-FR08-EXT-01 gate. It closes an order-immutability gap: FR08-AI-032 asserts only that the order count increments and the corrected FR08-AI-040 asserts only the second order total, so no AI case re-reads the first order after a second checkout to detect an overwrite or a cross-linked address."
     }
   ]
 }

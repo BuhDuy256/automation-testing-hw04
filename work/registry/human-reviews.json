@@ -376,6 +376,462 @@
       "reviewedAt": "2026-08-22T05:09:28.2202945Z",
       "reasoning": "Duplicate JSON keys have unstable parser semantics and no useful official oracle for this scoped API; low-value compared with meaningful required coverage.",
       "correction": "Rejected from the reviewed executable suite; no replacement AI artifact is fabricated."
+    },
+    {
+      "caseId": "FR08-AI-001",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-002",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Directly tests the explicit FR-08 rule that the backend recalculates the total and does not accept the client value; single injected fault with a persisted-state read-back.",
+      "correction": "Accepted with one traceability correction: the security coverage tag is not supported by the requirement references, so treat this as a domain/cart-derived-total test in the reviewed usable view. The original AI candidate is preserved unchanged as generation provenance."
+    },
+    {
+      "caseId": "FR08-AI-003",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Distinct inflation partition of the same explicit FR-08 rule, with a different real-world risk from the deflation case.",
+      "correction": "Accepted with one traceability correction: the security coverage tag is not supported by the requirement references, so treat this as a domain/cart-derived-total test in the reviewed usable view. The original AI candidate is preserved unchanged as generation provenance."
+    },
+    {
+      "caseId": "FR08-AI-004",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-005",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-006",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-007",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-008",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-009",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-010",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The candidate frames itself as the nearest-neighbour boundary of the mismatch partition, which restates the purpose of FR08-AI-002. Its genuinely distinct risk is that the client submits a fractional forged total.",
+      "correction": "Keep the concrete inputs cart-derived total 200000 and client total_amount 199999.99. Corrected oracle: the backend derives the authoritative total from cart state, the client-supplied 199999.99 must not control the persisted order total, and the resulting authoritative total remains the cart-derived value. Do not assert that fractional values are forbidden or that persisted totals must be integers; no authoritative source states that. Exact undocumented HTTP/error behavior remains SPEC GAP."
+    },
+    {
+      "caseId": "FR08-AI-011",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-012",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The candidate states that the address carries Vietnamese diacritics but the literal value recorded in the request has none, so it is not executable exactly as written.",
+      "correction": "Use the exact literal value 12 Duong Nguyen Van Cu, Phuong 4, Quan 5, Thanh pho Ho Chi Minh written with real Vietnamese Unicode diacritics on every accented syllable. Verify exact persisted read-back text where the authoritative observation mechanism supports it, and record an evidence gap if the order-detail endpoint does not return the stored address."
+    },
+    {
+      "caseId": "FR08-AI-013",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-014",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-015",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-016",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-017",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-018",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The specification defines no maximum length and no preservation or truncation rule for shipping_address, but the candidate turns the exploratory 1000-character input into a requirement that the stored value must remain exactly 1000 characters.",
+      "correction": "Keep the concrete 1000-character input as a robustness partition. Corrected oracle: observe whether the request is accepted or rejected; if an order is created, record the returned address length and value through the available read-back; do not classify truncation, normalization, or rejection as a contract violation unless an authoritative source supports that judgment; any created order must still respect the documented cart-derived-total invariant. Exact length and normalization behavior remains SPEC GAP."
+    },
+    {
+      "caseId": "FR08-AI-019",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-020",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-021",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-022",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The mutation rule replace the last character with X is not deterministic when the signature already ends in X, so two runs could send different tokens.",
+      "correction": "Make the tampering deterministic: replace the final signature character with A, or with B when it is already A. A fixed tampered token stored as an environment constant is equally acceptable and is preferred when byte-stability across runs matters."
+    },
+    {
+      "caseId": "FR08-AI-023",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-024",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Duplicate diagnostic of FR08-AI-022: a token signed with a foreign secret and a token whose signature was tampered with both fail at the same signature-verification step and assert the same invariant, while this one additionally requires an offline HMAC-SHA256 construction.",
+      "correction": "Drop FR08-AI-024. FR08-AI-022 remains the canonical invalid-signature diagnostic for the reviewed suite."
+    },
+    {
+      "caseId": "FR08-AI-025",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-026",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-027",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-028",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The oracle is internally inconsistent: the title asserts the value is stored and returned unchanged while the body records API-side rejection as SPEC GAP. Listing SEC-04 in the requirement references also reads as a SEC-04 conformance claim that API read-back cannot support.",
+      "correction": "Limit the purpose explicitly to preserving the HTML-like value through the API while recording that UI and display safety requires separate evidence. Make the oracle conditional: if the request is accepted, the read-back value is character-identical; if it is rejected, no order is created. State in the case that API-side observation is not UI/display-boundary SEC-04 verification, so SEC-04 conformance is never claimed from this case."
+    },
+    {
+      "caseId": "FR08-AI-029",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-030",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-031",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-032",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-033",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-034",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-035",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The setup is not reliably executable: using a session that has not added items does not empty an existing cart, because implementation cart state is process memory keyed to the user rather than to the login session.",
+      "correction": "Reach the empty-cart state deterministically by registering a fresh user with POST /api/register, logging in, and checking out without ever calling POST /api/cart; restarting the backend immediately before the case is the fallback. Do not claim that logging in again clears the in-memory cart. The empty-cart outcome itself remains exploratory because the specification does not define it."
+    },
+    {
+      "caseId": "FR08-AI-036",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The case does not need to invent the exact empty-cart response. After the first successful checkout FR-08 requires the cart to be cleared, so the second checkout must not use the client-supplied 200000 as an authoritative total for the now-empty cart.",
+      "correction": "Accepted as-is. The observed order count and the exact second-request behavior may remain exploratory and SPEC GAP."
+    },
+    {
+      "caseId": "FR08-AI-037",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-038",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-039",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-040",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The purpose is genuinely distinct from FR08-AI-031, because a cart can read as empty while the checkout derivation still uses stale state, but the case is framed as cart usability in an FR-07 flavour and never states how no residue is observed.",
+      "correction": "Rewrite around the checkout-specific state transition: successful checkout, cart becomes empty, adding a new item establishes a new post-checkout cart, and the second order's server-derived total is exactly 50000 while purchased items do not reappear in it. State the observation explicitly: compare the second order's total through GET /api/orders/:id, and assert its item composition where the detail endpoint exposes items, otherwise record an evidence gap."
+    },
+    {
+      "caseId": "FR08-AI-041",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-042",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-043",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The malformed payload is described narratively rather than as exact bytes, so two testers could send different inputs.",
+      "correction": "Send exactly the raw body {\"total_amount\": 200000, \"shipping_address\": with no closing quote or brace, and require the Postman implementation to send that raw string without re-serializing it into valid JSON."
+    },
+    {
+      "caseId": "FR08-AI-044",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-045",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-046",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-047",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-048",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The oracle mixes unrelated fields by requiring that any created order carries 200000 rather than a default or empty address, which compares a numeric total against an address state and is not logically valid.",
+      "correction": "Keep the purpose Content-Type text/plain with a JSON-looking payload. Corrected oracle: observe whether the endpoint parses or rejects the request, with exact Content-Type handling remaining SPEC GAP; if an order is created, its total must still be derived from the current cart; separately record the persisted shipping_address value if it is observable. Do not compare a numeric total against an address state."
+    },
+    {
+      "caseId": "FR08-AI-049",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The request is byte-identical to FR08-AI-001 and the case asserts no invariant; recording an undocumented success response shape is evidence attached to an existing case, not a separate product test case.",
+      "correction": "Drop FR08-AI-049. Record the observed success status, Content-Type, and body fields as part of the FR08-AI-001 execution evidence."
+    },
+    {
+      "caseId": "FR08-AI-050",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The request is byte-identical to FR08-AI-019 and the state invariant is already asserted there, so the case only records an observation rather than testing behavior.",
+      "correction": "Drop FR08-AI-050. Record the observed rejection status and error body as part of the FR08-AI-019 execution evidence."
+    },
+    {
+      "caseId": "FR08-AI-051",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Executable as written from a stated starting state, one injected fault, and an oracle anchored to an authoritative FR-08, SEC, or API-specification rule with undocumented behavior kept as SPEC GAP; not a duplicate of another reviewed case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR08-AI-052",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Quantity 99 is not a documented boundary, and replacing it with another arbitrary large quantity such as 99999 would still invent a boundary the authoritative specification does not define. Cart-derived arithmetic is already covered by the baseline, multi-line, aggregated-quantity, and minimum-cart cases.",
+      "correction": "Drop FR08-AI-052 and do not create an arbitrary large-quantity replacement to preserve the case count. If later real runtime evidence reveals an actual numeric or quantity boundary, treat that separately."
+    },
+    {
+      "caseId": "FR08-AI-053",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "The risk is useful, but the case has no source-grounded oracle about whether the cart must use the catalogue price. POST /api/cart exposes a client-supplied price, while FR-08 only states that checkout must derive the authoritative total from cart state.",
+      "correction": "Keep the setup using a real product with a manipulated cart price. Before checkout, read back the actual server-observed cart state. FR-08 oracle: the persisted checkout total must equal the total derived from the cart state actually observed by the server immediately before checkout. Do not assert that checkout must replace the cart price with the catalogue price. Whether the cart endpoint should have accepted the manipulated price is an upstream specification-gap observation, not an FR-08 bug oracle."
+    },
+    {
+      "caseId": "FR08-AI-054",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Duplicate of FR08-AI-036: both execute the same checkout-after-checkout state transition and assert the same effective invariant, and because Newman runs sequentially, omitting the intermediate read changes nothing on the server.",
+      "correction": "Drop FR08-AI-054 and keep FR08-AI-036. Do not relabel a sequential duplicate as a race-condition test; a genuine concurrency test would need parallel clients outside the agreed Postman/Newman toolchain."
+    },
+    {
+      "caseId": "FR08-AI-055",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "No authoritative character-set, normalization, or truncation rule exists for shipping_address, but the wording requires the value to be preserved or consistently normalised and not truncated, which is stronger than the specification.",
+      "correction": "Keep the exact value 123 Le Loi\\r\\n\\tTP.HCM. Corrected oracle: observe acceptance or rejection; if accepted, record the exact read-back value; do not classify preservation, normalization, or truncation as a contract violation without an authoritative rule; if an order is created, the cart-derived-total invariant still applies. Character normalization behavior remains SPEC GAP."
+    },
+    {
+      "caseId": "FR08-AI-056",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "No authoritative source defines whether an admin user may purchase, so the case has no oracle beyond what FR08-AI-001 already proves. SEC-03 governs admin routes and the verified extract records it as not applicable to checkout, so the case would claim role-boundary coverage this API does not have.",
+      "correction": "Drop FR08-AI-056. Do not invent an authorization rule for an undocumented admin-as-customer scenario, and do not claim SEC-03 coverage for checkout."
+    },
+    {
+      "caseId": "FR08-AI-057",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T07:33:31.094Z",
+      "reasoning": "Closes the documented expired-token authorization partition with a validly signed but expired fixture, so it fails for expiry rather than for signature validity and is therefore distinct from FR08-AI-022.",
+      "correction": "Accepted as-is. Preserve the expired token strictly as test input; no product oracle may be derived from source code."
     }
   ]
 }
