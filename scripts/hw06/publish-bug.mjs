@@ -63,6 +63,9 @@ function issueDetails(bug) {
     return {
       title: '[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format',
       caseIds: bug.caseIds,
+      expected: bug.expected,
+      actual: bug.actual,
+      reproduction: bug.reproduction,
       evidencePaths: [
         'work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.json',
         'work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html',
@@ -80,6 +83,9 @@ function issueDetails(bug) {
     return {
       title: '[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin',
       caseIds: ['FR04-AI-026'],
+      expected: 'The authenticated ordinary user role must remain user; the client must not be able to change the protected role field under FR-04 and SEC-06.',
+      actual: 'FR04-AI-026 submitted role=admin and the subsequent authenticated GET returned the user profile with persisted role=admin instead of the baseline role=user.',
+      reproduction: 'Authenticate as test@eshop.com and verify the authenticated baseline role is user. Submit PUT /api/users/me with role=admin and otherwise valid editable fields, then GET /api/users/me. The clean targeted Newman run records the persisted role mutation.',
       evidencePaths: [
         'work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.json',
         'work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html',
@@ -108,12 +114,12 @@ function issueBody(bug, commitSha) {
     '## Preconditions', '', details.preconditions, '',
     `Related canonical test cases: ${details.caseIds.join(', ')}`,
     '',
-    '## Expected behavior', '', bug.expected, '',
-    '## Actual behavior', '', bug.actual, '',
+    '## Expected behavior', '', details.expected, '',
+    '## Actual behavior', '', details.actual, '',
     '## Why this is a genuine SUT defect', '', details.genuineDefect, '',
     '## Impact assessment', '', details.impact, '',
     '## Reproducibility', '', details.reproducibility, '',
-    '## Reproduction', '', bug.reproduction, '',
+    '## Reproduction', '', details.reproduction, '',
     `Evidence commit: ${commitSha}`,
     '',
     '## Evidence', '',
