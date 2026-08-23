@@ -394,4 +394,13 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(`${OUT}/FR15-products.postman_collection.json`, `${JSON.stringify(collection, null, 2)}\n`);
 fs.writeFileSync(`${OUT}/FR15-products.postman_environment.json`, `${JSON.stringify(environment, null, 2)}\n`);
 fs.writeFileSync(`${OUT}/FR15-products.postman_data.json`, `${JSON.stringify(rows, null, 2)}\n`);
+const targetAuthorizationIds = ['FR15-AI-027', 'FR15-AI-028', 'FR15-AI-031', 'FR15-AI-032', 'FR15-H-002'];
+const targetValidationIds = ['FR15-AI-003', 'FR15-AI-009', 'FR15-AI-017', 'FR15-AI-047', 'FR15-H-003', 'FR15-H-005'];
+const targetRows = (ids) => ids.map((id) => {
+  const row = rows.find((candidate) => candidate.caseId === id);
+  if (!row) throw new Error(`target case is not reviewed-usable: ${id}`);
+  return row;
+});
+fs.writeFileSync(`${OUT}/FR15-target-authorization.postman_data.json`, `${JSON.stringify(targetRows(targetAuthorizationIds), null, 2)}\n`);
+fs.writeFileSync(`${OUT}/FR15-target-validation.postman_data.json`, `${JSON.stringify(targetRows(targetValidationIds), null, 2)}\n`);
 console.log(`FR-15 Postman build: ${rows.length} reviewed-usable cases, ${Object.keys(cfg).length} configurations.`);

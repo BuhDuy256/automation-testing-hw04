@@ -86,7 +86,9 @@
     "dataFiles": [
       "work/postman/fr15/FR15-products.postman_data.json"
     ],
-    "officialRunIds": [],
-    "officialPrimaryRunId": null
+    "officialRunIds": [
+      "RUN-20260823102155874-fr15-canonical-full-suite"
+    ],
+    "officialPrimaryRunId": "RUN-20260823102155874-fr15-canonical-full-suite"
   }
 }
