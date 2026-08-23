@@ -782,3 +782,56 @@ FR-15                              NOT STARTED
 there until the student answers `HG-FR08-REV-01` explicitly. The next action after that response is
 to write only the approved or overridden verdicts, then run `ACT-EXT-01` for at least five
 human-added FR-08 cases.
+
+## 31. Checkpoint — FR-08 generation/review repaired, gate reopened
+
+The student rejected the revision-1 `48 VALID / 5 INCOMPLETE / 3 INVALID` proposal and directed
+targeted repairs before any human verdict is recorded. This checkpoint completes those repairs.
+
+Corrections made:
+
+- The revision-1 claim that the `expired` JWT partition cannot be tested black-box was **wrong** and
+  is retracted. `work/postman/fr04/FR04-profile.postman_environment.json` already carries a
+  validly-signed-but-expired fixture (`exp = 1`) whose signature verifies against the local SUT
+  development secret. The mechanism was re-minted for user id 2 and used as a **test input only**.
+- New bounded batch `FR08-GEN-B6` (authorization-closure) generated `FR08-AI-057`, the expired-token
+  case, with fresh prospective provenance. FR-08 AI candidates are now 57.
+- All original `FR08-AI-001` … `FR08-AI-056` candidates, prompts, and timestamps are unchanged.
+- `work/reviews/HG-FR08-REV-01-proposal.md` was rebuilt at full audit detail for every case: purpose,
+  input/starting state, oracle, recommendation, reason, correction, source anchor, and uncertainty.
+- `work/prompts/fr08/FR08-GEN-coverage-ledger.md` corrected: the expired partition is covered, and
+  the retracted reasoning is recorded in a revision-2 note.
+
+Revised AI recommendation (still **not** a student verdict): 44 VALID, 8 INCOMPLETE, 5 INVALID.
+
+```text
+INCOMPLETE  FR08-AI-010 FR08-AI-012 FR08-AI-022 FR08-AI-028
+            FR08-AI-035 FR08-AI-040 FR08-AI-043 FR08-AI-052
+INVALID     FR08-AI-024 FR08-AI-049 FR08-AI-050 FR08-AI-054 FR08-AI-056
+```
+
+Changes from revision 1: `FR08-AI-010`'s correction no longer invents an integer-total rule and keeps
+the forged-total invariant; `FR08-AI-028` limited to an API-side observation that never claims SEC-04
+conformance; `FR08-AI-040` kept but sharpened to a checkout-specific transition; `FR08-AI-052`
+questioned as redundant unless anchored to a real precision boundary; `FR08-AI-054` and
+`FR08-AI-056` reclassified as duplicates. If accepted in full, the usable AI-origin suite is 52.
+
+Five ACT-EXT-01 ideas are prepared in `work/reviews/HG-FR08-EXT-01-ai-proposals.md` as explicitly
+non-canonical AI proposals with no `FR08-H-###` identifiers. Two of the student's suggested
+directions were already covered and were replaced (`B′` cart-to-total isolation across two users,
+`D′` cart line for a nonexistent product).
+
+Validation: `npm run hw06:derive` PASS, `npm run hw06:validate` PASS (0 errors, 0 warnings),
+`git diff --check` clean. Commit `4e48655`. `out/` is untouched by this checkpoint.
+
+Status:
+
+```text
+FR-08 ACT-GEN-01                   COMPLETE (57 candidates, batches B1-B6)
+FR-08 ACT-REV-01                   BLOCKED — awaiting the student response to HG-FR08-REV-01
+FR-08 ACT-EXT-01                   AI proposals prepared; awaiting student selection
+FR-15                              NOT STARTED
+```
+
+`work/registry/human-reviews.json` still holds 0 FR-08 records. Nothing may be written there, and no
+`origin=HUMAN` FR-08 case may be created, until the student responds explicitly.
