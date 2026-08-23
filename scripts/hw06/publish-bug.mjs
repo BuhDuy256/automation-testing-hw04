@@ -61,6 +61,13 @@ function imageLink(commitSha, screenshotPath) {
 function issueDetails(bug) {
   if (bug.id === 'BUG-CANDIDATE-FR04-PHONE-FORMAT') {
     return {
+      title: '[HW06][FR-04] PUT /api/users/me persists phone values outside the documented format',
+      caseIds: bug.caseIds,
+      evidencePaths: [
+        'work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.json',
+        'work/runs/RUN-20260823022316955-fr04-phone-corrected/newman-report.html',
+        'work/runs/RUN-20260823022316955-fr04-phone-corrected/stdout.log'
+      ],
       endpoint: 'PUT /api/users/me',
       requirement: 'FR-04 Personal profile management: the phone must begin with 0 and contain 10-11 digits (eshop-sut/README.md, FR-04). The selected operation is documented in eshop-sut/api_specification.md, §2.2.',
       preconditions: 'Freshly seeded local SUT; authenticate as test@eshop.com; capture the authenticated user profile baseline before mutation.',
@@ -71,12 +78,19 @@ function issueDetails(bug) {
   }
   if (bug.id === 'BUG-CANDIDATE-FR04-ROLE-TAMPERING') {
     return {
+      title: '[HW06][FR-04][SEC-06] PUT /api/users/me allows a client to persist role=admin',
+      caseIds: ['FR04-AI-026'],
+      evidencePaths: [
+        'work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.json',
+        'work/runs/RUN-20260823022329715-fr04-role-corrected/newman-report.html',
+        'work/runs/RUN-20260823022329715-fr04-role-corrected/stdout.log'
+      ],
       endpoint: 'PUT /api/users/me',
       requirement: 'FR-04 Personal profile management: a user cannot change the role attribute. SEC-06 states that the profile-update API must not allow the client to change role (eshop-sut/README.md, FR-04 and SEC-06). The selected operation is documented in eshop-sut/api_specification.md, §2.2.',
       preconditions: 'Freshly seeded local SUT; authenticate as test@eshop.com; verify the authenticated baseline role is user before submitting the mutation.',
-      genuineDefect: 'The clean targeted run verified the ordinary-user baseline before the PUT, submitted role=admin, reached the protected-field persistence assertion, and observed the stored role become admin. An independent clean rerun of FR04-AI-027 reproduced protected-field mutation. This is not a setup or mapping failure.',
+      genuineDefect: 'The clean targeted run verified the ordinary-user baseline before the PUT, submitted role=admin, reached the protected-field persistence assertion, and observed the stored role become admin. This is not a setup or mapping failure.',
       impact: 'A client can mutate the protected role field from user to admin. This creates a privilege-boundary exposure because downstream authorization that trusts the stored role could treat the account as an administrator. This report does not claim that a separate admin action was executed.',
-      reproducibility: 'Reproduced in the original data-driven run and in the clean targeted runs RUN-20260823022329715-fr04-role-corrected and RUN-20260823022342040-fr04-ai027-corrected. The primary finding is the role mutation; the email mutation observed in FR04-AI-027 is retained only as supporting protected-field evidence.'
+      reproducibility: 'Reproduced in the clean targeted run RUN-20260823022329715-fr04-role-corrected.'
     };
   }
   throw new Error(`No publication details configured for ${bug.id}`);
@@ -85,15 +99,14 @@ function issueDetails(bug) {
 function issueBody(bug, commitSha) {
   const details = issueDetails(bug);
   return [
-    `# ${bug.id}: ${bug.title}`,
+    `# ${details.title}`,
     '',
+    `Canonical bug ID: ${bug.id}`,
     `Affected endpoint: ${details.endpoint}`,
     `Requirement / specification: ${details.requirement}`,
     '',
     '## Preconditions', '', details.preconditions, '',
-    `Related canonical test cases: ${bug.caseIds.join(', ')}`,
-    `Confirmed by: ${bug.confirmedBy}`,
-    `Confirmed at: ${bug.confirmedAt}`,
+    `Related canonical test cases: ${details.caseIds.join(', ')}`,
     '',
     '## Expected behavior', '', bug.expected, '',
     '## Actual behavior', '', bug.actual, '',
@@ -104,7 +117,7 @@ function issueBody(bug, commitSha) {
     `Evidence commit: ${commitSha}`,
     '',
     '## Evidence', '',
-    ...(bug.evidencePaths ?? []).map((item) => `- \`${item}\``),
+    ...(details.evidencePaths ?? []).map((item) => `- \`${item}\``),
     '',
     ...bug.screenshotPaths.flatMap((item, index) => [`![${bug.id} evidence ${index + 1}](${imageLink(commitSha, item)})`, '']),
   ].join('\n');
@@ -114,8 +127,9 @@ function verifyAndPersist(registry, bug, repository, issueUrl) {
   const result = run('gh', ['issue', 'view', issueUrl, '--repo', repository, '--json', 'number,url,state,title,body']);
   const issue = JSON.parse(result.stdout);
   if (issue.url !== issueUrl || issue.state !== 'OPEN') throw new Error('Created issue could not be verified as open');
-  if (!issue.title.includes(bug.id) || !issue.body.includes(bug.id)) throw new Error('Verified issue does not contain the canonical bug ID');
-  for (const caseId of bug.caseIds) if (!issue.body.includes(caseId)) throw new Error(`Verified issue body lacks ${caseId}`);
+  const details = issueDetails(bug);
+  if (!issue.title.includes(details.title) || !issue.body.includes(bug.id)) throw new Error('Verified issue does not contain the expected public title or canonical bug ID');
+  for (const caseId of details.caseIds) if (!issue.body.includes(caseId)) throw new Error(`Verified issue body lacks ${caseId}`);
   if (!/!\[[^\]]*\]\([^)]*\)/.test(issue.body)) throw new Error('Verified issue body has no rendered-image Markdown reference');
   bug.status = 'published';
   bug.githubIssueNumber = issue.number;
@@ -145,7 +159,7 @@ try {
     run('gh', ['api', `repos/${repository}/commits/${sha}`, '--jq', '.sha']);
     const bodyPath = `work/generated/issues/${bug.id}.md`;
     writeText(bodyPath, issueBody(bug, sha));
-    const created = run('gh', ['issue', 'create', '--repo', repository, '--title', `[HW06][${bug.id}] ${bug.title}`, '--body-file', absoluteFromRepo(bodyPath)]);
+    const created = run('gh', ['issue', 'create', '--repo', repository, '--title', issueDetails(bug).title, '--body-file', absoluteFromRepo(bodyPath)]);
     const issueUrl = created.stdout.match(/https:\/\/github\.com\/[^\s]+\/issues\/\d+/)?.[0];
     if (!issueUrl) throw new Error(`GitHub did not return an issue URL: ${created.stdout.trim()}`);
     verifyAndPersist(registry, bug, repository, issueUrl);
