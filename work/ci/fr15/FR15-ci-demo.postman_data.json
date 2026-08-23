@@ -1,0 +1,7 @@
+[
+  {
+    "caseId": "FR15-AI-001",
+    "intentionalFailure": false,
+    "expectedSource": "eshop-sut/README.md FR-15 and FR-12; eshop-sut/api_specification.md section 3.3"
+  }
+]

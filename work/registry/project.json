@@ -86,6 +86,9 @@
     "dataFiles": [
       "work/postman/fr15/FR15-products.postman_data.json"
     ],
+    "ciWorkflowPaths": [
+      ".github/workflows/hw06-fr15-ci.yml"
+    ],
     "officialRunIds": [
       "RUN-20260823102155874-fr15-canonical-full-suite",
       "RUN-20260823102829114-fr15-auth-reproduction",

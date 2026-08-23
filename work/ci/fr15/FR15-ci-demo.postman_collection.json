@@ -1,0 +1,158 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr15-ci-demo-20260823",
+    "name": "HW06 FR-15 CI Demonstration Sample",
+    "description": "Small CI suite for reviewed case FR15-AI-001. It verifies a valid admin product create through authoritative product-list read-back and exact cleanup. The data-only intentionalFailure flag adds one labelled CI-demo assertion without changing the product oracle.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') || '23127179' });"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Request carried X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "CI setup: admin login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "var json = {}; try { json = pm.response.json(); } catch (error) { json = {}; }",
+          "pm.test('CI setup: admin login returned a token', function () { pm.expect(json.token).to.be.a('string').and.not.empty; });",
+          "pm.environment.set('adminToken', json.token || '');"
+        ] }
+      }]
+    },
+    {
+      "name": "CI setup: capture exact product baseline",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": { "type": "text/javascript", "exec": [
+            "pm.environment.set('uniqueName', 'FR15 CI AI001 ' + Date.now() + ' ' + Math.floor(Math.random() * 1000000));",
+            "pm.environment.unset('createdProductId');"
+          ] }
+        },
+        {
+          "listen": "test",
+          "script": { "type": "text/javascript", "exec": [
+            "var products = []; try { products = pm.response.json(); } catch (error) { products = []; }",
+            "pm.test('CI setup: product baseline is readable', function () { pm.expect(products).to.be.an('array'); });",
+            "pm.environment.set('baselineProductIds', JSON.stringify(products.map(function (item) { return item.id; }).sort(function (a, b) { return a - b; })));"
+          ] }
+        }
+      ]
+    },
+    {
+      "name": "Execute {{caseId}} - valid admin POST /api/products",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{uniqueName}}\",\n  \"price\": 100000,\n  \"description\": \"FR15 baseline product\",\n  \"imageUrl\": \"https://placehold.co/300x300/png?text=FR15\",\n  \"category_id\": 1\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "var json = {}; try { json = pm.response.json(); } catch (error) { json = {}; }",
+          "if (json.id !== undefined && json.id !== null) pm.environment.set('createdProductId', String(json.id));",
+          "console.log(pm.iterationData.get('caseId') + ' create response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 200));",
+          "console.log('SPEC GAP: no exact POST success status or response schema is asserted.');"
+        ] }
+      }]
+    },
+    {
+      "name": "Verify {{caseId}} - product persisted with exact documented fields",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "var id = pm.iterationData.get('caseId');",
+          "var products = []; try { products = pm.response.json(); } catch (error) { products = []; }",
+          "var uniqueName = pm.environment.get('uniqueName');",
+          "var created = products.find(function (item) { return item.name === uniqueName; });",
+          "pm.test(id + ' valid product is persisted with exact name, price, and category_id', function () {",
+          "  pm.expect(created, 'created product').to.be.an('object');",
+          "  pm.expect(Number(created.price)).to.equal(100000);",
+          "  pm.expect(Number(created.category_id)).to.equal(1);",
+          "});",
+          "if (created && created.id !== undefined) pm.environment.set('createdProductId', String(created.id));",
+          "if (pm.iterationData.get('intentionalFailure') === true) {",
+          "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+          "} else {",
+          "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+          "}"
+        ] }
+      }]
+    },
+    {
+      "name": "CI cleanup: delete the created product",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+        "url": { "raw": "{{baseUrl}}/api/products/{{createdProductId}}", "host": ["{{baseUrl}}"], "path": ["api", "products", "{{createdProductId}}"] }
+      }
+    },
+    {
+      "name": "CI cleanup: verify exact product baseline",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "var products = []; try { products = pm.response.json(); } catch (error) { products = []; }",
+          "var ids = products.map(function (item) { return item.id; }).sort(function (a, b) { return a - b; });",
+          "var baseline = JSON.parse(pm.environment.get('baselineProductIds') || '[]');",
+          "var uniqueName = pm.environment.get('uniqueName');",
+          "pm.test('CI cleanup restored the exact product baseline', function () {",
+          "  pm.expect(products.some(function (item) { return item.name === uniqueName; })).to.equal(false);",
+          "  pm.expect(JSON.stringify(ids)).to.equal(JSON.stringify(baseline));",
+          "});"
+        ] }
+      }]
+    }
+  ]
+}
