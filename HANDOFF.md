@@ -515,3 +515,12 @@ Both screenshots visibly show the public repository, Issue title/number, and emb
 The canonical bug registry now records both bugs as `published` with real Issue numbers/URLs and the publication commit SHA. The generated factual report is `work/generated/bug-report.md`; it contains only real published bug data and Issue URLs.
 
 Validation after publication passed with 0 errors and 2 expected warnings for the pending human attestation of the two new GitHub Issue-page screenshots. FR-04 publication is complete; the next gate is human inspection/attestation of `EVID-FR04-PHONE-ISSUE` and `EVID-FR04-ROLE-ISSUE`. FR-08, FR-15, CI/CD, and final submission curation remain not started.
+
+## 24. Latest checkpoint — GitHub Issue screenshot attestation complete
+
+The student explicitly inspected and attested the two real published GitHub Issue-page screenshots. ACT-EVID-01 attestation was recorded under `Nguyen Bao Duy` for:
+
+- `EVID-FR04-PHONE-ISSUE`
+- `EVID-FR04-ROLE-ISSUE`
+
+Their registry and metadata records now have `humanAttestation=true` with real attestation timestamps. `npm run hw06:derive` completed, `npm run hw06:validate` passed with 0 errors and 0 warnings, and `git diff --check` passed. FR-04 bug publication evidence is complete. The next work is the fresh FR-04 closure audit and CI/CD requirement; FR-08 remains not started.
