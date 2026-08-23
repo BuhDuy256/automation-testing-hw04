@@ -1,7 +1,7 @@
 [
   {
     "caseId": "FR08-AI-019",
-    "intentionalFailure": true,
+    "intentionalFailure": false,
     "expectedSource": "eshop-sut/README.md FR-08 (only logged-in users may check out) and SEC-02 (secured APIs require a valid JWT); eshop-sut/api_specification.md §4 and §4.3"
   }
 ]

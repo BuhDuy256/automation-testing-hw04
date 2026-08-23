@@ -150,6 +150,39 @@
       ],
       "screenshotEvidenceId": "EVID-CI-FR08-ALL-PASS",
       "screenshotHumanAttestation": false
+    },
+    {
+      "id": "CI-32629191161-intentional-single-failure",
+      "purpose": "intentional-single-failure",
+      "commitSha": "87054fd9cfe88caf3cb06212caf3eb3005d3d545",
+      "url": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "status": "completed",
+      "conclusion": "failure",
+      "workflowName": "HW06 FR-08 Newman CI Sample",
+      "startedAtUtc": "2026-08-23T08:47:06Z",
+      "capturedAtUtc": "2026-08-23T08:48:06.574Z",
+      "failedTests": 1,
+      "failedAssertions": 1,
+      "newmanReportPath": "work/ci/runs/CI-32629191161-intentional-single-failure/artifacts/ci-artifacts/newman-report.json",
+      "newmanReportPaths": [
+        "work/ci/runs/CI-32629191161-intentional-single-failure/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "canonicalSummaryPath": null,
+      "counts": null,
+      "failedCaseIds": null,
+      "knownBugFailureCaseIds": null,
+      "otherFailureCaseIds": null,
+      "runtimeHeaderCoverage": null,
+      "identities": null,
+      "matchesCanonicalLocalResults": null,
+      "limitationStatus": null,
+      "githubRunMetadataPath": "work/ci/runs/CI-32629191161-intentional-single-failure/github-run.json",
+      "evidencePaths": [
+        "work/evidence/screenshots/EVID-CI-FR08-SINGLE-FAILURE.png",
+        "work/ci/runs/CI-32629191161-intentional-single-failure/artifacts/ci-artifacts/newman-report.json"
+      ],
+      "screenshotEvidenceId": "EVID-CI-FR08-SINGLE-FAILURE",
+      "screenshotHumanAttestation": false
     }
   ]
 }

@@ -1,0 +1,2852 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "hw06-fr08-ci-demo-20260823"
+    },
+    "item": [
+      {
+        "id": "d3d816c0-bd26-41b2-b04f-0edf121bb36d",
+        "name": "CI setup: register demonstration user",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "register"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"FR08 CI Demo User\",\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "774468ce-a36f-4c27-b482-232d4e7c2c7d",
+              "type": "text/javascript",
+              "exec": [
+                "pm.collectionVariables.set('ciEmail', 'fr08-ci-' + Date.now() + '-' + Math.floor(Math.random() * 1000000) + '@eshop.test');",
+                "pm.collectionVariables.set('ciPassword', 'Fr08Ci1234!');"
+              ],
+              "_lastExecutionId": "b55c5941-1594-4a00-9769-bbcbdab06113"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "f1407a50-0daf-4f01-8d7f-67e2d8273e56",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('CI setup: demonstration user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });"
+              ],
+              "_lastExecutionId": "4256d6a0-8434-40d6-abaf-bf0d60dfa07c"
+            }
+          }
+        ]
+      },
+      {
+        "id": "50b0d257-16ab-4ab3-bbb5-8aa8f3c4b24f",
+        "name": "CI setup: login demonstration user",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "login"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "cbff44ce-98c3-45c1-86a5-9e4375d1f3ae",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('CI setup: demonstration user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.collectionVariables.set('ciToken', json.token); });"
+              ],
+              "_lastExecutionId": "fa5f776f-efef-4d61-8a97-8964f8fce60a"
+            }
+          }
+        ]
+      },
+      {
+        "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+        "name": "CI setup: seed a known cart and capture the baseline",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "cart"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{ciToken}}"
+            }
+          ],
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "d1742bd9-7a49-43e9-9f70-3e9b0f6f5404",
+              "type": "text/javascript",
+              "exec": [
+                "var base = pm.collectionVariables.get('baseUrl');",
+                "var token = pm.collectionVariables.get('ciToken');",
+                "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+                "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+                "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+                "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+                "    var ids = [];",
+                "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+                "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+                "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+                "  });",
+                "});"
+              ],
+              "_lastExecutionId": "d771b2c3-ea41-48b5-a64d-364ab5c1d904"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "28054ea3-a621-4fc6-be1f-44c82a0b8f71",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+                "var cart = [];",
+                "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+                "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+              ],
+              "_lastExecutionId": "f611ce06-c931-4b0f-8b41-cfe1b5bafa45"
+            }
+          }
+        ]
+      },
+      {
+        "id": "79f9307f-aca9-4ad1-9deb-d37f07377d46",
+        "name": "Execute {{caseId}} - unauthenticated POST /api/checkout",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "checkout"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"total_amount\": 200000,\n  \"shipping_address\": \"123 Le Loi, TP.HCM\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "243ab358-cceb-45fc-a241-af85a81f3357",
+              "type": "text/javascript",
+              "exec": [
+                "pm.request.headers.remove('Authorization');",
+                "console.log(pm.iterationData.get('caseId') + ' sending checkout with no Authorization header');"
+              ],
+              "_lastExecutionId": "da2315f5-17a7-4abf-8b5b-a4edd462dfa4"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "30a4227f-447f-4d75-83dc-522f9129c49e",
+              "type": "text/javascript",
+              "exec": [
+                "var id = pm.iterationData.get('caseId');",
+                "pm.test(id + ' checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+                "pm.test(id + ' request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+                "console.log(id + ' checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 200));",
+                "console.log(id + ' SPEC GAP: the API specification defines no status code for POST /api/checkout, so no status oracle is asserted.');"
+              ],
+              "_lastExecutionId": "5905f64d-5166-4d3a-bdf0-a2a867084d43"
+            }
+          }
+        ]
+      },
+      {
+        "id": "c13becff-1360-4c5b-b1ec-8ea9d935d877",
+        "name": "Verify {{caseId}} - no order was created",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "orders",
+              "my-orders"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{ciToken}}"
+            }
+          ],
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "ab7e8d67-07ca-4f4d-aef5-8281a0440645",
+              "type": "text/javascript",
+              "exec": [
+                "var id = pm.iterationData.get('caseId');",
+                "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+                "var baseline = JSON.parse(pm.collectionVariables.get('ciBaselineOrderIds') || '[]');",
+                "var orders = [];",
+                "try { orders = pm.response.json(); } catch (error) { orders = []; }",
+                "var newOrders = orders.filter(function (order) { return baseline.indexOf(order.id) === -1; });",
+                "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+                "pm.test(id + ' unauthenticated checkout created no order (FR-08 login rule, SEC-02)', function () { pm.expect(newOrders.length).to.equal(0); });",
+                "if (pm.iterationData.get('intentionalFailure') === true) {",
+                "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+                "} else {",
+                "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+                "}"
+              ],
+              "_lastExecutionId": "28956bba-aea3-4812-ba65-f5ab5ea161c8"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "id": "35969a05-c209-45c5-a4bb-0d19c6f748cf",
+          "type": "text/javascript",
+          "exec": [
+            "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.collectionVariables.get('studentId') || '23127179' });"
+          ],
+          "_lastExecutionId": "8bc47267-d263-45b5-9f4f-60a18702cfcb"
+        }
+      }
+    ],
+    "variable": [
+      {
+        "type": "any",
+        "value": "http://127.0.0.1:3000",
+        "key": "baseUrl"
+      },
+      {
+        "type": "any",
+        "value": "23127179",
+        "key": "studentId"
+      }
+    ],
+    "info": {
+      "_postman_id": "hw06-fr08-ci-demo-20260823",
+      "name": "HW06 FR-08 CI Demonstration Sample",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description": {
+        "content": "Small CI demonstration suite for POST /api/checkout. It executes one canonical FR-08 case, FR08-AI-019, whose oracle is the documented FR-08 login rule and SEC-02: an unauthenticated checkout must be refused and must create no order. That case genuinely passes against the SUT, so this workflow demonstrates a green CI pipeline without hiding either published FR-08 defect. The intentionalFailure flag in the data file drives the separate intentional-single-failure demonstration; it is a CI-behaviour demonstration only and never changes a product oracle.",
+        "type": "text/plain"
+      }
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment"
+    },
+    "id": "hw06-fr08-ci-demo-env-20260823",
+    "name": "HW06 FR-08 CI Demo Environment",
+    "values": [
+      {
+        "type": "any",
+        "value": "http://127.0.0.1:3000",
+        "key": "baseUrl"
+      },
+      {
+        "type": "any",
+        "value": "23127179",
+        "key": "studentId"
+      }
+    ]
+  },
+  "globals": {
+    "id": "9ebbe7fa-1b4f-42da-a926-1e948dc3ec2d",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 13,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 7,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 8,
+        "pending": 0,
+        "failed": 1
+      },
+      "testScripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 8,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 7.428571428571429,
+      "responseMin": 2,
+      "responseMax": 31,
+      "responseSd": 9.693254544964214,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1787474846087,
+      "completed": 1787474846284
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "27347de0-8c83-49ad-90bd-ea97e3f9abe7",
+          "httpRequestId": "4a2dee44-9e26-4a9b-963c-c8fc360c1f58"
+        },
+        "item": {
+          "id": "d3d816c0-bd26-41b2-b04f-0edf121bb36d",
+          "name": "CI setup: register demonstration user",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "register"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"FR08 CI Demo User\",\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "774468ce-a36f-4c27-b482-232d4e7c2c7d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('ciEmail', 'fr08-ci-' + Date.now() + '-' + Math.floor(Math.random() * 1000000) + '@eshop.test');",
+                  "pm.collectionVariables.set('ciPassword', 'Fr08Ci1234!');"
+                ],
+                "_lastExecutionId": "b55c5941-1594-4a00-9769-bbcbdab06113"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f1407a50-0daf-4f01-8d7f-67e2d8273e56",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('CI setup: demonstration user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });"
+                ],
+                "_lastExecutionId": "4256d6a0-8434-40d6-abaf-bf0d60dfa07c"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "register"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "bd772501-6bb6-4153-b0d3-87a2ef515511",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "116",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"FR08 CI Demo User\",\n  \"email\": \"fr08-ci-1787474846108-183384@eshop.test\",\n  \"password\": \"Fr08Ci1234!\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "df0d0244-b140-48cb-802a-2227518c264d",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "49"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"31-6Ci6+juThLYJE7fjTOwLWWX20Zs\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              85,
+              115,
+              101,
+              114,
+              32,
+              114,
+              101,
+              103,
+              105,
+              115,
+              116,
+              101,
+              114,
+              101,
+              100,
+              32,
+              115,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              34,
+              44,
+              34,
+              105,
+              100,
+              34,
+              58,
+              51,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 31,
+          "responseSize": 49
+        },
+        "id": "d3d816c0-bd26-41b2-b04f-0edf121bb36d",
+        "assertions": [
+          {
+            "assertion": "CI setup: demonstration user registered",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "83583666-a706-44f5-84e8-88da9855d407",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "abb2476c-3cf0-44ac-a186-718d7aaf6a06"
+        },
+        "item": {
+          "id": "50b0d257-16ab-4ab3-bbb5-8aa8f3c4b24f",
+          "name": "CI setup: login demonstration user",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "login"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "cbff44ce-98c3-45c1-86a5-9e4375d1f3ae",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('CI setup: demonstration user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.collectionVariables.set('ciToken', json.token); });"
+                ],
+                "_lastExecutionId": "fa5f776f-efef-4d61-8a97-8964f8fce60a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "login"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "acdb9f18-6845-4bf8-a0e8-acb0f4bac7fb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "85",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"fr08-ci-1787474846108-183384@eshop.test\",\n  \"password\": \"Fr08Ci1234!\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "71612bc5-59c9-48c7-ac0f-d55e608cef3d",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "401"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"191-VPCibG3V2eFCHaJTxCLhR0RNtk8\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              76,
+              111,
+              103,
+              105,
+              110,
+              32,
+              115,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              34,
+              44,
+              34,
+              116,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              34,
+              101,
+              121,
+              74,
+              104,
+              98,
+              71,
+              99,
+              105,
+              79,
+              105,
+              74,
+              73,
+              85,
+              122,
+              73,
+              49,
+              78,
+              105,
+              73,
+              115,
+              73,
+              110,
+              82,
+              53,
+              99,
+              67,
+              73,
+              54,
+              73,
+              107,
+              112,
+              88,
+              86,
+              67,
+              74,
+              57,
+              46,
+              101,
+              121,
+              74,
+              112,
+              90,
+              67,
+              73,
+              54,
+              77,
+              121,
+              119,
+              105,
+              99,
+              109,
+              57,
+              115,
+              90,
+              83,
+              73,
+              54,
+              73,
+              110,
+              86,
+              122,
+              90,
+              88,
+              73,
+              105,
+              76,
+              67,
+              74,
+              112,
+              89,
+              88,
+              81,
+              105,
+              79,
+              106,
+              69,
+              51,
+              79,
+              68,
+              99,
+              48,
+              78,
+              122,
+              81,
+              52,
+              78,
+              68,
+              90,
+              57,
+              46,
+              103,
+              106,
+              98,
+              104,
+              87,
+              107,
+              98,
+              85,
+              118,
+              109,
+              65,
+              45,
+              57,
+              116,
+              107,
+              69,
+              65,
+              104,
+              108,
+              99,
+              54,
+              54,
+              104,
+              122,
+              108,
+              66,
+              88,
+              103,
+              108,
+              122,
+              113,
+              86,
+              101,
+              112,
+              90,
+              105,
+              78,
+              109,
+              68,
+              67,
+              70,
+              52,
+              52,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              58,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              51,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              70,
+              82,
+              48,
+              56,
+              32,
+              67,
+              73,
+              32,
+              68,
+              101,
+              109,
+              111,
+              32,
+              85,
+              115,
+              101,
+              114,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              102,
+              114,
+              48,
+              56,
+              45,
+              99,
+              105,
+              45,
+              49,
+              55,
+              56,
+              55,
+              52,
+              55,
+              52,
+              56,
+              52,
+              54,
+              49,
+              48,
+              56,
+              45,
+              49,
+              56,
+              51,
+              51,
+              56,
+              52,
+              64,
+              101,
+              115,
+              104,
+              111,
+              112,
+              46,
+              116,
+              101,
+              115,
+              116,
+              34,
+              44,
+              34,
+              112,
+              97,
+              115,
+              115,
+              119,
+              111,
+              114,
+              100,
+              34,
+              58,
+              34,
+              70,
+              114,
+              48,
+              56,
+              67,
+              105,
+              49,
+              50,
+              51,
+              52,
+              33,
+              34,
+              44,
+              34,
+              114,
+              111,
+              108,
+              101,
+              34,
+              58,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              44,
+              34,
+              108,
+              111,
+              103,
+              105,
+              110,
+              95,
+              97,
+              116,
+              116,
+              101,
+              109,
+              112,
+              116,
+              115,
+              34,
+              58,
+              48,
+              44,
+              34,
+              108,
+              111,
+              99,
+              107,
+              101,
+              100,
+              95,
+              117,
+              110,
+              116,
+              105,
+              108,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              114,
+              101,
+              115,
+              101,
+              116,
+              95,
+              116,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              115,
+              104,
+              105,
+              112,
+              112,
+              105,
+              110,
+              103,
+              95,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              44,
+              34,
+              112,
+              104,
+              111,
+              110,
+              101,
+              34,
+              58,
+              110,
+              117,
+              108,
+              108,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 5,
+          "responseSize": 401
+        },
+        "id": "50b0d257-16ab-4ab3-bbb5-8aa8f3c4b24f",
+        "assertions": [
+          {
+            "assertion": "CI setup: demonstration user login returns a token",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "db3f47e8-b4d7-40e7-9c22-e07dfc8bbb9a",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "b155f291-0364-4063-b2b9-26ef4c8042b6"
+        },
+        "item": {
+          "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+          "name": "CI setup: seed a known cart and capture the baseline",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "cart"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ciToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "d1742bd9-7a49-43e9-9f70-3e9b0f6f5404",
+                "type": "text/javascript",
+                "exec": [
+                  "var base = pm.collectionVariables.get('baseUrl');",
+                  "var token = pm.collectionVariables.get('ciToken');",
+                  "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+                  "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+                  "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+                  "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+                  "    var ids = [];",
+                  "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+                  "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+                  "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+                  "  });",
+                  "});"
+                ],
+                "_lastExecutionId": "d771b2c3-ea41-48b5-a64d-364ab5c1d904"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "28054ea3-a621-4fc6-be1f-44c82a0b8f71",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "var cart = [];",
+                  "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+                  "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+                ],
+                "_lastExecutionId": "f611ce06-c931-4b0f-8b41-cfe1b5bafa45"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "cart"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3ODc0NzQ4NDZ9.gjbhWkbUvmA-9tkEAhlc66hzlBXglzqVepZiNmDCF44"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "22e0030a-f654-4fa2-95a0-fe06d7d8b582",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "9a11f9c7-cede-49db-992c-358b23520abd",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "58"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"3a-p4Bhwrs+HVkEc/k5Gc7mVCec8WE\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              97,
+              110,
+              32,
+              112,
+              104,
+              97,
+              109,
+              32,
+              65,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              99,
+              101,
+              34,
+              58,
+              49,
+              48,
+              48,
+              48,
+              48,
+              48,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              50,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 58
+        },
+        "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+        "assertions": [
+          {
+            "assertion": "CI setup: pre-checkout cart state is readable",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "db3f47e8-b4d7-40e7-9c22-e07dfc8bbb9a",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "b155f291-0364-4063-b2b9-26ef4c8042b6"
+        },
+        "item": {
+          "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+          "name": "CI setup: seed a known cart and capture the baseline",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "cart"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ciToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "d1742bd9-7a49-43e9-9f70-3e9b0f6f5404",
+                "type": "text/javascript",
+                "exec": [
+                  "var base = pm.collectionVariables.get('baseUrl');",
+                  "var token = pm.collectionVariables.get('ciToken');",
+                  "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+                  "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+                  "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+                  "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+                  "    var ids = [];",
+                  "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+                  "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+                  "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+                  "  });",
+                  "});"
+                ],
+                "_lastExecutionId": "d771b2c3-ea41-48b5-a64d-364ab5c1d904"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "28054ea3-a621-4fc6-be1f-44c82a0b8f71",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "var cart = [];",
+                  "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+                  "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+                ],
+                "_lastExecutionId": "f611ce06-c931-4b0f-8b41-cfe1b5bafa45"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "cart"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3ODc0NzQ4NDZ9.gjbhWkbUvmA-9tkEAhlc66hzlBXglzqVepZiNmDCF44"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "22e0030a-f654-4fa2-95a0-fe06d7d8b582",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "9a11f9c7-cede-49db-992c-358b23520abd",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "58"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"3a-p4Bhwrs+HVkEc/k5Gc7mVCec8WE\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              97,
+              110,
+              32,
+              112,
+              104,
+              97,
+              109,
+              32,
+              65,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              99,
+              101,
+              34,
+              58,
+              49,
+              48,
+              48,
+              48,
+              48,
+              48,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              50,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 58
+        },
+        "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+        "assertions": [
+          {
+            "assertion": "CI setup: pre-checkout cart state is readable",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "db3f47e8-b4d7-40e7-9c22-e07dfc8bbb9a",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "b155f291-0364-4063-b2b9-26ef4c8042b6"
+        },
+        "item": {
+          "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+          "name": "CI setup: seed a known cart and capture the baseline",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "cart"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ciToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "d1742bd9-7a49-43e9-9f70-3e9b0f6f5404",
+                "type": "text/javascript",
+                "exec": [
+                  "var base = pm.collectionVariables.get('baseUrl');",
+                  "var token = pm.collectionVariables.get('ciToken');",
+                  "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+                  "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+                  "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+                  "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+                  "    var ids = [];",
+                  "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+                  "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+                  "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+                  "  });",
+                  "});"
+                ],
+                "_lastExecutionId": "d771b2c3-ea41-48b5-a64d-364ab5c1d904"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "28054ea3-a621-4fc6-be1f-44c82a0b8f71",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "var cart = [];",
+                  "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+                  "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+                ],
+                "_lastExecutionId": "f611ce06-c931-4b0f-8b41-cfe1b5bafa45"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "cart"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3ODc0NzQ4NDZ9.gjbhWkbUvmA-9tkEAhlc66hzlBXglzqVepZiNmDCF44"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "22e0030a-f654-4fa2-95a0-fe06d7d8b582",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "9a11f9c7-cede-49db-992c-358b23520abd",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "58"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"3a-p4Bhwrs+HVkEc/k5Gc7mVCec8WE\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              97,
+              110,
+              32,
+              112,
+              104,
+              97,
+              109,
+              32,
+              65,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              99,
+              101,
+              34,
+              58,
+              49,
+              48,
+              48,
+              48,
+              48,
+              48,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              50,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 58
+        },
+        "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+        "assertions": [
+          {
+            "assertion": "CI setup: pre-checkout cart state is readable",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6f17991c-a862-403e-82bb-037fccd1a62e",
+          "length": 5,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "b93bf93b-2a58-4452-a6fc-816ba33a463a"
+        },
+        "item": {
+          "id": "79f9307f-aca9-4ad1-9deb-d37f07377d46",
+          "name": "Execute {{caseId}} - unauthenticated POST /api/checkout",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "checkout"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total_amount\": 200000,\n  \"shipping_address\": \"123 Le Loi, TP.HCM\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "243ab358-cceb-45fc-a241-af85a81f3357",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('Authorization');",
+                  "console.log(pm.iterationData.get('caseId') + ' sending checkout with no Authorization header');"
+                ],
+                "_lastExecutionId": "da2315f5-17a7-4abf-8b5b-a4edd462dfa4"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "30a4227f-447f-4d75-83dc-522f9129c49e",
+                "type": "text/javascript",
+                "exec": [
+                  "var id = pm.iterationData.get('caseId');",
+                  "pm.test(id + ' checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+                  "pm.test(id + ' request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+                  "console.log(id + ' checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 200));",
+                  "console.log(id + ' SPEC GAP: the API specification defines no status code for POST /api/checkout, so no status oracle is asserted.');"
+                ],
+                "_lastExecutionId": "5905f64d-5166-4d3a-bdf0-a2a867084d43"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "checkout"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "575d7412-8844-40f8-a836-01e68d413ea1",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "72",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"total_amount\": 200000,\n  \"shipping_address\": \"123 Le Loi, TP.HCM\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "dfe01e07-4244-47e2-87a9-adcbeb136115",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "24"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"18-XPDV80vbMk4yY1/PADG4jYM4rSI\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              85,
+              110,
+              97,
+              117,
+              116,
+              104,
+              111,
+              114,
+              105,
+              122,
+              101,
+              100,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 5,
+          "responseSize": 24
+        },
+        "id": "79f9307f-aca9-4ad1-9deb-d37f07377d46",
+        "assertions": [
+          {
+            "assertion": "FR08-AI-019 checkout returned an observable HTTP response",
+            "skipped": false
+          },
+          {
+            "assertion": "FR08-AI-019 request carried the student header X-Student-Id: 23127179",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "3f98b3f8-a842-4139-995e-11e4e09be2ea",
+          "length": 5,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "e883686f-f460-46f4-bf68-f268748af0fe"
+        },
+        "item": {
+          "id": "c13becff-1360-4c5b-b1ec-8ea9d935d877",
+          "name": "Verify {{caseId}} - no order was created",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "orders",
+                "my-orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ciToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "ab7e8d67-07ca-4f4d-aef5-8281a0440645",
+                "type": "text/javascript",
+                "exec": [
+                  "var id = pm.iterationData.get('caseId');",
+                  "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "var baseline = JSON.parse(pm.collectionVariables.get('ciBaselineOrderIds') || '[]');",
+                  "var orders = [];",
+                  "try { orders = pm.response.json(); } catch (error) { orders = []; }",
+                  "var newOrders = orders.filter(function (order) { return baseline.indexOf(order.id) === -1; });",
+                  "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+                  "pm.test(id + ' unauthenticated checkout created no order (FR-08 login rule, SEC-02)', function () { pm.expect(newOrders.length).to.equal(0); });",
+                  "if (pm.iterationData.get('intentionalFailure') === true) {",
+                  "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+                  "} else {",
+                  "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+                  "}"
+                ],
+                "_lastExecutionId": "28956bba-aea3-4812-ba65-f5ab5ea161c8"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3000",
+            "path": [
+              "api",
+              "orders",
+              "my-orders"
+            ],
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3ODc0NzQ4NDZ9.gjbhWkbUvmA-9tkEAhlc66hzlBXglzqVepZiNmDCF44"
+            },
+            {
+              "key": "X-Student-Id",
+              "value": "23127179"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "6910ffbd-e11e-4983-921f-156ec612ca86",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "127.0.0.1:3000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "7c79bbf3-3383-4d09-87bf-67f0e6fb8b86",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "2"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 23 Aug 2026 08:47:26 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 3,
+          "responseSize": 2
+        },
+        "id": "c13becff-1360-4c5b-b1ec-8ea9d935d877",
+        "assertions": [
+          {
+            "assertion": "FR08-AI-019 order history is readable after the attempt",
+            "skipped": false
+          },
+          {
+            "assertion": "FR08-AI-019 unauthenticated checkout created no order (FR-08 login rule, SEC-02)",
+            "skipped": false
+          },
+          {
+            "assertion": "FR08-AI-019 [CI-DEMO] intentional single failure",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 2,
+              "test": "FR08-AI-019 [CI-DEMO] intentional single failure",
+              "message": "expected 'intentional-failure' to equal 'disabled'",
+              "stack": "AssertionError: expected 'intentional-failure' to equal 'disabled'\n   at Object.eval sandbox-script.js:3:5)"
+            }
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 563
+    },
+    "failures": [
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 2,
+          "test": "FR08-AI-019 [CI-DEMO] intentional single failure",
+          "message": "expected 'intentional-failure' to equal 'disabled'",
+          "stack": "AssertionError: expected 'intentional-failure' to equal 'disabled'\n   at Object.eval sandbox-script.js:3:5)",
+          "checksum": "2057bb72ce08aab05cbfed061d3f45e8",
+          "id": "1684b9d9-8fcb-46a3-bd50-6c4651521336",
+          "timestamp": 1787474846278,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 3,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 5,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:2 in test-script",
+        "source": {
+          "id": "c13becff-1360-4c5b-b1ec-8ea9d935d877",
+          "name": "Verify {{caseId}} - no order was created",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "orders",
+                "my-orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ciToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "ab7e8d67-07ca-4f4d-aef5-8281a0440645",
+                "type": "text/javascript",
+                "exec": [
+                  "var id = pm.iterationData.get('caseId');",
+                  "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "var baseline = JSON.parse(pm.collectionVariables.get('ciBaselineOrderIds') || '[]');",
+                  "var orders = [];",
+                  "try { orders = pm.response.json(); } catch (error) { orders = []; }",
+                  "var newOrders = orders.filter(function (order) { return baseline.indexOf(order.id) === -1; });",
+                  "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+                  "pm.test(id + ' unauthenticated checkout created no order (FR-08 login rule, SEC-02)', function () { pm.expect(newOrders.length).to.equal(0); });",
+                  "if (pm.iterationData.get('intentionalFailure') === true) {",
+                  "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+                  "} else {",
+                  "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+                  "}"
+                ],
+                "_lastExecutionId": "28956bba-aea3-4812-ba65-f5ab5ea161c8"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "_": {
+            "postman_id": "hw06-fr08-ci-demo-20260823"
+          },
+          "item": [
+            {
+              "id": "d3d816c0-bd26-41b2-b04f-0edf121bb36d",
+              "name": "CI setup: register demonstration user",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "register"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"FR08 CI Demo User\",\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "774468ce-a36f-4c27-b482-232d4e7c2c7d",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.collectionVariables.set('ciEmail', 'fr08-ci-' + Date.now() + '-' + Math.floor(Math.random() * 1000000) + '@eshop.test');",
+                      "pm.collectionVariables.set('ciPassword', 'Fr08Ci1234!');"
+                    ],
+                    "_lastExecutionId": "b55c5941-1594-4a00-9769-bbcbdab06113"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f1407a50-0daf-4f01-8d7f-67e2d8273e56",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('CI setup: demonstration user registered', function () { pm.expect(pm.response.code).to.equal(200); pm.expect(pm.response.json()).to.have.property('id'); });"
+                    ],
+                    "_lastExecutionId": "4256d6a0-8434-40d6-abaf-bf0d60dfa07c"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "50b0d257-16ab-4ab3-bbb5-8aa8f3c4b24f",
+              "name": "CI setup: login demonstration user",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "login"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{ciEmail}}\",\n  \"password\": \"{{ciPassword}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "cbff44ce-98c3-45c1-86a5-9e4375d1f3ae",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('CI setup: demonstration user login returns a token', function () { pm.expect(pm.response.code).to.equal(200); var json = pm.response.json(); pm.expect(json.token).to.be.a('string').and.not.empty; pm.collectionVariables.set('ciToken', json.token); });"
+                    ],
+                    "_lastExecutionId": "fa5f776f-efef-4d61-8a97-8964f8fce60a"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "a19ffe88-f884-41b7-a4be-551fc99d5cf3",
+              "name": "CI setup: seed a known cart and capture the baseline",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "cart"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ciToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "d1742bd9-7a49-43e9-9f70-3e9b0f6f5404",
+                    "type": "text/javascript",
+                    "exec": [
+                      "var base = pm.collectionVariables.get('baseUrl');",
+                      "var token = pm.collectionVariables.get('ciToken');",
+                      "var header = { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };",
+                      "pm.sendRequest({ url: base + '/api/cart', method: 'POST', header: header, body: { mode: 'raw', raw: JSON.stringify({ id: 1, name: 'San pham A', price: 100000, quantity: 2 }) } }, function (error, response) {",
+                      "  console.log('CI seed cart -> ' + (error ? ('TRANSPORT ERROR ' + error) : response.code));",
+                      "  pm.sendRequest({ url: base + '/api/orders/my-orders', method: 'GET', header: { 'X-Student-Id': pm.collectionVariables.get('studentId'), Authorization: 'Bearer ' + token } }, function (baselineError, baselineResponse) {",
+                      "    var ids = [];",
+                      "    if (!baselineError) { try { ids = baselineResponse.json().map(function (order) { return order.id; }); } catch (parseError) { ids = []; } }",
+                      "    pm.collectionVariables.set('ciBaselineOrderIds', JSON.stringify(ids));",
+                      "    console.log('CI baseline order ids: ' + JSON.stringify(ids));",
+                      "  });",
+                      "});"
+                    ],
+                    "_lastExecutionId": "d771b2c3-ea41-48b5-a64d-364ab5c1d904"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "28054ea3-a621-4fc6-be1f-44c82a0b8f71",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('CI setup: pre-checkout cart state is readable', function () { pm.expect(pm.response.code).to.equal(200); });",
+                      "var cart = [];",
+                      "try { cart = pm.response.json(); } catch (error) { cart = []; }",
+                      "console.log('CI server-observed pre-checkout cart: ' + JSON.stringify(cart));"
+                    ],
+                    "_lastExecutionId": "f611ce06-c931-4b0f-8b41-cfe1b5bafa45"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "79f9307f-aca9-4ad1-9deb-d37f07377d46",
+              "name": "Execute {{caseId}} - unauthenticated POST /api/checkout",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "checkout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"total_amount\": 200000,\n  \"shipping_address\": \"123 Le Loi, TP.HCM\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "243ab358-cceb-45fc-a241-af85a81f3357",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.request.headers.remove('Authorization');",
+                      "console.log(pm.iterationData.get('caseId') + ' sending checkout with no Authorization header');"
+                    ],
+                    "_lastExecutionId": "da2315f5-17a7-4abf-8b5b-a4edd462dfa4"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "30a4227f-447f-4d75-83dc-522f9129c49e",
+                    "type": "text/javascript",
+                    "exec": [
+                      "var id = pm.iterationData.get('caseId');",
+                      "pm.test(id + ' checkout returned an observable HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+                      "pm.test(id + ' request carried the student header X-Student-Id: 23127179', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.equal('23127179'); });",
+                      "console.log(id + ' checkout response ' + pm.response.code + ' :: ' + pm.response.text().substring(0, 200));",
+                      "console.log(id + ' SPEC GAP: the API specification defines no status code for POST /api/checkout, so no status oracle is asserted.');"
+                    ],
+                    "_lastExecutionId": "5905f64d-5166-4d3a-bdf0-a2a867084d43"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "c13becff-1360-4c5b-b1ec-8ea9d935d877",
+              "name": "Verify {{caseId}} - no order was created",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "orders",
+                    "my-orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ciToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ab7e8d67-07ca-4f4d-aef5-8281a0440645",
+                    "type": "text/javascript",
+                    "exec": [
+                      "var id = pm.iterationData.get('caseId');",
+                      "pm.test(id + ' order history is readable after the attempt', function () { pm.expect(pm.response.code).to.equal(200); });",
+                      "var baseline = JSON.parse(pm.collectionVariables.get('ciBaselineOrderIds') || '[]');",
+                      "var orders = [];",
+                      "try { orders = pm.response.json(); } catch (error) { orders = []; }",
+                      "var newOrders = orders.filter(function (order) { return baseline.indexOf(order.id) === -1; });",
+                      "console.log(id + ' orders after the attempt: ' + JSON.stringify(orders));",
+                      "pm.test(id + ' unauthenticated checkout created no order (FR-08 login rule, SEC-02)', function () { pm.expect(newOrders.length).to.equal(0); });",
+                      "if (pm.iterationData.get('intentionalFailure') === true) {",
+                      "  pm.test(id + ' [CI-DEMO] intentional single failure', function () { pm.expect('intentional-failure').to.equal('disabled'); });",
+                      "} else {",
+                      "  pm.test(id + ' [CI-DEMO] intentional failure is disabled', function () { pm.expect(pm.iterationData.get('intentionalFailure')).to.equal(false); });",
+                      "}"
+                    ],
+                    "_lastExecutionId": "28956bba-aea3-4812-ba65-f5ab5ea161c8"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "35969a05-c209-45c5-a4bb-0d19c6f748cf",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.collectionVariables.get('studentId') || '23127179' });"
+                ],
+                "_lastExecutionId": "8bc47267-d263-45b5-9f4f-60a18702cfcb"
+              }
+            }
+          ],
+          "variable": [
+            {
+              "type": "any",
+              "value": "http://127.0.0.1:3000",
+              "key": "baseUrl"
+            },
+            {
+              "type": "any",
+              "value": "23127179",
+              "key": "studentId"
+            }
+          ],
+          "info": {
+            "_postman_id": "hw06-fr08-ci-demo-20260823",
+            "name": "HW06 FR-08 CI Demonstration Sample",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "description": {
+              "content": "Small CI demonstration suite for POST /api/checkout. It executes one canonical FR-08 case, FR08-AI-019, whose oracle is the documented FR-08 login rule and SEC-02: an unauthenticated checkout must be refused and must create no order. That case genuinely passes against the SUT, so this workflow demonstrates a green CI pipeline without hiding either published FR-08 defect. The intentionalFailure flag in the data file drives the separate intentional-single-failure demonstration; it is a CI-behaviour demonstration only and never changes a product oracle.",
+              "type": "text/plain"
+            }
+          }
+        },
+        "cursor": {
+          "ref": "3f98b3f8-a842-4139-995e-11e4e09be2ea",
+          "length": 5,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "e883686f-f460-46f4-bf68-f268748af0fe",
+          "scriptId": "ab7e8d67-07ca-4f4d-aef5-8281a0440645",
+          "execution": "28956bba-aea3-4812-ba65-f5ab5ea161c8"
+        }
+      }
+    ],
+    "error": null
+  }
+}

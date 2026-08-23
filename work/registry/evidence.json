@@ -418,6 +418,30 @@
         "height": 1141
       },
       "humanAttestation": false
+    },
+    {
+      "id": "EVID-CI-FR08-SINGLE-FAILURE",
+      "type": "github-actions-run",
+      "description": "GitHub Actions run 32629191161 of the HW06 FR-08 Newman CI Sample workflow at commit 87054fd, concluding failure because the CI demonstration flag intentionalFailure was set to true, producing exactly one failed test case while the real FR08-AI-019 oracle still passed.",
+      "path": "work/evidence/screenshots/EVID-CI-FR08-SINGLE-FAILURE.png",
+      "sha256": "fafc05e7f977395f77ccf451e31ec93a63e67e77404daefb8df13aeffdf3245c",
+      "capturedAt": "2026-08-23T08:48:01.378Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629191161",
+      "pageTitle": "test(hw06): trigger the FR-08 intentional single-failure CI demonstra… · BuhDuy256/automation-testing-hw04@87054fd · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 114144,
+        "width": 1600,
+        "height": 1206
+      },
+      "humanAttestation": false
     }
   ]
 }
