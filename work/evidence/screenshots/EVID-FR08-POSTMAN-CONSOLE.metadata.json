@@ -12,5 +12,7 @@
     "width": 1434,
     "height": 428
   },
-  "humanAttestation": false
+  "humanAttestation": true,
+  "attestedBy": "Nguyen Bao Duy",
+  "attestedAt": "2026-08-23T09:38:34.734Z"
 }

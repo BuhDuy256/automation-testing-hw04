@@ -461,7 +461,9 @@
         "width": 484,
         "height": 960
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:33.808Z"
     },
     {
       "id": "EVID-FR08-POSTMAN-CONSOLE",
@@ -477,7 +479,9 @@
         "width": 1434,
         "height": 428
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:34.734Z"
     },
     {
       "id": "EVID-FR08-POSTMAN-RUNNER",
@@ -493,7 +497,9 @@
         "width": 1919,
         "height": 1027
       },
-      "humanAttestation": false
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-23T09:38:35.534Z"
     }
   ]
 }

@@ -12,7 +12,7 @@
 - Postman Desktop manual-import copies: out/fr08/postman/manual-import/
 - CI workflow configuration: out/fr08/ci/hw06-fr08-ci.yml
 - Published bugs: BUG-CANDIDATE-FR08-CLIENT-TOTAL (#15), BUG-CANDIDATE-FR08-CART-NOT-CLEARED (#16)
-- Promoted attested evidence: EVID-FR08-RUN-SUMMARY, EVID-FR08-CLIENT-TOTAL, EVID-FR08-CART-NOT-CLEARED, EVID-FR08-CLIENT-TOTAL-ISSUE, EVID-FR08-CART-NOT-CLEARED-ISSUE, EVID-CI-FR08-ALL-PASS, EVID-CI-FR08-SINGLE-FAILURE
-- Pending student attestation, still under work/evidence: EVID-FR08-POSTMAN-COLLECTION, EVID-FR08-POSTMAN-CONSOLE, EVID-FR08-POSTMAN-RUNNER
+- Promoted attested evidence: EVID-FR08-RUN-SUMMARY, EVID-FR08-CLIENT-TOTAL, EVID-FR08-CART-NOT-CLEARED, EVID-FR08-CLIENT-TOTAL-ISSUE, EVID-FR08-CART-NOT-CLEARED-ISSUE, EVID-CI-FR08-ALL-PASS, EVID-CI-FR08-SINGLE-FAILURE, EVID-FR08-POSTMAN-COLLECTION, EVID-FR08-POSTMAN-CONSOLE, EVID-FR08-POSTMAN-RUNNER
+- All FR-08 evidence carries explicit student attestation.
 
 The primary run preserves genuine bug-revealing failures and its original exit code. Its 19 failures map to the two published bugs; no oracle was changed after results were observed.
