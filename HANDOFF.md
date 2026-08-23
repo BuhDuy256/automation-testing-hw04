@@ -1205,3 +1205,45 @@ Next genuine human gate: `HG-FR08-POSTMAN-MANUAL-01`. The student imports the pa
 captures three screenshots that AI must not substitute or attest:
 `work/evidence/screenshots/EVID-FR08-POSTMAN-COLLECTION.png`,
 `EVID-FR08-POSTMAN-CONSOLE.png`, and `EVID-FR08-POSTMAN-RUNNER.png`.
+
+## 39. Checkpoint — FR-08 curated into `out/`; manual Postman evidence awaiting attestation
+
+The student ran the manual-import package in Postman Desktop and saved three screenshots. AI verified
+them and registered them from the student's own files; none is attested.
+
+```text
+EVID-FR08-POSTMAN-COLLECTION   484x960    collection tree + selected environment
+EVID-FR08-POSTMAN-CONSOLE      1434x428   POST /api/checkout request headers, X-Student-Id: 23127179
+EVID-FR08-POSTMAN-RUNNER       1919x1027  Runner results, case ids FR08-AI-001, checkout 200 orderId 55
+```
+
+Verification performed: valid PNG signatures, dimensions recorded, sha256 unchanged from the saved
+files, and content cross-checked against the canonical run — the Runner screenshot shows the
+server-observed cart, the derived expected total 200000, and the persisted order at 200000, matching
+`RUN-20260823080014785-fr08-canonical-full-suite`.
+
+`ACT-PM-02` recorded two genuinely new Postman features (conditional `pm.execution.skipRequest`, and
+the Postman Desktop Collection Runner with an external data file) and appended FR-08 evidence to the
+existing Console and data-driven-iteration entries. The registry now lists 10 features.
+
+Curation: `scripts/hw06/derive.mjs` gained an FR-08 promotion block mirroring FR-04, driven by the
+new `project.postmanFr08` configuration. `out/fr08/` now contains the reviewed Postman inputs, the
+manual-import copies, the canonical Newman run with its original exit code 1, the CI workflow, the
+seven attested evidence images, `test-summary.md`, and a manifest. The three unattested Postman
+screenshots are deliberately not promoted and are named as pending in `out/fr08/README.md`.
+`out/README.md` was corrected; it still claimed FR-08 and FR-15 were not started.
+
+Validation: `npm run hw06:derive` PASS, `npm run hw06:validate` PASS with 0 errors and exactly the 3
+expected attestation warnings, `git diff --check` clean. Commits `17170f1`, `cef5f68`, both pushed.
+
+Status:
+
+```text
+FR-08 curation into out/           COMPLETE except the three pending screenshots
+FR-08 freeze                       BLOCKED — needs student attestation of the Postman screenshots
+AI Audit Report                    UNCHANGED (human-triggered only)
+FR-15                              PAUSED at HG-FR15-REV-01, 58 candidates, no verdict recorded
+```
+
+Next genuine human gate: `HG-FR08-EVID-04`, attestation of the three manual Postman screenshots.
+After that, re-running derive promotes them into `out/fr08/evidence/` and FR-08 can be frozen.
