@@ -103,6 +103,86 @@
       "githubIssueUrl": "https://github.com/BuhDuy256/automation-testing-hw04/issues/14",
       "publishedAt": "2026-08-23T03:42:55.158Z",
       "publishedCommitSha": "88551320e389089c21aa28fa95b4c772a8981c72"
+    },
+    {
+      "id": "BUG-CANDIDATE-FR08-CLIENT-TOTAL",
+      "status": "candidate",
+      "title": "[HW06][FR-08] POST /api/checkout persists the client-supplied total_amount instead of recalculating it from the cart",
+      "caseIds": [
+        "FR08-AI-002",
+        "FR08-AI-003",
+        "FR08-AI-004",
+        "FR08-AI-005",
+        "FR08-AI-006",
+        "FR08-AI-007",
+        "FR08-AI-009",
+        "FR08-AI-010",
+        "FR08-AI-011",
+        "FR08-AI-030",
+        "FR08-AI-035",
+        "FR08-AI-041",
+        "FR08-AI-042",
+        "FR08-AI-044",
+        "FR08-AI-046",
+        "FR08-H-001",
+        "FR08-AI-040",
+        "FR08-H-005"
+      ],
+      "publicCaseIds": [
+        "FR08-AI-002",
+        "FR08-AI-003",
+        "FR08-AI-004",
+        "FR08-AI-005",
+        "FR08-AI-035",
+        "FR08-H-001"
+      ],
+      "runIds": [
+        "RUN-20260823080014785-fr08-canonical-full-suite"
+      ],
+      "expected": "README FR-08 states that the checkout total is calculated automatically from the cart and that the backend must recalculate it and must not accept the client-supplied total_amount. The persisted order total must therefore equal the total derived from the cart state the server itself reports immediately before checkout. The exact status code and error schema are undocumented and are not claimed.",
+      "actual": "The persisted order total equalled the client-supplied value in every observed variation: 1000 and 9999000 against a 200000 cart, 0, -200000, 199999.99, 999999999999, and 200000 against an empty cart (server-derived 0). Non-numeric and absent client values were persisted as NULL or NaN rather than the derived total, and the boolean true was persisted as 1. FR08-H-001 shows the same behaviour with a stale client total of 200000 against a cart the server itself reported as 250000.",
+      "reproduction": "Register a fresh user, log in, POST /api/cart {\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}, confirm GET /api/cart reports that single line, then POST /api/checkout with a total_amount that differs from the cart-derived 200000, and read the order back with GET /api/orders/my-orders. The persisted total_amount matches the submitted value rather than the cart. The Newman raw report records each variation as its own iteration.",
+      "evidencePaths": [
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html"
+      ],
+      "screenshotPaths": [],
+      "note": "CANDIDATE ONLY. Not a confirmed bug: no student confirmation exists yet and no GitHub Issue has been created. 16 cases fail on this root cause directly; FR08-AI-040 and FR08-H-005 fail on a combination of this and BUG-CANDIDATE-FR08-CART-NOT-CLEARED. Evidence limitation: because no derivation happens at all, the cases whose client value happens to equal the cart-derived total (for example FR08-AI-001, FR08-AI-033, FR08-AI-034, FR08-AI-051, FR08-H-002) pass without proving that the server derives anything."
+    },
+    {
+      "id": "BUG-CANDIDATE-FR08-CART-NOT-CLEARED",
+      "status": "candidate",
+      "title": "[HW06][FR-08] The cart is not cleared after a successful checkout",
+      "caseIds": [
+        "FR08-AI-031",
+        "FR08-AI-040",
+        "FR08-H-005"
+      ],
+      "publicCaseIds": [
+        "FR08-AI-031"
+      ],
+      "runIds": [
+        "RUN-20260823080014785-fr08-canonical-full-suite"
+      ],
+      "expected": "README FR-08 states that after a successful checkout the cart is cleared, so GET /api/cart must report no lines for that user once checkout succeeds. The exact empty-cart response shape is undocumented and is not claimed.",
+      "actual": "After a successful checkout returning {\"message\":\"Checkout successful\",\"orderId\":N}, GET /api/cart still reported the purchased line, so the cart retained 1 line where 0 were expected. The stale line then polluted the next checkout: in FR08-AI-040 and FR08-H-005 the server-observed cart before the second checkout was 250000 because the already-purchased 200000 line was still present.",
+      "reproduction": "Register a fresh user, log in, POST /api/cart {\"id\":1,\"name\":\"San pham A\",\"price\":100000,\"quantity\":2}, POST /api/checkout with the matching body, then GET /api/cart. The purchased line is still returned.",
+      "evidencePaths": [
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/metadata.json"
+      ],
+      "publicEvidencePaths": [
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html"
+      ],
+      "screenshotPaths": [],
+      "note": "CANDIDATE ONLY. Not a confirmed bug: no student confirmation exists yet and no GitHub Issue has been created. FR08-AI-040 and FR08-H-005 are shared with BUG-CANDIDATE-FR08-CLIENT-TOTAL because their failures need both defects to explain them."
     }
   ]
 }

@@ -1551,9 +1551,18 @@
       "executionCount": 20,
       "studentHeaderRequests": 20,
       "caseResults": [
-        { "caseId": "FR04-AI-031", "result": "PASS" },
-        { "caseId": "FR04-AI-046", "result": "PASS" },
-        { "caseId": "FR04-H-005", "result": "PASS" }
+        {
+          "caseId": "FR04-AI-031",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-046",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-H-005",
+          "result": "PASS"
+        }
       ],
       "resultImportStatus": "human-checked-mapping"
     },
@@ -1650,8 +1659,16 @@
       "executionCount": 14,
       "studentHeaderRequests": 14,
       "caseResults": [
-        { "caseId": "FR04-H-006", "result": "PASS", "classification": "CLEAN-TARGETED-CLOSURE" },
-        { "caseId": "FR04-H-007", "result": "FAIL", "classification": "SPEC-GAP-OBSERVATION" }
+        {
+          "caseId": "FR04-H-006",
+          "result": "PASS",
+          "classification": "CLEAN-TARGETED-CLOSURE"
+        },
+        {
+          "caseId": "FR04-H-007",
+          "result": "FAIL",
+          "classification": "SPEC-GAP-OBSERVATION"
+        }
       ],
       "resultImportStatus": "human-checked-mapping"
     },
@@ -1748,49 +1765,501 @@
       "executionCount": 264,
       "studentHeaderRequests": 264,
       "caseResults": [
-        { "caseId": "FR04-AI-001", "result": "PASS" },
-        { "caseId": "FR04-AI-004", "result": "PASS" },
-        { "caseId": "FR04-AI-005", "result": "PASS" },
-        { "caseId": "FR04-AI-006", "result": "PASS" },
-        { "caseId": "FR04-AI-007", "result": "PASS" },
-        { "caseId": "FR04-AI-008", "result": "PASS" },
-        { "caseId": "FR04-AI-009", "result": "PASS" },
-        { "caseId": "FR04-AI-010", "result": "PASS" },
-        { "caseId": "FR04-AI-011", "result": "PASS" },
-        { "caseId": "FR04-AI-012", "result": "PASS" },
-        { "caseId": "FR04-AI-013", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-014", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-015", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-016", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-017", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-018", "result": "PASS" },
-        { "caseId": "FR04-AI-019", "result": "PASS" },
-        { "caseId": "FR04-AI-020", "result": "PASS" },
-        { "caseId": "FR04-AI-021", "result": "PASS" },
-        { "caseId": "FR04-AI-022", "result": "PASS" },
-        { "caseId": "FR04-AI-023", "result": "PASS" },
-        { "caseId": "FR04-AI-024", "result": "PASS", "manualVerification": "PENDING_UI_SEC-04" },
-        { "caseId": "FR04-AI-025", "result": "PASS" },
-        { "caseId": "FR04-AI-026", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-AI-029", "result": "PASS" },
-        { "caseId": "FR04-AI-030", "result": "PASS" },
-        { "caseId": "FR04-AI-033", "result": "PASS" },
-        { "caseId": "FR04-AI-035", "result": "PASS" },
-        { "caseId": "FR04-AI-036", "result": "PASS" },
-        { "caseId": "FR04-AI-038", "result": "PASS" },
-        { "caseId": "FR04-AI-039", "result": "PASS" },
-        { "caseId": "FR04-AI-040", "result": "PASS" },
-        { "caseId": "FR04-AI-041", "result": "PASS" },
-        { "caseId": "FR04-AI-042", "result": "PASS" },
-        { "caseId": "FR04-H-001", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
-        { "caseId": "FR04-H-002", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
-        { "caseId": "FR04-H-003", "result": "PASS", "classification": "EXPLORATORY-OBSERVATION" },
-        { "caseId": "FR04-H-004", "result": "FAIL", "classification": "VERIFIED-CONTRACT-VIOLATION" },
-        { "caseId": "FR04-H-006", "result": "PASS" },
-        { "caseId": "FR04-H-007", "result": "FAIL", "classification": "SPEC-GAP-OBSERVATION" }
+        {
+          "caseId": "FR04-AI-001",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-004",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-005",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-006",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-007",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-008",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-009",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-010",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-011",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-012",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-013",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-014",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-015",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-016",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-017",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-018",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-019",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-020",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-021",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-022",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-023",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-024",
+          "result": "PASS",
+          "manualVerification": "PENDING_UI_SEC-04"
+        },
+        {
+          "caseId": "FR04-AI-025",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-026",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-AI-029",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-030",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-033",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-035",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-036",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-038",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-039",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-040",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-041",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-AI-042",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-H-001",
+          "result": "PASS",
+          "classification": "EXPLORATORY-OBSERVATION"
+        },
+        {
+          "caseId": "FR04-H-002",
+          "result": "PASS",
+          "classification": "EXPLORATORY-OBSERVATION"
+        },
+        {
+          "caseId": "FR04-H-003",
+          "result": "PASS",
+          "classification": "EXPLORATORY-OBSERVATION"
+        },
+        {
+          "caseId": "FR04-H-004",
+          "result": "FAIL",
+          "classification": "VERIFIED-CONTRACT-VIOLATION"
+        },
+        {
+          "caseId": "FR04-H-006",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR04-H-007",
+          "result": "FAIL",
+          "classification": "SPEC-GAP-OBSERVATION"
+        }
       ],
       "resultImportStatus": "human-checked-mapping-with-ai027-excluded-for-intra-run-role-contamination",
       "mappingNote": "FR04-AI-027 executed after FR04-AI-026 changed the shared role and could not restore it. Its result is intentionally excluded here; the clean current-hash targeted run remains canonical for AI-027."
+    },
+    {
+      "mode": "local",
+      "id": "RUN-20260823080014785-fr08-canonical-full-suite",
+      "fixture": false,
+      "startedAtUtc": "2026-08-23T08:00:14.785Z",
+      "completedAtUtc": "2026-08-23T08:00:52.069Z",
+      "hostname": "localhost:3000",
+      "command": "C:\\dev_env\\nodejs\\node.exe",
+      "arguments": [
+        "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+        "run",
+        "work/postman/fr08/FR08-checkout.postman_collection.json",
+        "--reporters",
+        "cli,json,htmlextra",
+        "--reporter-json-export",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+        "--reporter-htmlextra-export",
+        "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+        "--environment",
+        "work/postman/fr08/FR08-checkout.postman_environment.json",
+        "--iteration-data",
+        "work/postman/fr08/FR08-checkout.data.json"
+      ],
+      "exitCode": 1,
+      "collectionPath": "work/postman/fr08/FR08-checkout.postman_collection.json",
+      "collectionSha256": "7d185f739fa800f84d4433ddd7586928aabae225277e88b546984926e099de82",
+      "environmentPath": "work/postman/fr08/FR08-checkout.postman_environment.json",
+      "environmentSha256": "c5ee711db7f232825763768a0b28008daf19620d620b7ede4cafa3088f279679",
+      "dataPath": "work/postman/fr08/FR08-checkout.data.json",
+      "dataSha256": "4b9e7c3824e7b78a1d15cda9271532019e062206a1bf9f6dd73a888ab6005b23",
+      "rawJsonPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+      "htmlReportPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+      "consoleLogPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log",
+      "stderrPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stderr.log",
+      "metadataPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/metadata.json",
+      "reporters": [
+        "cli",
+        "json",
+        "htmlextra"
+      ],
+      "actualHostnames": [
+        "localhost:3000"
+      ],
+      "summaryStats": {
+        "iterations": {
+          "total": 56,
+          "pending": 0,
+          "failed": 0
+        },
+        "items": {
+          "total": 448,
+          "pending": 0,
+          "failed": 0
+        },
+        "scripts": {
+          "total": 1132,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequests": {
+          "total": 448,
+          "pending": 0,
+          "failed": 0
+        },
+        "requests": {
+          "total": 438,
+          "pending": 0,
+          "failed": 0
+        },
+        "tests": {
+          "total": 292,
+          "pending": 0,
+          "failed": 0
+        },
+        "assertions": {
+          "total": 422,
+          "pending": 0,
+          "failed": 19
+        },
+        "testScripts": {
+          "total": 292,
+          "pending": 0,
+          "failed": 0
+        },
+        "prerequestScripts": {
+          "total": 840,
+          "pending": 0,
+          "failed": 0
+        }
+      },
+      "executionCount": 438,
+      "studentHeaderRequests": 438,
+      "caseResults": [
+        {
+          "caseId": "FR08-AI-001",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-002",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-003",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-004",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-005",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-006",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-007",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-008",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-009",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-010",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-011",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-012",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-013",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-014",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-015",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-016",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-017",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-018",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-019",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-020",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-021",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-022",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-023",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-025",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-026",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-027",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-028",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-029",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-030",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-031",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-032",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-033",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-034",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-035",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-036",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-037",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-038",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-039",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-040",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-041",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-042",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-043",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-044",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-045",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-046",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-AI-047",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-048",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-051",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-053",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-055",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-AI-057",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-H-001",
+          "result": "FAIL"
+        },
+        {
+          "caseId": "FR08-H-002",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-H-003",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-H-004",
+          "result": "PASS"
+        },
+        {
+          "caseId": "FR08-H-005",
+          "result": "FAIL"
+        }
+      ],
+      "resultImportStatus": "mapped-from-raw-json"
     }
   ]
 }

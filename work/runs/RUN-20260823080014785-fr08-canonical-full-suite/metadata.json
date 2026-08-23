@@ -1,0 +1,94 @@
+{
+  "id": "RUN-20260823080014785-fr08-canonical-full-suite",
+  "fixture": false,
+  "startedAtUtc": "2026-08-23T08:00:14.785Z",
+  "completedAtUtc": "2026-08-23T08:00:52.069Z",
+  "hostname": "localhost:3000",
+  "command": "C:\\dev_env\\nodejs\\node.exe",
+  "arguments": [
+    "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+    "run",
+    "work/postman/fr08/FR08-checkout.postman_collection.json",
+    "--reporters",
+    "cli,json,htmlextra",
+    "--reporter-json-export",
+    "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+    "--reporter-htmlextra-export",
+    "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+    "--environment",
+    "work/postman/fr08/FR08-checkout.postman_environment.json",
+    "--iteration-data",
+    "work/postman/fr08/FR08-checkout.data.json"
+  ],
+  "exitCode": 1,
+  "collectionPath": "work/postman/fr08/FR08-checkout.postman_collection.json",
+  "collectionSha256": "7d185f739fa800f84d4433ddd7586928aabae225277e88b546984926e099de82",
+  "environmentPath": "work/postman/fr08/FR08-checkout.postman_environment.json",
+  "environmentSha256": "c5ee711db7f232825763768a0b28008daf19620d620b7ede4cafa3088f279679",
+  "dataPath": "work/postman/fr08/FR08-checkout.data.json",
+  "dataSha256": "4b9e7c3824e7b78a1d15cda9271532019e062206a1bf9f6dd73a888ab6005b23",
+  "rawJsonPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.json",
+  "htmlReportPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/newman-report.html",
+  "consoleLogPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stdout.log",
+  "stderrPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/stderr.log",
+  "metadataPath": "work/runs/RUN-20260823080014785-fr08-canonical-full-suite/metadata.json",
+  "reporters": [
+    "cli",
+    "json",
+    "htmlextra"
+  ],
+  "actualHostnames": [
+    "localhost:3000"
+  ],
+  "summaryStats": {
+    "iterations": {
+      "total": 56,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 448,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 1132,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 448,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 438,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 292,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 422,
+      "pending": 0,
+      "failed": 19
+    },
+    "testScripts": {
+      "total": 292,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 840,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "executionCount": 438,
+  "studentHeaderRequests": 438,
+  "caseResults": [],
+  "resultImportStatus": "pending-human-checked-mapping"
+}

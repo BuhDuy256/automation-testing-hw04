@@ -1,0 +1,502 @@
+[
+  {
+    "caseId": "FR08-AI-001",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-019",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "none",
+    "expectNoNewOrder": true,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-031",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": true,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-041",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "none",
+    "body": null,
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-043",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "raw",
+    "body": null,
+    "raw": "{\"total_amount\": 200000, \"shipping_address\":",
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-057",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "expired",
+    "expectNoNewOrder": true,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": true,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": "test@eshop.com",
+    "useSeededPassword": "Test1234!",
+    "secondUser": null,
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-025",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": {
+      "cart": []
+    },
+    "secondCheckout": null,
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": true,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-AI-040",
+    "origin": "AI",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": {
+      "rebuildCart": [
+        {
+          "id": 2,
+          "name": "San pham B",
+          "price": 50000,
+          "quantity": 1
+        }
+      ],
+      "body": {
+        "total_amount": 50000,
+        "shipping_address": "123 Le Loi, TP.HCM"
+      }
+    },
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": true,
+    "assertSecondOrderDerived": true,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": true
+  },
+  {
+    "caseId": "FR08-H-003",
+    "origin": "HUMAN",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "123 Le Loi, TP.HCM"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "none",
+    "expectNoNewOrder": true,
+    "assertExactlyOneNewOrder": true,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": {
+      "body": {
+        "total_amount": 200000,
+        "shipping_address": "123 Le Loi, TP.HCM"
+      }
+    },
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": true,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": true,
+    "assertBothOrdersIndependent": null,
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  },
+  {
+    "caseId": "FR08-H-005",
+    "origin": "HUMAN",
+    "cart": [
+      {
+        "id": 1,
+        "name": "San pham A",
+        "price": 100000,
+        "quantity": 2
+      }
+    ],
+    "bodyMode": "json",
+    "body": {
+      "total_amount": 200000,
+      "shipping_address": "111 Nguyen Hue, Quan 1"
+    },
+    "raw": null,
+    "contentType": "application/json",
+    "auth": "bearer",
+    "expectNoNewOrder": false,
+    "assertExactlyOneNewOrder": false,
+    "assertCartCleared": false,
+    "assertCartUnchanged": false,
+    "assertOrderDetail": false,
+    "assertPriorOrdersIntact": false,
+    "seedPriorOrder": false,
+    "recordAddress": false,
+    "recordStatus": false,
+    "secUiGap": false,
+    "readCatalogueProductId": null,
+    "probeMissingProductId": null,
+    "useSeededUser": null,
+    "useSeededPassword": null,
+    "secondUser": null,
+    "secondCheckout": {
+      "rebuildCart": [
+        {
+          "id": 2,
+          "name": "San pham B",
+          "price": 50000,
+          "quantity": 1
+        }
+      ],
+      "body": {
+        "total_amount": 50000,
+        "shipping_address": "222 Le Duan, Quan 3"
+      }
+    },
+    "injectSecondUserIdField": null,
+    "assertSecondUserNoNewOrder": false,
+    "assertSecondUserCartUnchanged": false,
+    "assertCartUnchangedBeforeSecond": false,
+    "assertFirstOrderDerived": false,
+    "assertSecondOrderDerived": false,
+    "assertBothOrdersIndependent": {
+      "firstAddress": "111 Nguyen Hue, Quan 1",
+      "secondAddress": "222 Le Duan, Quan 3"
+    },
+    "logIntermediateCart": false,
+    "logStaleClientTotal": false,
+    "logSecondUserDerived": false,
+    "logItemCompositionGap": false
+  }
+]

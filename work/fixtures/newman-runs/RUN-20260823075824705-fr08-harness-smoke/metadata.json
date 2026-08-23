@@ -1,0 +1,94 @@
+{
+  "id": "RUN-20260823075824705-fr08-harness-smoke",
+  "fixture": true,
+  "startedAtUtc": "2026-08-23T07:58:24.705Z",
+  "completedAtUtc": "2026-08-23T07:59:15.188Z",
+  "hostname": "localhost:3000",
+  "command": "C:\\dev_env\\nodejs\\node.exe",
+  "arguments": [
+    "C:\\Users\\Duy\\Desktop\\automation-testing-hw04\\node_modules\\newman\\bin\\newman.js",
+    "run",
+    "work/postman/fr08/FR08-checkout.postman_collection.json",
+    "--reporters",
+    "cli,json,htmlextra",
+    "--reporter-json-export",
+    "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/newman-report.json",
+    "--reporter-htmlextra-export",
+    "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/newman-report.html",
+    "--environment",
+    "work/postman/fr08/FR08-checkout.postman_environment.json",
+    "--iteration-data",
+    "work/fixtures/fr08-smoke.data.json"
+  ],
+  "exitCode": 1,
+  "collectionPath": "work/postman/fr08/FR08-checkout.postman_collection.json",
+  "collectionSha256": "7d185f739fa800f84d4433ddd7586928aabae225277e88b546984926e099de82",
+  "environmentPath": "work/postman/fr08/FR08-checkout.postman_environment.json",
+  "environmentSha256": "c5ee711db7f232825763768a0b28008daf19620d620b7ede4cafa3088f279679",
+  "dataPath": "work/fixtures/fr08-smoke.data.json",
+  "dataSha256": "6827d08c2408afe143016ab6e90b00bd13b54cf18dad89d6e5a9d2fa190d44cb",
+  "rawJsonPath": "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/newman-report.json",
+  "htmlReportPath": "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/newman-report.html",
+  "consoleLogPath": "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/stdout.log",
+  "stderrPath": "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/stderr.log",
+  "metadataPath": "work/fixtures/newman-runs/RUN-20260823075824705-fr08-harness-smoke/metadata.json",
+  "reporters": [
+    "cli",
+    "json",
+    "htmlextra"
+  ],
+  "actualHostnames": [
+    "localhost:3000"
+  ],
+  "summaryStats": {
+    "iterations": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 80,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 205,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 80,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 86,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 55,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 85,
+      "pending": 0,
+      "failed": 4
+    },
+    "testScripts": {
+      "total": 55,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 150,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "executionCount": 86,
+  "studentHeaderRequests": 86,
+  "caseResults": [],
+  "resultImportStatus": "pending-human-checked-mapping"
+}
