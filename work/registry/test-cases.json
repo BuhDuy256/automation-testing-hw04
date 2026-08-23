@@ -4425,6 +4425,172 @@
       "generationTool": "Claude Opus 5 (claude-opus-5) via Claude Code",
       "generationPrompt": "# HW06 AI Generation Prompt — HW06-C-FR15-POST-PRODUCTS / FR15-GEN-B5\n\n## Batch identity\n\n- Generation batch ID: `FR15-GEN-B5`\n- Coverage stage: `closure-deduplication`\n- The invoking session records the actual tool/model and completion time immediately after the response.\n\n## Task boundary\n\nGenerate candidate API test cases only for the coverage slice stated below. Do not claim execution,\nobserved responses, or product bugs.\n\n## Authoritative input\n\n- Verified spec extract: `work/selection/HW06-C-FR15-POST-PRODUCTS-verified-spec.md`\n- Exact source sections to consult if the extract is insufficient:\n  - `eshop-sut/README.md` FR-15 and FR-12\n  - `eshop-sut/api_specification.md` §3.1 to §3.4\n\n## Existing cases to avoid duplicating\n\n- `FR15-AI-001` … `FR15-AI-026` (`FR15-GEN-B1`): field partitions and boundaries.\n- `FR15-AI-027` … `FR15-AI-038` (`FR15-GEN-B2`): authorization and security.\n- `FR15-AI-039` … `FR15-AI-046` (`FR15-GEN-B3`): catalogue state transitions.\n- `FR15-AI-047` … `FR15-AI-054` (`FR15-GEN-B4`): request envelope and body shape.\n\n## Coverage slice for this batch\n\n- Required technique/category: closure of the coverage ledger. Add only meaningful cases for risks the\n  four earlier batches leave uncovered, and add nothing that merely restates an existing case.\n- Parameters/states/SEC/schema rules in scope: the lower boundary of the category identifier space,\n  numeric magnitude of the price, name trimming, and imageUrl length robustness.\n- Explicit exclusions: any risk already covered by `FR15-GEN-B1` through `FR15-GEN-B4`; filler cases;\n  setup or cleanup operations presented as product cases.\n\n## Required candidate fields\n\n- All candidate fields required by `hw06-api-test-generator`, including a stable temporary ID,\n  concrete request, observable oracle, basis, coverage tags, requirement references, exact source\n  anchors, setup/reset, assumptions, and generation context.\n- Every candidate must name the specific risk it closes and why no earlier batch covers it.\n- Use `SPEC GAP` instead of inventing an expected status or schema that the authoritative sources do\n  not define.\n- Repeat the supplied generation batch ID. The invoking session stamps the actual tool/model,\n  verbatim prompt, and completion time immediately after the response.\n\n## Output rule\n\nReturn candidates only. Do not label them VALID, do not silently correct the specification, and do\nnot invent runtime evidence. State `SPEC GAP` where the authoritative inputs do not define an oracle.\n",
       "generatedAt": "2026-08-23T09:01:07.762Z"
+    },
+    {
+      "id": "FR15-AI-059",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "AI",
+      "title": "Category id explicitly set to null",
+      "preconditions": "Admin logged in; the run-unique product name is absent from GET /api/products before the attempt; seeded category id 1 exists for comparison but is not submitted",
+      "request": "POST /api/products with Authorization: Bearer <admin JWT>, Content-Type: application/json, and body {\"name\": \"FR15 AI 059 <run-unique suffix>\", \"price\": 100000, \"description\": \"FR15 null category\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": null}",
+      "expected": "FR-15 requires an existing category, and null identifies no existing category, so no product carrying the unique name may be persisted; assert through GET /api/products that the name is absent; the exact rejection status and error schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "domain_partition",
+        "state_transition"
+      ],
+      "requirementRefs": [
+        "FR-15"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-15: category must exist",
+        "work/selection/HW06-C-FR15-POST-PRODUCTS-verified-spec.md - category_id invalid partitions include null",
+        "eshop-sut/api_specification.md - 3.3 create-product JSON body"
+      ],
+      "setupReset": "Setup: login as admin; confirm the unique name is absent. Read-back: GET /api/products and search for the unique name after the attempt. Reset: if a product was created against the rule, capture its id and delete it, or reset the seeded database.",
+      "assumptions": "None; null is explicitly listed as an invalid category_id partition in the human-verified extract and is distinct from omitted, wrong-type, and concrete nonexistent-id cases.",
+      "generationContext": "HW06-C-FR15-POST-PRODUCTS bounded generation batch FR15-GEN-B6, coverage slice category-null-closure: explicit null category_id with every other documented required input valid",
+      "generationBatchId": "FR15-GEN-B6",
+      "generationTool": "OpenAI Codex (GPT-5)",
+      "generationPrompt": "# HW06 AI Generation Prompt — HW06-C-FR15-POST-PRODUCTS / FR15-GEN-B6\n\n## Batch identity\n\n- Generation batch ID: `FR15-GEN-B6`\n- Coverage stage: `category-null-closure`\n- The invoking session records the actual tool/model and completion time immediately after the response.\n\n## Task boundary\n\nGenerate exactly one candidate API test case for the coverage slice below. Do not modify or duplicate\n`FR15-AI-001` through `FR15-AI-058`. Do not claim execution, observed responses, or product bugs.\n\n## Authoritative input\n\n- Verified spec extract: `work/selection/HW06-C-FR15-POST-PRODUCTS-verified-spec.md`\n- `eshop-sut/README.md` FR-15: the selected category must exist.\n- `eshop-sut/api_specification.md` §3.3: `category_id` is part of the create-product JSON body.\n\n## Existing cases to avoid duplicating\n\n- `FR15-AI-017`: concrete nonexistent category id `9999`.\n- `FR15-AI-018`: omitted `category_id`.\n- `FR15-AI-019`: non-numeric string `category_id`.\n- `FR15-AI-055`: category id `0`, proposed INVALID as a duplicate nonexistent-category value.\n\n## Coverage slice for this batch\n\n- Generate the next immutable candidate id `FR15-AI-059`.\n- Send `category_id: null` with a valid admin JWT, a unique valid name, and a valid positive price.\n- Treat null as the missing invalid category partition named by the verified extract.\n- Observable oracle: invalid data must not create a persistent product; verify the unique name is absent\n  through `GET /api/products`.\n- Exact HTTP status and error schema remain `SPEC GAP`.\n\n## Required candidate fields\n\n- Include every field required by `hw06-api-test-generator`.\n- Keep one diagnostic fault: only `category_id` is invalid.\n- Include setup, read-back, and cleanup for accidental persistence.\n- Repeat the supplied generation batch ID. The invoking session stamps the actual tool/model,\n  verbatim prompt, and completion time immediately after the response.\n\n## Output rule\n\nReturn exactly one candidate only. Do not assign a human verdict, claim execution, or invent runtime evidence.\n",
+      "generatedAt": "2026-08-23T09:53:46.147Z"
+    },
+    {
+      "id": "FR15-H-001",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "HUMAN",
+      "title": "Client-supplied product id must not overwrite or alias an existing product",
+      "preconditions": "Admin logged in; seeded product id 1 captured through GET /api/products/1 with its id, name, price, description, imageUrl, and category_id; seeded category id 1 exists; the run-unique product name is absent",
+      "request": "POST /api/products with Authorization: Bearer <admin JWT>, Content-Type: application/json, and body {\"id\": 1, \"name\": \"FR15 H 001 <run-unique suffix>\", \"price\": 100000, \"description\": \"FR15 protected id\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": 1}",
+      "expected": "Read back product id 1 and the run-unique name after the request: the original id 1 product must remain unchanged in all captured fields, and if a new product is created it must have an identity distinct from id 1 rather than overwriting or aliasing it; exact additional-property handling, HTTP status, and response schema are SPEC GAP",
+      "basis": "official_contract_plus_exploration",
+      "coverage": [
+        "state_transition",
+        "security",
+        "schema_validation"
+      ],
+      "requirementRefs": [
+        "FR-15",
+        "API-SPEC-3.2",
+        "API-SPEC-3.3"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/api_specification.md - 3.2 product identity and detail read-back",
+        "eshop-sut/api_specification.md - 3.3 POST creates a product",
+        "work/selection/HW06-C-FR15-POST-PRODUCTS-verified-spec.md - existing-product consistency check"
+      ],
+      "setupReset": "Setup: login as admin; GET /api/products/1 and preserve all returned product fields; confirm the run-unique name is absent. Read-back: GET /api/products/1 and GET /api/products?search=<unique-name>; compare id 1 exactly and inspect any created row id. Reset: delete only a newly created product whose id is not 1; if id 1 changed, preserve evidence and reset the seeded database.",
+      "assumptions": "The create contract does not document client control of id, so acceptance of the additional field is observational; the authoritative state invariant is that POST create must not replace the existing product.",
+      "humanExtensionRationale": "AI proposal A, explicitly selected without modification by the student at HG-FR15-EXT-01. FR15-AI-052 tests a harmless unknown stock_quantity field and FR15-AI-041 checks non-interference during an ordinary create; neither injects the protected id field or tests attempted overwrite/alias behavior."
+    },
+    {
+      "id": "FR15-H-002",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "HUMAN",
+      "title": "Validly signed unexpired non-admin token without a role claim must not authorize product creation",
+      "preconditions": "Known ordinary-user identity captured from a genuine login; seeded category id 1 exists; a deterministic HS256 JWT fixture is validly signed with that non-admin identity, has an unexpired exp claim, and omits the role claim; the run-unique product name is absent",
+      "request": "POST /api/products with Authorization: Bearer <validly signed unexpired non-admin JWT with no role claim> and body {\"name\": \"FR15 H 002 <run-unique suffix>\", \"price\": 100000, \"description\": \"FR15 missing role\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": 1}",
+      "expected": "SEC-03 requires role = admin for this product-changing operation, so the request must not create a product carrying the run-unique name; verify absence through an authoritative product read-back using a genuine admin token; exact rejection status and error schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "security",
+        "state_transition"
+      ],
+      "requirementRefs": [
+        "FR-12",
+        "SEC-02",
+        "SEC-03"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-12 admin-only product data changes",
+        "eshop-sut/README.md - SEC-02 valid JWT required",
+        "eshop-sut/README.md - SEC-03 role = admin required"
+      ],
+      "setupReset": "Setup: login as the known ordinary user to capture identity only; construct the no-role fixture as test input with a future exp and verify its signature, payload, and expiration locally; capture the product baseline with a genuine admin token. Read-back: GET /api/products?search=<unique-name> with the genuine admin token. Reset: delete any product created against the role rule.",
+      "assumptions": "The signing secret is a test-fixture input and is not committed. No expected product behavior is derived from implementation code. This case differs from a user-role token, invalid signature, expired token, and malformed token because only the role claim is absent.",
+      "humanExtensionRationale": "AI proposal B, explicitly selected without modification by the student at HG-FR15-EXT-01. FR15-AI-028 carries an explicit ordinary-user role, FR15-AI-031 has an invalid signature, FR15-AI-032 is expired, and FR15-AI-030 is malformed; no usable AI case isolates a cryptographically valid unexpired token whose authorization claim is absent."
+    },
+    {
+      "id": "FR15-H-003",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "HUMAN",
+      "title": "A deleted temporary category must not remain valid for product creation",
+      "preconditions": "Admin logged in; a run-unique temporary category is created with POST /api/categories, its returned or discovered id is confirmed in GET /api/categories, then deleted with DELETE /api/categories/:id and confirmed absent before the product request; the run-unique product name is absent",
+      "request": "After the temporary category has transitioned from existing to deleted, POST /api/products with Authorization: Bearer <admin JWT> and body {\"name\": \"FR15 H 003 <run-unique suffix>\", \"price\": 100000, \"description\": \"FR15 stale category\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": <deleted temporary category id>}",
+      "expected": "FR-15 requires the category to exist at product-create time, so no product carrying the run-unique name may persist after the referenced temporary category has already been deleted; exact rejection status and error schema are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "state_transition",
+        "domain_partition"
+      ],
+      "requirementRefs": [
+        "FR-15",
+        "API-SPEC-3.3",
+        "API-SPEC-3.4"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-15 category must exist",
+        "eshop-sut/api_specification.md - 3.3 product create",
+        "eshop-sut/api_specification.md - 3.4 category create, list, and delete"
+      ],
+      "setupReset": "Setup: use a run-unique category name; create, locate, delete, and confirm absence through documented supporting category operations, all with the student header. Read-back: GET /api/products?search=<unique-name>. Reset: the temporary category is already deleted; delete any product created against the rule, then confirm both temporary product and category are absent. Supporting category requests do not count as selected HW06 APIs.",
+      "assumptions": "If the supporting category create/delete sequence cannot establish the required starting state, classify the case as BLOCKED rather than replacing the temporary category with a seeded one.",
+      "humanExtensionRationale": "AI proposal C, explicitly selected without modification by the student at HG-FR15-EXT-01. FR15-AI-017 uses an id that never existed; it cannot detect stale category validation after an id transitions from valid to deleted."
+    },
+    {
+      "id": "FR15-H-004",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "HUMAN",
+      "title": "An authorized create must recover cleanly after a refused non-admin attempt with the same name",
+      "preconditions": "Genuine ordinary-user and admin JWTs available; seeded category id 1 exists; product count N captured and one run-unique product name confirmed absent",
+      "request": "First POST /api/products with Authorization: Bearer <ordinary-user JWT> and valid body {\"name\": \"FR15 H 004 <run-unique suffix>\", \"price\": 100000, \"description\": \"FR15 authorization recovery\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": 1}; verify no persistence; then POST the identical body with Authorization: Bearer <admin JWT>",
+      "expected": "FR-12 and SEC-03 require the ordinary-user attempt to create nothing, while the following authorized request with the same valid data must create exactly one product carrying the unique name; the catalogue must move from N to N+1 with no partial or duplicate row from the refused attempt; exact response statuses and schemas are SPEC GAP",
+      "basis": "official_contract",
+      "coverage": [
+        "state_transition",
+        "security"
+      ],
+      "requirementRefs": [
+        "FR-12",
+        "FR-15",
+        "SEC-03"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-12 admin-only product changes",
+        "eshop-sut/README.md - FR-15 valid product rules",
+        "eshop-sut/README.md - SEC-03 admin role required",
+        "eshop-sut/api_specification.md - 3.1 product read-back and 3.3 create"
+      ],
+      "setupReset": "Setup: login as ordinary user and admin; capture N and confirm the unique name is absent. Intermediate read-back: after the refused attempt, GET /api/products?search=<unique-name> with the admin token and require absence. Final read-back: require exactly one matching row and catalogue count N+1. Reset: delete the single created product and verify the name is absent.",
+      "assumptions": "None beyond the documented role boundary and valid create rules.",
+      "humanExtensionRationale": "AI proposal D, explicitly selected without modification by the student at HG-FR15-EXT-01. FR15-AI-037 stops after a refused non-admin create and FR15-AI-044 checks recovery only after an invalid-price request; neither proves recovery from an authorization refusal using the same product identity."
+    },
+    {
+      "id": "FR15-H-005",
+      "apiId": "HW06-C-FR15-POST-PRODUCTS",
+      "origin": "HUMAN",
+      "title": "A product name explicitly set to null must not persist as a valid product",
+      "preconditions": "Admin logged in; seeded category id 1 exists; the product list and count N captured before the attempt",
+      "request": "POST /api/products with Authorization: Bearer <admin JWT>, Content-Type: application/json, and body {\"name\": null, \"price\": 100000, \"description\": \"FR15 null name\", \"imageUrl\": \"https://placehold.co/300x300/png\", \"category_id\": 1}",
+      "expected": "FR-15 documents name as a required string, so a product with a null or otherwise missing valid name must not become a persisted valid product; compare the catalogue with baseline N and inspect for any new nameless or null-named row; exact rejection status, error schema, and null-coercion behavior are SPEC GAP",
+      "basis": "official_contract_plus_exploration",
+      "coverage": [
+        "domain_partition",
+        "state_transition",
+        "schema_validation"
+      ],
+      "requirementRefs": [
+        "FR-15",
+        "API-SPEC-3.3"
+      ],
+      "sourceAnchors": [
+        "eshop-sut/README.md - FR-15 name is required and at most 255 characters",
+        "eshop-sut/api_specification.md - 3.3 name is a JSON string in the create body",
+        "work/selection/HW06-C-FR15-POST-PRODUCTS-verified-spec.md - null and wrong-type name are exploratory partitions"
+      ],
+      "setupReset": "Setup: login as admin; capture the complete product list and N. Read-back: GET /api/products and compare against the baseline, explicitly checking for any new row whose name is null or missing. Reset: delete any row created by the attempt if it can be identified safely; otherwise reset the seeded database.",
+      "assumptions": "The no-persistence invariant follows from the required string-name contract; exact null coercion and response behavior remain SPEC GAP. This case is distinct from omitted, empty-string, numeric, and whitespace-only name inputs.",
+      "humanExtensionRationale": "AI proposal E, explicitly selected without modification by the student at HG-FR15-EXT-01. FR15-AI-007 omits name, FR15-AI-005 sends empty text, FR15-AI-008 sends a number, and FR15-AI-006 sends whitespace only; no usable AI case exercises explicit JSON null for the required name field."
     }
   ]
 }

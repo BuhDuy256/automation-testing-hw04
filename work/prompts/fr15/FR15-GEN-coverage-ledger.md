@@ -4,8 +4,8 @@
 > `work/registry/human-reviews.json` after the `HG-FR15-REV-01` student gate.
 
 Batches: `FR15-GEN-B1` contract-domain (26), `FR15-GEN-B2` authorization-security (12),
-`FR15-GEN-B3` state-transition (8), `FR15-GEN-B4` schema (8), `FR15-GEN-B5` closure-deduplication (4).
-Total AI candidates: 58.
+`FR15-GEN-B3` state-transition (8), `FR15-GEN-B4` schema (8), `FR15-GEN-B5` closure-deduplication (4),
+and `FR15-GEN-B6` category-null-closure (1). Total AI candidates: 59.
 
 Runtime fixtures used: seeded categories `1` Dien thoai, `2` Laptop, `3` Phu kien; five seeded
 products; admin `admin@eshop.com`; ordinary user `test@eshop.com`; the FR-04 validly-signed-but-expired
@@ -22,7 +22,7 @@ JWT fixture, used as a test input only.
 | `price` — valid and boundary | smallest positive 1, fractional 0.5, very large magnitude | FR15-AI-011, FR15-AI-012, FR15-AI-056 |
 | `price` — type coercion | numeric string | FR15-AI-013 |
 | `category_id` — valid | seeded 1, 2, 3 | FR15-AI-001, FR15-AI-020, FR15-AI-045 |
-| `category_id` — invalid | nonexistent 9999, zero, omitted, non-numeric string | FR15-AI-017, FR15-AI-055, FR15-AI-018, FR15-AI-019 |
+| `category_id` — invalid | nonexistent 9999, zero, omitted, non-numeric string, null | FR15-AI-017, FR15-AI-055, FR15-AI-018, FR15-AI-019, FR15-AI-059 |
 | `description` — exploratory | empty, omitted, 5000 characters, structured object | FR15-AI-021, FR15-AI-022, FR15-AI-023, FR15-AI-051 |
 | `imageUrl` — exploratory | malformed value, omitted, boolean, 2000 characters | FR15-AI-024, FR15-AI-025, FR15-AI-054, FR15-AI-058 |
 | `Authorization` | valid admin, missing, non-Bearer scheme, non-JWT string, tampered signature, validly signed but expired, valid ordinary-user token | FR15-AI-001, FR15-AI-027, FR15-AI-029, FR15-AI-030, FR15-AI-031, FR15-AI-032, FR15-AI-028 |
@@ -60,7 +60,7 @@ JWT fixture, used as a test input only.
 | Request envelope faults | FR15-AI-047, FR15-AI-048, FR15-AI-049, FR15-AI-050, FR15-AI-053 | No body, `{}`, malformed JSON, top-level array, `text/plain` |
 | Structured wrong type | FR15-AI-051 | Description as an object |
 | Additional properties | FR15-AI-052 | No documented additional-property rule |
-| Required-field enforcement | FR15-AI-007, FR15-AI-015, FR15-AI-018, FR15-AI-048 | Each required field individually, then all three at once |
+| Required-field enforcement | FR15-AI-007, FR15-AI-015, FR15-AI-018, FR15-AI-048, FR15-AI-059 | Each required field individually, all three at once, and explicit null category |
 
 ## Uncovered items and reasons
 

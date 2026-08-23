@@ -832,6 +832,478 @@
       "reviewedAt": "2026-08-23T07:33:31.094Z",
       "reasoning": "Closes the documented expired-token authorization partition with a validly signed but expired fixture, so it fails for expiry rather than for signature validity and is therefore distinct from FR08-AI-022.",
       "correction": "Accepted as-is. Preserve the expired token strictly as test input; no product oracle may be derived from source code."
+    },
+    {
+      "caseId": "FR15-AI-001",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-002",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "The 255-character value is inside the documented limit, but exact full-length storage is not an authoritative FR-15 requirement.",
+      "correction": "Keep the 255-character input. Assert only creation because 255 is allowed; record the stored value and length. Do not classify truncation or normalization as a contract defect without an authoritative rule."
+    },
+    {
+      "caseId": "FR15-AI-003",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-004",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-005",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-006",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-007",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-008",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-009",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-010",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-011",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Price 1 is a concrete positive integer, but FR-15 defines a positive number and documents no minimum increment or precision, so it is not the mathematical smallest-positive boundary.",
+      "correction": "Keep price=1 as one concrete positive integer example. Remove “smallest positive” and boundary language; record the stored value without inventing precision or increment rules."
+    },
+    {
+      "caseId": "FR15-AI-012",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-013",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-014",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-015",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-016",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-017",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-018",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-019",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-020",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-021",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-022",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-023",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-024",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-025",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-026",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Vietnamese Unicode input is useful, but FR-15 does not require exact character-for-character round-trip fidelity or define normalization behavior.",
+      "correction": "Keep the Vietnamese input and record the stored/read-back value. Treat normalization and exact fidelity as SPEC GAP unless an authoritative rule is found."
+    },
+    {
+      "caseId": "FR15-AI-027",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-028",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-029",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-030",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-031",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-032",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "A validly signed but expired token is a distinct token-validity/security robustness partition under SEC-02, which requires a valid JWT; it remains distinct from signature tampering.",
+      "correction": "Accepted with corrected grounding: cite SEC-02’s valid-JWT requirement. Do not claim the verified extract explicitly lists expired JWT as an invalid partition."
+    },
+    {
+      "caseId": "FR15-AI-033",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-034",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "The HTML-like input is useful for observation, but API acceptance or read-back cannot prove SEC-04 display escaping, and FR-15 defines no character-preservation or normalization rule.",
+      "correction": "Keep the HTML-like input. Observe acceptance/rejection and stored/read-back value without requiring character-identical preservation or treating transformation as an FR-15 defect. UI/display-boundary SEC-04 evidence remains separate."
+    },
+    {
+      "caseId": "FR15-AI-035",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-036",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-037",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct security and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-038",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Repeats baseline creation and invents a token-reuse risk; multi-product persistence is already covered by FR15-AI-040 and FR15-AI-041.",
+      "correction": "Drop FR15-AI-038; do not retain a repeated baseline create for count optics."
+    },
+    {
+      "caseId": "FR15-AI-039",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition and schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-040",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-041",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-042",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-043",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-044",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct state_transition and domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-045",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Using category 3 repeats FR15-AI-020’s existing-category/non-defaulting partition and adds no distinct diagnostic purpose.",
+      "correction": "Drop FR15-AI-045 and keep FR15-AI-020."
+    },
+    {
+      "caseId": "FR15-AI-046",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Product creation not modifying the category list is not an authoritative FR-15 requirement, and the inferred side-effect check is too weak for a separate product case.",
+      "correction": "Drop FR15-AI-046."
+    },
+    {
+      "caseId": "FR15-AI-047",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-048",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-049",
+      "verdict": "INCOMPLETE",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Malformed JSON is a distinct request-envelope fault, but the original narrative does not fix the exact bytes testers must send.",
+      "correction": "Send exactly the raw body {\"name\": \"FR15 AI 049\", \"price\": with no value or closing brace, and prevent client re-serialization. Assert no persistence; status and error schema remain SPEC GAP."
+    },
+    {
+      "caseId": "FR15-AI-050",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation and state_transition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-051",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-052",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-053",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-054",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct schema_validation purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-055",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Category id 0 is another nonexistent-category value and duplicates FR15-AI-017; no authoritative minimum category-id boundary is documented.",
+      "correction": "Drop FR15-AI-055 and retain FR15-AI-017 for the nonexistent-category partition."
+    },
+    {
+      "caseId": "FR15-AI-056",
+      "verdict": "INVALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "The extremely large positive value is not a documented boundary; reducing its oracle to price greater than zero duplicates existing valid-price coverage.",
+      "correction": "Drop FR15-AI-056 rather than inventing a numeric precision or magnitude boundary."
+    },
+    {
+      "caseId": "FR15-AI-057",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-058",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Executable as written with a distinct domain_partition purpose, concrete input, and a source-grounded or explicitly observational oracle; not duplicated by another retained FR-15 case.",
+      "correction": "Accepted as-is; no correction required."
+    },
+    {
+      "caseId": "FR15-AI-059",
+      "verdict": "VALID",
+      "reviewedBy": "Human (explicit confirmation in chat)",
+      "reviewedAt": "2026-08-23T10:02:01.234Z",
+      "reasoning": "Explicit null closes the authoritative invalid category partition and is distinct from omitted, wrong-type, and concrete nonexistent-category inputs.",
+      "correction": "Accepted as-is; no correction required."
     }
   ]
 }
