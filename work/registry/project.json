@@ -79,5 +79,14 @@
       "RUN-20260823080014785-fr08-canonical-full-suite"
     ],
     "officialPrimaryRunId": "RUN-20260823080014785-fr08-canonical-full-suite"
+  },
+  "postmanFr15": {
+    "collectionPath": "work/postman/fr15/FR15-products.postman_collection.json",
+    "environmentPath": "work/postman/fr15/FR15-products.postman_environment.json",
+    "dataFiles": [
+      "work/postman/fr15/FR15-products.postman_data.json"
+    ],
+    "officialRunIds": [],
+    "officialPrimaryRunId": null
   }
 }

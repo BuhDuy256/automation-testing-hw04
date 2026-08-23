@@ -1,0 +1,691 @@
+{
+  "info": {
+    "_postman_id": "hw06-fr15-products-20260823",
+    "name": "HW06 FR-15 Product Management - POST /api/products",
+    "description": "Canonical reviewed FR-15 suite: 54 usable AI-origin cases plus five student-selected HUMAN extensions.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "var row = pm.iterationData.toObject();",
+          "pm.request.headers.upsert({ key: 'X-Student-Id', value: pm.environment.get('studentId') || '23127179' });",
+          "if (pm.environment.get('activeCaseId') !== row.caseId) {",
+          "  pm.environment.set('activeCaseId', row.caseId);",
+          "  pm.environment.set('uniqueName', row.caseId + '-' + pm.info.iteration + '-' + Date.now());",
+          "  pm.environment.set('tempCategoryName', row.caseId + '-category-' + pm.info.iteration + '-' + Date.now());",
+          "  pm.environment.set('tempCategoryId', '');",
+          "  pm.environment.set('createdProductId', '');",
+          "  pm.environment.set('caseBlocked', 'false');",
+          "  pm.environment.set('phase1NewIds', '[]');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "studentId",
+      "value": "23127179"
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup admin login for {{caseId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('admin supporting login returns 200', function () { pm.response.to.have.status(200); });",
+              "var json = pm.response.json();",
+              "pm.expect(json.token, 'admin token').to.be.a('string').and.not.empty;",
+              "pm.environment.set('adminToken', json.token);",
+              "if (json.user && json.user.id !== undefined) pm.environment.set('adminUserId', String(json.user.id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{adminEmail}}\",\"password\":\"{{adminPassword}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Setup ordinary-user login for {{caseId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('user supporting login returns 200', function () { pm.response.to.have.status(200); });",
+              "var json = pm.response.json();",
+              "pm.expect(json.token, 'user token').to.be.a('string').and.not.empty;",
+              "pm.environment.set('userToken', json.token);",
+              "if (json.user && json.user.id !== undefined) pm.environment.set('userUserId', String(json.user.id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{userEmail}}\",\"password\":\"{{userPassword}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Capture product baseline for {{caseId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('product baseline is readable', function () { pm.response.to.have.status(200); });",
+              "var products = pm.response.json();",
+              "pm.expect(products, 'product baseline array').to.be.an('array');",
+              "pm.environment.set('baselineProducts', JSON.stringify(products));",
+              "pm.environment.set('baselineProductIds', JSON.stringify(products.map(function (p) { return p.id; })));",
+              "console.log(pm.iterationData.get('caseId') + ' baseline product count=' + products.length);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-H-003 setup - create temporary category",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('h003')) pm.execution.skipRequest();",
+              "",
+              "var token = pm.environment.get('adminToken');",
+              "pm.request.headers.remove('Authorization');",
+              "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });",
+              "",
+              "pm.request.body.update({ mode: 'raw', raw: JSON.stringify({ name: pm.environment.get('tempCategoryName') }), options: { raw: { language: 'json' } } });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.iterationData.get('caseId');",
+              "pm.test(id + ' temporary category create is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "try { var json = pm.response.json(); if (json.id !== undefined) pm.environment.set('tempCategoryId', String(json.id)); } catch (_) {}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/categories",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-H-003 setup - confirm temporary category exists",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('h003')) pm.execution.skipRequest();"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var rows = pm.response.json();",
+              "var found = rows.find(function (c) { return c.name === pm.environment.get('tempCategoryName'); });",
+              "pm.test('FR15-H-003 temporary category exists before deletion', function () { pm.expect(found).to.be.an('object'); });",
+              "if (found) pm.environment.set('tempCategoryId', String(found.id));",
+              "if (!found) pm.environment.set('caseBlocked', 'true');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/categories",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-H-003 setup - delete temporary category",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('h003')) pm.execution.skipRequest();",
+              "",
+              "var token = pm.environment.get('adminToken');",
+              "pm.request.headers.remove('Authorization');",
+              "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('FR15-H-003 category delete is observable', function () { pm.expect(pm.response.code).to.be.a('number'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/categories/{{tempCategoryId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories",
+            "{{tempCategoryId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-H-003 setup - confirm temporary category is absent",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('h003')) pm.execution.skipRequest();"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var rows = pm.response.json();",
+              "var id = Number(pm.environment.get('tempCategoryId'));",
+              "var found = rows.find(function (c) { return Number(c.id) === id; });",
+              "pm.test('FR15-H-003 temporary category is absent before product create', function () { pm.expect(found).to.equal(undefined); });",
+              "if (found) pm.environment.set('caseBlocked', 'true');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/categories",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute {{caseId}} phase 1 - POST /api/products",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject();",
+              "var id = row.caseId;",
+              "var unique = pm.environment.get('uniqueName');",
+              "function subst(value) {",
+              "  if (value === '__DELETED_CATEGORY_ID__') return Number(pm.environment.get('tempCategoryId'));",
+              "  if (typeof value === 'string') return value.replaceAll('__NAME__', unique);",
+              "  if (Array.isArray(value)) return value.map(subst);",
+              "  if (value && typeof value === 'object') { var out = {}; Object.keys(value).forEach(function (key) { out[key] = subst(value[key]); }); return out; }",
+              "  return value;",
+              "}",
+              "pm.request.headers.remove('Authorization');",
+              "var mode = row.auth || 'admin';",
+              "var admin = pm.environment.get('adminToken');",
+              "if (mode === 'admin') pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + admin });",
+              "if (mode === 'user') pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('userToken') });",
+              "if (mode === 'scheme') pm.request.headers.add({ key: 'Authorization', value: 'Token abc123' });",
+              "if (mode === 'malformed') pm.request.headers.add({ key: 'Authorization', value: 'Bearer not-a-jwt' });",
+              "if (mode === 'tampered') { var parts = admin.split('.'); var sig = parts[2]; var last = sig.slice(-1); parts[2] = sig.slice(0, -1) + (last === 'A' ? 'B' : 'A'); pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + parts.join('.') }); }",
+              "if (mode === 'expiredAdmin') pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('expiredAdminToken') });",
+              "if (mode === 'missingRole') pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('missingRoleToken') });",
+              "pm.request.headers.upsert({ key: 'Content-Type', value: row.contentType || 'application/json' });",
+              "var raw = '';",
+              "if (row.bodyMode === 'json') raw = JSON.stringify(subst(row.body));",
+              "if (row.bodyMode === 'raw') raw = subst(row.raw || '');",
+              "pm.request.body.update({ mode: 'raw', raw: raw, options: { raw: { language: 'json' } } });",
+              "pm.environment.set('submittedExpected', JSON.stringify(subst(row.body)));",
+              "console.log(id + ' phase1 auth=' + mode + ' body=' + raw);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id = pm.iterationData.get('caseId');",
+              "pm.test(id + ' selected request carries X-Student-Id', function () { pm.expect(pm.request.headers.get('X-Student-Id')).to.eql('23127179'); });",
+              "pm.test(id + ' phase 1 produced an HTTP response', function () { pm.expect(pm.response.code).to.be.a('number'); });",
+              "pm.environment.set('phase1Status', String(pm.response.code));",
+              "console.log(id + ' SPEC GAP response phase1 status=' + pm.response.code + ' body=' + pm.response.text());"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verify {{caseId}} phase 1 state before phase 2",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('phase2Kind')) pm.execution.skipRequest();"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject(); var id = row.caseId;",
+              "var baselineIds = JSON.parse(pm.environment.get('baselineProductIds') || '[]').map(Number);",
+              "var current = pm.response.json();",
+              "var newRows = current.filter(function (p) { return !baselineIds.includes(Number(p.id)); });",
+              "pm.environment.set('phase1NewIds', JSON.stringify(newRows.map(function (p) { return p.id; })));",
+              "if (row.phase2Kind === 'duplicate') pm.test(id + ' first valid create persists before duplicate observation', function () { pm.expect(newRows.length).to.eql(1); });",
+              "if (row.phase2Kind === 'domainRecovery' || row.phase2Kind === 'authRecovery') pm.test(id + ' refused phase 1 leaves no product', function () { pm.expect(newRows.length).to.eql(0); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute {{caseId}} phase 2 - POST /api/products",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row = pm.iterationData.toObject(); if (!row.phase2Kind) pm.execution.skipRequest();",
+              "var unique = pm.environment.get('uniqueName');",
+              "function subst(value) { if (typeof value === 'string') return value.replaceAll('__NAME__', unique); if (Array.isArray(value)) return value.map(subst); if (value && typeof value === 'object') { var out={}; Object.keys(value).forEach(function(k){out[k]=subst(value[k]);}); return out; } return value; }",
+              "pm.request.headers.remove('Authorization');",
+              "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('adminToken') });",
+              "pm.request.headers.upsert({ key: 'Content-Type', value: 'application/json' });",
+              "pm.request.body.update({ mode: 'raw', raw: JSON.stringify(subst(row.phase2Body)), options: { raw: { language: 'json' } } });",
+              "pm.environment.set('submittedExpected', JSON.stringify(subst(row.phase2Body)));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var id=pm.iterationData.get('caseId');",
+              "pm.test(id + ' phase 2 carries X-Student-Id', function(){pm.expect(pm.request.headers.get('X-Student-Id')).to.eql('23127179');});",
+              "pm.test(id + ' phase 2 produced an HTTP response', function(){pm.expect(pm.response.code).to.be.a('number');});",
+              "console.log(id + ' SPEC GAP response phase2 status=' + pm.response.code + ' body=' + pm.response.text());"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verify {{caseId}} final product state",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row=pm.iterationData.toObject(); var id=row.caseId; var unique=pm.environment.get('uniqueName');",
+              "var baseline=JSON.parse(pm.environment.get('baselineProducts')||'[]'); var baselineIds=baseline.map(function(p){return Number(p.id);});",
+              "var current=pm.response.json(); var newRows=current.filter(function(p){return !baselineIds.includes(Number(p.id));});",
+              "var matching=current.filter(function(p){return p.name===unique || (typeof p.name==='string' && p.name.includes(unique));});",
+              "pm.environment.set('newProductIds',JSON.stringify(newRows.map(function(p){return p.id;})));",
+              "if(newRows[0]) pm.environment.set('createdProductId',String(newRows[0].id));",
+              "if(row.expectedMode==='mustCreate') pm.test(id+' creates exactly one product',function(){pm.expect(newRows.length).to.eql(1);});",
+              "if(row.expectedMode==='mustNotCreate') pm.test(id+' forbidden or invalid input creates no product',function(){pm.expect(newRows.length).to.eql(0);});",
+              "if(row.expectedMode==='recovery') pm.test(id+' recovery leaves exactly one authorized valid product',function(){pm.expect(newRows.length).to.eql(1);pm.expect(matching.length).to.eql(1);});",
+              "if(row.expectedMode==='duplicateObserve') { pm.test(id+' first valid product remains persisted',function(){pm.expect(newRows.length).to.be.at.least(1);}); console.log(id+' SPEC GAP duplicate-name result: newRows='+newRows.length); }",
+              "if(row.expectedMode==='observe') console.log(id+' SPEC GAP observation: newRows='+newRows.length+' matching='+matching.length+' status='+pm.environment.get('phase1Status'));",
+              "if(row.assertFields && row.assertFields.length && newRows.length===1){var expected=JSON.parse(pm.environment.get('submittedExpected')||'{}');var actual=newRows[0];pm.test(id+' documented persisted fields match',function(){row.assertFields.forEach(function(key){pm.expect(actual[key],key).to.eql(expected[key]);});});}",
+              "function slim(p){return {id:p.id,name:p.name,price:p.price,description:p.description,imageUrl:p.imageUrl,category_id:p.category_id};}",
+              "if(row.preserveExisting){pm.test(id+' existing products remain unchanged',function(){baseline.forEach(function(before){var after=current.find(function(p){return Number(p.id)===Number(before.id);});pm.expect(after,'existing id '+before.id).to.be.an('object');pm.expect(slim(after)).to.eql(slim(before));});});}",
+              "if(row.protectedIdCheck){var before1=baseline.find(function(p){return Number(p.id)===1;});var after1=current.find(function(p){return Number(p.id)===1;});pm.test(id+' seeded product id 1 is unchanged and never aliased',function(){pm.expect(slim(after1)).to.eql(slim(before1));newRows.forEach(function(p){pm.expect(Number(p.id)).not.to.eql(1);});});}",
+              "if(row.secUiGap) console.log(id+' EVIDENCE GAP: API acceptance/read-back does not prove SEC-04 UI escaping; normalization is observational.');",
+              "if(row.secSqlGap) console.log(id+' EVIDENCE GAP: black-box persistence integrity cannot prove internal parameterized queries.');",
+              "if(row.h003 && pm.environment.get('caseBlocked')==='true') console.log(id+' BLOCKED: temporary-category starting state was not established; do not classify the product result as a defect.');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-AI-039 detail read-back",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('detailReadback')) pm.execution.skipRequest();"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row=pm.iterationData.toObject();var json=pm.response.json();var expected=JSON.parse(pm.environment.get('submittedExpected')||'{}');",
+              "pm.test(row.caseId+' created product is retrievable by its id',function(){pm.expect(Number(json.id)).to.eql(Number(pm.environment.get('createdProductId')));pm.expect(json.name).to.eql(expected.name);pm.expect(Number(json.price)).to.eql(Number(expected.price));pm.expect(Number(json.category_id)).to.eql(Number(expected.category_id));});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{createdProductId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "{{createdProductId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FR15-AI-042 documented name-search read-back",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!pm.iterationData.get('searchReadback')) pm.execution.skipRequest();"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var rows=pm.response.json();var name=pm.environment.get('uniqueName');pm.test('FR15-AI-042 created product is findable by documented name search',function(){pm.expect(rows.some(function(p){return p.name===name;})).to.eql(true);});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products?search={{uniqueName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products?search={{uniqueName}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cleanup and verify exact product baseline for {{caseId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var row=pm.iterationData.toObject();var id=row.caseId;var base=pm.environment.get('baseUrl');var sid=pm.environment.get('studentId');var token=pm.environment.get('adminToken');",
+              "var baseline=JSON.parse(pm.environment.get('baselineProducts')||'[]');var baselineIds=baseline.map(function(p){return Number(p.id);});var current=pm.response.json();",
+              "var created=current.filter(function(p){return !baselineIds.includes(Number(p.id));});",
+              "function hdr(extra){return Object.assign({'X-Student-Id':sid,Authorization:'Bearer '+token},extra||{});}",
+              "function slim(p){return {id:p.id,name:p.name,price:p.price,description:p.description,imageUrl:p.imageUrl,category_id:p.category_id};}",
+              "var changed=baseline.filter(function(before){var after=current.find(function(p){return Number(p.id)===Number(before.id);});return after && JSON.stringify(slim(after))!==JSON.stringify(slim(before));});",
+              "function restore(i,done){if(i>=changed.length)return done();var p=changed[i];pm.sendRequest({url:base+'/api/products/'+p.id,method:'PUT',header:hdr({'Content-Type':'application/json'}),body:{mode:'raw',raw:JSON.stringify({name:p.name,price:p.price,description:p.description,imageUrl:p.imageUrl,category_id:p.category_id})}},function(){restore(i+1,done);});}",
+              "function remove(i,done){if(i>=created.length)return done();pm.sendRequest({url:base+'/api/products/'+created[i].id,method:'DELETE',header:hdr()},function(){remove(i+1,done);});}",
+              "restore(0,function(){remove(0,function(){pm.sendRequest({url:base+'/api/products',method:'GET',header:{'X-Student-Id':sid}},function(err,res){pm.expect(err,'cleanup read-back transport').to.equal(null);var finalRows=res.json();pm.test(id+' cleanup restores exact product baseline',function(){pm.expect(finalRows.map(slim)).to.eql(baseline.map(slim));});});});});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    }
+  ]
+}
