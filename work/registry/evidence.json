@@ -394,6 +394,30 @@
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy",
       "attestedAt": "2026-08-23T08:40:10.758Z"
+    },
+    {
+      "id": "EVID-CI-FR08-ALL-PASS",
+      "type": "github-actions-run",
+      "description": "GitHub Actions run 32629097098 of the HW06 FR-08 Newman CI Sample workflow at commit a1f2188, concluding success with every assertion passing for canonical case FR08-AI-019.",
+      "path": "work/evidence/screenshots/EVID-CI-FR08-ALL-PASS.png",
+      "sha256": "d94925d3ae13460d491b45f698c04a8d67bdb024ff134f6648398e0fdc23612e",
+      "capturedAt": "2026-08-23T08:46:20.151Z",
+      "captureMethod": "Playwright headless Chromium",
+      "sourceUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629097098",
+      "finalUrl": "https://github.com/BuhDuy256/automation-testing-hw04/actions/runs/32629097098",
+      "pageTitle": "feat(hw06): add FR-08 CI workflow and attest issue-page evidence · BuhDuy256/automation-testing-hw04@a1f2188 · GitHub",
+      "mode": "full-page",
+      "selector": null,
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "image": {
+        "bytes": 108719,
+        "width": 1600,
+        "height": 1141
+      },
+      "humanAttestation": false
     }
   ]
 }
