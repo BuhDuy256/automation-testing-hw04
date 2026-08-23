@@ -1417,3 +1417,43 @@ close was the runtime database `eshop-sut/backend/database.sqlite`.
 Next genuine human gate: `HG-FR15-BUG-02`. The student must explicitly confirm or reject each of
 `BUG-CANDIDATE-FR15-AUTHORIZATION` and `BUG-CANDIDATE-FR15-VALIDATION` as a genuine bug. Do not infer
 the decision, publish Issues, or create human evidence attestation.
+
+## 43. Checkpoint — FR-15 bugs confirmed; Newman evidence awaiting visual attestation
+
+At `HG-FR15-BUG-02`, the student explicitly confirmed both FR-15 root defects at the recorded action
+timestamp `2026-08-23T10:40:24.2861323Z`:
+
+- `BUG-CANDIDATE-FR15-AUTHORIZATION` is `human-confirmed`, preserving all 10 affected canonical
+  cases and `RUN-20260823102829114-fr15-auth-reproduction` with its 5/5 result.
+- `BUG-CANDIDATE-FR15-VALIDATION` is `human-confirmed`, preserving all 18 affected canonical cases
+  and `RUN-20260823102841701-fr15-validation-reproduction` with its 6/6 result.
+
+The two records remain grouped by root defect. No HTTP-status oracle was added, name/price/category
+partitions were not split, and no GitHub Issue was published. All 28 authoritative canonical FAIL
+cases map to the two confirmed bugs. The canonical run was not rerun or modified and remains 59
+cases: 16 PASS, 28 FAIL, 15 SPEC-GAP observations, 0 HARNESS, and 0 BLOCKED.
+
+`ACT-EVID-01` prepared the smallest representative set from the immutable Newman HTML reports:
+
+```text
+EVID-FR15-RUN-SUMMARY    canonical dashboard, 1600x1100
+EVID-FR15-AUTHORIZATION  FR15-AI-028 ordinary-user JWT persistence, 1046x5089
+EVID-FR15-VALIDATION     FR15-AI-009 price=0 persistence, 1046x5089
+```
+
+AI verified PNG signatures, hashes, dimensions, sidecar/registry agreement, source run and case
+mappings, visible `X-Student-Id: 23127179` on the representative requests, and the real failed
+persistence assertions. All three evidence records deliberately remain `humanAttestation=false`.
+The review packet is `work/reviews/HG-FR15-EVID-01-proposal.md`.
+
+The explicitly authorized cumulative AI Audit Report now covers FR-15 through this gate: 59 original
+FR-15 AI test artifacts plus 7 later AI-assisted workflow artifacts. Cumulative totals are 180
+artifacts: 124 VALID, 35 INCOMPLETE, and 21 INVALID. Existing FR-04 and FR-08 content was retained.
+Missing standalone prompts/models/times are disclosed instead of reconstructed.
+
+Commits `723e792` (bug confirmation and evidence) and `723d3a4` (FR-15 AI audit) were pushed normally
+to `origin/hw06-api-testing`. The runtime database remains excluded.
+
+Next genuine human gate: `HG-FR15-EVID-01`. The student must open and visually inspect all three PNGs
+before giving explicit attestation. Do not record attestation, publish either Issue, or proceed past
+this gate without that decision.
