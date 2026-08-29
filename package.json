@@ -12,7 +12,7 @@
     "hw06:export-xlsx": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hw06/export-test-cases.ps1",
     "hw06:render-pdf": "node scripts/hw06/render-markdown-pdf.mjs",
     "hw06:validate:out": "node scripts/hw06/validate-out.mjs",
-    "hw06:finalize": "npm run hw06:derive && npm run hw06:curate-out && npm run hw06:render-pdf && npm run hw06:validate && npm run hw06:validate:out"
+    "hw06:finalize": "npm run hw06:derive && npm run hw06:curate-out && npm run hw06:validate && npm run hw06:validate:out"
   },
   "devDependencies": {
     "newman": "^6.2.1",

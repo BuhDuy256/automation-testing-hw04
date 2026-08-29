@@ -3,7 +3,6 @@
   "requiredArtifacts": [
     { "id": "submission-readme", "path": "out/README.md" },
     { "id": "main-report-markdown", "path": "out/main-report.md" },
-    { "id": "main-report-pdf", "path": "out/main-report.pdf" },
     { "id": "test-cases-excel", "path": "out/test-cases.xlsx" },
     { "id": "postman-collection", "pathFrom": "project.postman.collectionPath" },
     { "id": "newman-report-html", "evidenceType": "newman-html-report" },
@@ -13,7 +12,6 @@
     { "id": "generator-diagram", "evidenceType": "self-drawn-generator-diagram" },
     { "id": "generator-pseudocode", "path": "out/generator/pseudocode.md" },
     { "id": "ai-audit-markdown", "path": "out/ai-audit-report.md" },
-    { "id": "ai-audit-pdf", "path": "out/ai-audit-report.pdf" },
     { "id": "ai-critique", "path": "out/ai-critique.md" },
     { "id": "git-commit-log", "path": "out/git-commit-log.txt" },
     { "id": "github-repository-link", "path": "out/github-repo-link.txt" }

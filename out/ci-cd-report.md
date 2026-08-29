@@ -19,7 +19,7 @@
 - Result: failure
 - Canonical logical cases: 44/44 executed; 35 passed; 9 failed.
 - Failure classification: 8 known-bug failures; 1 other/specification-gap failure.
-- Student-header runtime proof: 305/305 requests.
+- Required-header runtime proof: 305/305 requests.
 - Main collection SHA-256: 35d8ef322af899bd42ae9399c1f31c46145287e4a35622f7a37f2a9001a3551f
 - Main data SHA-256: 905c5448170c40746565300360d3840865a643ca5a7249b1c25580dffc72eb14
 - Canonical summary: provenance/ci-index.md (CI-32618732832-canonical-full-suite)

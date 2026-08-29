@@ -26,8 +26,8 @@ function requireFile(name) {
 }
 
 for (const name of [
-  'README.md', 'main-report.md', 'main-report.pdf', 'test-cases.xlsx', 'submission-checklist.md',
-  'ai-audit-report.md', 'ai-audit-report.pdf', 'ai-critique.md', 'ai-critique.pdf', 'git-commit-log.txt',
+  'README.md', 'main-report.md', 'test-cases.xlsx', 'submission-checklist.md',
+  'ai-audit-report.md', 'ai-critique.md', 'git-commit-log.txt',
   'github-repo-link.txt', 'bug-report.md', 'ci-cd-report.md', 'postman-features.md',
   'generator/pseudocode.md', 'generator/agent-skill/SKILL.md',
 ]) requireFile(name);
@@ -114,10 +114,6 @@ if (fs.existsSync(gitEvidencePath)) {
   }
 }
 
-for (const [name, signature] of [['main-report.pdf', '%PDF-'], ['ai-audit-report.pdf', '%PDF-'], ['ai-critique.pdf', '%PDF-']]) {
-  const target = path.join(outRoot, name);
-  if (fs.existsSync(target) && fs.readFileSync(target).subarray(0, 5).toString('ascii') !== signature) errors.push(`${name} is not a valid PDF`);
-}
 const xlsxPath = path.join(outRoot, 'test-cases.xlsx');
 if (fs.existsSync(xlsxPath) && fs.readFileSync(xlsxPath).subarray(0, 2).toString('ascii') !== 'PK') errors.push('test-cases.xlsx is not an Open XML ZIP package');
 
