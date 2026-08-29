@@ -58,7 +58,10 @@ for (const file of files.filter((item) => textExtensions.has(path.extname(item).
 
 const youtubeMarker = '[TO BE FILLED BY STUDENT]';
 const markerLocations = files.filter((file) => textExtensions.has(path.extname(file).toLowerCase()) && fs.readFileSync(file, 'utf8').includes(youtubeMarker));
-if (markerLocations.length !== 1 || relative(markerLocations[0]) !== 'README.md') errors.push('YouTube placeholder must appear exactly once, in README.md');
+const readme = fs.readFileSync(path.join(outRoot, 'README.md'), 'utf8');
+const youtubeUrls = [...readme.matchAll(/https?:\/\/(?:www\.)?(?:youtube\.com\/\S+|youtu\.be\/\S+)/gi)];
+if (markerLocations.length > 0 && (markerLocations.length !== 1 || relative(markerLocations[0]) !== 'README.md')) errors.push('YouTube placeholder may appear only once, in README.md');
+if (markerLocations.length === 0 && youtubeUrls.length !== 1) errors.push('README.md must contain exactly one YouTube demonstration URL when the placeholder is removed');
 
 for (const file of files.filter((item) => path.extname(item).toLowerCase() === '.md')) {
   const content = fs.readFileSync(file, 'utf8');

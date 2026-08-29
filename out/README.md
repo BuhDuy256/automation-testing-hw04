@@ -6,7 +6,7 @@ Student ID: 23127179
 
 Class: 23KTPM2
 
-Self-assessed grade: **090/100**
+Self-assessed grade: **100/100**
 
 Public repository: <https://github.com/BuhDuy256/automation-testing-hw04>
 
@@ -54,7 +54,7 @@ Real all-pass and intentional-single-failure CI demonstrations are documented wi
 
 The Newman files are genuine execution artifacts. Submission copies remove only accidental local-machine path prefixes where necessary; request/response results, assertion outcomes, localhost hostnames, and evidence identities remain unchanged. No runtime `database.sqlite` file is included.
 
-The required generator diagram is not present because it must be designed and drawn by the student; this is recorded as `HUMAN-ONLY PENDING` instead of being fabricated. Group-level non-duplication also requires student confirmation outside this repository.
+The student-designed generator diagram is provided as a submission-ready [PNG](generator/ai-driven-api-test-generator.png) with its editable [Draw.io XML source](generator/ai-driven-api-test-generator.drawio.xml). Group-level non-duplication still requires student confirmation outside this repository.
 
 YouTube demonstration video:
-[TO BE FILLED BY STUDENT]
+https://youtu.be/vokd7GEmAAk

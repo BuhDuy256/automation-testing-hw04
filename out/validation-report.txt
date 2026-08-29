@@ -1,5 +1,5 @@
 HW06 Final Submission Validation Record
-Date: 2026-08-23
+Date: 2026-08-30
 
 npm run hw06:finalize
 PASS — runs derive, curate-out, render-pdf, validate and validate:out in the one
@@ -20,9 +20,9 @@ forbidden databases, token/private-key signatures, canonical counts, Issue recor
 Git hashes, CI commit/link records, and PDF/XLSX signatures.
 
 Evidence reachability
-PASS — all 30 attested evidence screenshots are referenced from a submission
-document, not only present as files. The six GitHub Issue page screenshots are
-listed in bug-report.md and all seven recorded CI runs in ci-cd-report.md.
+PASS — all attested evidence is registered and referenced from the submission.
+The student-supplied generator diagram is included as a PNG with its editable
+Draw.io XML source under generator/.
 
 Curation idempotence
 PASS — two consecutive curation runs produce a byte-identical out/. This was a
@@ -30,10 +30,9 @@ real defect: the workflow-path rewrite embedded its own search string, so
 repeated runs tripled eight blob URLs in ai-audit-report.md. Fixed and verified.
 
 npm run hw06:validate:submission
-FAIL — 2 errors, 0 warnings.
-Both errors have one genuine human-only cause:
-- missing required evidence type: self-drawn-generator-diagram
-- generator-diagram artifact lacks that evidence type
+PASS — 0 errors, 0 warnings.
+The student-supplied generator diagram is registered under evidence type
+self-drawn-generator-diagram and satisfies the required generator-diagram artifact.
 
 git diff --check
 PASS — no whitespace errors.
@@ -47,6 +46,5 @@ Section 3W was re-verdicted from VALID to INCOMPLETE after the curation
 idempotence defect was found; it is corrected in place, not double-counted.
 
 Packaging
-NOT BUILT — strict validation correctly blocks the ZIP until a genuine
-student-designed/self-drawn diagram is supplied and registered. No validator was
-weakened to make this pass.
+NOT BUILT — all deterministic validators pass, but ZIP creation still requires
+the student's explicit final submission approval.

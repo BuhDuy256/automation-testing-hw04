@@ -19,8 +19,8 @@ Statuses use the required vocabulary: `COMPLETE`, `INCOMPLETE`, `MISSING`, `HUMA
 | One all-pass CI sample and one intentional-one-failure sample | COMPLETE | [ci-cd-report.md](ci-cd-report.md) | FR-04 commits `d8670c4...` and `84f837f...` provide the required green/red pair; FR-08 and FR-15 add further samples. |
 | AI-driven API test generator Agent Skill | COMPLETE | [generator/agent-skill/SKILL.md](generator/agent-skill/SKILL.md) | Reusable generator used for bounded FR-08 and FR-15 candidate generation. |
 | Generator pseudocode | COMPLETE | [generator/pseudocode.md](generator/pseudocode.md) | Design mirrors the source-grounded generation method and human-control boundaries. |
-| Student-designed/self-drawn generator diagram | HUMAN-ONLY PENDING | [generator/README.md](generator/README.md) | No genuine student-drawn diagram was supplied; AI did not fabricate one. |
-| Generator demonstration video | HUMAN-ONLY PENDING | [README.md](README.md) | Encouraged by section 7; the single manual URL field is in the root README. |
+| Student-designed/self-drawn generator diagram | COMPLETE | [PNG](generator/ai-driven-api-test-generator.png), [Draw.io XML](generator/ai-driven-api-test-generator.drawio.xml) | Student-supplied workflow diagram and editable source are included. |
+| Generator demonstration video | COMPLETE | [README.md](README.md) | The YouTube demonstration URL is provided in the root README. |
 | AI Audit Report, Markdown and PDF | COMPLETE | [ai-audit-report.md](ai-audit-report.md), [ai-audit-report.pdf](ai-audit-report.pdf) | Existing supported rows are preserved; final-submission AI artifacts are appended with actual provenance. |
 | AI Critique, 200–300 words, Markdown and PDF | COMPLETE | [ai-critique.md](ai-critique.md), [ai-critique.pdf](ai-critique.pdf) | Project-specific critique; deterministic word-count validation is applied. |
 | Excel test cases and summary | COMPLETE | [test-cases.xlsx](test-cases.xlsx) | Contains summary and case-detail worksheets generated from canonical registries. |
@@ -28,7 +28,7 @@ Statuses use the required vocabulary: `COMPLETE`, `INCOMPLETE`, `MISSING`, `HUMA
 | Public repository link | COMPLETE | [github-repo-link.txt](github-repo-link.txt) | Public repository and HW06 branch are listed. |
 | Meaningful Git commit log | COMPLETE | [git-commit-log.txt](git-commit-log.txt) | Selected real hashes/messages map to specification, generation, review, extension, implementation, execution, bugs, evidence, CI, and curation. |
 | No forbidden runtime database in submission | COMPLETE | Entire `out/` tree | Deterministic check rejects `database.sqlite`, `*.db`, and `*.sqlite` files. |
-| Final ZIP naming and package | INCOMPLETE | Not built | Strict validation cannot pass until the genuine student-drawn diagram is supplied and registered. |
+| Final ZIP naming and package | INCOMPLETE | Not built | The diagram is supplied and registered; the ZIP remains unbuilt pending final submission approval. |
 | Optional OpenAPI conversion | NOT APPLICABLE | None | Section 14 marks this artifact optional. |
 | Oral defense | NOT APPLICABLE | None | Selection for oral defense occurs after submission and is not a submission artifact. |
 
@@ -39,5 +39,5 @@ Statuses use the required vocabulary: `COMPLETE`, `INCOMPLETE`, `MISSING`, `HUMA
 | 1 | API 1 — full pipeline | 30 | 30 | FR-04 pipeline and evidence are complete. |
 | 2 | API 2 — full pipeline | 30 | 30 | FR-08 pipeline and evidence are complete. |
 | 3 | API 3 — full pipeline | 30 | 30 | FR-15 pipeline and evidence are complete. |
-| 4 | Agent Skills — AI-driven test generator | 10 | 0 | Skill and pseudocode exist, but the mandatory student-drawn diagram is missing; no partial points are assumed. |
-| | **Total** | **100** | **90** | Conservative self-assessment; package name grade component is `090`. |
+| 4 | Agent Skills — AI-driven test generator | 10 | 10 | Full credit is included in the student's self-assessment. |
+| | **Total** | **100** | **100** | Student-confirmed self-assessment; package name grade component is `100`. |

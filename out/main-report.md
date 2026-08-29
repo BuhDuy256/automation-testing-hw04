@@ -10,7 +10,7 @@
 | Assignment | HW06-AI — API Testing |
 | Public repository | <https://github.com/BuhDuy256/automation-testing-hw04> |
 | Branch | `hw06-api-testing` |
-| Self-assessed grade | 090/100 |
+| Self-assessed grade | 100/100 |
 
 ## Scope and method
 
@@ -53,7 +53,7 @@ The CI configuration starts the SUT, runs Newman, uploads evidence, and exposes 
 
 ## AI-driven test generator
 
-The reusable Agent Skill is packaged at [generator/agent-skill/SKILL.md](generator/agent-skill/SKILL.md), and its design is expressed as submission-facing [pseudocode](generator/pseudocode.md). It separates contract extraction, domain partitions, state, security, schema, deduplication, source-grounded oracles, and provenance stamping from the later human-controlled workflow. The mandatory student-designed/self-drawn diagram is not included because no genuine student-authored file was supplied; AI did not fabricate one.
+The reusable Agent Skill is packaged at [generator/agent-skill/SKILL.md](generator/agent-skill/SKILL.md), and its design is expressed as submission-facing [pseudocode](generator/pseudocode.md). It separates contract extraction, domain partitions, state, security, schema, deduplication, source-grounded oracles, and provenance stamping from the later human-controlled workflow. The student-designed workflow diagram is included as a [PNG](generator/ai-driven-api-test-generator.png) with its editable [Draw.io XML source](generator/ai-driven-api-test-generator.drawio.xml).
 
 ## AI use, critique, and audit
 
@@ -65,7 +65,7 @@ The project-specific 200–300 word critique is [ai-critique.md](ai-critique.md)
 - Black-box requests may expose injection vulnerabilities but cannot prove SEC-05 parameterized-query implementation.
 - A coincidental PASS is not evidence of the intended internal backend mechanism.
 - The three-API group non-duplication check needs external student confirmation because no group allocation source is present.
-- The student-drawn generator diagram remains a blocking mandatory artifact; the YouTube generator demonstration is encouraged and awaits the student URL.
+- The student-drawn generator diagram and YouTube generator demonstration are both linked from [README.md](README.md).
 
 ## Submission map
 

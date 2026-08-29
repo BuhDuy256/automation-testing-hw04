@@ -786,6 +786,23 @@
       "captureMethod": "official Newman execution harness with htmlextra reporter",
       "humanAttestation": true,
       "attestedBy": "Nguyen Bao Duy"
+    },
+    {
+      "id": "EVID-SUBMISSION-GENERATOR-DIAGRAM",
+      "type": "self-drawn-generator-diagram",
+      "description": "Student-submitted AI-driven API test generator and review workflow diagram. The PNG is submission-ready and the editable Draw.io XML source is stored beside it.",
+      "path": "generator/ai-driven-api-test-generator.png",
+      "sha256": "dadf49a2a15c81a582a3d99198f64c4f6799bb88b5c459f033c7296abf3029ac",
+      "capturedAt": "2026-08-30",
+      "captureMethod": "student-supplied diagram exported from diagrams.net",
+      "image": {
+        "bytes": 177750,
+        "width": 752,
+        "height": 1631
+      },
+      "humanAttestation": true,
+      "attestedBy": "Nguyen Bao Duy",
+      "attestedAt": "2026-08-30"
     }
   ]
 }

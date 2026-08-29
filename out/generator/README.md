@@ -4,6 +4,7 @@ This folder packages the reusable Agent Skill and its submission-facing pseudoco
 
 - Skill: [agent-skill/SKILL.md](agent-skill/SKILL.md)
 - Pseudocode: [pseudocode.md](pseudocode.md)
-- Student-designed/self-drawn diagram: **HUMAN-ONLY PENDING — no genuine student file was supplied**
+- Student-designed/self-drawn diagram: [PNG](ai-driven-api-test-generator.png)
+- Editable diagram source: [Draw.io XML](ai-driven-api-test-generator.drawio.xml)
 
-The missing diagram must be created by the student with any diagramming tool and then added as a PNG or Mermaid source. AI must not generate it or claim student authorship.
+The student supplied and attested the diagram on 30 August 2026.
